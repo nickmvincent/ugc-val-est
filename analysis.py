@@ -15,13 +15,14 @@
 # limitations under the License.
 
 """Simple application that performs a query with BigQuery."""
-import requests
 import os
 from pprint import pprint
 
-from fingerprint import Fingerprint
-import html2text
+import requests
 from google.cloud import bigquery
+
+import html2text
+from fingerprint import Fingerprint
 
 
 def query_so_answers():
@@ -60,43 +61,72 @@ def query_so_answers():
         _ = input()
 
 
+def make_select(
+    fields_to_select, table_name, where_clause=None,
+    group_by_cols=None, order_by_cols=None):
+    """Returns a syntactically correct SELECT statement"""
+    components = []
+    components.append("SELECT {}".format(fields_to_select))
+    components.append("FROM {}".format(table_name))
+    if where_clause:
+        components.append(where_clause)
+    if group_by_cols:
+        components.append('GROUP BY {}'.format(group_by_cols))
+    if order_by_cols:
+        components.append('ORDER BY {}'.format(order_by_cols))
+    return ' '.join(components) + ';'
+
+
 def analyze():
     """Analyze SO content"""
     client = bigquery.Client()
-    so_query = """
-    SELECT
-        count(*), sum(score)
-        FROM `bigquery-public-data.stackoverflow.posts_answers` {};"""
-    reddit_query = """
-    SELECT
-        count(*), sum(score)
-        FROM `fh-bigquery.reddit_comments.2014` {}; """
+    so_table = '`bigquery-public-data.stackoverflow.posts_answers`'
+    reddit_table = '`fh-bigquery.reddit_posts.2016_01`'
+    basic = 'count(*), sum(score)'
 
-    so_queries = {
-        'all': so_query.format(""),
-        'has_link': so_query.format(
-            "WHERE body LIKE '%<a%_href=%'"
-        ),
-        'has_wiki_link': so_query.format(
-            "WHERE body LIKE '%<a%_href=%wikipedia.org/wiki/%'"),
-        'has_nonwiki_link': so_query.format(
-            "WHERE body LIKE '%<a%_href=%' AND body NOT LIKE '%wikipedia.org/wiki/%'"),
-        'no_wiki_link': so_query.format(
-            "WHERE body NOT LIKE '%wikipedia.org/wiki/%'"),
+    patterns = {
+        'link': '<a%_href=',
+        'wiki_link': '<a%_href=%wikipedia.org/wiki/'
     }
-    reddit_queries = {
-        'all': reddit_query.format(""),
-        'has_wiki_link': reddit_query.format(
-            "WHERE body LIKE '%wikipedia.org/wiki/%'"
+
+    basic_so_queries = {
+        'all': make_select(basic, so_table),
+        'has_link': make_select(
+            basic, so_table, "WHERE body LIKE '%{link}%'".format(**patterns)
         ),
-        'no_wiki_link': reddit_query.format(
-            "WHERE body NOT LIKE '%wikipedia.org/wiki/%'"
+        'has_wiki_link': make_select(
+            basic, so_table, "WHERE body LIKE '%{wiki_link}%'".format(**patterns)
+        ),
+        'has_nonwiki_link': make_select(
+            basic, so_table,
+            "WHERE body LIKE '%{link}%' AND body NOT LIKE '%{wiki_link}%'".format(**patterns)
+        ),
+        'no_wiki_link': make_select(
+            basic, so_table,
+            "WHERE body NOT LIKE '%{wiki_link}%'".format(**patterns)
+        ),
+    }
+    basic_reddit_queries = {
+        'all': make_select(basic, reddit_table),
+        'has_wiki_link': make_select(
+            basic, reddit_table,
+            "WHERE url LIKE '%wikipedia.org/wiki/%'",
+        ),
+    }
+
+    raw_reddit_queries = {
+        'wiki_link_per_subreddit': make_select(
+            "COUNT(*) as subcount, subreddit", reddit_table,
+            where_clause="WHERE url LIKE '%wikipedia.org/wiki/%'",
+            group_by_cols='subreddit',
+            order_by_cols='subcount DESC',
         )
     }
-    #run_queries(client, so_queries)
-    run_queries(client, reddit_queries)
 
-def run_queries(client, queries):
+    # run_basic_analysis(client, so_queries)
+    print_query_output(client, raw_reddit_queries)
+
+def run_basic_analysis(client, queries):
     """Run a dictionary of queries and print the results"""
     resp_dict = {}
     for key, val in queries.items():
@@ -115,6 +145,19 @@ def run_queries(client, queries):
     for key, val in resp_dict.items():
         resp_dict[key]['percentage'] = resp_dict[key]['count'] / total * 100
     pprint(resp_dict)
+
+
+def print_query_output(client, queries):
+    """For each query in 'queries', print the exact output"""
+    for key, val in queries.items():
+        query_obj = client.run_sync_query(val)
+        query_obj.use_legacy_sql = False
+        query_obj.run()
+        with open('out.txt', 'w') as outfile:
+            for row in query_obj.fetch_data():
+                casted_row = [str(x) for x in row]
+                line = ','.join(casted_row) + '\n'
+                outfile.write(line)
 
 
 def test_fingerprint():
