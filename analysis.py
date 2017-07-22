@@ -81,7 +81,11 @@ def analyze():
     """Analyze SO content"""
     client = bigquery.Client()
     so_table = '`bigquery-public-data.stackoverflow.posts_answers`'
-    reddit_table = '`fh-bigquery.reddit_posts.2016_01`'
+    reddit_tables = [
+        '`fh-bigquery.reddit_posts.2016_01`',
+        '`fh-bigquery.reddit_posts.2016_02`',
+        '`fh-bigquery.reddit_posts.2016_03`'
+    ]
     basic = 'count(*), sum(score)'
 
     patterns = {
@@ -107,21 +111,21 @@ def analyze():
         ),
     }
     basic_reddit_queries = {
-        'all': make_select(basic, reddit_table),
+        'all': make_select(basic, reddit_tables[0]),
         'has_wiki_link': make_select(
-            basic, reddit_table,
+            basic, reddit_tables[0],
             "WHERE url LIKE '%wikipedia.org/wiki/%'",
         ),
     }
 
-    raw_reddit_queries = {
-        'wiki_link_per_subreddit': make_select(
-            "COUNT(*) as subcount, subreddit", reddit_table,
+    raw_reddit_queries = {}
+    for table in reddit_tables:
+        raw_reddit_queries[table] = make_select(
+            "COUNT(*) as subcount, subreddit", table,
             where_clause="WHERE url LIKE '%wikipedia.org/wiki/%'",
             group_by_cols='subreddit',
             order_by_cols='subcount DESC',
         )
-    }
 
     # run_basic_analysis(client, so_queries)
     print_query_output(client, raw_reddit_queries)
@@ -149,11 +153,11 @@ def run_basic_analysis(client, queries):
 
 def print_query_output(client, queries):
     """For each query in 'queries', print the exact output"""
-    for key, val in queries.items():
-        query_obj = client.run_sync_query(val)
+    for key, query in queries.items():
+        query_obj = client.run_sync_query(query)
         query_obj.use_legacy_sql = False
         query_obj.run()
-        with open('out.txt', 'w') as outfile:
+        with open(key +'.txt', 'w') as outfile:
             for row in query_obj.fetch_data():
                 casted_row = [str(x) for x in row]
                 line = ','.join(casted_row) + '\n'
