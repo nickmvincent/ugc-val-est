@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 class Post(models.Model):
     """
@@ -17,16 +18,19 @@ class Post(models.Model):
     wiki_links = models.ManyToManyField('WikiLink')
 
 
+
     class Meta:
         abstract = True
 
 
 class RedditPost(Post):
     """A reddit specific post"""
-    user_comment_karma = models.IntegerField()
-    user_link_karma = models.IntegerField()
-    user_created_utc = models.DateTimeField()
-    user_is_mod = models.BooleanField()
+    user_comment_karma = models.IntegerField(default=0)
+    user_link_karma = models.IntegerField(default=0)
+    user_created_utc = models.DateTimeField(default=timezone.now)
+    user_is_mod = models.BooleanField(default=False)
+    user_is_suspended = models.BooleanField(default=False)
+    user_is_deleted = models.BooleanField(default=False)
 
     class Meta:
         abstract = True
@@ -61,3 +65,11 @@ class ErrorLog(models.Model):
     """Each row corresponds to a post that couldn't be loaded due to some error"""
     uid = models.CharField(max_length=100, primary_key=True)
     msg = models.CharField(max_length=255)
+
+
+class ThreadLog(models.Model):
+    """Each row corresponds to a full thread that has been analyzed.
+    Meant for time saving purposes, in case script execution is interrupted.
+    """
+    uid = models.CharField(max_length=100, primary_key=True)
+    complete = models.BooleanField(default=False)

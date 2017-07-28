@@ -33,6 +33,7 @@ def query_so_answers():
             WHERE body NOT LIKE '%wikipedia.org%';
         """)
 
+
     query_results.use_legacy_sql = False
     query_results.run()
 
