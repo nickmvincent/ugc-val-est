@@ -81,11 +81,13 @@ def analyze():
     """Analyze SO content"""
     client = bigquery.Client()
     so_table = '`bigquery-public-data.stackoverflow.posts_answers`'
-    reddit_tables = [
-        '`fh-bigquery.reddit_posts.2016_01`',
-        '`fh-bigquery.reddit_posts.2016_02`',
-        '`fh-bigquery.reddit_posts.2016_03`'
-    ]
+    
+    reddit_2016_tables = []
+    temp = '`fh-bigquery.reddit_posts.2016_{}`'
+    for i in range(1, 10):
+        reddit_2016_tables.append(temp.format('0' + str(i)))
+    for i in range(10, 13):
+        reddit_2016_tables.append(temp.format(str(i)))
     basic = 'count(*), sum(score)'
 
     patterns = {
@@ -110,16 +112,23 @@ def analyze():
             "WHERE body NOT LIKE '%{wiki_link}%'".format(**patterns)
         ),
     }
-    basic_reddit_queries = {
-        'all': make_select(basic, reddit_tables[0]),
-        'has_wiki_link': make_select(
-            basic, reddit_tables[0],
-            "WHERE url LIKE '%wikipedia.org/wiki/%'",
-        ),
-    }
+    basic_reddit_queries = []
+    for table in reddit_2016_tables:
+        basic_reddit_queries.append({
+            'all': make_select(basic, table),
+            'has_wiki_link': make_select(
+                basic, table,
+                "WHERE url LIKE '%wikipedia.org/wiki/%'",
+            ),
+            'no_wiki_link': make_select(
+                basic, table,
+                "WHERE url NOT LIKE '%wikipedia.org/wiki/%'",
+            ),
+        })
+        
 
     raw_reddit_queries = {}
-    for table in reddit_tables:
+    for table in reddit_2016_tables:
         raw_reddit_queries[table] = make_select(
             "COUNT(*) as subcount, subreddit", table,
             where_clause="WHERE url LIKE '%wikipedia.org/wiki/%'",
@@ -127,8 +136,13 @@ def analyze():
             order_by_cols='subcount DESC',
         )
 
-    # run_basic_analysis(client, so_queries)
-    print_query_output(client, raw_reddit_queries)
+    sum_of_percents = 0
+    for queries in basic_reddit_queries:
+        percent = run_basic_analysis(client, queries)['has_wiki_link']['percentage']
+        sum_of_percents += percent
+    avg_percent = sum_of_percents / len(basic_reddit_queries)
+    print(avg_percent)
+    # print_query_output(client, raw_reddit_queries)
 
 def run_basic_analysis(client, queries):
     """Run a dictionary of queries and print the results"""
@@ -149,6 +163,7 @@ def run_basic_analysis(client, queries):
     for key, val in resp_dict.items():
         resp_dict[key]['percentage'] = resp_dict[key]['count'] / total * 100
     pprint(resp_dict)
+    return resp_dict
 
 
 def print_query_output(client, queries):
