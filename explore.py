@@ -16,21 +16,27 @@
 
 """Simple application that performs a query with BigQuery."""
 import os
+from collections import defaultdict
 from pprint import pprint
 
+import html2text
 import requests
+from fingerprint import Fingerprint
 from google.cloud import bigquery
 
-import html2text
-from fingerprint import Fingerprint
 
 
 def query_so_answers():
     client = bigquery.Client()
     query_results = client.run_sync_query("""
         SELECT
-            body FROM `bigquery-public-data.stackoverflow.posts_answers`
-            WHERE body NOT LIKE '%wikipedia.org%';
+            `bigquery-public-data.stackoverflow.posts_answers`.body, `bigquery-public-data.stackoverflow.posts_answers`.owner_user_id,
+            `bigquery-public-data.stackoverflow.users`.reputation, `bigquery-public-data.stackoverflow.users`.creation_date
+            FROM `bigquery-public-data.stackoverflow.posts_answers`
+            LEFT JOIN `bigquery-public-data.stackoverflow.users`
+            ON
+            `bigquery-public-data.stackoverflow.posts_answers`.owner_user_id = `bigquery-public-data.stackoverflow.users`.id
+            LIMIT 100;
         """)
 
 
@@ -43,28 +49,29 @@ def query_so_answers():
     printed = 0
 
     resp = query_results.fetch_data(
-        max_results=10,
+        max_results=100,
         page_token=page_token)
     print(resp)
     for iterable in resp:
-        print('Show another?')
-        _ = input()
-        text = html2text.html2text(iterable[0])
-        print(iterable[0])
-        print(text)
-        base = 'https://en.wikipedia.org/w/api.php?'
-        config = 'action=query&list=search&format=json&'
-        search_params = 'srsearch={}&srwhat=text'.format(text)
-        wiki_resp = requests.get('{}{}{}'.format(
-            base, config, search_params
-        ))
-        print(wiki_resp.json())
-        _ = input()
+        print(iterable)
+        # print('Show another?')
+        # _ = input()
+        # text = html2text.html2text(iterable[0])
+        # print(iterable[0])
+        # print(text)
+        # base = 'https://en.wikipedia.org/w/api.php?'
+        # config = 'action=query&list=search&format=json&'
+        # search_params = 'srsearch={}&srwhat=text'.format(text)
+        # wiki_resp = requests.get('{}{}{}'.format(
+        #     base, config, search_params
+        # ))
+        # print(wiki_resp.json())
+        # _ = input()
 
 
 def make_select(
-    fields_to_select, table_name, where_clause=None,
-    group_by_cols=None, order_by_cols=None):
+        fields_to_select, table_name, where_clause=None,
+        group_by_cols=None, order_by_cols=None):
     """Returns a syntactically correct SELECT statement"""
     components = []
     components.append("SELECT {}".format(fields_to_select))
@@ -137,12 +144,24 @@ def analyze():
             order_by_cols='subcount DESC',
         )
 
+
     sum_of_percents = 0
+    summed_resp_dict = {}
     for queries in basic_reddit_queries:
-        percent = run_basic_analysis(client, queries)['has_wiki_link']['percentage']
-        sum_of_percents += percent
-    avg_percent = sum_of_percents / len(basic_reddit_queries)
-    print(avg_percent)
+        resp_dict = run_basic_analysis(client, queries)
+        for key0, value0 in resp_dict.items():
+            if key0 not in summed_resp_dict:
+                summed_resp_dict[key0] = {}
+            for key1, value1 in value0.items():
+                if key1 not in summed_resp_dict[key0]:
+                    summed_resp_dict[key0][key1] = 0
+                summed_resp_dict[key0][key1] += value1
+
+    summed_resp_dict['has_wiki_link']['mean'] /= len(basic_reddit_queries)
+    summed_resp_dict['has_wiki_link']['percentage'] /= len(basic_reddit_queries)
+
+    pprint(summed_resp_dict)
+    run_basic_analysis(client, basic_so_queries)
     # print_query_output(client, raw_reddit_queries)
 
 def run_basic_analysis(client, queries):

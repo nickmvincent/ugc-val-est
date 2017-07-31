@@ -16,8 +16,7 @@ class Post(models.Model):
     context = models.CharField(max_length=50) # TODO
     timestamp = models.DateTimeField()
     wiki_links = models.ManyToManyField('WikiLink')
-
-
+    wiki_content_analyzed = models.BooleanField(default=False)
 
     class Meta:
         abstract = True
@@ -41,6 +40,19 @@ class AnnotatedRedditPost(RedditPost):
     discourse_type = models.CharField(max_length=20)
 
 
+class SampledRedditThread(RedditPost):
+    """A sampled reddit THREAD using SQL Rand() function"""
+    url = models.CharField(max_length=255)
+
+
+class StackOverflowPost(Post):
+    """
+    Each row corresponds to one Stack Overflow post (question or answer)
+    """
+    user_reputation = models.IntegerField(default=0)
+    user_created_utc = models.DateTimeField(default=timezone.now)
+
+
 
 class WikiLink(models.Model):
     """
@@ -48,17 +60,19 @@ class WikiLink(models.Model):
     reddit or Stack Overflow
     """
     url = models.CharField(max_length=255)
-    
-class WikiScore(models.Model):
+    day_prior = models.ForeignKey('RevisionScore', related_name='day_prior')
+    day_of = models.ForeignKey('RevisionScore', related_name='day_of')
+    week_after = models.ForeignKey('RevisionScore', related_name='week_after')
+
+
+class RevisionScore(models.Model):
     """
-    Each row correspnds to a set of scores for a WikiLink for a given date
+    Each row is the ORES score for a given revision.
+    Main purpose of this table to reduce repeat calls to Wikimedia API
+    and ORES api
     """
-    link = models.ForeignKey(WikiLink)
-    timestamp = models.DateTimeField()
-    day_prior_rev_id = models.CharField(max_length=50)
-    day_prior_ores_score = models.IntegerField()
-    day_of_rev_id = models.CharField(max_length=50)
-    day_of_ores_score = models.IntegerField()
+    rev_id = models.CharField(max_length=50, primary_key=True)
+    score = models.IntegerField(default=0)
 
 
 class ErrorLog(models.Model):
