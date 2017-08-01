@@ -15,18 +15,14 @@
 # limitations under the License.
 
 """Simple application that performs a query with BigQuery."""
-import os
-from collections import defaultdict
 from pprint import pprint
 
-import html2text
-import requests
-from fingerprint import Fingerprint
+# from fingerprint import Fingerprint
 from google.cloud import bigquery
 
 
-
 def query_so_answers():
+    """Run a LEFT JOIN query on SO answers on BQ"""
     client = bigquery.Client()
     query_results = client.run_sync_query("""
         SELECT
@@ -39,14 +35,11 @@ def query_so_answers():
             LIMIT 100;
         """)
 
-
     query_results.use_legacy_sql = False
     query_results.run()
 
     # Drain the query results by requesting a page at a time.
     page_token = None
-    num_to_print = 2000
-    printed = 0
 
     resp = query_results.fetch_data(
         max_results=100,
@@ -89,7 +82,7 @@ def analyze():
     """Analyze SO content"""
     client = bigquery.Client()
     so_table = '`bigquery-public-data.stackoverflow.posts_answers`'
-    
+
     reddit_2016_tables = []
     temp = '`fh-bigquery.reddit_posts.2016_{}`'
     for i in range(1, 10):
@@ -109,11 +102,13 @@ def analyze():
             basic, so_table, "WHERE body LIKE '%{link}%'".format(**patterns)
         ),
         'has_wiki_link': make_select(
-            basic, so_table, "WHERE body LIKE '%{wiki_link}%'".format(**patterns)
+            basic, so_table, "WHERE body LIKE '%{wiki_link}%'".format(
+                **patterns)
         ),
         'has_nonwiki_link': make_select(
             basic, so_table,
-            "WHERE body LIKE '%{link}%' AND body NOT LIKE '%{wiki_link}%'".format(**patterns)
+            "WHERE body LIKE '%{link}%' AND body NOT LIKE '%{wiki_link}%'".format(
+                **patterns)
         ),
         'no_wiki_link': make_select(
             basic, so_table,
@@ -133,7 +128,6 @@ def analyze():
                 "WHERE url NOT LIKE '%wikipedia.org/wiki/%'",
             ),
         })
-        
 
     raw_reddit_queries = {}
     for table in reddit_2016_tables:
@@ -144,8 +138,6 @@ def analyze():
             order_by_cols='subcount DESC',
         )
 
-
-    sum_of_percents = 0
     summed_resp_dict = {}
     for queries in basic_reddit_queries:
         resp_dict = run_basic_analysis(client, queries)
@@ -158,11 +150,13 @@ def analyze():
                 summed_resp_dict[key0][key1] += value1
 
     summed_resp_dict['has_wiki_link']['mean'] /= len(basic_reddit_queries)
-    summed_resp_dict['has_wiki_link']['percentage'] /= len(basic_reddit_queries)
+    summed_resp_dict['has_wiki_link']['percentage'] /= len(
+        basic_reddit_queries)
 
     pprint(summed_resp_dict)
     run_basic_analysis(client, basic_so_queries)
     # print_query_output(client, raw_reddit_queries)
+
 
 def run_basic_analysis(client, queries):
     """Run a dictionary of queries and print the results"""
@@ -179,7 +173,8 @@ def run_basic_analysis(client, queries):
             except TypeError:
                 vals['mean'] = 'error'
         resp_dict[key] = vals
-    total = resp_dict['has_wiki_link']['count'] + resp_dict['no_wiki_link']['count']
+    total = resp_dict['has_wiki_link']['count'] + \
+        resp_dict['no_wiki_link']['count']
     for key, val in resp_dict.items():
         resp_dict[key]['percentage'] = resp_dict[key]['count'] / total * 100
     pprint(resp_dict)
@@ -192,41 +187,41 @@ def print_query_output(client, queries):
         query_obj = client.run_sync_query(query)
         query_obj.use_legacy_sql = False
         query_obj.run()
-        with open(key +'.txt', 'w') as outfile:
+        with open(key + '.txt', 'w') as outfile:
             for row in query_obj.fetch_data():
                 casted_row = [str(x) for x in row]
                 line = ','.join(casted_row) + '\n'
                 outfile.write(line)
 
 
-def test_fingerprint():
-    """To test winnowing algo
-    a fingerprint is of the form hashval, index
-    """
-    f = Fingerprint(kgram_len=4, window_len=5, base=10, modulo=1000)
-    answers = ['.\\test_answers1.txt']
-    answer_prints_list = []
-    wiki_pages = ['.\\test_wiki1.txt']
-    wiki_prints_list = []
-    for answer_path in answers:
-        answer_prints = f.generate(fpath=answer_path)
-        print(answer_prints)
-        answer_prints_list.append([x[0] for x in answer_prints])
-    for wiki_path in wiki_pages:
-        wiki_prints = f.generate(fpath=wiki_path)
-        print(wiki_prints)
-        wiki_prints_list.append([x[0] for x in wiki_prints])
-    for answer_prints in answer_prints_list:
-        score = 0
-        total = len(answer_prints)
-        for wiki_prints in wiki_prints_list:
-            for answer_print in answer_prints:
-                if answer_print in wiki_prints:
-                    score += 1
-        print(score/total)
+# def test_fingerprint():
+#     """To test winnowing algo
+#     a fingerprint is of the form hashval, index
+#     """
+#     f = Fingerprint(kgram_len=4, window_len=5, base=10, modulo=1000)
+#     answers = ['.\\test_answers1.txt']
+#     answer_prints_list = []
+#     wiki_pages = ['.\\test_wiki1.txt']
+#     wiki_prints_list = []
+#     for answer_path in answers:
+#         answer_prints = f.generate(fpath=answer_path)
+#         print(answer_prints)
+#         answer_prints_list.append([x[0] for x in answer_prints])
+#     for wiki_path in wiki_pages:
+#         wiki_prints = f.generate(fpath=wiki_path)
+#         print(wiki_prints)
+#         wiki_prints_list.append([x[0] for x in wiki_prints])
+#     for answer_prints in answer_prints_list:
+#         score = 0
+#         total = len(answer_prints)
+#         for wiki_prints in wiki_prints_list:
+#             for answer_print in answer_prints:
+#                 if answer_print in wiki_prints:
+#                     score += 1
+#         print(score / total)
+
+
 if __name__ == '__main__':
-    # set GOOGLE_APPLICATION_CREDENTIALS=C:\Users\nickm\Desktop\research\wikipedia_and_stack_overflow\client_secrets.json
-    os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "C:\\Users\\nickm\\Desktop\\research\\wikipedia_and_stack_overflow\\client_secrets.json"
     analyze()
     # query_so_answers()
     # test_fingerprint()

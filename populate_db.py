@@ -3,7 +3,6 @@ import json
 import os
 import time
 import datetime
-from pprint import pprint
 
 import pytz
 import praw
@@ -11,6 +10,13 @@ from prawcore.exceptions import Forbidden, NotFound
 from google.cloud import bigquery
 
 
+def utcstamp_to_utcdatetime(timestamp):
+    """Takes a UTC stamp and returns UTC datetime"""
+    return datetime.datetime.fromtimestamp(timestamp).replace(tzinfo=pytz.UTC)
+
+
+def default_to_zero(val):
+    return 0 if val is None else val
 
 def extract_reddit_kwargs(post):
     """Extract needed kwargs to make a db entry for a reddit post"""
@@ -19,11 +25,10 @@ def extract_reddit_kwargs(post):
         ret[key] = post[key]
     for key in ['user_comment_karma', 'user_link_karma', 'user_is_mod', 'user_is_deleted']:
         ret[key] = post.get(key, 0)
-    ret['timestamp'] = datetime.datetime.fromtimestamp(post['timestamp']).replace(tzinfo=pytz.UTC)
-    
+    ret['timestamp'] = utcstamp_to_utcdatetime(post['timestamp'])
+
     if post.get('created_utc'):
-        ret['user_created_utc'] = datetime.datetime.fromtimestamp(
-            post['created_utc']).replace(tzinfo=pytz.UTC)
+        ret['user_created_utc'] = utcstamp_to_utcdatetime(post['created_utc'])
     if post.get('discourse_type'):
         ret['discourse_type'] = post.get('majority_type')
     if post.get('url'):
@@ -33,6 +38,8 @@ def extract_reddit_kwargs(post):
 # PURITY LOVERS BEWARE
 # this function is REMARKABLY IMPURE
 # returns nothing...
+
+
 def extract_reddit_author_info(holder, author):
     """
     Args:
@@ -52,9 +59,9 @@ def extract_reddit_author_info(holder, author):
         holder['author'] = author.name
         try:
             grab_author_attrib()
-        except NotFound as err:
+        except NotFound:
             pass
-        except AttributeError as err:
+        except AttributeError:
             if 'is_suspended' in author.__dict__ and author.is_suspended:
                 holder['user_is_suspended'] = True
             else:
@@ -62,7 +69,7 @@ def extract_reddit_author_info(holder, author):
                 try:
                     grab_author_attrib()
                     print('Sleep for 2 second worked!!!')
-                except:
+                except AttributeError:
                     pass
     else:
         holder['user_is_deleted'] = True
@@ -79,29 +86,7 @@ def init_count():
     return count
 
 
-def process_so_rows(lines, table='Sampled'):
-    """
-    Args:
-        lines - a list of of dicts, each corresponds to a row of data
-    Returns:
-        None
-    """
-    if table == 'Annotated':
-        model = AnnotatedRedditPost
-    else:
-        model = SampledRedditThread
-    count = init_count()
-    for index, line in enumerate(lines):
-        print(line)
-        uid = line.get('id')
-        try:
-            model.objects.get_or_create(**line)
-        except Exception as err:
-            msg = 'Err loading SO post: {}'.format(err)
-            ErrorLog.objects.get_or_create(uid=uid, msg=msg)
-
-
-def process_reddit_rows(lines, reddit=None, parse_comments=False, table='Annotated'):
+def process_reddit_rows(lines, model, reddit=None, parse_comments=False):
     """
     Args:
         lines:
@@ -115,12 +100,8 @@ def process_reddit_rows(lines, reddit=None, parse_comments=False, table='Annotat
     Returns:
         None
     """
-    if table == 'Annotated':
-        model = AnnotatedRedditPost
-    else:
-        model = SampledRedditThread
     count = init_count()
-    for index, line in enumerate(lines):
+    for line in lines:
         if not isinstance(line, dict):
             reader = json.loads(line)
         else:
@@ -143,7 +124,7 @@ def process_reddit_rows(lines, reddit=None, parse_comments=False, table='Annotat
                 post_id_dict[post['id']] = post
                 count['posts_attempted'] += 1
             submission.comment_sort = 'best'
-            submission.comment_limit = 40 # only top 40 annotated
+            submission.comment_limit = 40  # only top 40 annotated
         else:
             sub['id'] = line['id']
             sub['author'] = reddit.redditor(line['author'])
@@ -164,7 +145,8 @@ def process_reddit_rows(lines, reddit=None, parse_comments=False, table='Annotat
             for key in ['body', 'url', 'score', 'timestamp', 'context']:
                 post_id_dict[full_submission_id][key] = sub[key]
             post_id_dict[full_submission_id]['is_root'] = True
-            extract_reddit_author_info(post_id_dict[full_submission_id], sub['author'])
+            extract_reddit_author_info(
+                post_id_dict[full_submission_id], sub['author'])
         except Forbidden:
             print('Skipping Forbidden thread')
             continue
@@ -172,7 +154,7 @@ def process_reddit_rows(lines, reddit=None, parse_comments=False, table='Annotat
         if parse_comments:
             submission.comments.replace_more(limit=0)
             try:
-                bfs_comments = submission.comments.list() # performs BFS!!
+                bfs_comments = submission.comments.list()  # performs BFS!!
             except Exception as err:
                 print('bfs comments.list() failed: {}'.format(err))
                 bfs_comments = []
@@ -205,7 +187,7 @@ def process_reddit_rows(lines, reddit=None, parse_comments=False, table='Annotat
                 else:
                     count['already_in_errors'] += 1
         ThreadLog.objects.create(uid=full_submission_id, complete=True)
-
+    print(count)
 
 
 def read_from_discourse():
@@ -215,16 +197,20 @@ def read_from_discourse():
                              client_secret=os.environ["CLIENT_SECRET"],
                              user_agent=os.environ["UA"])
     except Exception as err:
-        print(err)        
+        print(err)
         raise ValueError('Authentication failed')
-
 
     with open('coarse_discourse_dataset.json') as jsonfile:
         lines = jsonfile.readlines()
-        process_reddit_rows(lines, reddit, parse_comments=True, table='Annotated')
+        process_reddit_rows(
+            lines, AnnotatedRedditPost, reddit, parse_comments=True)
 
 
 def sample_reddit_threads_from_bq():
+    """
+    Randomly sample rows from BigQuery corresponding the reddit threads,
+    aka submissions (NOT COMMENT)
+    """
     try:
         reddit = praw.Reddit(client_id=os.environ["CLIENT_ID"],
                              client_secret=os.environ["CLIENT_SECRET"],
@@ -244,81 +230,126 @@ def sample_reddit_threads_from_bq():
     }
     query = template.format(**query_kwargs)
 
-    t_init = time.time()
-    for i in range(0, 20):
-        t_start = time.time()
+    times = {}
+    times['init'] = time.time()
+    for iteration in range(0, 20):
+        times['start'] = time.time()
         query_results = client.run_sync_query(query)
         query_results.use_legacy_sql = False
         query_results.run()
-
-        resp = query_results.fetch_data(max_results=1000)
-        
         row_dicts = []
-        for row in resp:
+        for row in query_results.fetch_data(max_results=1000):
             row_dict = {}
             for i, col in enumerate(cols):
                 row_dict[col] = row[i]
             row_dicts.append(row_dict)
-        process_reddit_rows(row_dicts, reddit, parse_comments=False, table='Sampled')
-        t_end = time.time()
-        print('Runtime for iteration {} was {}'.format(i, t_end - t_start))
-    print('Total runtime was {}'.format(t_end - t_init))
+        process_reddit_rows(row_dicts, SampledRedditThread, reddit,
+                            parse_comments=False)
+        times['end'] = time.time()
+        print('Runtime for iteration {} was {}'.format(
+            iteration, times['end'] - times['start']))
+    print('Total runtime was {}'.format(times['end'] - times['init']))
 
 
-# TODO
+def process_so_rows(lines, model):
+    """
+    Args:
+        lines - a list of of dicts, each corresponds to a row of data
+    Returns:
+        None
+    """
+    count = init_count()
+    for line in lines:
+        uid = line.get('uid')
+        count['posts_attempted'] += 1
+        try:
+            _, created = model.objects.get_or_create(**line)
+            if created:
+                count['rows_added'] += 1
+            else:
+                count['already_in_db'] += 1
+        except Exception as err:
+            msg = 'Err loading SO post: {}'.format(err)
+            log, created = ErrorLog.objects.get_or_create(uid=uid)
+            log.msg = msg[:254]
+            log.save()
+            if created:
+                count['errors_added'] += 1
+            else:
+                count['already_in_errors'] += 1
+    print(count)
+
+
+SO_ANSWERS_TABLE = '`bigquery-public-data.stackoverflow.posts_answers`'
+SO_USERS_TABLE = '`bigquery-public-data.stackoverflow.users`'
+
 def sample_so_answers_from_bq():
     """
     Populate DB with random samples of SO answers from BigQuery
     """
+    print('Going to populate SO Answers from BigQuery...')
     client = bigquery.Client()
-    """
-        SELECT
-            FROM 
-            LEFT JOIN `bigquery-public-data.stackoverflow.users`
-            ON
-            `bigquery-public-data.stackoverflow.posts_answers`.owner_user_id = `bigquery-public-data.stackoverflow.users`.id
-            LIMIT 100;
-    """
-    # BigQuery columns to grab
-    columns = [
-        '`bigquery-public-data.stackoverflow.posts_answers`.body',
-        '`bigquery-public-data.stackoverflow.posts_answers`.owner_user_id',
-        '`bigquery-public-data.stackoverflow.users`.reputation',
-        '`bigquery-public-data.stackoverflow.users`.creation_date',
-
+    col_objects = [
+        {
+            'bq_name': SO_ANSWERS_TABLE + '.body',
+            'dja_name': 'body',
+        },
+        {
+            'bq_name': SO_ANSWERS_TABLE + '.id',
+            'dja_name': 'uid',
+        },
+        {
+            'bq_name': SO_ANSWERS_TABLE + '.score',
+            'dja_name': 'score',
+        },
+        {
+            'bq_name': SO_ANSWERS_TABLE + '.creation_date',
+            'dja_name': 'timestamp',
+        },
+        {
+            'bq_name': SO_USERS_TABLE + '.reputation',
+            'dja_name': 'user_reputation',
+            'processing': default_to_zero,
+        },
+        {
+            'bq_name': SO_USERS_TABLE + '.creation_date as user_created_utc',
+            'dja_name': 'user_created_utc',
+        },
     ]
-    table = '`bigquery-public-data.stackoverflow.posts_answers`'
+    table = "{answers} LEFT JOIN {users} ON {answers}.owner_user_id = {users}.id".format(
+        **{'answers': SO_ANSWERS_TABLE, 'users': SO_USERS_TABLE})
     template = "SELECT {columns} FROM {table} WHERE RAND() < {fraction} LIMIT {limit};"
-    cols = ['id', 'url', 'score', 'created_utc', 'author', 'subreddit', ]
     query_kwargs = {
-        'columns': ', '.join(cols),
-        'table': '`fh-bigquery.reddit_posts.2016_01`',
+        'columns': ', '.join([x['bq_name'] for x in col_objects]),
+        'table': table,
         'fraction': 0.001,
         'limit': 1000,
     }
     query = template.format(**query_kwargs)
-
+    print(query)
     t_init = time.time()
-    for i in range(0, 20):
+    for iteration in range(0, 20):
         t_start = time.time()
         query_results = client.run_sync_query(query)
         query_results.use_legacy_sql = False
         query_results.run()
 
         resp = query_results.fetch_data(max_results=1000)
-        
+
         row_dicts = []
         for row in resp:
             row_dict = {}
-            for i, col in enumerate(cols):
-                row_dict[col] = row[i]
+            for i, obj in enumerate(col_objects):
+                val = row[i]
+                if obj.get('processing'):
+                    val = obj['processing'](val)
+                row_dict[obj['dja_name']] = val
             row_dicts.append(row_dict)
-        process_so_rows(row_dicts, table='Sampled')
+        process_so_rows(row_dicts, model=SampledStackOverflowPost)
         t_end = time.time()
-        print('Runtime for iteration {} was {}'.format(i, t_end - t_start))
+        print('Runtime for iteration {} was {}'.format(
+            iteration, t_end - t_start))
     print('Total runtime was {}'.format(t_end - t_init))
-
-
 
 
 if __name__ == "__main__":
@@ -326,8 +357,10 @@ if __name__ == "__main__":
     import django
     django.setup()
     from portal.models import (
-        Post, AnnotatedRedditPost, ErrorLog, ThreadLog, SampledRedditThread
+        AnnotatedRedditPost, ErrorLog, ThreadLog, SampledRedditThread,
+        SampledStackOverflowPost,
     )
-    os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "C:\\Users\\nickm\\Desktop\\research\\wikipedia_and_stack_overflow\\client_secrets.json"
+    print('Ready to begin "populate_db" script')
     # read_from_discourse()
-    sample_reddit_threads_from_bq()
+    # sample_reddit_threads_from_bq()
+    sample_so_answers_from_bq()

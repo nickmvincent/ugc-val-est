@@ -1,4 +1,6 @@
-
+"""
+Helper functions related to scoring UGC
+"""
 
 def map_ores_code_to_int(code):
     """

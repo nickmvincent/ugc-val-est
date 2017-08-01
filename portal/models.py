@@ -1,3 +1,7 @@
+"""
+These models are used to define the tables in the Postgresql database for
+doing data analysis
+"""
 from django.db import models
 from django.utils import timezone
 
@@ -13,7 +17,7 @@ class Post(models.Model):
     body = models.CharField(max_length=10000)
     score = models.IntegerField()
     is_root = models.BooleanField(default=False)
-    context = models.CharField(max_length=50, null=True, blank=True) # TODO
+    context = models.CharField(max_length=50, null=True, blank=True)
     timestamp = models.DateTimeField()
     wiki_links = models.ManyToManyField('WikiLink')
     post_specific_wiki_links = models.ManyToManyField('PostSpecificWikiLink')
@@ -27,7 +31,7 @@ class RedditPost(Post):
     """A reddit specific post"""
     user_comment_karma = models.IntegerField(default=0)
     user_link_karma = models.IntegerField(default=0)
-    user_created_utc = models.DateTimeField(default=timezone.now)
+    user_created_utc = models.DateTimeField(null=True, blank=True)
     user_is_mod = models.BooleanField(default=False)
     user_is_suspended = models.BooleanField(default=False)
     user_is_deleted = models.BooleanField(default=False)
@@ -46,12 +50,12 @@ class SampledRedditThread(RedditPost):
     url = models.CharField(max_length=500)
 
 
-class StackOverflowPost(Post):
+class SampledStackOverflowPost(Post):
     """
     Each row corresponds to one Stack Overflow post (question or answer)
     """
     user_reputation = models.IntegerField(default=0)
-    user_created_utc = models.DateTimeField(default=timezone.now)
+    user_created_utc = models.DateTimeField(null=True, blank=True)
 
 
 class PostSpecificWikiLink(models.Model):
