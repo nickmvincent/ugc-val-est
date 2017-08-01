@@ -11,12 +11,6 @@ from prawcore.exceptions import Forbidden, NotFound
 from google.cloud import bigquery
 
 
-VERBOSE = True
-def say(msg):
-    """Print only if VERBOSE is True"""
-    if VERBOSE:
-        print(msg)
-
 
 def extract_reddit_kwargs(post):
     """Extract needed kwargs to make a db entry for a reddit post"""
@@ -61,19 +55,50 @@ def extract_reddit_author_info(holder, author):
         except NotFound as err:
             pass
         except AttributeError as err:
-            print(err)
             if 'is_suspended' in author.__dict__ and author.is_suspended:
                 holder['user_is_suspended'] = True
-                print('author is suspended, moving on...')
             else:
                 time.sleep(2)
                 try:
                     grab_author_attrib()
                     print('Sleep for 2 second worked!!!')
                 except:
-                    print('Really cannot get comment_karma...')
+                    pass
     else:
         holder['user_is_deleted'] = True
+
+
+def init_count():
+    """Initialize a counter dict to keep track of successes/errors"""
+    count = {}
+    count['posts_attempted'] = 0
+    count['already_in_db'] = 0
+    count['already_in_errors'] = 0
+    count['rows_added'] = 0
+    count['errors_added'] = 0
+    return count
+
+
+def process_so_rows(lines, table='Sampled'):
+    """
+    Args:
+        lines - a list of of dicts, each corresponds to a row of data
+    Returns:
+        None
+    """
+    if table == 'Annotated':
+        model = AnnotatedRedditPost
+    else:
+        model = SampledRedditThread
+    count = init_count()
+    for index, line in enumerate(lines):
+        print(line)
+        uid = line.get('id')
+        try:
+            model.objects.get_or_create(**line)
+        except Exception as err:
+            msg = 'Err loading SO post: {}'.format(err)
+            ErrorLog.objects.get_or_create(uid=uid, msg=msg)
 
 
 def process_reddit_rows(lines, reddit=None, parse_comments=False, table='Annotated'):
@@ -94,17 +119,8 @@ def process_reddit_rows(lines, reddit=None, parse_comments=False, table='Annotat
         model = AnnotatedRedditPost
     else:
         model = SampledRedditThread
-
-    count = {}
-    count['posts_attempted'] = 0
-    count['already_in_db'] = 0
-    count['already_in_errors'] = 0
-    count['rows_added'] = 0
-    count['errors_added'] = 0
+    count = init_count()
     for index, line in enumerate(lines):
-        if index % 100 == 0:
-            print('Threads analyzed: {}'.format(index))
-            pprint(count)
         if not isinstance(line, dict):
             reader = json.loads(line)
         else:
@@ -158,7 +174,7 @@ def process_reddit_rows(lines, reddit=None, parse_comments=False, table='Annotat
             try:
                 bfs_comments = submission.comments.list() # performs BFS!!
             except Exception as err:
-                say('bfs comments.list() failed: {}'.format(err))
+                print('bfs comments.list() failed: {}'.format(err))
                 bfs_comments = []
             for comment in bfs_comments:
                 full_comment_id = 't1_' + comment.id
@@ -198,7 +214,6 @@ def read_from_discourse():
         reddit = praw.Reddit(client_id=os.environ["CLIENT_ID"],
                              client_secret=os.environ["CLIENT_SECRET"],
                              user_agent=os.environ["UA"])
-        print('Authentication successful!')
     except Exception as err:
         print(err)        
         raise ValueError('Authentication failed')
@@ -214,9 +229,8 @@ def sample_reddit_threads_from_bq():
         reddit = praw.Reddit(client_id=os.environ["CLIENT_ID"],
                              client_secret=os.environ["CLIENT_SECRET"],
                              user_agent=os.environ["UA"])
-        print('Authentication successful!')
     except Exception as err:
-        print(err)        
+        print(err)
         raise ValueError('Authentication failed')
 
     client = bigquery.Client()
@@ -226,25 +240,86 @@ def sample_reddit_threads_from_bq():
         'columns': ', '.join(cols),
         'table': '`fh-bigquery.reddit_posts.2016_01`',
         'fraction': 0.001,
-        'limit': 100,
+        'limit': 1000,
     }
     query = template.format(**query_kwargs)
-    print(query)
-    query_results = client.run_sync_query(query)
-    query_results.use_legacy_sql = False
-    query_results.run()
-    page_token = None
-    resp = query_results.fetch_data(
-        max_results=100,
-        page_token=page_token)
-    row_dicts = []
-    for row in resp:
-        row_dict = {}
-        for i, col in enumerate(cols):
-            row_dict[col] = row[i]
-        row_dicts.append(row_dict)
-        print(row_dict['score'])
-    process_reddit_rows(row_dicts, reddit, parse_comments=False, table='Sampled')
+
+    t_init = time.time()
+    for i in range(0, 20):
+        t_start = time.time()
+        query_results = client.run_sync_query(query)
+        query_results.use_legacy_sql = False
+        query_results.run()
+
+        resp = query_results.fetch_data(max_results=1000)
+        
+        row_dicts = []
+        for row in resp:
+            row_dict = {}
+            for i, col in enumerate(cols):
+                row_dict[col] = row[i]
+            row_dicts.append(row_dict)
+        process_reddit_rows(row_dicts, reddit, parse_comments=False, table='Sampled')
+        t_end = time.time()
+        print('Runtime for iteration {} was {}'.format(i, t_end - t_start))
+    print('Total runtime was {}'.format(t_end - t_init))
+
+
+# TODO
+def sample_so_answers_from_bq():
+    """
+    Populate DB with random samples of SO answers from BigQuery
+    """
+    client = bigquery.Client()
+    """
+        SELECT
+            FROM 
+            LEFT JOIN `bigquery-public-data.stackoverflow.users`
+            ON
+            `bigquery-public-data.stackoverflow.posts_answers`.owner_user_id = `bigquery-public-data.stackoverflow.users`.id
+            LIMIT 100;
+    """
+    # BigQuery columns to grab
+    columns = [
+        '`bigquery-public-data.stackoverflow.posts_answers`.body',
+        '`bigquery-public-data.stackoverflow.posts_answers`.owner_user_id',
+        '`bigquery-public-data.stackoverflow.users`.reputation',
+        '`bigquery-public-data.stackoverflow.users`.creation_date',
+
+    ]
+    table = '`bigquery-public-data.stackoverflow.posts_answers`'
+    template = "SELECT {columns} FROM {table} WHERE RAND() < {fraction} LIMIT {limit};"
+    cols = ['id', 'url', 'score', 'created_utc', 'author', 'subreddit', ]
+    query_kwargs = {
+        'columns': ', '.join(cols),
+        'table': '`fh-bigquery.reddit_posts.2016_01`',
+        'fraction': 0.001,
+        'limit': 1000,
+    }
+    query = template.format(**query_kwargs)
+
+    t_init = time.time()
+    for i in range(0, 20):
+        t_start = time.time()
+        query_results = client.run_sync_query(query)
+        query_results.use_legacy_sql = False
+        query_results.run()
+
+        resp = query_results.fetch_data(max_results=1000)
+        
+        row_dicts = []
+        for row in resp:
+            row_dict = {}
+            for i, col in enumerate(cols):
+                row_dict[col] = row[i]
+            row_dicts.append(row_dict)
+        process_so_rows(row_dicts, table='Sampled')
+        t_end = time.time()
+        print('Runtime for iteration {} was {}'.format(i, t_end - t_start))
+    print('Total runtime was {}'.format(t_end - t_init))
+
+
+
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dja.settings")

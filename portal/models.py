@@ -13,9 +13,10 @@ class Post(models.Model):
     body = models.CharField(max_length=10000)
     score = models.IntegerField()
     is_root = models.BooleanField(default=False)
-    context = models.CharField(max_length=50) # TODO
+    context = models.CharField(max_length=50, null=True, blank=True) # TODO
     timestamp = models.DateTimeField()
     wiki_links = models.ManyToManyField('WikiLink')
+    post_specific_wiki_links = models.ManyToManyField('PostSpecificWikiLink')
     wiki_content_analyzed = models.BooleanField(default=False)
 
     class Meta:
@@ -42,7 +43,7 @@ class AnnotatedRedditPost(RedditPost):
 
 class SampledRedditThread(RedditPost):
     """A sampled reddit THREAD using SQL Rand() function"""
-    url = models.CharField(max_length=255)
+    url = models.CharField(max_length=500)
 
 
 class StackOverflowPost(Post):
@@ -53,16 +54,28 @@ class StackOverflowPost(Post):
     user_created_utc = models.DateTimeField(default=timezone.now)
 
 
+class PostSpecificWikiLink(models.Model):
+    """
+    Each row corresponding timestamped Wikipedia link that was posted
+    This table mainly exists for convenience when doing analysis
+    But if we decide to use other metrics than day prior, day of, week after
+    We will need to use the normal WikiLink table instead
+    """
+    day_prior = models.ForeignKey('RevisionScore', related_name='day_prior')
+    day_of = models.ForeignKey('RevisionScore', related_name='day_of')
+    week_after = models.ForeignKey('RevisionScore', related_name='week_after')
+
 
 class WikiLink(models.Model):
     """
     Each row corresponds to a Wikipedia article link that appeared on
     reddit or Stack Overflow
+
+    A WikiLink object is JUST a url that links to a Wikipedi article.
+    Infinitely mainly RevisionScores may be associated with one WikiLink via
+    ForeignKeys (on the RevisionScore table)
     """
-    url = models.CharField(max_length=255)
-    day_prior = models.ForeignKey('RevisionScore', related_name='day_prior')
-    day_of = models.ForeignKey('RevisionScore', related_name='day_of')
-    week_after = models.ForeignKey('RevisionScore', related_name='week_after')
+    url = models.CharField(max_length=500)
 
 
 class RevisionScore(models.Model):
@@ -70,7 +83,17 @@ class RevisionScore(models.Model):
     Each row is the ORES score for a given revision.
     Main purpose of this table to reduce repeat calls to Wikimedia API
     and ORES api
+
+    ORES Score map
+    Stub - 0
+    Start - 1
+    C - 2
+    B - 3
+    GA - 4
+    FA - 5
     """
+    timestamp = models.DateTimeField(default=timezone.now)
+    wiki_link = models.ForeignKey(WikiLink)
     rev_id = models.CharField(max_length=50, primary_key=True)
     score = models.IntegerField(default=0)
 
