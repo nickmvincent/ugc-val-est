@@ -78,17 +78,22 @@ def make_select(
     return ' '.join(components) + ';'
 
 
-def analyze():
-    """Analyze SO content"""
-    client = bigquery.Client()
-    so_table = '`bigquery-public-data.stackoverflow.posts_answers`'
-
+def get_reddit_tables():
+    """Returns 12 reddit tables corresponding to 2016"""
     reddit_2016_tables = []
     temp = '`fh-bigquery.reddit_posts.2016_{}`'
     for i in range(1, 10):
         reddit_2016_tables.append(temp.format('0' + str(i)))
     for i in range(10, 13):
         reddit_2016_tables.append(temp.format(str(i)))
+    return reddit_2016_tables
+
+def analyze():
+    """Analyze SO content"""
+    client = bigquery.Client()
+    so_table = '`bigquery-public-data.stackoverflow.posts_answers`'
+
+    reddit_2016_tables = get_reddit_tables()
     basic = 'count(*), sum(score)'
 
     patterns = {

@@ -16,17 +16,37 @@ class Post(models.Model):
     uid = models.CharField(max_length=100, primary_key=True)
     body = models.CharField(max_length=10000)
     score = models.IntegerField()
+    num_comments = models.IntegerField(default=0)
     is_root = models.BooleanField(default=False)
     context = models.CharField(max_length=50, null=True, blank=True)
     timestamp = models.DateTimeField()
+
     wiki_links = models.ManyToManyField('WikiLink')
-    post_specific_wiki_links = models.ManyToManyField('PostSpecificWikiLink')
+    has_wiki_link = models.BooleanField(default=False)
+    num_wiki_links = models.IntegerField(default=0)
+
+    post_specific_wiki_links = models.ManyToManyField('PostSpecificWikiScores')
     wiki_content_analyzed = models.BooleanField(default=False)
 
     class Meta:
         abstract = True
 
+    def day(self):
+        """Returns a number corresponding to the day of posting"""
+        return self.timestamp.day
 
+    def hour(self):
+        """Returns a number corresponding to the day of posting"""
+        return self.timestamp.hour
+
+    def save(self, *args, **kwargs):
+        """overload save method"""
+        wiki_links = self.wiki_links.all()
+        num_wiki_links = wiki_links.count()
+        self.num_wiki_links = num_wiki_links
+        self.has_wiki_link = num_wiki_links > 0
+        super(Post, self).save(*args, **kwargs)
+        
 class RedditPost(Post):
     """A reddit specific post"""
     user_comment_karma = models.IntegerField(default=0)
@@ -40,14 +60,14 @@ class RedditPost(Post):
         abstract = True
 
 
-class AnnotatedRedditPost(RedditPost):
-    """An annotated reddit post - annotation indicates category of discourse"""
-    discourse_type = models.CharField(max_length=20)
+# class AnnotatedRedditPost(RedditPost):
+#     """An annotated reddit post - annotation indicates category of discourse"""
+#     discourse_type = models.CharField(max_length=20)
 
 
 class SampledRedditThread(RedditPost):
     """A sampled reddit THREAD using SQL Rand() function"""
-    url = models.CharField(max_length=500)
+    url = models.CharField(max_length=2083)
 
 
 class SampledStackOverflowPost(Post):
@@ -58,7 +78,7 @@ class SampledStackOverflowPost(Post):
     user_created_utc = models.DateTimeField(null=True, blank=True)
 
 
-class PostSpecificWikiLink(models.Model):
+class PostSpecificWikiScores(models.Model):
     """
     Each row corresponding timestamped Wikipedia link that was posted
     This table mainly exists for convenience when doing analysis
@@ -69,6 +89,7 @@ class PostSpecificWikiLink(models.Model):
     day_of = models.ForeignKey('RevisionScore', related_name='day_of')
     week_after = models.ForeignKey('RevisionScore', related_name='week_after')
 
+WIKI_PATTERN = 'wikipedia.org/wiki/'
 
 class WikiLink(models.Model):
     """
@@ -79,7 +100,28 @@ class WikiLink(models.Model):
     Infinitely mainly RevisionScores may be associated with one WikiLink via
     ForeignKeys (on the RevisionScore table)
     """
-    url = models.CharField(max_length=500)
+    url = models.CharField(max_length=200)
+    language_code = models.CharField(max_length=10, blank=True, null=True)
+    title = models.CharField(max_length=200, blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        """overload save method"""
+        url = self.url.replace('.m.', '.')
+        url = url.replace('www.', '')
+        prefix_start = url.find('//') + 2
+        prefix_end = url.find('.wiki')
+        if prefix_end == -1:
+            code = 'en'
+        else:
+            code = url[prefix_start:prefix_end]
+        self.language_code = code
+        i = url.find(WIKI_PATTERN) + len(WIKI_PATTERN)
+        url_query_params = url.find('?')
+        if url_query_params != -1:
+            self.title = url[i:url_query_params]
+        else:
+            self.title = url[i:]
+        super(WikiLink, self).save(*args, **kwargs)
 
 
 class RevisionScore(models.Model):
@@ -98,7 +140,7 @@ class RevisionScore(models.Model):
     """
     timestamp = models.DateTimeField(default=timezone.now)
     wiki_link = models.ForeignKey(WikiLink)
-    rev_id = models.CharField(max_length=50, primary_key=True)
+    revid = models.CharField(max_length=50, primary_key=True)
     score = models.IntegerField(default=0)
 
 

@@ -26,6 +26,17 @@ def delete_old_errors():
     ErrorLog.objects.filter(msg__contains="not-null").delete()
     ErrorLog.objects.filter(msg="").delete()
 
+
+def reset_wiki_checking():
+    """Reset"""
+    print('Resetting the wiki_analysis_done falg to False')
+    SampledRedditThread.objects.filter(wiki_content_analyzed=True).update(
+        wiki_content_analyzed=False)
+    WikiLink.objects.all().delete()
+    RevisionScore.objects.all().delete()
+    PostSpecificWikiScores.objects.all().delete()
+
+
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dja.settings")
     import django
@@ -33,8 +44,12 @@ if __name__ == "__main__":
     from portal.models import (
         AnnotatedRedditPost, ErrorLog, ThreadLog, SampledRedditThread,
         SampledStackOverflowPost,
+        WikiLink, RevisionScore, PostSpecificWikiScores
     )
-    if len(sys.argv) > 1 and sys.argv[1] == 'delete':
-        delete_old_errors()
+    if len(sys.argv) > 1:
+        if sys.argv[1] == 'delete':
+            delete_old_errors()
+        elif sys.argv[1] == 'reset':
+            reset_wiki_checking()
     else:
         show_errors()
