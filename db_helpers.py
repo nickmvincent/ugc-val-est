@@ -36,13 +36,23 @@ def reset_wiki_checking():
     RevisionScore.objects.all().delete()
     PostSpecificWikiScores.objects.all().delete()
 
+def show_sample_threads():
+    """Show samples of reddit threads"""
+    samples = SampledRedditThread.objects.all()[:5]
+    for sample in samples.values():
+        print(sample)
+    
+    so_samples = SampledStackOverflowPost.objects.all()[:5]
+    for sample in so_samples.values():
+        print(sample)
+
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dja.settings")
     import django
     django.setup()
     from portal.models import (
-        AnnotatedRedditPost, ErrorLog, ThreadLog, SampledRedditThread,
+        ErrorLog, ThreadLog, SampledRedditThread,
         SampledStackOverflowPost,
         WikiLink, RevisionScore, PostSpecificWikiScores
     )
@@ -51,5 +61,7 @@ if __name__ == "__main__":
             delete_old_errors()
         elif sys.argv[1] == 'reset':
             reset_wiki_checking()
+        elif sys.argv[1] == 'show':
+            show_sample_threads()
     else:
         show_errors()

@@ -73,6 +73,8 @@ def check_posts(model, field):
             for url in urls:
                 dja_link, _ = WikiLink.objects.get_or_create(url=url)
                 post.wiki_links.add(dja_link)
+                post.has_wiki_link = True
+                post.num_wiki_links += 1
                 scores_by_offset = {}
                 dt = post.timestamp
                 for offset in ['day_prior', 'day_of', 'week_after']:

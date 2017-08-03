@@ -80,13 +80,19 @@ def main():
 
     def identify_link_distribution(qs):
         """Takes a qs a figure out which base urls the linsk go to"""
-        num_threads = len(qs)
+        num_threads = qs.count()
+        print('Identifying link distribution for {} threads'.format(num_threads))
         domain_to_count = defaultdict(int)
-        for thread in qs:
-            base = get_base(thread.url)
-            domain_to_count[base] += 1
-        sorted_domain_to_count = sorted(
-            domain_to_count.items(), key=operator.itemgetter(1), reverse=True)
+        batch_index = 0
+        batch_size = 10000
+        while batch_index < num_threads:
+            batch = qs[batch_index:batch_index+batch_size]
+            for thread in batch:
+                base = get_base(thread.url)
+                domain_to_count[base] += 1
+            sorted_domain_to_count = sorted(
+                domain_to_count.items(), key=operator.itemgetter(1), reverse=True)
+            batch_index += batch_size
         for i, domain_tup in enumerate(sorted_domain_to_count[:30]):
             domain = domain_tup[0]
             count = domain_to_count[domain]

@@ -19,6 +19,7 @@ class Post(models.Model):
     num_comments = models.IntegerField(default=0)
     is_root = models.BooleanField(default=False)
     context = models.CharField(max_length=50, null=True, blank=True)
+    author = models.CharField(max_length=50)
     timestamp = models.DateTimeField()
 
     wiki_links = models.ManyToManyField('WikiLink')
@@ -39,16 +40,10 @@ class Post(models.Model):
         """Returns a number corresponding to the day of posting"""
         return self.timestamp.hour
 
-    def save(self, *args, **kwargs):
-        """overload save method"""
-        wiki_links = self.wiki_links.all()
-        num_wiki_links = wiki_links.count()
-        self.num_wiki_links = num_wiki_links
-        self.has_wiki_link = num_wiki_links > 0
-        super(Post, self).save(*args, **kwargs)
-        
+
 class RedditPost(Post):
     """A reddit specific post"""
+    user_info_processed = models.BooleanField(default=False)
     user_comment_karma = models.IntegerField(default=0)
     user_link_karma = models.IntegerField(default=0)
     user_created_utc = models.DateTimeField(null=True, blank=True)
@@ -68,6 +63,7 @@ class RedditPost(Post):
 class SampledRedditThread(RedditPost):
     """A sampled reddit THREAD using SQL Rand() function"""
     url = models.CharField(max_length=2083)
+    title = models.CharField(max_length=500)
 
 
 class SampledStackOverflowPost(Post):
@@ -76,6 +72,7 @@ class SampledStackOverflowPost(Post):
     """
     user_reputation = models.IntegerField(default=0)
     user_created_utc = models.DateTimeField(null=True, blank=True)
+    num_pageviews = models.IntegerField(default=0)
 
 
 class PostSpecificWikiScores(models.Model):
