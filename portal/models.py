@@ -32,6 +32,10 @@ class Post(models.Model):
     class Meta:
         abstract = True
 
+    def day_of_week(self):
+        """Returns a number corresponding to the day of posting"""
+        return self.timestamp.weekday()
+
     def day(self):
         """Returns a number corresponding to the day of posting"""
         return self.timestamp.day
@@ -64,6 +68,10 @@ class SampledRedditThread(RedditPost):
     """A sampled reddit THREAD using SQL Rand() function"""
     url = models.CharField(max_length=2083)
     title = models.CharField(max_length=500)
+    
+    def title_length(self):
+        """Returns the length of the title in the title field"""
+        return len(self.title)
 
 
 class SampledStackOverflowPost(Post):
@@ -97,9 +105,9 @@ class WikiLink(models.Model):
     Infinitely mainly RevisionScores may be associated with one WikiLink via
     ForeignKeys (on the RevisionScore table)
     """
-    url = models.CharField(max_length=200)
+    url = models.CharField(max_length=300)
     language_code = models.CharField(max_length=10, blank=True, null=True)
-    title = models.CharField(max_length=200, blank=True, null=True)
+    title = models.CharField(max_length=300, blank=True, null=True)
 
     def save(self, *args, **kwargs):
         """overload save method"""

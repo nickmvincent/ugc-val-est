@@ -276,4 +276,5 @@ if __name__ == "__main__":
         SampledStackOverflowPost,
     )
     print('Ready to begin "populate_db" script')
-    sample_reddit(ROWS_PER_QUERY)
+    # sample_reddit(ROWS_PER_QUERY)
+    sample_so(ROWS_PER_QUERY)

@@ -24,6 +24,11 @@ class ContextNotSupported(Exception):
     """Used to catch MissingRevision Media Wiki"""
     pass
 
+class BrokenLinkError(Exception):
+    """Used to catch Broken Links"""
+    pass
+
+
 def generate_revid_endpoint(prefix, title, wiki_timestamp):
     """
     Returns an endpoint that will give us a revid in json format
@@ -71,7 +76,13 @@ def check_posts(model, field):
             urls = [post.url]
         try:
             for url in urls:
-                dja_link, _ = WikiLink.objects.get_or_create(url=url)
+                try:
+                    dja_link, _ = WikiLink.objects.get_or_create(url=url)
+                except:
+                    err_log, _ = ErrorLog.objects.get_or_create(uid=post.uid)
+                    err_log.msg = '#001: BrokenLinkError'
+                    err_log.save()
+                    raise BrokenLinkError
                 post.wiki_links.add(dja_link)
                 post.has_wiki_link = True
                 post.num_wiki_links += 1
@@ -101,28 +112,31 @@ def check_posts(model, field):
                                 for _, val in pages.items():
                                     rev_obj = val['revisions'][0]
                             except KeyError as err:
-                                print(err)
-                                print(post.uid, endpoint)
-                                input()
+                                err_log, _ = ErrorLog.objects.get_or_create(uid=post.uid)
+                                err_log.msg = '#002: MissingRevisionId: {}'.format(alt_endpoint)
+                                err_log.save()
                                 raise MissingRevisionId
                         revid = rev_obj['revid']
                         rev_timestamp = rev_obj['timestamp']
-                    ores_context = dja_link.language_code + 'wiki'
-                    ores_ep = ores_ep_template.format(**{
-                        'context': ores_context,
-                        'revid': revid
-                    })
-                    ores_resp = requests.get(ores_ep).json()
                     try:
-                        scores = ores_resp['scores'][ores_context]['wp10']['scores']
-                    except KeyError:
-                        raise ContextNotSupported
-                    predicted_code = scores[str(revid)]['prediction']
-                    score_as_int = map_ores_code_to_int(predicted_code)
-                    dja_score, _ = RevisionScore.objects.get_or_create(
-                        revid=revid, timestamp=rev_timestamp,
-                        score=score_as_int, wiki_link=dja_link
-                    )
+                        dja_score = RevisionScore.objects.get(revid=revid)
+                    except RevisionScore.DoesNotExist:
+                        ores_context = dja_link.language_code + 'wiki'
+                        ores_ep = ores_ep_template.format(**{
+                            'context': ores_context,
+                            'revid': revid
+                        })
+                        ores_resp = requests.get(ores_ep).json()
+                        try:
+                            scores = ores_resp['scores'][ores_context]['wp10']['scores']
+                        except KeyError:
+                            raise ContextNotSupported
+                        predicted_code = scores[str(revid)]['prediction']
+                        score_as_int = map_ores_code_to_int(predicted_code)
+                        dja_score = RevisionScore.objects.create(
+                            revid=revid, timestamp=rev_timestamp,
+                            score=score_as_int, wiki_link=dja_link
+                        )
                     scores_by_offset[offset] = dja_score
                 dja_post_specific_link = PostSpecificWikiScores.objects.create(
                     **scores_by_offset)
@@ -133,6 +147,8 @@ def check_posts(model, field):
             continue
         except ContextNotSupported:
             continue
+        except BrokenLinkError:
+            continue
 
 
 if __name__ == "__main__":
@@ -141,7 +157,7 @@ if __name__ == "__main__":
     django.setup()
     from portal.models import (
         SampledRedditThread, SampledStackOverflowPost,
-        PostSpecificWikiScores, WikiLink, RevisionScore
+        PostSpecificWikiScores, WikiLink, RevisionScore, ErrorLog
     )
     os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "C:\\Users\\nickm\\Desktop\\research\\wikipedia_and_stack_overflow\\client_secrets.json"
     print('Django settings initialized, running "check_sampled_threads"')
