@@ -131,7 +131,11 @@ def check_posts(model, field):
                             scores = ores_resp['scores'][ores_context]['wp10']['scores']
                         except KeyError:
                             raise ContextNotSupported
-                        predicted_code = scores[str(revid)]['prediction']
+                        try:
+                            predicted_code = scores[str(revid)]['prediction']
+                        except KeyError:
+                            print(scores)
+                            return
                         score_as_int = map_ores_code_to_int(predicted_code)
                         dja_score = RevisionScore.objects.create(
                             revid=revid, timestamp=rev_timestamp,

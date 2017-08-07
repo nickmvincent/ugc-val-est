@@ -27,14 +27,12 @@ def delete_old_errors():
     ErrorLog.objects.filter(msg="").delete()
 
 
-def reset_wiki_checking():
+def custom_reset():
     """Reset"""
-    print('Resetting the wiki_analysis_done falg to False')
-    SampledRedditThread.objects.filter(wiki_content_analyzed=True).update(
-        wiki_content_analyzed=False)
-    WikiLink.objects.all().delete()
-    RevisionScore.objects.all().delete()
-    PostSpecificWikiScores.objects.all().delete()
+    print('Performing custom reset, check the code...')
+    input()
+    SampledStackOverflowPost.objects.all().delete()
+
 
 def show_sample_threads():
     """Show samples of reddit threads"""
@@ -60,7 +58,7 @@ if __name__ == "__main__":
         if sys.argv[1] == 'delete':
             delete_old_errors()
         elif sys.argv[1] == 'reset':
-            reset_wiki_checking()
+            custom_reset()
         elif sys.argv[1] == 'show':
             show_sample_threads()
     else:

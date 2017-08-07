@@ -14,11 +14,11 @@ class Post(models.Model):
         Reddit - root=thread and comment=comment
     """
     uid = models.CharField(max_length=100, primary_key=True)
-    body = models.CharField(max_length=10000)
+    body = models.CharField(max_length=30000)
     score = models.IntegerField()
     num_comments = models.IntegerField(default=0)
     is_root = models.BooleanField(default=False)
-    context = models.CharField(max_length=50, null=True, blank=True)
+    context = models.CharField(max_length=115, null=True, blank=True)
     author = models.CharField(max_length=50)
     timestamp = models.DateTimeField()
 
@@ -81,6 +81,7 @@ class SampledStackOverflowPost(Post):
     user_reputation = models.IntegerField(default=0)
     user_created_utc = models.DateTimeField(null=True, blank=True)
     num_pageviews = models.IntegerField(default=0)
+    tags_string = models.CharField(max_length=115, blank=True, null=True)
 
 
 class PostSpecificWikiScores(models.Model):
@@ -161,3 +162,55 @@ class ThreadLog(models.Model):
     """
     uid = models.CharField(max_length=100, primary_key=True)
     complete = models.BooleanField(default=False)
+
+
+class StackOverflowQuestion(models.Model):
+    """
+    Each row corresponds to a StackOverflow question.
+    Matches BigQuery almost exactly.
+    """
+    id = models.IntegerField(primary_key=True)
+    title = models.CharField(max_length=192)
+    body = models.CharField(max_length=58431)
+    accepted_answer_id = models.IntegerField()
+    answer_count = models.IntegerField()
+    comment_count = models.IntegerField()
+    community_owned_date = models.DateTimeField()
+    creation_date = models.DateTimeField()
+    favorite_count = models.IntegerField()
+    last_activity_date = models.DateTimeField()
+    last_edit_date = models.DateTimeField()
+    last_editor_display_name = models.CharField(max_length=30)
+    last_editor_user_id = models.IntegerField()
+    owner_display_name = models.CharField(max_length=30)
+    owner_user_id = models.IntegerField()
+    post_type_id = models.IntegerField()
+    score = models.IntegerField()
+    tags = models.CharField(max_length=115)
+    view_count = models.IntegerField()
+
+
+class StackOverflowAnswer(models.Model):
+    """
+    Each row corresponds to a StackOverflow answers.
+    Matches BigQuery almost exactly.
+    """
+    id = models.IntegerField(primary_key=True)
+    title = models.CharField(max_length=192)
+    body = models.CharField(max_length=58431)
+    accepted_answer_id = models.IntegerField()
+    answer_count = models.IntegerField()
+    comment_count = models.IntegerField()
+    community_owned_date = models.DateTimeField()
+    creation_date = models.DateTimeField()
+    favorite_count = models.IntegerField()
+    last_activity_date = models.DateTimeField()
+    last_edit_date = models.DateTimeField()
+    last_editor_display_name = models.CharField(max_length=30)
+    last_editor_user_id = models.IntegerField()
+    owner_display_name = models.CharField(max_length=30)
+    owner_user_id = models.IntegerField()
+    post_type_id = models.IntegerField()
+    score = models.IntegerField()
+    tags = models.CharField(max_length=115)
+    view_count = models.IntegerField()
