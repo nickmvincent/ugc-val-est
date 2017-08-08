@@ -27,7 +27,7 @@ def values_list_to_records(rows, names):
 def train_and_test():
     """Train a linear regression model and test it!"""
     num_rows = 100000
-    qs = SampledRedditThread.objects.filter(has_wiki_link=True, day_of_avg_score__isnull=False)
+    qs = SampledRedditThread.objects.filter(has_wiki_link=True, day_of_avg_score__isnull=True)
     qs = qs.order_by('uid')
     # features = ['has_wiki_link', 'day', 'day_of_week', 'title_length', ]
     features = ['day_of_avg_score', ]

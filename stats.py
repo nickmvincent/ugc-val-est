@@ -69,7 +69,7 @@ def cles(lessers, greaters):
 
 
 
-def plot_bar(counter, title="", axis=None):
+def plot_bar(counter, title="", filename="tmp.png"):
     """"
     This function creates a bar plot from a counter.
 
@@ -79,9 +79,9 @@ def plot_bar(counter, title="", axis=None):
     :return: the axis wit the object in it
     """
 
-    if axis is None:
-        fig = plt.figure()
-        axis = fig.add_subplot(111)
+
+    fig = plt.figure()
+    axis = fig.add_subplot(111)
 
     if isinstance(counter, dict):
         frequencies = counter.values()
@@ -96,6 +96,8 @@ def plot_bar(counter, title="", axis=None):
     axis.set_yticklabels(list(names))
     axis.invert_yaxis()  # labels read top-to-bottom
     axis.set_xlabel('Frequency')
+    print('going to save fig...')
+    fig.savefig('png_files/' + filename.replace(".csv", ".png"))
 
     return axis
 
@@ -122,7 +124,7 @@ def frequency_distribution(qs, field, qs_name, extractor=None):
     title = 'Frequency Distribution of {} in subset "{}" ({} threads)'.format(
         field, qs_name, num_threads
     )
-    filename = "{}{}{}.csv".format(field, qs_name, num_threads)
+    filename = "{}_{}_{}.csv".format(field, qs_name, num_threads)
     print(title)
     val_to_count = defaultdict(int)
     qs = qs.order_by('uid')
@@ -143,7 +145,7 @@ def frequency_distribution(qs, field, qs_name, extractor=None):
         print(len(val_to_count.keys()))
     sorted_val_to_count = sorted(
         val_to_count.items(), key=operator.itemgetter(1), reverse=True)
-    plot_bar(sorted_val_to_count[:20], title)
+    plot_bar(sorted_val_to_count[:20], title, filename)
 
     rows = []
     for i, val_tup in enumerate(sorted_val_to_count[:25]):
@@ -151,7 +153,7 @@ def frequency_distribution(qs, field, qs_name, extractor=None):
         percent = count / num_threads * 100
         print(i, val_tup, percent)
         rows.append([i, val_tup, percent])
-    with open(filename, 'w', newline='') as outfile:
+    with open('csv_files/' + filename, 'w', newline='') as outfile:
         writer = csv.writer(outfile)
         writer.writerows(rows)
 
@@ -295,7 +297,7 @@ def output_stats(output_filename, descriptive_stats, inferential_stats):
 
     cols_captured = False
     rows = []
-    first_row = ['Variable/Subset', ]
+    first_row = ['', ]
     second_row = ['', ]
     for subset_name, variables in output.items():
         for variable, stat_categories in variables.items():
@@ -319,20 +321,40 @@ def output_stats(output_filename, descriptive_stats, inferential_stats):
                 cols_captured = True
             rows.append(row)
     rows = [first_row, second_row, ] + rows
-    print(len(rows))
-    for row in rows:
-        print(len(row))
-        print(row)
     arr = np.array(rows, dtype=object)
     arr = np.transpose(arr)
-    arr = np.round(arr, 3)
-    with open(output_filename, 'w', newline='') as outfile:
+    with open('csv_files/' + output_filename, 'w', newline='') as outfile:
         writer = csv.writer(outfile)
         writer.writerows(arr)
+    return output
+
+def make_ln_func(variable):
+    """Take an qs and computed the natural log of a variable"""
+    def safe_ln_queryset(qs):
+        """Takes the natural log of a queryset's values and handles zeros"""
+        vals = qs.values_list(variable, flat=True)
+        ret = np.log(vals)
+        ret[ret==-np.inf] = 0
+        return ret
+    return safe_ln_queryset
+
+
+def change_in_quality(qs):
+    ret = []
+    qs = qs.filter(has_wiki_link=True, week_after_avg_score__isnull=False)
+    for start, end, total, batch in batch_qs(qs):
+        for obj in batch:
+            ret.append(obj.week_after_avg_score - obj.day_of_avg_score)
+    return ret
 
 
 def main(platform='r', calculate_frequency=False):
     """Driver"""
+    csv_dir = 'csv_files'
+    png_dir = 'png_files'
+    for directory in [csv_dir, png_dir]:
+        if not os.path.exists(directory):
+            os.makedirs(directory)
     if platform == 'r':
         datasets = [{
             'qs': SampledRedditThread.objects.filter(context='todayilearned'),
@@ -345,6 +367,8 @@ def main(platform='r', calculate_frequency=False):
             'name': 'All',
         }]
         variables = ['score', 'num_comments', ]
+        variables = [make_ln_func('score'), make_ln_func('num_comments')]
+        # variables = [change_in_quality]
         filter_kwargs = {
             'url__contains': WIKI
         }
@@ -381,7 +405,7 @@ def main(platform='r', calculate_frequency=False):
             'qs': qs.exclude(**filter_kwargs)
         }
         groups = [has_wikilink_group, no_wikilink_group, {
-            'name': 'All',
+            'name': 'Both',
             'qs': qs,
         }]
 
@@ -389,17 +413,23 @@ def main(platform='r', calculate_frequency=False):
         inferential_stats[name] = {}
         for variable in variables:
             for group in groups:
-                group['vals'] = np.array(
-                    group['qs'].values_list(variable, flat=True))
+                if callable(variable):
+                    group['vals'] = variable(group['qs'])
+                else:
+                    group['vals'] = np.array(
+                        group['qs'].values_list(variable, flat=True))
                 if calculate_frequency:
                     if platform == 'r':
                         frequency_distribution(
                             group['qs'], 'context', name +'_' + group['name'])
-            inferential_stats[name][variable] = inferential_analysis(
-                has_wikilink_group['vals'], no_wikilink_group['vals'])
+            if has_wikilink_group['vals'] and no_wikilink_group['vals']:
+                inferential_stats[name][variable] = inferential_analysis(
+                    has_wikilink_group['vals'], no_wikilink_group['vals'])
+            groups = [group for group in groups if group['vals']]
             descriptive_stats[name][variable] = univariate_analysis(groups)
-    output_stats(output_filename, descriptive_stats, inferential_stats)
-    # print(index_to_key)
+    pprint(descriptive_stats)
+    output = output_stats(output_filename, descriptive_stats, inferential_stats)
+    print(output)
     plt.show()
 
 def parse():
