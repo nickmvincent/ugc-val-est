@@ -3,16 +3,17 @@ Helper functions related to the usage of URL
 """
 import re
 
-def normalize_url(url):
-    pass
 
-
-def extract_urls(base_url, text):
+def extract_urls(text, base_url=None):
     """
     Extract all urls matching base_url from `text`
     Returns a list of strings
     """
-    return [x for x in re.findall('<a href="?\'?([^"\'>]*)', text) if base_url in x]
+    if base_url is not None:
+        return [x for x in re.findall('<a href="?\'?([^"\'>]*)', text) if base_url in x]
+    else:
+        return [x for x in re.findall('<a href="?\'?([^"\'>]*)', text)]
+
 
 def test_extract_urls():
     """Test func"""
@@ -26,4 +27,4 @@ def test_extract_urls():
     """
 
     
-    print(extract_urls(w, test_so))
+    print(extract_urls(test_so, w))

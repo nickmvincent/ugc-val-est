@@ -71,7 +71,7 @@ def check_posts(model, field):
             post.save()
             continue
         if field == 'body':
-            urls = extract_urls(w, post.body)
+            urls = extract_urls(post.body, w)
         else:
             urls = [post.url]
         try:

@@ -1,36 +1,25 @@
+"""
+Performs statistical analysis on sampled data
+"""
+# pylint: disable=E0401
+
 import argparse
 import csv
 import operator
 import os
 from collections import defaultdict
 from pprint import pprint
+import time
 
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy import stats
 
+from url_helpers import extract_urls
+
 WIKI = 'wikipedia.org/wiki/'
 
 
-def merge_dicts(first, second):
-    """
-    Merge two nested dictionfirstriseconds
-    Both dicts must be of depth 2 and have the SAME keys on level 0
-    The point is the get a single output with union of keys on level 1
-    Args:
-        first - dict with depth 2
-        second - dict with depth 2
-    Returns:
-        ret - a dict with depth 2
-    """
-    ret = {}
-    for key in first.keys():
-        ret[key] = {}
-        for nested_key in first[key].keys():
-            ret[key][nested_key] = first[key][nested_key]
-        for nested_key in second[key].keys():
-            ret[key][nested_key] = second[key][nested_key]
-    return ret
 
 
 def batch_qs(qs, total=None, batch_size=1000):
@@ -58,7 +47,54 @@ def batch_qs(qs, total=None, batch_size=1000):
         yield (start, end, total, qs[start:end])
 
 
-def plot_bar(counter, title="", ax=None):
+def alt_cohen_d(x_arr, y_arr):
+    """
+    Takes two lists and returns cohen's d effect size calculatins
+    This version uses simple calculation for pooled_Std
+    """
+    delta = np.mean(x_arr) - np.mean(y_arr)
+    pooled_std = np.sqrt((np.std(x_arr, ddof=1) ** 2 +
+                   np.std(y_arr, ddof=1) ** 2) / 2.0)
+    return delta / pooled_std
+
+
+def cohen_d(x_arr, y_arr):
+    """
+    Takes two lists and returns cohen's d effect size calculation
+    This version uses more involved calculation for pooled_std
+    Uses the length of both arrays
+    """
+    delta = np.mean(x_arr) - np.mean(y_arr)
+    pooled_std = np.sqrt(
+        (
+            (len(x_arr) - 1) * np.std(x_arr, ddof=1) ** 2 +
+            (len(y_arr) - 1) * np.std(y_arr, ddof=1) ** 2
+        ) / (len(x_arr) + len(y_arr))
+    )
+    return delta / pooled_std
+
+def cles(lessers, greaters):
+    """
+    Common-Language Effect Size
+    Probability that a random draw from `greater` is in fact greater
+    than a random draw from `lesser`.
+    Args:
+      lesser, greater: Iterables of comparables.
+    """
+    numerator = 0
+    lessers, greaters = sorted(lessers), sorted(greaters)
+    lesser_index = 0
+    for i, greater in enumerate(greaters):
+        while lesser_index < len(lessers) and lessers[lesser_index] < greater:
+            lesser_index += 1
+        numerator += lesser_index  # the count less than the greater
+    # total combinations of 1 treatment and 1 control    
+    denominator = len(lessers) * len(greaters)
+    return float(numerator) / denominator
+
+
+
+def plot_bar(counter, title="", axis=None):
     """"
     This function creates a bar plot from a counter.
 
@@ -68,9 +104,9 @@ def plot_bar(counter, title="", ax=None):
     :return: the axis wit the object in it
     """
 
-    if ax is None:
+    if axis is None:
         fig = plt.figure()
-        ax = fig.add_subplot(111)
+        axis = fig.add_subplot(111)
 
     if isinstance(counter, dict):
         frequencies = counter.values()
@@ -79,14 +115,14 @@ def plot_bar(counter, title="", ax=None):
         frequencies = [x[1] for x in counter]
         names = [x[0] for x in counter]
     y_pos = np.arange(len(counter))
-    ax.barh(y_pos, frequencies, align='center')
-    ax.set_title(title)
-    ax.set_yticks(y_pos)
-    ax.set_yticklabels(list(names))
-    ax.invert_yaxis()  # labels read top-to-bottom
-    ax.set_xlabel('Frequency')
+    axis.barh(y_pos, frequencies, align='center')
+    axis.set_title(title)
+    axis.set_yticks(y_pos)
+    axis.set_yticklabels(list(names))
+    axis.invert_yaxis()  # labels read top-to-bottom
+    axis.set_xlabel('Frequency')
 
-    return ax
+    return axis
 
 
 TOP_TEN = [
@@ -111,25 +147,39 @@ def frequency_distribution(qs, field, qs_name, extractor=None):
     title = 'Frequency Distribution of {} in subset "{}" ({} threads)'.format(
         field, qs_name, num_threads
     )
+    filename = "{}{}{}.csv".format(field, qs_name, num_threads)
     print(title)
     val_to_count = defaultdict(int)
     qs = qs.order_by('uid')
 
-    for start, end, total, batch in batch_qs(qs, num_threads, 1000):
+    # start, end, total
+    start_time = time.time()
+    for start, end, total, batch in batch_qs(qs, num_threads, 10000):
+        stamp = time.time()
         for thread in batch:
-            val = getattr(thread, field)
+            vals = [getattr(thread, field)]
             if extractor is not None:
-                val = extractor(val)
-            val_to_count[val] += 1
-        sorted_val_to_count = sorted(
-            val_to_count.items(), key=operator.itemgetter(1), reverse=True)
+                vals = extractor(vals[0])
+            for val in vals:
+                val_to_count[val] += 1
+        print('Finished threads {} to {} of {}. Took {}'.format(
+            start, end, total, time.time() - stamp))
+        print('Running time: {}'.format(time.time() - start_time))
+        print(len(val_to_count.keys()))
+    sorted_val_to_count = sorted(
+        val_to_count.items(), key=operator.itemgetter(1), reverse=True)
     plot_bar(sorted_val_to_count[:20], title)
 
+    rows = []
     for i, val_tup in enumerate(sorted_val_to_count[:25]):
-        val = val_tup[0]
-        count = val_to_count[val]
+        count = val_to_count[val_tup[0]]
         percent = count / num_threads * 100
         print(i, val_tup, percent)
+        rows.append([i, val_tup, percent])
+    with open(filename +'.csv', 'w', newline='') as outfile:
+        writer = csv.writer(outfile)
+        writer.writerows(rows)
+
 
 
 def tags_frequency_distribution(qs):
@@ -140,23 +190,31 @@ def tags_frequency_distribution(qs):
     because each post can have as many tags as desired by users
     """
     num_threads = qs.count()
-    print('Identifying tagdistribution for {} threads'.format(num_threads))
+    title = 'Identifying tag distribution for {} threads'.format(num_threads)
+    print(title)
     tag_to_count = defaultdict(int)
     qs = qs.order_by('uid')
 
+    # start, end, total
     for start, end, total, batch in batch_qs(qs, num_threads, 1000):
+        print('Processing threads {} to {} of {}'.format(start, end, total))
         for thread in batch:
             tags = thread.tags_string.split('|')
             for tag in tags:
                 tag_to_count[tag] += 1
-        sorted_tag_to_count = sorted(
-            tag_to_count.items(), key=operator.itemgetter(1), reverse=True)
+    sorted_tag_to_count = sorted(
+        tag_to_count.items(), key=operator.itemgetter(1), reverse=True)
 
+    rows = []
     for i, val_tup in enumerate(sorted_tag_to_count[:25]):
         val = val_tup[0]
         count = tag_to_count[val]
         percent = count / num_threads * 100
         print(i, val_tup, percent)
+        rows.append([i, val_tup, percent])
+    with open(title, 'w', newline='') as outfile:
+        writer = csv.writer(outfile)
+        writer.writerows(rows)
 
 
 def get_central_tendency_breakdown(vals):
@@ -171,20 +229,50 @@ def get_central_tendency_breakdown(vals):
     }
 
 
-def univariate_analysis(vals, groups):
+def univariate_analysis(groups):
     """Mean, median, variance"""
     central_tendencies = {}
+    dispersion = {}
     for group in groups:
         central_tendencies[group['name']] = get_central_tendency_breakdown(
             group['vals'])
-    dispersion = {
-        'Peak to peak range': np.ptp(vals),
-        'Standard Deviation': np.std(vals),
-    }
+        dispersion[group['name']] = {
+            'range': np.ptp(group['vals']),
+            'standard deviation': np.std(group['vals']),
+        }
     return {
         'central_tendencies': central_tendencies,
         'dispersion': dispersion
     }
+
+
+def inferential_analysis(x_arr, y_arr):
+    """
+    Performs t-test, cohen's d calculation, and mean difference calculations
+    """
+    delta = abs(np.mean(x_arr) - np.mean(y_arr))
+    _, pval = stats.ttest_ind(
+        x_arr, y_arr, equal_var=False)  # _ = tstat
+    cles_score_flipped = cles(x_arr, y_arr)
+    cles_score = cles(y_arr, x_arr)
+    return {
+        'Hypothesis Testing': {
+            'Treatment vs Control': {
+                'Difference': delta,
+                'p-value': pval,
+                'cohen\'s d effect size': cohen_d(x_arr, y_arr),
+                'CLES': cles_score,
+                'CLES flipped (treatment=lesser)': cles_score_flipped,
+                'Wilcoxon rank-sum statistic': stats.ranksums(x_arr, y_arr),
+            }
+        }
+    }
+
+
+def get_links_from_body(body):
+    """Return link base from a body"""
+    return [get_base(url) for url in extract_urls(body)]
+
 
 
 def get_base(url):
@@ -213,43 +301,82 @@ def get_base(url):
     return base
 
 
+def output_stats(output_filename, descriptive_stats, inferential_stats):
+    """
+    Takes descriptive and inferential and prints and writes to a file
+    """
+    # join stats dicts together for convenience in printing output
+    output = {}
+    for subset_name in descriptive_stats:
+        output[subset_name] = {}
+        for variable in descriptive_stats[subset_name]:
+            output[subset_name][variable] = descriptive_stats[subset_name][variable].copy()
+            output[subset_name][variable].update(
+                inferential_stats[subset_name][variable])
+    pprint(output)
+
+    cols_captured = False
+    rows = []
+    first_row = ['Variable/Subset', ]
+    second_row = ['', ]
+    for subset_name, variables in output.items():
+        for variable, stat_categories in variables.items():
+            # one row per subset/variable combo
+            row_description = "{} in subset {}".format(variable, subset_name)
+            row = []
+            row.append(row_description)
+            for stat_category, subgroups in stat_categories.items():
+                first_row_segment = []
+                for subgroup, stat_names in subgroups.items():
+                    for stat_name, stat_value in stat_names.items():
+                        if not cols_captured:
+                            first_row_segment.append('')
+                            second_row.append(
+                                '{}, {}'.format(subgroup, stat_name))
+                        row.append(stat_value)
+                if not cols_captured:
+                    first_row_segment[0] = stat_category
+                    first_row += first_row_segment
+            if not cols_captured:
+                cols_captured = True
+            rows.append(row)
+    with open(output_filename, 'w', newline='') as outfile:
+        writer = csv.writer(outfile)
+        writer.writerows([first_row, second_row, ] + rows)
+
+
 def main(platform='r', calculate_frequency=False):
     """Driver"""
-    # subreddits = list(SampledRedditThread.objects.filter(url__contains='wikipedia.org/wiki/').values_list('context', flat=True))
-    # subreddit_counts = Counter(subreddits)
-    # plot_bar_from_counter(subreddit_counts, label=False)
-    # key_list = list(subreddit_counts.keys())
-    # index_to_key = {i: key for i, key in enumerate(key_list)}
     if platform == 'r':
         datasets = [{
             'qs': SampledRedditThread.objects.filter(context='todayilearned'),
             'name': 'TIL'
-        },
-            {
-                'qs': SampledRedditThread.objects.filter(context__in=TOP_TEN),
-                'name': 'TOP TEN'
-        },
-            {
-                'qs': SampledRedditThread.objects.all(),
-                'name': 'ALL',
-        }
-        ]
-        variables = ['score', 'num_comments']
+        }, {
+            'qs': SampledRedditThread.objects.filter(context__in=TOP_TEN),
+            'name': 'TOP TEN'
+        }, {
+            'qs': SampledRedditThread.objects.all(),
+            'name': 'ALL',
+        }]
+        variables = ['score', 'num_comments', ]
         filter_kwargs = {
             'url__contains': WIKI
         }
-        output_fn = "reddit_stats.csv"
-    else:
+        extractor = get_base
+        extract_from = 'url'
+        output_filename = "reddit_stats.csv"
+    elif platform == 's':
         datasets = [{
             'qs': SampledStackOverflowPost.objects.all(),
             'name': 'All SO'
-        },
-        ]
-        variables = ['score', ]
+        }]
+        variables = ['score', 'num_comments', 'num_pageviews', ]
+        extractor = get_links_from_body
+        extract_from = 'body'
         filter_kwargs = {
             'body__contains': WIKI
         }
-        output_fn = "stack_overflow_stats.csv"
+        output_filename = "stack_overflow_stats.csv"
     descriptive_stats = {}
     inferential_stats = {}
     for dataset in datasets:
@@ -257,13 +384,13 @@ def main(platform='r', calculate_frequency=False):
         qs = dataset['qs']
         if calculate_frequency:
             frequency_distribution(
-                qs, 'url', name, get_base)
+                qs, extract_from, name, extractor)
         has_wikilink_group = {
-            'name': 'Has Wikipedia Link',
+            'name': 'Treatment',
             'qs': qs.filter(**filter_kwargs)
         }
         no_wikilink_group = {
-            'name': 'No Wikipedia Link',
+            'name': 'Control',
             'qs': qs.exclude(**filter_kwargs)
         }
         groups = [has_wikilink_group, no_wikilink_group, {
@@ -280,40 +407,18 @@ def main(platform='r', calculate_frequency=False):
                 if calculate_frequency:
                     if platform == 'r':
                         frequency_distribution(
-                            group['qs'], 'context', name)
-                    else:
-                        # tags_frequency_distribution(group['qs'])
-                        pass
-            tmp = inferential_stats[name][variable] = {}
-            tmp['t'], tmp['p'] = stats.ttest_ind(
+                            group['qs'], 'context', name, extractor)
+            inferential_stats[name][variable] = inferential_analysis(
                 has_wikilink_group['vals'], no_wikilink_group['vals'])
-            vals = dataset['qs'].values_list(variable, flat=True)
-            descriptive_stats[name][variable] = univariate_analysis(
-                vals, groups)
-    pprint(inferential_stats)
-    pprint(descriptive_stats)
-    # join stats dicts together for convenience in printing output
-
-    output = merge_dicts(descriptive_stats, inferential_stats)
-    pprint(output)
-
-    rows = []
-    for key0, val0 in output.items():
-        for key1, val1 in val0.items():
-            rows.append([key1, val1])
-    with open(output_fn, 'w') as f:
-        writer = csv.writer(f)
-        writer.writerows(rows)
-
+            descriptive_stats[name][variable] = univariate_analysis(groups)
+    output_stats(output_filename, descriptive_stats, inferential_stats)
     # print(index_to_key)
     plt.show()
 
-
-if __name__ == "__main__":
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dja.settings")
-    import django
-    django.setup()
-    from portal.models import SampledRedditThread, SampledStackOverflowPost
+def parse():
+    """
+    Parse args and do the appropriate analysis
+    """
     parser = argparse.ArgumentParser(
         description='Calculates statistics of sampled data')
     parser.add_argument(
@@ -334,3 +439,11 @@ if __name__ == "__main__":
             SampledStackOverflowPost.objects.filter(body__contains=WIKI))
     else:
         main(args.platform, args.frequency)
+
+
+if __name__ == "__main__":
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dja.settings")
+    import django
+    django.setup()
+    from portal.models import SampledRedditThread, SampledStackOverflowPost
+    parse()

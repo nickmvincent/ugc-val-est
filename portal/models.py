@@ -44,6 +44,10 @@ class Post(models.Model):
         """Returns a number corresponding to the day of posting"""
         return self.timestamp.hour
 
+    def comments_per_vote(self):
+        """Returns the number of comments per voting point"""
+        return self.num_comments / self.score
+
 
 class RedditPost(Post):
     """A reddit specific post"""

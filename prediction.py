@@ -28,7 +28,8 @@ def train_and_test():
     """Train a linear regression model and test it!"""
     num_rows = 100000
     qs = SampledRedditThread.objects.all().order_by('uid')[:num_rows]
-    features = ['has_wiki_link', 'day', 'day_of_week', 'title_length', ]
+    # features = ['has_wiki_link', 'day', 'day_of_week', 'title_length', ]
+    features = ['has_wiki_link']
     outcome = ['score']
     field_names = features + outcome
 
