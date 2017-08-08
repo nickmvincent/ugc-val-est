@@ -27,6 +27,10 @@ class Post(models.Model):
     num_wiki_links = models.IntegerField(default=0)
 
     post_specific_wiki_links = models.ManyToManyField('PostSpecificWikiScores')
+    day_prior_avg_score = models.IntegerField(blank=True, null=True)
+    day_of_avg_score = models.IntegerField(blank=True, null=True)
+    week_after_avg_score = models.IntegerField(blank=True, null=True)
+    
     wiki_content_analyzed = models.BooleanField(default=False)
 
     class Meta:

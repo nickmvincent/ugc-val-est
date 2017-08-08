@@ -15,36 +15,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy import stats
 
-from url_helpers import extract_urls
 
+from url_helpers import extract_urls
+from queryset_helpers import batch_qs
 WIKI = 'wikipedia.org/wiki/'
 
-
-
-
-def batch_qs(qs, total=None, batch_size=1000):
-    """
-    Returns a (start, end, total, queryset) tuple for each batch in the given
-    queryset.
-
-    The purpose of the `total` parameter is to save memory/query time
-    if the length of the queryset has already been determined in
-    the parent code.
-
-    Usage:
-        # Make sure to order your querset
-        article_qs = Article.objects.order_by('id')
-        total = article_qs.count()
-        for start, end, total, qs in batch_qs(article_qs, total, 1500):
-            print "Now processing %s - %s of %s" % (start + 1, end, total)
-            for article in qs:
-                print article.body
-    """
-    if total is None:
-        total = qs.count()
-    for start in range(0, total, batch_size):
-        end = min(start + batch_size, total)
-        yield (start, end, total, qs[start:end])
 
 
 def alt_cohen_d(x_arr, y_arr):
@@ -176,7 +151,7 @@ def frequency_distribution(qs, field, qs_name, extractor=None):
         percent = count / num_threads * 100
         print(i, val_tup, percent)
         rows.append([i, val_tup, percent])
-    with open(filename +'.csv', 'w', newline='') as outfile:
+    with open(filename, 'w', newline='') as outfile:
         writer = csv.writer(outfile)
         writer.writerows(rows)
 
@@ -274,6 +249,10 @@ def get_links_from_body(body):
     return [get_base(url) for url in extract_urls(body)]
 
 
+def get_links_from_url(url):
+    """Returns link bases from a url"""
+    return [get_base(url)]
+
 
 def get_base(url):
     """Return the base of a given url"""
@@ -313,7 +292,6 @@ def output_stats(output_filename, descriptive_stats, inferential_stats):
             output[subset_name][variable] = descriptive_stats[subset_name][variable].copy()
             output[subset_name][variable].update(
                 inferential_stats[subset_name][variable])
-    pprint(output)
 
     cols_captured = False
     rows = []
@@ -340,9 +318,17 @@ def output_stats(output_filename, descriptive_stats, inferential_stats):
             if not cols_captured:
                 cols_captured = True
             rows.append(row)
+    rows = [first_row, second_row, ] + rows
+    print(len(rows))
+    for row in rows:
+        print(len(row))
+        print(row)
+    arr = np.array(rows, dtype=object)
+    arr = np.transpose(arr)
+    arr = np.round(arr, 3)
     with open(output_filename, 'w', newline='') as outfile:
         writer = csv.writer(outfile)
-        writer.writerows([first_row, second_row, ] + rows)
+        writer.writerows(arr)
 
 
 def main(platform='r', calculate_frequency=False):
@@ -353,16 +339,16 @@ def main(platform='r', calculate_frequency=False):
             'name': 'TIL'
         }, {
             'qs': SampledRedditThread.objects.filter(context__in=TOP_TEN),
-            'name': 'TOP TEN'
+            'name': 'Top_Ten'
         }, {
             'qs': SampledRedditThread.objects.all(),
-            'name': 'ALL',
+            'name': 'All',
         }]
         variables = ['score', 'num_comments', ]
         filter_kwargs = {
             'url__contains': WIKI
         }
-        extractor = get_base
+        extractor = get_links_from_url
         extract_from = 'url'
         output_filename = "reddit_stats.csv"
     elif platform == 's':
@@ -383,6 +369,7 @@ def main(platform='r', calculate_frequency=False):
         name = dataset['name']
         qs = dataset['qs']
         if calculate_frequency:
+            # extracts LINK BASES from URL
             frequency_distribution(
                 qs, extract_from, name, extractor)
         has_wikilink_group = {
@@ -407,7 +394,7 @@ def main(platform='r', calculate_frequency=False):
                 if calculate_frequency:
                     if platform == 'r':
                         frequency_distribution(
-                            group['qs'], 'context', name, extractor)
+                            group['qs'], 'context', name +'_' + group['name'])
             inferential_stats[name][variable] = inferential_analysis(
                 has_wikilink_group['vals'], no_wikilink_group['vals'])
             descriptive_stats[name][variable] = univariate_analysis(groups)

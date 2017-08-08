@@ -6,19 +6,7 @@ import sys
 from pprint import pprint
 
 
-def show_errors():
-    """Show error messages"""
-    logs = ErrorLog.objects.all()
-    print('There are {} total errors logged'.format(len(logs)))
-    message_cache = {}
-    for error_log in logs:
-        msg = error_log.msg
-        if msg not in message_cache:
-            print(msg)
-            message_cache[msg] = 0
-        else:
-            message_cache[msg] += 1
-    pprint(message_cache)
+
 
 
 def delete_old_errors():
@@ -45,6 +33,28 @@ def show_sample_threads():
         print(sample)
 
 
+def calc_avg_scores():
+    """
+    Calculates average wiki scores at various time intervals
+    """
+    fields = ['day_prior',  'day_of', 'week_after', ]
+    qs = SampledRedditThread.objects.filter(has_wiki_link=True)
+    print(qs.count())
+    for start, end, total, batch in batch_qs(qs):
+        print(start, end, total)
+        for thread in batch:
+            n = 0
+            field_to_score = {field: 0 for field in fields}
+            for link_obj in thread.post_specific_wiki_links.all():
+                for field in fields:
+                    field_to_score[field] += getattr(link_obj, field).score
+                n += 1
+            output_field_to_val = {field + '_avg_score': val / n for field, val in field_to_score.items()}
+            for output_field, val in output_field_to_val.items():
+                setattr(thread, output_field, val)
+            thread.save()
+
+
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dja.settings")
     import django
@@ -54,6 +64,7 @@ if __name__ == "__main__":
         SampledStackOverflowPost,
         WikiLink, RevisionScore, PostSpecificWikiScores
     )
+    from queryset_helpers import batch_qs
     if len(sys.argv) > 1:
         if sys.argv[1] == 'delete':
             delete_old_errors()
@@ -61,5 +72,7 @@ if __name__ == "__main__":
             custom_reset()
         elif sys.argv[1] == 'show':
             show_sample_threads()
+        elif sys.argv[1] == 'calc_avg_scores':
+            calc_avg_scores()
     else:
         show_errors()

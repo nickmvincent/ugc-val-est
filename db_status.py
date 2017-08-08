@@ -1,6 +1,6 @@
 """native imports"""
 import os
-
+from pprint import pprint
 
 
 def explore_queryset():
@@ -12,6 +12,20 @@ def explore_queryset():
         if 'imgur' in thread.url:
             print(thread.url)
 
+
+def show_errors():
+    """Show error messages"""
+    logs = ErrorLog.objects.all()
+    print('There are {} total errors logged'.format(len(logs)))
+    message_cache = {}
+    for error_log in logs:
+        msg = error_log.msg
+        if msg not in message_cache:
+            print(msg)
+            message_cache[msg] = 0
+        else:
+            message_cache[msg] += 1
+    pprint(message_cache)
 
 
 def main():
@@ -33,6 +47,7 @@ def main():
         SampledStackOverflowPost.objects.all().count(),
     )
     print(report_body)
+    show_errors()
     explore_queryset()
     # send_mail(
     #     'DB Status Report',

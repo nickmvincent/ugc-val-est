@@ -27,9 +27,10 @@ def values_list_to_records(rows, names):
 def train_and_test():
     """Train a linear regression model and test it!"""
     num_rows = 100000
-    qs = SampledRedditThread.objects.all().order_by('uid')[:num_rows]
+    qs = SampledRedditThread.objects.filter(has_wiki_link=True, day_of_avg_score__isnull=False)
+    qs = qs.order_by('uid')
     # features = ['has_wiki_link', 'day', 'day_of_week', 'title_length', ]
-    features = ['has_wiki_link']
+    features = ['day_of_avg_score', ]
     outcome = ['score']
     field_names = features + outcome
 
@@ -49,6 +50,7 @@ def train_and_test():
         arr.append(getattr(records, feature))
     X = np.array(arr)
     X = np.transpose(X)
+    print(X)
     Y = records.score
     # Split the data into training/testing sets
     test_percent = 50
@@ -78,6 +80,7 @@ def train_and_test():
 
     # Plot outputs
     col = X_test[:, 0]
+    col = X_test
     plt.scatter(col, y_test, color='black')
     plt.plot(col, y_test_hat, color='blue',
             linewidth=3)

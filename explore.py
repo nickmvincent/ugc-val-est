@@ -197,6 +197,7 @@ def print_query_output(client, queries):
                 casted_row = [str(x) for x in row]
                 line = ','.join(casted_row) + '\n'
                 outfile.write(line)
+                
 
 
 # def test_fingerprint():
