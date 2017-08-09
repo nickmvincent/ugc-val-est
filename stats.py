@@ -207,13 +207,22 @@ def get_central_tendency_breakdown(vals):
 
 def univariate_analysis(groups):
     """Mean, median, variance"""
+    groups_to_analyze = []
     basic = {}
     central_tendencies = {}
     dispersion = {}
+    all_vals = np.array([])
     for group in groups:
+        all_vals = np.concatenate((all_vals, group['vals']), axis=0)
+        groups_to_analyze.append(group)
+    groups_to_analyze.append({
+        'name': 'All groups',
+        'vals': all_vals
+    })
+    for group in groups_to_analyze:
         basic[group['name']] = {
-            'number of posts': len(group['vals']),
-            'percent of subset': len(group['vals'] / )
+            'num_items': len(group['vals']),
+            'sum': sum(group['vals']),
         }
         central_tendencies[group['name']] = get_central_tendency_breakdown(
             group['vals'])
@@ -221,7 +230,11 @@ def univariate_analysis(groups):
             'range': np.ptp(group['vals']),
             'standard deviation': np.std(group['vals']),
         }
+    for group in groups_to_analyze:
+        basic[group['name']]['percent_of_total_items'] = basic[group['name']]['num_items'] / len(all_vals) * 100
+        basic[group['name']]['percent_of_total_sum'] = basic[group['name']]['sum'] / sum(all_vals) * 100
     return {
+        'basic': basic,
         'central_tendencies': central_tendencies,
         'dispersion': dispersion
     }
@@ -407,16 +420,13 @@ def main(platform='r', calculate_frequency=False):
             'name': 'Control',
             'qs': qs.exclude(**filter_kwargs)
         }
-        both = {
-            'name': 'Both',
-            'qs': qs,
-        }
-        groups = [has_wikilink_group, no_wikilink_group, both]
+        groups = [has_wikilink_group, no_wikilink_group]
 
         descriptive_stats[name] = {}
         inferential_stats[name] = {}
         for variable in variables:
             for group in groups:
+                print(group)
                 if callable(variable):
                     group['vals'] = variable(group['qs'])
                 else:
