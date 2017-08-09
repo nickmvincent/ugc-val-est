@@ -207,9 +207,14 @@ def get_central_tendency_breakdown(vals):
 
 def univariate_analysis(groups):
     """Mean, median, variance"""
+    basic = {}
     central_tendencies = {}
     dispersion = {}
     for group in groups:
+        basic[group['name']] = {
+            'number of posts': len(group['vals']),
+            'percent of subset': len(group['vals'] / )
+        }
         central_tendencies[group['name']] = get_central_tendency_breakdown(
             group['vals'])
         dispersion[group['name']] = {
@@ -301,7 +306,7 @@ def output_stats(output_filename, descriptive_stats, inferential_stats):
     for subset_name, variables in output.items():
         for variable, stat_categories in variables.items():
             # one row per subset/variable combo
-            row_description = "{} in subset {}".format(variable, subset_name)
+            row_description = "Variable `{}` in subset `{}`".format(variable, subset_name)
             row = []
             row.append(row_description)
             for stat_category, subgroups in stat_categories.items():
@@ -366,8 +371,7 @@ def main(platform='r', calculate_frequency=False):
             'name': 'All',
         }]
         variables = ['score', 'num_comments', ]
-        variables = [make_ln_func('score'), make_ln_func('num_comments')]
-        # variables = [change_in_quality]
+        # variables = [make_ln_func('score'), make_ln_func('num_comments')]
         filter_kwargs = {
             'url__contains': WIKI
         }
@@ -403,10 +407,11 @@ def main(platform='r', calculate_frequency=False):
             'name': 'Control',
             'qs': qs.exclude(**filter_kwargs)
         }
-        groups = [has_wikilink_group, no_wikilink_group, {
+        both = {
             'name': 'Both',
             'qs': qs,
-        }]
+        }
+        groups = [has_wikilink_group, no_wikilink_group, both]
 
         descriptive_stats[name] = {}
         inferential_stats[name] = {}
