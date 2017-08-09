@@ -63,10 +63,9 @@ def cles(lessers, greaters):
         while lesser_index < len(lessers) and lessers[lesser_index] < greater:
             lesser_index += 1
         numerator += lesser_index  # the count less than the greater
-    # total combinations of 1 treatment and 1 control    
+    # total combinations of 1 treatment and 1 control
     denominator = len(lessers) * len(greaters)
     return float(numerator) / denominator
-
 
 
 def plot_bar(counter, title="", filename="tmp.png"):
@@ -422,14 +421,29 @@ def main(platform='r', calculate_frequency=False):
                     if platform == 'r':
                         frequency_distribution(
                             group['qs'], 'context', name +'_' + group['name'])
-            if has_wikilink_group['vals'] and no_wikilink_group['vals']:
-                inferential_stats[name][variable] = inferential_analysis(
-                    has_wikilink_group['vals'], no_wikilink_group['vals'])
-            groups = [group for group in groups if group['vals']]
+            inferential_stats[name][variable] = inferential_analysis(
+                has_wikilink_group['vals'], no_wikilink_group['vals'])
+            # groups = [group for group in groups if group['vals']]
             descriptive_stats[name][variable] = univariate_analysis(groups)
     pprint(descriptive_stats)
     output = output_stats(output_filename, descriptive_stats, inferential_stats)
     print(output)
+    plt.show()
+
+
+def visualize(platform, ln=False):
+    """Visualize distribution"""
+    if platform == 's':
+        qs = SampledStackOverflowPost.objects.all()
+    if ln:
+        safe_ln = make_ln_func('user_reputation')
+        vals = safe_ln(qs)
+    else:
+        vals = qs.values_list('user_reputation', flat=True)
+    hist, bin_edges = np.histogram(vals, bins='auto')
+    print(hist)
+    print(bin_edges)
+    plt.plot(hist)
     plt.show()
 
 def parse():
@@ -448,12 +462,18 @@ def parse():
         '--tags',
         action='store_true',
         help='Only compute tags frequency dist')
+    parser.add_argument(
+        '--visualize',
+        action='store_true',
+        help='Performs some data visualization')
     args = parser.parse_args()
     if args.tags:
         tags_frequency_distribution(
             SampledStackOverflowPost.objects.all())
         tags_frequency_distribution(
             SampledStackOverflowPost.objects.filter(body__contains=WIKI))
+    elif args.visualize:
+        visualize(args.platform)
     else:
         main(args.platform, args.frequency)
 

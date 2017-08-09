@@ -91,6 +91,10 @@ class SampledStackOverflowPost(Post):
     num_pageviews = models.IntegerField(default=0)
     tags_string = models.CharField(max_length=115, blank=True, null=True)
 
+    def user_age_at_post_time(self):
+        """Gives the users age at the time of posting this post"""
+        delta = self.timestamp - self.user_created_utc
+        return delta.total_seconds()
 
 class PostSpecificWikiScores(models.Model):
     """

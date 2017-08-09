@@ -77,7 +77,7 @@ WSGI_APPLICATION = 'dja.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'ugc-val-est',
+        'NAME': os.environ['POSTGRES_DBNAME'],
         'USER': os.environ['POSTGRES_USERNAME'],
         'PASSWORD': os.environ['POSTGRES_PASSWORD'],
         'HOST': '127.0.0.1',
