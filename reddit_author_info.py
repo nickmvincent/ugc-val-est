@@ -10,7 +10,7 @@ def give_author_processor(reddit):
     This function uses closures to
     take a "reddit" object and returns a function that will process author information using the reddit object
     """
-    
+
     def author_processor(val):
         """Process author info"""
         ret = {}
@@ -45,7 +45,6 @@ def main():
         batch_start_time = time.time()
         print(start, end, total)
         for thread in batch:
-            print(thread.author)
             author_dict = processor(thread.author)
             for key, val in author_dict.items():
                 setattr(thread, key, val)

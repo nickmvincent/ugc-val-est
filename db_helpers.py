@@ -7,19 +7,27 @@ from pprint import pprint
 
 
 
-
-
 def delete_old_errors():
     """one off script"""
     ErrorLog.objects.filter(msg__contains="not-null").delete()
     ErrorLog.objects.filter(msg="").delete()
 
 
-def custom_reset():
+def reset_wiki_links():
     """Reset"""
-    print('Performing custom reset, check the code...')
-    input()
-    SampledStackOverflowPost.objects.all().delete()
+    for model in [SampledRedditThread, SampledStackOverflowPost]:
+        model.objects.filter(wiki_content_analyzed=True).update(
+            has_wiki_link=False,
+            num_wiki_links=0,
+            day_prior_avg_score=None,
+            day_of_avg_score=None,
+            week_after_avg_score=None,
+            wiki_content_analyzed=False,
+        )
+    RevisionScore.objects.all().delete()
+    PostSpecificWikiScores.objects.all().delete()
+    WikiLink.objects.all().delete()
+    ErrorLog.objects.all().delete()
 
 
 def show_sample_threads():
@@ -69,10 +77,8 @@ if __name__ == "__main__":
         if sys.argv[1] == 'delete':
             delete_old_errors()
         elif sys.argv[1] == 'reset':
-            custom_reset()
+            reset_wiki_links()
         elif sys.argv[1] == 'show':
             show_sample_threads()
         elif sys.argv[1] == 'calc_avg_scores':
             calc_avg_scores()
-    else:
-        show_errors()

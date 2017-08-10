@@ -32,6 +32,7 @@ class Post(models.Model):
     week_after_avg_score = models.IntegerField(blank=True, null=True)
 
     wiki_content_analyzed = models.BooleanField(default=False)
+    wiki_content_error = models.IntegerField(default=False)
 
     class Meta:
         abstract = True

@@ -15,19 +15,44 @@ from scoring_helpers import map_ores_code_to_int
 from url_helpers import extract_urls
 
 
+def handle_err(post, err_num):
+    post.wiki_content_error = err_num
+    post.save()
+
+
 class MissingRevisionId(Exception):
     """Used to catch MissingRevision Media Wiki"""
-    pass
+    def __init__(self, post, endpoint):
+        err_log, _ = ErrorLog.objects.get_or_create(uid=post.uid)
+        err_log.msg = '#2: MissingRevisionId: {}'.format(endpoint)[:500]
+        err_log.save()
+        handle_err(post, 2)
 
 
 class ContextNotSupported(Exception):
     """Used to catch MissingRevision Media Wiki"""
-    pass
+    def __init__(self, post, ores_context):
+        err_log, _ = ErrorLog.objects.get_or_create(uid=post.uid)
+        err_log.msg = '#3: ContextNotSupported: {}'.format(ores_context)[:500]
+        err_log.save()
+        handle_err(post, 3)
 
 class BrokenLinkError(Exception):
     """Used to catch Broken Links"""
-    pass
+    def __init__(self, post, url):
+        err_log, _ = ErrorLog.objects.get_or_create(uid=post.uid)
+        err_log.msg = '#1: BrokenLinkError: {}'.format(url)[:500]
+        err_log.save()
+        handle_err(post, 1)
 
+
+class MissingOresResponse(Exception):
+    """Used to catch missing ores response"""
+    def __init(self, post, url):
+        err_log, _ = ErrorLog.objects.get_or_create(uid=post.uid)
+        err_log.msg = '#4: MissingOresResponse: {}'.format(url)[:500]
+        err_log.save()
+        handle_err(post, 4)
 
 def generate_revid_endpoint(prefix, title, wiki_timestamp):
     """
@@ -65,11 +90,6 @@ def check_posts(model, field):
         raise ValueError('Invalid choice of field... try "url" or "body"')
     print('About to run through {} threads'.format(len(filtered)))
     for post in filtered:
-        if post.wiki_links.all().count() >= 1:
-            print('Skipping already processed one...')
-            post.wiki_content_analyzed = True
-            post.save()
-            continue
         if field == 'body':
             urls = extract_urls(post.body, w)
         else:
@@ -79,10 +99,7 @@ def check_posts(model, field):
                 try:
                     dja_link, _ = WikiLink.objects.get_or_create(url=url)
                 except:
-                    err_log, _ = ErrorLog.objects.get_or_create(uid=post.uid)
-                    err_log.msg = '#001: BrokenLinkError'
-                    err_log.save()
-                    raise BrokenLinkError
+                    raise BrokenLinkError(post, url)
                 post.wiki_links.add(dja_link)
                 post.has_wiki_link = True
                 post.num_wiki_links += 1
@@ -109,13 +126,10 @@ def check_posts(model, field):
                             resp = requests.get(alt_endpoint)
                             pages = resp.json()['query']['pages']
                             try:
-                                for _, val in pages.items():
-                                    rev_obj = val['revisions'][0]
+                                for _, altval in pages.items():
+                                    rev_obj = altval['revisions'][0]
                             except KeyError as err:
-                                err_log, _ = ErrorLog.objects.get_or_create(uid=post.uid)
-                                err_log.msg = '#002: MissingRevisionId: {}'.format(alt_endpoint)
-                                err_log.save()
-                                raise MissingRevisionId
+                                raise MissingRevisionId(post, alt_endpoint)
                         revid = rev_obj['revid']
                         rev_timestamp = rev_obj['timestamp']
                     try:
@@ -130,12 +144,11 @@ def check_posts(model, field):
                         try:
                             scores = ores_resp['scores'][ores_context]['wp10']['scores']
                         except KeyError:
-                            raise ContextNotSupported
+                            raise ContextNotSupported(post, ores_context)
                         try:
                             predicted_code = scores[str(revid)]['prediction']
                         except KeyError:
-                            print(scores)
-                            return
+                            raise MissingOresResponse(post, revid)
                         score_as_int = map_ores_code_to_int(predicted_code)
                         dja_score = RevisionScore.objects.create(
                             revid=revid, timestamp=rev_timestamp,
@@ -144,15 +157,12 @@ def check_posts(model, field):
                     scores_by_offset[offset] = dja_score
                 dja_post_specific_link = PostSpecificWikiScores.objects.create(
                     **scores_by_offset)
-            post.post_specific_wiki_links.add(dja_post_specific_link)
+                post.post_specific_wiki_links.add(dja_post_specific_link)
+        except (MissingRevisionId, ContextNotSupported, BrokenLinkError, MissingOresResponse):
+            continue
+        finally:
             post.wiki_content_analyzed = True
             post.save()
-        except MissingRevisionId:
-            continue
-        except ContextNotSupported:
-            continue
-        except BrokenLinkError:
-            continue
 
 
 if __name__ == "__main__":
@@ -164,7 +174,7 @@ if __name__ == "__main__":
         PostSpecificWikiScores, WikiLink, RevisionScore, ErrorLog
     )
     os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "C:\\Users\\nickm\\Desktop\\research\\wikipedia_and_stack_overflow\\client_secrets.json"
-    print('Django settings initialized, running "check_sampled_threads"')
+    print('Django settings initialized, running "check_posts"')
     if sys.argv[1] == 'r':
         check_posts(SampledRedditThread, 'url')
     elif sys.argv[1] == 's':
