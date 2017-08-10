@@ -34,38 +34,21 @@ class Post(models.Model):
     wiki_content_analyzed = models.BooleanField(default=False)
     wiki_content_error = models.IntegerField(default=False)
 
-    class Meta:
-        abstract = True
-
-    def day_of_week(self):
-        """Returns a number corresponding to the day of posting"""
-        return self.timestamp.weekday()
-
-    def day(self):
-        """Returns a number corresponding to the day of posting"""
-        return self.timestamp.day
-
-    def hour(self):
-        """Returns a number corresponding to the day of posting"""
-        return self.timestamp.hour
-
-    def comments_per_vote(self):
-        """Returns the number of comments per voting point"""
-        return self.num_comments / self.score
-
-
-class RedditPost(Post):
-    """A reddit specific post"""
-    user_info_processed = models.BooleanField(default=False)
-    user_comment_karma = models.IntegerField(default=0)
-    user_link_karma = models.IntegerField(default=0)
-    user_created_utc = models.DateTimeField(null=True, blank=True)
-    user_is_mod = models.BooleanField(default=False)
-    user_is_suspended = models.BooleanField(default=False)
-    user_is_deleted = models.BooleanField(default=False)
+    day_of_week = models.IntegerField(blank=True, null=True)
+    day_of_month = models.IntegerField(blank=True, null=True)
+    hour = models.IntegerField(blank=True, null=True)
 
     class Meta:
         abstract = True
+
+    def save(self, *args, **kwargs):
+        """overload save method"""
+        self.day_of_week = self.timestamp.weekday()
+        self.day_of_moth = self.timestamp.day
+        self.hour = self.timestamp.hour
+        super(Post, self).save(*args, **kwargs)
+
+
 
 
 # class AnnotatedRedditPost(RedditPost):
@@ -73,15 +56,24 @@ class RedditPost(Post):
 #     discourse_type = models.CharField(max_length=20)
 
 
-class SampledRedditThread(RedditPost):
+class SampledRedditThread(Post):
     """A sampled reddit THREAD using SQL Rand() function"""
+    user_info_processed = models.BooleanField(default=False)
+    user_comment_karma = models.IntegerField(default=0)
+    user_link_karma = models.IntegerField(default=0)
+    user_created_utc = models.DateTimeField(null=True, blank=True)
+    user_is_mod = models.BooleanField(default=False)
+    user_is_suspended = models.BooleanField(default=False)
+    user_is_deleted = models.BooleanField(default=False)
     url = models.CharField(max_length=2083)
     title = models.CharField(max_length=500)
+    title_length = models.IntegerField(default=0)
     
-    def title_length(self):
-        """Returns the length of the title in the title field"""
-        return len(self.title)
 
+    def save(self, *args, **kwargs):
+        """overload save method"""
+        self.title_length = len(self.title)
+        super(SampledRedditThread, self).save(*args, **kwargs)
 
 class SampledStackOverflowPost(Post):
     """

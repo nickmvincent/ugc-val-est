@@ -22,6 +22,15 @@ WIKI = 'wikipedia.org/wiki/'
 
 
 
+def percent_bias(x_arr, y_arr):
+    """Calculate the percent bias for two groups
+    Inputs should be numerical arrays corresponding to the two groups
+    """
+    delta = np.mean(x_arr) - np.mean(y_arr)
+    denom = np.sqrt((np.var(x_arr) + np.var(y_arr)) / 2.0)
+    return 100.0 * delta / denom
+
+
 def alt_cohen_d(x_arr, y_arr):
     """
     Takes two lists and returns cohen's d effect size calculatins
@@ -253,7 +262,8 @@ def inferential_analysis(x_arr, y_arr):
         'Hypothesis Testing': {
             'Treatment vs Control': {
                 'Difference': delta,
-                'p-value': pval,
+                'p_value': pval,
+                'percent_bias': percent_bias(x_arr, y_arr),
                 'cohen\'s d effect size': cohen_d(x_arr, y_arr),
                 'CLES': cles_score,
                 'CLES flipped (treatment=lesser)': cles_score_flipped,
@@ -261,6 +271,7 @@ def inferential_analysis(x_arr, y_arr):
             }
         }
     }
+
 
 
 def get_links_from_body(body):
@@ -339,7 +350,7 @@ def output_stats(output_filename, descriptive_stats, inferential_stats):
             rows.append(row)
     rows = [first_row, second_row, ] + rows
     arr = np.array(rows, dtype=object)
-    arr = np.transpose(arr)
+    # arr = np.transpose(arr)
     with open('csv_files/' + output_filename, 'w', newline='') as outfile:
         writer = csv.writer(outfile)
         writer.writerows(arr)
@@ -354,6 +365,18 @@ def make_ln_func(variable):
         ret[ret==-np.inf] = 0
         return ret
     return safe_ln_queryset
+
+
+def make_method_getter(method_name):
+    """todo"""
+    def get_method_outputs(qs):
+        vals = []
+        for start, end, total, batch in batch_qs(qs):
+            for item in batch:
+                vals.append(getattr(item, method_name)())
+        return vals
+
+    return get_method_outputs
 
 
 def change_in_quality(qs):
@@ -374,16 +397,17 @@ def main(platform='r', calculate_frequency=False):
             os.makedirs(directory)
     if platform == 'r':
         datasets = [{
-            'qs': SampledRedditThread.objects.filter(context='todayilearned'),
-            'name': 'TIL'
-        }, {
             'qs': SampledRedditThread.objects.filter(context__in=TOP_TEN),
             'name': 'Top_Ten'
         }, {
             'qs': SampledRedditThread.objects.all(),
             'name': 'All',
         }]
-        variables = ['score', 'num_comments', ]
+        variables = [
+            'score', 'num_comments',
+            make_method_getter('day_of_week'), make_method_getter('hour'), 
+        #    make_method_getter('title_length'), 
+        ]
         # variables = [make_ln_func('score'), make_ln_func('num_comments')]
         filter_kwargs = {
             'url__contains': WIKI
@@ -426,7 +450,6 @@ def main(platform='r', calculate_frequency=False):
         inferential_stats[name] = {}
         for variable in variables:
             for group in groups:
-                print(group)
                 if callable(variable):
                     group['vals'] = variable(group['qs'])
                 else:

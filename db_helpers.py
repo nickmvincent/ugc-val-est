@@ -30,13 +30,13 @@ def reset_wiki_links():
     ErrorLog.objects.all().delete()
 
 
-def show_sample_threads():
+def show_samples():
     """Show samples of reddit threads"""
-    samples = SampledRedditThread.objects.all()[:5]
+    samples = SampledRedditThread.objects.all()[:10]
     for sample in samples.values():
         print(sample)
     
-    so_samples = SampledStackOverflowPost.objects.all()[:5]
+    so_samples = SampledStackOverflowPost.objects.all()[:10]
     for sample in so_samples.values():
         print(sample)
 
@@ -63,6 +63,22 @@ def calc_avg_scores():
             thread.save()
 
 
+def bulk_save():
+    reddit = SampledRedditThread.objects.all()
+    stack = SampledStackOverflowPost.objects.all()
+
+    for start, end, total, batch in batch_qs(reddit):
+        print('reddit', start, end, total)
+        for item in batch:
+            item.save()
+    for start, end, total, batch in batch_qs(stack):
+        print('stack', start, end, total)
+        for item in batch:
+            item.save()
+
+
+
+
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dja.settings")
     import django
@@ -79,6 +95,8 @@ if __name__ == "__main__":
         elif sys.argv[1] == 'reset':
             reset_wiki_links()
         elif sys.argv[1] == 'show':
-            show_sample_threads()
+            show_samples()
         elif sys.argv[1] == 'calc_avg_scores':
             calc_avg_scores()
+        elif sys.argv[1] == 'bulk_save':
+            bulk_save()

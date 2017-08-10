@@ -28,22 +28,22 @@ def values_list_to_records(rows, names):
 def train_and_test():
     """Train a linear regression model and test it!"""
     num_rows = 100000
-    qs = SampledStackOverflowPost.objects.all()
+    qs = SampledRedditThread.objects.all()
     qs = qs.order_by('uid')[:num_rows]
     features = [
         # treatment effects
-        # 'has_wiki_link', 'num_wiki_links',
+        'has_wiki_link', 'num_wiki_links',
         # contextual information
-        # 'day_of_week', 'hour',
+        'day_of_week', 'hour',
         # social capital
-        'user_reputation', 'user_age_at_post_time', 
+        # 'user_reputation', 'user_age_at_post_time', 
     ]
-    outcomes = ['score', 'num_comments', 'num_pageviews', ]
+    outcomes = ['score', 'num_comments', ]
     for outcome in outcomes:
         print('==={}==='.format(outcome))
         field_names = features + [outcome]
         rows = []
-        for start, end, total, batch in batch_qs(qs):
+        for start, end, total, batch in batch_qs(qs, batch_size=20000):
             print(start, end, total)
             for obj in batch:
                 row = []
