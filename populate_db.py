@@ -24,9 +24,7 @@ SO_ANSWERS_TABLE = '`bigquery-public-data.stackoverflow.posts_answers`'
 SO_QUESTIONS_TABLE = '`bigquery-public-data.stackoverflow.posts_questions`'
 SO_USERS_TABLE = '`bigquery-public-data.stackoverflow.users`'
 
-def utcstamp_to_utcdatetime(timestamp):
-    """Takes a UTC stamp and returns UTC datetime"""
-    return datetime.datetime.fromtimestamp(timestamp).replace(tzinfo=pytz.UTC)
+
 
 
 def give_truncator(lim):
@@ -44,27 +42,6 @@ def default_to_zero(val):
     """Return zero if val is None"""
     return 0 if val is None else val
 
-def give_author_processor(reddit):
-    """
-    This function uses closures to
-    take a "reddit" object and returns a function that will process author information using the reddit object
-    """
-    def author_processor(val):
-        """Process author info"""
-        ret = {}
-        author = reddit.redditor(val)
-        try:
-            if getattr(author, 'is_suspended', None):
-                ret['user_is_suspended'] = True
-            else:
-                ret['user_comment_karma'] = author.comment_karma
-                ret['user_link_karma'] = author.comment_karma
-                ret['user_created_utc'] = utcstamp_to_utcdatetime(author.created_utc)
-                ret['user_is_mod'] = author.is_mod
-        except:
-            ret['user_is_deleted'] = True
-        return ret
-    return author_processor
 
 def init_count():
     """Initialize a counter dict to keep track of successes/errors"""
@@ -227,9 +204,7 @@ def sample_so(rows_per_query):
 
 def sample_reddit(rows_per_query):
     """Sample Reddit Threads"""
-    # reddit = praw.Reddit(
-    #     client_id=os.environ["CLIENT_ID"], 
-    #     client_secret=os.environ["CLIENT_SECRET"], user_agent=os.environ["UA"])
+    
 
     col_objects = [
         {

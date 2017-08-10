@@ -1,3 +1,5 @@
+import datetime
+
 def batch_qs(qs, total=None, batch_size=1000):
     """
     Returns a (start, end, total, queryset) tuple for each batch in the given
@@ -21,3 +23,7 @@ def batch_qs(qs, total=None, batch_size=1000):
     for start in range(0, total, batch_size):
         end = min(start + batch_size, total)
         yield (start, end, total, qs[start:end])
+
+def utcstamp_to_utcdatetime(timestamp):
+    """Takes a UTC stamp and returns UTC datetime"""
+    return datetime.datetime.fromtimestamp(timestamp).replace(tzinfo=pytz.UTC)

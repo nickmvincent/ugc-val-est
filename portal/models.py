@@ -30,7 +30,7 @@ class Post(models.Model):
     day_prior_avg_score = models.IntegerField(blank=True, null=True)
     day_of_avg_score = models.IntegerField(blank=True, null=True)
     week_after_avg_score = models.IntegerField(blank=True, null=True)
-    
+
     wiki_content_analyzed = models.BooleanField(default=False)
 
     class Meta:
@@ -165,7 +165,7 @@ class RevisionScore(models.Model):
 class ErrorLog(models.Model):
     """Each row corresponds to a post that couldn't be loaded due to some error"""
     uid = models.CharField(max_length=100, primary_key=True)
-    msg = models.CharField(max_length=255)
+    msg = models.CharField(max_length=500)
 
 
 class ThreadLog(models.Model):
