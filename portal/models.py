@@ -56,12 +56,7 @@ class Post(models.Model):
 #     discourse_type = models.CharField(max_length=20)
 
 
-class RedditPost(Post):
-
-    class Meta:
-        abstract = True
-
-class SampledRedditThread(RedditPost):
+class SampledRedditThread(Post):
     """A sampled reddit THREAD using SQL Rand() function"""
     user_info_processed = models.BooleanField(default=False)
     user_comment_karma = models.IntegerField(default=0)
