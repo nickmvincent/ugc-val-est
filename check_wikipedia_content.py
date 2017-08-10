@@ -59,7 +59,6 @@ def generate_revid_endpoint(prefix, title, wiki_timestamp):
     Returns an endpoint that will give us a revid in json format
     closest to the timestamp, but prior to to the timestamp.
     """
-    print(prefix)
     base = 'https://{}.wikipedia.org/w/api.php?action=query&'.format(prefix)
     query_params = {
         'format': 'json',
@@ -89,7 +88,11 @@ def check_posts(model, field):
     else:
         raise ValueError('Invalid choice of field... try "url" or "body"')
     print('About to run through {} threads'.format(len(filtered)))
+    count = 0
     for post in filtered:
+        count += 1
+        if count % 100 == 0:
+            print(count)
         if field == 'body':
             urls = extract_urls(post.body, w)
         else:
@@ -100,7 +103,10 @@ def check_posts(model, field):
                     dja_link, _ = WikiLink.objects.get_or_create(url=url)
                 except:
                     raise BrokenLinkError(post, url)
+
                 post.wiki_links.add(dja_link)
+                if dja_link.language_code != 'en':
+                    raise ValueError
                 post.has_wiki_link = True
                 post.num_wiki_links += 1
                 scores_by_offset = {}
@@ -116,7 +122,10 @@ def check_posts(model, field):
                     endpoint = generate_revid_endpoint(
                         dja_link.language_code, dja_link.title, wiki_timestamp)
                     resp = requests.get(endpoint)
-                    pages = resp.json()['query']['pages']
+                    try:
+                        pages = resp.json()['query']['pages']
+                    except:
+                        raise ValueError
                     for _, val in pages.items():
                         try:
                             rev_obj = val['revisions'][0]
@@ -159,6 +168,8 @@ def check_posts(model, field):
                     **scores_by_offset)
                 post.post_specific_wiki_links.add(dja_post_specific_link)
         except (MissingRevisionId, ContextNotSupported, BrokenLinkError, MissingOresResponse):
+            continue
+        except ValueError:
             continue
         finally:
             post.wiki_content_analyzed = True
