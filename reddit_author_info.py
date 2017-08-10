@@ -10,6 +10,7 @@ def give_author_processor(reddit):
     This function uses closures to
     take a "reddit" object and returns a function that will process author information using the reddit object
     """
+    
     def author_processor(val):
         """Process author info"""
         ret = {}
