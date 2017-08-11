@@ -469,11 +469,16 @@ def main(platform='r', calculate_frequency=False):
             len1, len2 = len(has_wikilink_group['vals']), len(no_wikilink_group['vals'])
             if len1 == 0 or len2 == 0:
                 print('Skipping variable {} because {}, {}.'.format(
-                    variable, len1, len2)) 
-            inferential_stats[name][variable] = inferential_analysis(
-                has_wikilink_group['vals'], no_wikilink_group['vals'])
-            # groups = [group for group in groups if group['vals']]
-            descriptive_stats[name][variable] = univariate_analysis(groups)
+                    variable, len1, len2))
+            try:
+                inferential_stats[name][variable] = inferential_analysis(
+                    has_wikilink_group['vals'], no_wikilink_group['vals'])
+                # groups = [group for group in groups if group['vals']]
+                descriptive_stats[name][variable] = univariate_analysis(groups)
+            except TypeError as err:
+                print('analysis of variable {} failed because {}'.format(
+                    variable, err
+                ))
     pprint(descriptive_stats)
     output = output_stats(output_filename, descriptive_stats, inferential_stats)
     print(output)

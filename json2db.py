@@ -43,9 +43,10 @@ def main(platform):
         with open(SAVE_LOC, 'r', encoding='utf8') as jsonfile:
             for line in jsonfile:
                 data = json.loads(line)
+                print(data)
                 kwargs = {}
                 for field in model._meta.get_fields():
-                    kwargs[field.name] = data[field.name]
+                    kwargs[field.name] = data.get(field.name)
                 print(kwargs)
                 obj, created= model.objects.get_or_create(**kwargs)
                 prefixes_tested[prefix] = True
