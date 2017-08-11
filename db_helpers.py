@@ -64,8 +64,8 @@ def calc_avg_scores():
 
 
 def bulk_save():
-    reddit = SampledRedditThread.objects.all()
-    stack = SampledStackOverflowPost.objects.all()
+    reddit = SampledRedditThread.objects.all().order_by('uid')
+    stack = SampledStackOverflowPost.objects.all().order_by('uid')
 
     for start, end, total, batch in batch_qs(reddit):
         print('reddit', start, end, total)

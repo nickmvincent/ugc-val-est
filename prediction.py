@@ -29,6 +29,7 @@ def values_list_to_records(rows, names):
 def train_and_test(platform):
     """Train a linear regression model and test it!"""
     num_rows = 100000
+    
     common_features = [
         # treatment effects
         'has_wiki_link', 'num_wiki_links',
