@@ -26,19 +26,19 @@ SAVE_LOC = 'tmp.json'
 TEST = True
 
 def main(platform):
-    prefixes_tested = {}
+    prefixes = {}
 
     client = storage.Client()
     bucket = client.get_bucket('datadumpsforme')
     for blob in bucket.list_blobs():
         path = blob.name
         prefix = path[:path.find('/')]
-
-        if TEST and prefixes_tested.get(prefix) is not None:
+        print(path)
+        if TEST and prefixes.get(prefix):
             continue
-        
+        if prefix != 'stackoverflow-answers':
+            continue
         model = prefix_to_model(prefix)
-        print(prefix, model)
         blob.download_to_filename(SAVE_LOC)
         with open(SAVE_LOC, 'r', encoding='utf8') as jsonfile:
             for line in jsonfile:
@@ -47,11 +47,20 @@ def main(platform):
                 kwargs = {}
                 for field in model._meta.get_fields():
                     kwargs[field.name] = data.get(field.name)
+                    if kwargs[field.name] == 'null':
+                        kwargs[field.name] = None
+                    if (field._description() == 'Field of type: DateTimeField' and 
+                        kwargs[field.name] and
+                        ' UTC' in kwargs[field.name]):
+                        kwargs[field.name] = kwargs[field.name].replace(' UTC', '')
                 print(kwargs)
-                obj, created= model.objects.get_or_create(**kwargs)
-                prefixes_tested[prefix] = True
+                try:
+                    obj, created= model.objects.get_or_create(**kwargs)
+                    prefixes[prefix] = True
+                except Exception as err:
+                    print(err)
                 if TEST:
-                    continue
+                    break
 
 
 def parse():

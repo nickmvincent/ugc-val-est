@@ -48,6 +48,7 @@ class Post(models.Model):
         self.day_of_week = self.timestamp.weekday()
         self.day_of_month = self.timestamp.day
         self.hour = self.timestamp.hour
+        self.body_length = len(self.body)
         super(Post, self).save(*args, **kwargs)
 
 
@@ -203,14 +204,10 @@ class StackOverflowAnswer(models.Model):
     Matches BigQuery almost exactly.
     """
     id = models.IntegerField(primary_key=True)
-    title = models.CharField(max_length=192)
     body = models.CharField(max_length=58431)
-    accepted_answer_id = models.IntegerField()
-    answer_count = models.IntegerField()
     comment_count = models.IntegerField()
     community_owned_date = models.DateTimeField()
     creation_date = models.DateTimeField()
-    favorite_count = models.IntegerField()
     last_activity_date = models.DateTimeField()
     last_edit_date = models.DateTimeField()
     last_editor_display_name = models.CharField(max_length=30)
@@ -220,7 +217,6 @@ class StackOverflowAnswer(models.Model):
     post_type_id = models.IntegerField()
     score = models.IntegerField()
     tags = models.CharField(max_length=115)
-    view_count = models.IntegerField()
 
 class StackOverflowUser(models.Model):
     """
@@ -268,16 +264,16 @@ class RedditPost(models.Model):
     stickied = models.BooleanField()
     retrieved_on = models.IntegerField()
     over_18 = models.BooleanField()
-    thumbnail = models.CharField(max_length=80)
+    thumbnail = models.CharField(max_length=80, blank=True, null=True)
     subreddit_id = models.CharField(max_length=8)
     hide_score = models.BooleanField()
-    link_flair_css_class = models.CharField(max_length=61)
-    author_flair_css_class = models.CharField(max_length=92)
+    link_flair_css_class = models.CharField(max_length=61, blank=True, null=True)
+    author_flair_css_class = models.CharField(max_length=92, blank=True, null=True)
     archived = models.BooleanField()
     is_self = models.BooleanField()
     permalink = models.CharField(max_length=125)
     name = models.CharField(max_length=9)
-    author_flair_text = models.CharField(max_length=89)
+    author_flair_text = models.CharField(max_length=89, blank=True, null=True)
     quarantine = models.BooleanField()
-    link_flair_text = models.CharField(max_length=67)
-    distinguished = models.CharField(max_length=9)
+    link_flair_text = models.CharField(max_length=67, blank=True, null=True)
+    distinguished = models.CharField(max_length=9, blank=True, null=True)

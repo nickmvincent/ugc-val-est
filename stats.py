@@ -380,12 +380,25 @@ def make_method_getter(method_name):
 
 
 def change_in_quality(qs):
+    """The difference in quality between one week after posting"""
     ret = []
     qs = qs.filter(has_wiki_link=True, week_after_avg_score__isnull=False)
     for start, end, total, batch in batch_qs(qs):
         for obj in batch:
             ret.append(obj.week_after_avg_score - obj.day_of_avg_score)
     return ret
+
+
+def reddit_specific_features():
+    return [
+        'title_length',
+        'user_comment_karma', 'user_is_mod',
+    ]
+
+def stack_specific_features():
+    return [
+        'user_reputation'
+    ]
 
 
 def main(platform='r', calculate_frequency=False):
@@ -408,10 +421,7 @@ def main(platform='r', calculate_frequency=False):
             'qs': SampledRedditThread.objects.all(),
             'name': 'All',
         }]
-        variables += [
-            'title_length',
-            'user_comment_karma', 'user_is_mod',
-        ]
+        variables += reddit_specific_features()
         filter_kwargs = {
             'url__contains': WIKI
         }
@@ -423,9 +433,7 @@ def main(platform='r', calculate_frequency=False):
             'qs': SampledStackOverflowPost.objects.all(),
             'name': 'All SO'
         }]
-        variables += [
-            'num_pageviews', 'user_reputation',
-        ]
+        variables += stack_specific_features()
         extractor = get_links_from_body
         extract_from = 'body'
         filter_kwargs = {

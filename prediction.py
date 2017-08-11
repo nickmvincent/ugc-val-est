@@ -10,6 +10,7 @@ Should be run from Anaconda environment with scipy installed
 # License: BSD 3 clause
 
 import os
+import argparse
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn import datasets, linear_model, tree
@@ -25,19 +26,23 @@ def values_list_to_records(rows, names):
 
 
 
-def train_and_test():
+def train_and_test(platform):
     """Train a linear regression model and test it!"""
     num_rows = 100000
-    qs = SampledRedditThread.objects.all()
-    qs = qs.order_by('uid')[:num_rows]
-    features = [
+    common_features = [
         # treatment effects
         'has_wiki_link', 'num_wiki_links',
         # contextual information
-        'day_of_week', 'hour',
-        # social capital
-        # 'user_reputation', 'user_age_at_post_time', 
+        'day_of_week', 'day_of_month', 'hour',
     ]
+    if platform == 'r':
+        qs = SampledRedditThread.objects.all()
+        features = common_features + reddit_specific_features
+    elif platform == 's':
+        qs = SampledStackOverflowPost.objects.all()
+        features = common_features + stack_specific_features
+    qs = qs.order_by('uid')[:num_rows]
+    
     outcomes = ['score', 'num_comments', ]
     for outcome in outcomes:
         print('==={}==='.format(outcome))
@@ -62,7 +67,7 @@ def train_and_test():
         X = np.transpose(X)
         Y = getattr(records, outcome)
         # Split the data into training/testing sets
-        test_percent = 50
+        test_percent = 30
         test_len = int(X.shape[0] * test_percent / 100)
         X_train = X[:-test_len]
         X_test = X[-test_len:]
@@ -89,7 +94,23 @@ def train_and_test():
         )
         print(lin_msg)
     plt.show()
-    
+
+
+def parse():
+    """
+    Parse args and do the appropriate analysis
+    """
+    parser = argparse.ArgumentParser(
+        description='Train predictive model')
+    parser.add_argument(
+        'platform', help='the platform to use. "r" for reddit and "s" for stack overflow')
+    # parser.add_argument(
+    #     '--visualize',
+    #     action='store_true',
+    #     help='Performs some data visualization')
+    args = parser.parse_args()
+    train_and_test(args.platform)
+
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dja.settings")
@@ -99,4 +120,5 @@ if __name__ == "__main__":
         SampledRedditThread, SampledStackOverflowPost,
         PostSpecificWikiScores, WikiLink, RevisionScore
     )
-    train_and_test()
+    from stats import reddit_specific_features, stack_specific_features
+    parse()
