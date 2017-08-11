@@ -19,6 +19,8 @@ def batch_qs(qs, total=None, batch_size=1000):
             for article in qs:
                 print article.body
     """
+    if not qs.query.order_by:
+        raise ValueError("batch_qs was used without an order_by choice")
     if total is None:
         total = qs.count()
     for start in range(0, total, batch_size):

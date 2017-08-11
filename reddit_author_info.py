@@ -46,6 +46,7 @@ def main(do_all=False):
         print('will only processed new samples')
         qs = SampledRedditThread.objects.filter(user_info_processed=False)
 
+    qs = qs.order_by('uid')
     start_time = time.time()
     for start, end, total, batch in batch_qs(qs):
         batch_start_time = time.time()

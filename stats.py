@@ -382,7 +382,7 @@ def make_method_getter(method_name):
 def change_in_quality(qs):
     """The difference in quality between one week after posting"""
     ret = []
-    qs = qs.filter(has_wiki_link=True, week_after_avg_score__isnull=False)
+    qs = qs.filter(has_wiki_link=True, week_after_avg_score__isnull=False).order_by('uid')
     for start, end, total, batch in batch_qs(qs):
         for obj in batch:
             ret.append(obj.week_after_avg_score - obj.day_of_avg_score)
