@@ -1,4 +1,5 @@
 import datetime
+import pytz
 
 def batch_qs(qs, total=None, batch_size=1000):
     """

@@ -395,6 +395,11 @@ def main(platform='r', calculate_frequency=False):
     for directory in [csv_dir, png_dir]:
         if not os.path.exists(directory):
             os.makedirs(directory)
+    variables = [
+        'score', 'num_comments',
+        make_ln_func('score'),
+        'day_of_week', 'hour', 
+    ]
     if platform == 'r':
         datasets = [{
             'qs': SampledRedditThread.objects.filter(context__in=TOP_TEN),
@@ -403,12 +408,10 @@ def main(platform='r', calculate_frequency=False):
             'qs': SampledRedditThread.objects.all(),
             'name': 'All',
         }]
-        variables = [
-            'score', 'num_comments',
-            make_method_getter('day_of_week'), make_method_getter('hour'), 
-        #    make_method_getter('title_length'), 
+        variables += [
+            'title_length',
+            'user_comment_karma', 'user_is_mod',
         ]
-        # variables = [make_ln_func('score'), make_ln_func('num_comments')]
         filter_kwargs = {
             'url__contains': WIKI
         }
@@ -420,7 +423,9 @@ def main(platform='r', calculate_frequency=False):
             'qs': SampledStackOverflowPost.objects.all(),
             'name': 'All SO'
         }]
-        variables = ['score', 'num_comments', 'num_pageviews', ]
+        variables.append += [
+            'num_pageviews', 'user_reputation'
+        ]
         extractor = get_links_from_body
         extract_from = 'body'
         filter_kwargs = {

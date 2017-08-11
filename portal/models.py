@@ -14,7 +14,8 @@ class Post(models.Model):
         Reddit - root=thread and comment=comment
     """
     uid = models.CharField(max_length=100, primary_key=True)
-    body = models.CharField(max_length=30000)
+    body = models.CharField(max_length=58431)
+    body_length = models.IntegerField(default=0)
     score = models.IntegerField()
     num_comments = models.IntegerField(default=0)
     is_root = models.BooleanField(default=False)
@@ -27,6 +28,7 @@ class Post(models.Model):
     num_wiki_links = models.IntegerField(default=0)
 
     post_specific_wiki_links = models.ManyToManyField('PostSpecificWikiScores')
+    # poor naming choices... the following refer to ORES score...
     day_prior_avg_score = models.IntegerField(blank=True, null=True)
     day_of_avg_score = models.IntegerField(blank=True, null=True)
     week_after_avg_score = models.IntegerField(blank=True, null=True)
@@ -44,7 +46,7 @@ class Post(models.Model):
     def save(self, *args, **kwargs):
         """overload save method"""
         self.day_of_week = self.timestamp.weekday()
-        self.day_of_moth = self.timestamp.day
+        self.day_of_month = self.timestamp.day
         self.hour = self.timestamp.hour
         super(Post, self).save(*args, **kwargs)
 
@@ -107,7 +109,7 @@ class WikiLink(models.Model):
     Each row corresponds to a Wikipedia article link that appeared on
     reddit or Stack Overflow
 
-    A WikiLink object is JUST a url that links to a Wikipedi article.
+    A WikiLink object is JUST a url that links to a Wikipedia article.
     Infinitely mainly RevisionScores may be associated with one WikiLink via
     ForeignKeys (on the RevisionScore table)
     """
@@ -219,3 +221,63 @@ class StackOverflowAnswer(models.Model):
     score = models.IntegerField()
     tags = models.CharField(max_length=115)
     view_count = models.IntegerField()
+
+class StackOverflowUser(models.Model):
+    """
+    Each row corresponds to a SO user from BigQuery table
+    """
+    id = models.IntegerField(primary_key=True)
+    display_name = models.CharField(max_length=30)
+    about_me = models.CharField(max_length=5999)
+    age = models.CharField(max_length=4)
+    creation_date = models.DateTimeField()
+    last_access_date = models.DateTimeField()
+    location = models.CharField(max_length=100)
+    reputation = models.IntegerField()
+    up_votes = models.IntegerField()
+    down_votes = models.IntegerField()
+    views = models.IntegerField()
+    profile_image_url = models.CharField(max_length=105)
+    website_url = models.CharField(max_length=200)
+
+
+class RedditPost(models.Model):
+    """
+    Each row corresponds to a reddit post
+    
+    Omitted misleading fields or non-helpful fields
+    
+    from_kind - always null
+    from - always null
+    downs - always zero
+    ups - always equal to score
+    """
+    created_utc	= models.IntegerField()
+    subreddit = models.CharField(max_length=21)
+    author = models.CharField(max_length=20)
+    domain = models.CharField(max_length=206)
+    url = models.CharField(max_length=6843)
+    num_comments = models.IntegerField()
+    score = models.IntegerField()
+    title = models.CharField(max_length=329)
+    selftext = models.CharField(max_length=59994)
+    saved = models.BooleanField()
+    id = models.CharField(primary_key=True)
+    gilded = models.IntegerField()
+    stickied = models.BooleanField()
+    retrieved_on = models.IntegerField()
+    over_18 = models.BooleanField()
+    thumbnail = models.CharField(max_length=80)
+    subreddit_id = models.CharField(max_length=8)
+    hide_score = models.BooleanField()
+    link_flair_css_class = models.CharField(max_length=61)
+    author_flair_css_class = models.CharField(max_length=92)
+    archived = models.BooleanField()
+    is_self = models.BooleanField()
+    from_id = models.CharField()
+    permalink = models.CharField(max_length=125)
+    name = models.CharField(max_length=9)
+    author_flair_text = models.CharField(max_length=89)
+    quarantine = models.BooleanField()
+    link_flair_text = models.CharField(max_length=67)
+    distinguished = models.CharField(max_length=9)
