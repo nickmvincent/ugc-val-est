@@ -423,8 +423,8 @@ def main(platform='r', calculate_frequency=False):
             'qs': SampledStackOverflowPost.objects.all(),
             'name': 'All SO'
         }]
-        variables.append += [
-            'num_pageviews', 'user_reputation'
+        variables += [
+            'num_pageviews', 'user_reputation',
         ]
         extractor = get_links_from_body
         extract_from = 'body'
@@ -454,6 +454,7 @@ def main(platform='r', calculate_frequency=False):
         descriptive_stats[name] = {}
         inferential_stats[name] = {}
         for variable in variables:
+            print('processing variable {}'.format(variable))
             for group in groups:
                 if callable(variable):
                     group['vals'] = variable(group['qs'])
@@ -464,6 +465,8 @@ def main(platform='r', calculate_frequency=False):
                     if platform == 'r':
                         frequency_distribution(
                             group['qs'], 'context', name +'_' + group['name'])
+            if not has_wikilink_group['vals'] or not no_wikilink_group['vals']:
+                print('Skipping variable {} because empty array'.format(variable)) 
             inferential_stats[name][variable] = inferential_analysis(
                 has_wikilink_group['vals'], no_wikilink_group['vals'])
             # groups = [group for group in groups if group['vals']]
@@ -471,7 +474,7 @@ def main(platform='r', calculate_frequency=False):
     pprint(descriptive_stats)
     output = output_stats(output_filename, descriptive_stats, inferential_stats)
     print(output)
-    plt.show()
+    # plt.show()
 
 
 def visualize(platform, ln=False):
