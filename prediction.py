@@ -37,10 +37,10 @@ def train_and_test(platform):
     ]
     if platform == 'r':
         qs = SampledRedditThread.objects.all()
-        features = common_features + reddit_specific_features
+        features = common_features + reddit_specific_features()
     elif platform == 's':
         qs = SampledStackOverflowPost.objects.all()
-        features = common_features + stack_specific_features
+        features = common_features + stack_specific_features()
     qs = qs.order_by('uid')[:num_rows]
     
     outcomes = ['score', 'num_comments', ]
