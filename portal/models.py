@@ -249,6 +249,7 @@ class RedditPost(models.Model):
     
     from_kind - always null
     from - always null
+    from_id - always null
     downs - always zero
     ups - always equal to score
     """
@@ -262,7 +263,7 @@ class RedditPost(models.Model):
     title = models.CharField(max_length=329)
     selftext = models.CharField(max_length=59994)
     saved = models.BooleanField()
-    id = models.CharField(primary_key=True)
+    id = models.CharField(primary_key=True, max_length=10)
     gilded = models.IntegerField()
     stickied = models.BooleanField()
     retrieved_on = models.IntegerField()
@@ -274,7 +275,6 @@ class RedditPost(models.Model):
     author_flair_css_class = models.CharField(max_length=92)
     archived = models.BooleanField()
     is_self = models.BooleanField()
-    from_id = models.CharField()
     permalink = models.CharField(max_length=125)
     name = models.CharField(max_length=9)
     author_flair_text = models.CharField(max_length=89)
