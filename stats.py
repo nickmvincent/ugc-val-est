@@ -465,8 +465,11 @@ def main(platform='r', calculate_frequency=False):
                     if platform == 'r':
                         frequency_distribution(
                             group['qs'], 'context', name +'_' + group['name'])
-            if not has_wikilink_group['vals'] or not no_wikilink_group['vals']:
-                print('Skipping variable {} because empty array'.format(variable)) 
+            
+            len1, len2 = len(has_wikilink_group['vals']), len(no_wikilink_group['vals'])
+            if len1 == 0 or len2 == 0:
+                print('Skipping variable {} because {}, {}.'.format(
+                    variable, len1, len2)) 
             inferential_stats[name][variable] = inferential_analysis(
                 has_wikilink_group['vals'], no_wikilink_group['vals'])
             # groups = [group for group in groups if group['vals']]

@@ -45,7 +45,7 @@ def main(platform):
                 data = json.loads(line)
                 kwargs = {}
                 for field in model._meta.get_fields():
-                    kwargs[field.name] = data[field]
+                    kwargs[field.name] = data[field.name]
                 print(kwargs)
                 obj, created= model.objects.get_or_create(**kwargs)
                 prefixes_tested[prefix] = True
