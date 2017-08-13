@@ -44,7 +44,6 @@ def main(platform):
             test_counter = 0
             for line in jsonfile:
                 test_counter += 1
-                print(line)
                 data = json.loads(line)
                 kwargs = {}
                 for field in model._meta.get_fields():
