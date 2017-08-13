@@ -13,6 +13,18 @@ def delete_old_errors():
     ErrorLog.objects.filter(msg="").delete()
 
 
+def clear_json2db():
+    """Delete entries populated by the json2db script"""
+    for model in [
+        RedditPost, StackOverflowAnswer, StackOverflowQuestion, StackOverflowUser
+    ]:
+        qs = model.objects.all()
+        print('Going to delete {} entries from model {}'.format(qs.count(), model))
+        print('Enter y to continue')
+        if input() == 'y':
+            qs.delete()
+
+
 def reset_wiki_links():
     """Reset"""
     for model in [SampledRedditThread, SampledStackOverflowPost]:
@@ -86,7 +98,8 @@ if __name__ == "__main__":
     from portal.models import (
         ErrorLog, ThreadLog, SampledRedditThread,
         SampledStackOverflowPost,
-        WikiLink, RevisionScore, PostSpecificWikiScores
+        WikiLink, RevisionScore, PostSpecificWikiScores,
+        RedditPost, StackOverflowAnswer, StackOverflowQuestion, StackOverflowUser
     )
     from queryset_helpers import batch_qs
     if len(sys.argv) > 1:
@@ -100,3 +113,5 @@ if __name__ == "__main__":
             calc_avg_scores()
         elif sys.argv[1] == 'bulk_save':
             bulk_save()
+        elif sys.argv[1] == 'clear_json2db':
+            clear_json2db()

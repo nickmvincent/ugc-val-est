@@ -40,6 +40,9 @@ class Post(models.Model):
     day_of_month = models.IntegerField(blank=True, null=True)
     hour = models.IntegerField(blank=True, null=True)
 
+    user_created_utc = models.DateTimeField(null=True, blank=True)
+    time_since_user_creation = models.DateTimeField(null=True, blank=True)
+
     class Meta:
         abstract = True
 
@@ -49,6 +52,8 @@ class Post(models.Model):
         self.day_of_month = self.timestamp.day
         self.hour = self.timestamp.hour
         self.body_length = len(self.body)
+        delta = self.timestamp - self.user_created_utc
+        self.time_since_user_creation = delta.seconds
         super(Post, self).save(*args, **kwargs)
 
 
@@ -64,7 +69,6 @@ class SampledRedditThread(Post):
     user_info_processed = models.BooleanField(default=False)
     user_comment_karma = models.IntegerField(default=0)
     user_link_karma = models.IntegerField(default=0)
-    user_created_utc = models.DateTimeField(null=True, blank=True)
     user_is_mod = models.BooleanField(default=False)
     user_is_suspended = models.BooleanField(default=False)
     user_is_deleted = models.BooleanField(default=False)
@@ -83,14 +87,17 @@ class SampledStackOverflowPost(Post):
     Each row corresponds to one Stack Overflow post (question or answer)
     """
     user_reputation = models.IntegerField(default=0)
-    user_created_utc = models.DateTimeField(null=True, blank=True)
+    question_asked_utc = models.DateTimeField(null=True, blank=True)
     num_pageviews = models.IntegerField(default=0)
     tags_string = models.CharField(max_length=115, blank=True, null=True)
+    response_time = models.IntegerField(blank=True, null=True)
 
-    def user_age_at_post_time(self):
-        """Gives the users age at the time of posting this post"""
-        delta = self.timestamp - self.user_created_utc
-        return delta.total_seconds()
+    def save(self, *args, **kwargs):
+        """overload save method"""
+        if self.question_asked_utc:
+            delta = self.timestamp - self.question_asked_utc
+            self.response_time = delta.seconds
+        super(SampledStackOverflowPost, self).save(*args, **kwargs)
 
 class PostSpecificWikiScores(models.Model):
     """
@@ -180,22 +187,22 @@ class StackOverflowQuestion(models.Model):
     id = models.IntegerField(primary_key=True)
     title = models.CharField(max_length=192)
     body = models.CharField(max_length=58431)
-    accepted_answer_id = models.IntegerField()
-    answer_count = models.IntegerField()
-    comment_count = models.IntegerField()
-    community_owned_date = models.DateTimeField()
+    accepted_answer_id = models.IntegerField(blank=True, null=True)
+    answer_count = models.IntegerField(default=0)
+    comment_count = models.IntegerField(default=0)
+    community_owned_date = models.DateTimeField(blank=True, null=True)
     creation_date = models.DateTimeField()
-    favorite_count = models.IntegerField()
+    favorite_count = models.IntegerField(default=0)
     last_activity_date = models.DateTimeField()
-    last_edit_date = models.DateTimeField()
-    last_editor_display_name = models.CharField(max_length=30)
-    last_editor_user_id = models.IntegerField()
+    last_edit_date = models.DateTimeField(blank=True, null=True)
+    last_editor_display_name = models.CharField(max_length=30, blank=True, null=True)
+    last_editor_user_id = models.IntegerField(blank=True, null=True)
     owner_display_name = models.CharField(max_length=30)
     owner_user_id = models.IntegerField()
     post_type_id = models.IntegerField()
-    score = models.IntegerField()
+    score = models.IntegerField(default=0)
     tags = models.CharField(max_length=115)
-    view_count = models.IntegerField()
+    view_count = models.IntegerField(default=0)
 
 
 class StackOverflowAnswer(models.Model):
@@ -205,17 +212,17 @@ class StackOverflowAnswer(models.Model):
     """
     id = models.IntegerField(primary_key=True)
     body = models.CharField(max_length=58431)
-    comment_count = models.IntegerField()
-    community_owned_date = models.DateTimeField()
+    comment_count = models.IntegerField(default=0)
+    community_owned_date = models.DateTimeField(blank=True, null=True)
     creation_date = models.DateTimeField()
     last_activity_date = models.DateTimeField()
-    last_edit_date = models.DateTimeField()
-    last_editor_display_name = models.CharField(max_length=30)
-    last_editor_user_id = models.IntegerField()
+    last_edit_date = models.DateTimeField(blank=True, null=True)
+    last_editor_display_name = models.CharField(max_length=30, blank=True, null=True)
+    last_editor_user_id = models.IntegerField(blank=True, null=True)
     owner_display_name = models.CharField(max_length=30)
-    owner_user_id = models.IntegerField()
+    owner_user_id = models.IntegerField(blank=True, null=True)
     post_type_id = models.IntegerField()
-    score = models.IntegerField()
+    score = models.IntegerField(default=0)
     tags = models.CharField(max_length=115)
 
 class StackOverflowUser(models.Model):
@@ -224,17 +231,17 @@ class StackOverflowUser(models.Model):
     """
     id = models.IntegerField(primary_key=True)
     display_name = models.CharField(max_length=30)
-    about_me = models.CharField(max_length=5999)
-    age = models.CharField(max_length=4)
+    about_me = models.CharField(max_length=5999, blank=True, null=True)
+    age = models.CharField(max_length=4, blank=True, null=True)
     creation_date = models.DateTimeField()
     last_access_date = models.DateTimeField()
-    location = models.CharField(max_length=100)
-    reputation = models.IntegerField()
-    up_votes = models.IntegerField()
-    down_votes = models.IntegerField()
-    views = models.IntegerField()
-    profile_image_url = models.CharField(max_length=105)
-    website_url = models.CharField(max_length=200)
+    location = models.CharField(max_length=100, blank=True, null=True)
+    reputation = models.IntegerField(default=0)
+    up_votes = models.IntegerField(default=0)
+    down_votes = models.IntegerField(default=0)
+    views = models.IntegerField(default=0)
+    profile_image_url = models.CharField(max_length=105, blank=True, null=True)
+    website_url = models.CharField(max_length=200, blank=True, null=True)
 
 
 class RedditPost(models.Model):
@@ -250,7 +257,8 @@ class RedditPost(models.Model):
     ups - always equal to score
     """
     created_utc	= models.IntegerField()
-    subreddit = models.CharField(max_length=21)
+    subreddit = models.CharField(max_length=21, blank=True, null=True)
+    subreddit_id = models.CharField(max_length=8, blank=True, null=True)
     author = models.CharField(max_length=20)
     domain = models.CharField(max_length=206)
     url = models.CharField(max_length=6843)
@@ -265,7 +273,6 @@ class RedditPost(models.Model):
     retrieved_on = models.IntegerField()
     over_18 = models.BooleanField()
     thumbnail = models.CharField(max_length=80, blank=True, null=True)
-    subreddit_id = models.CharField(max_length=8)
     hide_score = models.BooleanField()
     link_flair_css_class = models.CharField(max_length=61, blank=True, null=True)
     author_flair_css_class = models.CharField(max_length=92, blank=True, null=True)

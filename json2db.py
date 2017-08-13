@@ -4,7 +4,9 @@ This module imports data from json (stored in GCS) to DB (postgres)
 import os
 import json
 import argparse
+from datetime import datetime
 
+import pytz
 from google.cloud import storage
 
 
@@ -23,7 +25,7 @@ def prefix_to_model(prefix):
 
 
 SAVE_LOC = 'tmp.json'
-TEST = False
+TEST = True
 
 def main(platform):
     prefixes = {}
@@ -32,32 +34,45 @@ def main(platform):
     bucket = client.get_bucket('datadumpsforme')
     for blob in bucket.list_blobs():
         path = blob.name
-        prefix = path[:path.find('/')]
         print(path)
+        prefix = path[:path.find('/')]
         if TEST and prefixes.get(prefix):
+            continue
+        if TEST and 'reddit' in prefix:
             continue
         model = prefix_to_model(prefix)
         blob.download_to_filename(SAVE_LOC)
         with open(SAVE_LOC, 'r', encoding='utf8') as jsonfile:
+            test_counter = 0
             for line in jsonfile:
+                test_counter += 1
+                print(line)
                 data = json.loads(line)
-                print(data)
                 kwargs = {}
                 for field in model._meta.get_fields():
-                    kwargs[field.name] = data.get(field.name)
-                    if kwargs[field.name] == 'null':
-                        kwargs[field.name] = None
+                    try:
+                        kwargs[field.name] = data[field.name]
+                    except KeyError:
+                        continue
+                    val = kwargs[field.name]
+                    if val == 'null':
+                        kwargs.pop(field.name, 0)
                     if (field._description() == 'Field of type: DateTimeField' and 
-                        kwargs[field.name] and
-                        ' UTC' in kwargs[field.name]):
-                        kwargs[field.name] = kwargs[field.name].replace(' UTC', '')
-                print(kwargs)
+                        val):
+                        if '.' in val:
+                            period_index = val.find('.')
+                            kwargs[field.name] = val[:period_index] + ' UTC'
+                        as_dt = datetime.strptime(kwargs[field.name], "%Y-%m-%d %H:%M:%S %Z")
+                        kwargs[field.name] = as_dt.astimezone(pytz.UTC)
                 try:
                     obj, created= model.objects.get_or_create(**kwargs)
                     prefixes[prefix] = True
                 except Exception as err:
+                    print(path)
+                    print(data)
+                    print(kwargs)
                     print(err)
-                if TEST:
+                if TEST and test_counter > 100:
                     break
 
 
