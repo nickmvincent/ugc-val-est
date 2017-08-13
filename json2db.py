@@ -25,7 +25,7 @@ def prefix_to_model(prefix):
 
 
 SAVE_LOC = 'tmp.json'
-TEST = True
+TEST = False
 
 def main(platform):
     prefixes = {}
@@ -37,8 +37,6 @@ def main(platform):
         print(path)
         prefix = path[:path.find('/')]
         if TEST and prefixes.get(prefix):
-            continue
-        if TEST and 'reddit' in prefix:
             continue
         model = prefix_to_model(prefix)
         blob.download_to_filename(SAVE_LOC)
