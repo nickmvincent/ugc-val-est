@@ -123,7 +123,7 @@ def simple_linear(platform, quality_mode=False):
             'has_wiki_link': True,
             'wiki_content_analyzed': True,
             'wiki_content_error': 0,
-            'day_of_avg_score__is_null': False,
+            'day_of_avg_score__isnull': False,
         })
         features = ['day_of_avg_score']
     else:
