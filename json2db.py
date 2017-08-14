@@ -3,6 +3,7 @@ This module imports data from json (stored in GCS) to DB (postgres)
 """
 import os
 import json
+from json.decoder import JSONDecodeError
 import argparse
 from datetime import datetime
 
@@ -65,7 +66,17 @@ def main(platform):
             test_counter = 0
             for line in jsonfile:
                 test_counter += 1
-                data = json.loads(line)
+                try:
+                    data = json.loads(line)
+                except JSONDecodeError:
+                    send_mail(
+                        'json2db JSONDecode Error',
+                        path,
+                        settings.EMAIL_HOST_USER,
+                        ['nickmvincent@gmail.com'],
+                        fail_silently=False,
+                    )
+                    continue
                 kwargs = {}
                 for field in model._meta.get_fields():
                     try:
@@ -87,10 +98,7 @@ def main(platform):
                     prefixes[prefix] = True
                 except Exception as err:
                     full_msg = '\n'.join([path, data, kwargs, err])
-                    print(path)
-                    print(data)
-                    print(kwargs)
-                    print(err)
+                    print(full_msg)
                     send_mail(
                         'json2db Error!',
                         full_msg,

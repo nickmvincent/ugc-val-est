@@ -61,6 +61,7 @@ def calc_avg_scores():
     reddit_threads = SampledRedditThread.objects.filter(has_wiki_link=True).order_by('uid')
     stack_posts = SampledStackOverflowPost.objects.filter(has_wiki_link=True).order_by('uid')
     for qs in [reddit_threads, stack_posts]:
+        num_errors = 0
         print(qs.count())
         for start, end, total, batch in batch_qs(qs):
             print(start, end, total)
@@ -72,12 +73,14 @@ def calc_avg_scores():
                         field_to_score[field] += getattr(link_obj, field).score
                     num_links += 1
                 if num_links == 0:
-                    print(thread.__dict__)
+                    print(thread.wiki_content_error, end='|')
+                    num_errors += 0
                     continue
                 output_field_to_val = {field + '_avg_score': val / num_links for field, val in field_to_score.items()}
                 for output_field, val in output_field_to_val.items():
                     setattr(thread, output_field, val)
                 thread.save()
+        print(num_errors)
 
 
 def bulk_save():
