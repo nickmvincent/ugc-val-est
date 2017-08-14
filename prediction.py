@@ -26,11 +26,11 @@ def values_list_to_records(rows, names):
 
 
 def get_data(platform):
-    num_rows = 100000
+    num_rows = None
 
     common_features = [
         # treatment effects
-        'has_wiki_link', 'num_wiki_links', # 'day_of_avg_score',
+        'has_wiki_link', # 'day_of_avg_score',
         # contextual information
         'day_of_week', 'day_of_month', 'hour',
         'body_length',
@@ -41,7 +41,9 @@ def get_data(platform):
     elif platform == 's':
         qs = SampledStackOverflowPost.objects.all()
         features = common_features + stack_specific_features()
-    qs = qs.order_by('uid')[:num_rows]
+    qs = qs.order_by('uid')
+    if num_rows is not None:
+        qs = qs[:num_rows]
     outcomes = ['score', 'num_comments', ]
     return qs, features, outcomes
 
