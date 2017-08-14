@@ -45,7 +45,7 @@ def get_data(platform):
     outcomes = ['score', 'num_comments', ]
     return qs, features, outcomes
 
-def extract_vals_and_method_results(qs, field_name):
+def extract_vals_and_method_results(qs, field_names):
     """Extract either stored values or method results from a django QS"""
     rows = []
     for start, end, total, batch in batch_qs(qs, batch_size=1000):
