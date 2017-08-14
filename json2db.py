@@ -21,13 +21,21 @@ def prefix_to_model(prefix):
         'stackoverflow-questions': StackOverflowQuestion,
         'stackoverflow-users': StackOverflowUser,
     }[prefix]
-    
 
+# completed stackoverflow-answers 0 to 63
+# error occurred in 64
 
 SAVE_LOC = 'tmp.json'
 TEST = False
 
 def main(platform):
+    template = 'stackoverflow-answers/0000000000{}'
+    completed = []
+    for i in range(0, 10):
+        completed.append(template.format('0' + i))
+    for i in range (10, 63):
+        completed.append(template.format(i))
+
     prefixes = {}
     confirmation_sent = False
 
@@ -36,6 +44,9 @@ def main(platform):
     for blob in bucket.list_blobs():
         path = blob.name
         print(path)
+        if path in completed:
+            print('Bypassing completed path')
+            continue
         prefix = path[:path.find('/')]
         if platform == 's':
             if 'reddit' in prefix:
