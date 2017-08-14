@@ -25,9 +25,8 @@ def values_list_to_records(rows, names):
     return np.core.records.fromrecords(rows, names=names)
 
 
-def get_data(platform):
-    num_rows = None
-
+def get_data(platform, num_rows=None):
+    """Get data from DB for regression and/or causal inference"""
     common_features = [
         # treatment effects
         'has_wiki_link', # 'day_of_avg_score',
@@ -65,7 +64,8 @@ def extract_vals_and_method_results(qs, field_names):
 
 
 def causal_inference(platform):
-    qs, features, outcomes = get_data(platform)
+    qs, features, outcomes = get_data(platform, 100000)
+    outcomes = ['score', ]
     treatment_feature = 'has_wiki_link'
     for outcome in outcomes:
         print('==={}==='.format(outcome))
@@ -101,6 +101,11 @@ def causal_inference(platform):
         print(causal.strata)
         causal.est_via_blocking()
         print(causal.estimates)
+        causal.est_via_weighting()
+        print(causal.estimates)
+        causal.est_via_matching()
+        print(causal.estimates)
+        
 
 
 def simple_linear(platform):

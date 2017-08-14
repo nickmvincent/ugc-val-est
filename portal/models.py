@@ -4,6 +4,7 @@ doing data analysis
 """
 from django.db import models
 from django.utils import timezone
+from url_helpers import extract_urls
 
 
 class Post(models.Model):
@@ -17,6 +18,7 @@ class Post(models.Model):
     uid = models.CharField(max_length=100, primary_key=True)
     body = models.CharField(max_length=58431)
     body_length = models.IntegerField(default=0)
+    body_num_links = models.IntegerField(default=0)
     score = models.IntegerField()
     num_comments = models.IntegerField(default=0)
     is_root = models.BooleanField(default=False)
@@ -53,6 +55,7 @@ class Post(models.Model):
         self.day_of_month = self.timestamp.day
         self.hour = self.timestamp.hour
         self.body_length = len(self.body)
+        self.body_num_links = len(extract_urls(self.body))
         delta = self.timestamp - self.user_created_utc
         self.seconds_since_user_creation = delta.seconds
         super(Post, self).save(*args, **kwargs)

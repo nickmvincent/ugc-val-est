@@ -398,7 +398,7 @@ def reddit_specific_features():
 
 def stack_specific_features():
     return [
-        'user_reputation'
+        'user_reputation', 'num_links', 
     ]
 
 
