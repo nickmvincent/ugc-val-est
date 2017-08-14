@@ -29,12 +29,13 @@ SAVE_LOC = 'tmp.json'
 TEST = False
 
 def main(platform):
+    """main driver"""
     template = 'stackoverflow-answers/0000000000{}'
     completed = []
     for i in range(0, 10):
-        completed.append(template.format('0' + i))
+        completed.append(template.format('0' + str(i)))
     for i in range (10, 63):
-        completed.append(template.format(i))
+        completed.append(template.format(str(i)))
 
     prefixes = {}
     confirmation_sent = False

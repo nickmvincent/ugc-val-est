@@ -58,7 +58,7 @@ def calc_avg_scores():
     Calculates average wiki scores at various time intervals
     """
     fields = ['day_prior',  'day_of', 'week_after', ]
-    qs = SampledRedditThread.objects.filter(has_wiki_link=True)
+    qs = SampledRedditThread.objects.filter(has_wiki_link=True).order_by('uid')
     print(qs.count())
     for start, end, total, batch in batch_qs(qs):
         print(start, end, total)
