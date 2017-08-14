@@ -6,6 +6,7 @@ import json
 from json.decoder import JSONDecodeError
 import argparse
 from datetime import datetime
+import time
 
 import pytz
 from google.cloud import storage
@@ -31,12 +32,13 @@ TEST = False
 
 def main(platform):
     """main driver"""
-    template = 'stackoverflow-answers/0000000000{}'
+    soa_template = 'stackoverflow-answers/0000000000{}'
     completed = []
     for i in range(0, 10):
-        completed.append(template.format('0' + str(i)))
-    for i in range (10, 63):
-        completed.append(template.format(str(i)))
+        completed.append(soa_template.format('0' + str(i)))
+    for i in range (10, 64):
+        completed.append(soa_template.format(str(i)))
+    
 
     prefixes = {}
     confirmation_sent = False
@@ -44,6 +46,7 @@ def main(platform):
     client = storage.Client()
     bucket = client.get_bucket('datadumpsforme')
     for blob in bucket.list_blobs():
+        tic = time.time()
         path = blob.name
         print(path)
         if path in completed:
@@ -63,6 +66,8 @@ def main(platform):
         model = prefix_to_model(prefix)
         blob.download_to_filename(SAVE_LOC)
         with open(SAVE_LOC, 'r', encoding='utf8') as jsonfile:
+            print('Download + open took {}'.format(time.time() - tic))
+            tic = time.time()
             test_counter = 0
             for line in jsonfile:
                 test_counter += 1
@@ -91,11 +96,17 @@ def main(platform):
                         if '.' in val:
                             period_index = val.find('.')
                             kwargs[field.name] = val[:period_index] + ' UTC'
-                        as_dt = datetime.strptime(kwargs[field.name], "%Y-%m-%d %H:%M:%S %Z")
-                        kwargs[field.name] = as_dt.astimezone(pytz.UTC)
+                        try:
+                            as_dt = datetime.strptime(kwargs[field.name], "%Y-%m-%d %H:%M:%S %Z")
+                            kwargs[field.name] = as_dt.astimezone(pytz.UTC)
+                        except ValueError:
+                            print(data)
+                            continue
                 try:
-                    obj, created= model.objects.get_or_create(**kwargs)
+                    obj, created = model.objects.create(**kwargs)
                     prefixes[prefix] = True
+                except IntegrityError:
+                    continue
                 except Exception as err:
                     full_msg = '\n'.join([path, data, kwargs, err])
                     print(full_msg)
@@ -106,18 +117,16 @@ def main(platform):
                         ['nickmvincent@gmail.com'],
                         fail_silently=False,
                     )
-                if TEST and test_counter > 100:
-                    break
             if not confirmation_sent:
                 send_mail(
                     'Confirmation email: json2db ran successfully for one round',
-                    '',
+                    path,
                     settings.EMAIL_HOST_USER,
                     ['nickmvincent@gmail.com'],
                     fail_silently=False,
                 )
                 confirmation_sent = True
-
+            print('Blob processing took {}'.format(time.time() - tic))
 def parse():
     """
     Parse args and do the appropriate analysis
@@ -134,6 +143,7 @@ if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dja.settings")
     import django
     django.setup()
+    from django.db import IntegrityError
     from django.core.mail import send_mail
     from dja import settings
     from portal.models import (
