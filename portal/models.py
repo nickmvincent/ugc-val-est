@@ -41,7 +41,7 @@ class Post(models.Model):
     hour = models.IntegerField(blank=True, null=True)
 
     user_created_utc = models.DateTimeField(null=True, blank=True)
-    time_since_user_creation = models.DateTimeField(null=True, blank=True)
+    seconds_since_user_creation = models.IntegerField(null=True, blank=True)
 
     class Meta:
         abstract = True
@@ -53,7 +53,7 @@ class Post(models.Model):
         self.hour = self.timestamp.hour
         self.body_length = len(self.body)
         delta = self.timestamp - self.user_created_utc
-        self.time_since_user_creation = delta.seconds
+        self.seconds_since_user_creation = delta.seconds
         super(Post, self).save(*args, **kwargs)
 
 

@@ -36,6 +36,14 @@ def main(platform):
         path = blob.name
         print(path)
         prefix = path[:path.find('/')]
+        if platform == 's':
+            if 'reddit' in prefix:
+                print('Bypassing {} for now'.format(path))
+                continue
+        elif platform == 'r':
+            if 'stackoverflow' in prefix:
+                print('Bypassing {} for now'.format(path))                
+                continue
         if TEST and prefixes.get(prefix):
             continue
         model = prefix_to_model(prefix)
@@ -69,6 +77,8 @@ def main(platform):
                     print(data)
                     print(kwargs)
                     print(err)
+                    msg = str(err)[:254]
+                    ErrorLog.objects.create(uid=kwargs.get('id'), msg=msg)
                 if TEST and test_counter > 100:
                     break
 
@@ -90,6 +100,8 @@ if __name__ == "__main__":
     import django
     django.setup()
     from portal.models import (
-        RedditPost, StackOverflowAnswer, StackOverflowQuestion, StackOverflowUser
+        RedditPost, StackOverflowAnswer, 
+        StackOverflowQuestion, StackOverflowUser
+        ErrorLog
     )
     parse()
