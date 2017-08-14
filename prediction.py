@@ -148,7 +148,7 @@ def simple_linear(platform, quality_mode=False):
         y_train = Y[:-test_len]
         y_test = Y[-test_len:]
 
-        if quality_mode and feature == 'num_pageviews':
+        if quality_mode and outcome == 'num_pageviews':
             fig = plt.figure()
             axis = fig.add_subplot(111)
             axis.plot(X_train, y_train)
