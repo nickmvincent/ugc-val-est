@@ -58,21 +58,26 @@ def calc_avg_scores():
     Calculates average wiki scores at various time intervals
     """
     fields = ['day_prior',  'day_of', 'week_after', ]
-    qs = SampledRedditThread.objects.filter(has_wiki_link=True).order_by('uid')
-    print(qs.count())
-    for start, end, total, batch in batch_qs(qs):
-        print(start, end, total)
-        for thread in batch:
-            n = 0
-            field_to_score = {field: 0 for field in fields}
-            for link_obj in thread.post_specific_wiki_links.all():
-                for field in fields:
-                    field_to_score[field] += getattr(link_obj, field).score
-                n += 1
-            output_field_to_val = {field + '_avg_score': val / n for field, val in field_to_score.items()}
-            for output_field, val in output_field_to_val.items():
-                setattr(thread, output_field, val)
-            thread.save()
+    reddit_threads = SampledRedditThread.objects.filter(has_wiki_link=True).order_by('uid')
+    stack_posts = SampledStackOverflowPost.objects.filter(has_wiki_link=True).order_by('uid')
+    for qs in [reddit_threads, stack_posts]:
+        print(qs.count())
+        for start, end, total, batch in batch_qs(qs):
+            print(start, end, total)
+            for thread in batch:
+                num_links = 0
+                field_to_score = {field: 0 for field in fields}
+                for link_obj in thread.post_specific_wiki_links.all():
+                    for field in fields:
+                        field_to_score[field] += getattr(link_obj, field).score
+                    num_links += 1
+                if num_links == 0:
+                    print(thread.__dict__)
+                    continue
+                output_field_to_val = {field + '_avg_score': val / num_links for field, val in field_to_score.items()}
+                for output_field, val in output_field_to_val.items():
+                    setattr(thread, output_field, val)
+                thread.save()
 
 
 def bulk_save():
