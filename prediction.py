@@ -64,7 +64,6 @@ def extract_vals_and_method_results(qs, field_names):
 
 def causal_inference(platform):
     qs, features, outcomes = get_data(platform)
-    list_of_values_rows = qs.values_list(features + outcomes)
     treatment_feature = 'has_wiki_link'
     for outcome in outcomes:
         print('==={}==='.format(outcome))
@@ -73,13 +72,16 @@ def causal_inference(platform):
         rows = qs.values_list(*field_names)
         records = values_list_to_records(rows, field_names)
         feature_rows = []
+        successful_fields = []
         for feature in features:
             feature_row = getattr(records, feature)
             if any(np.isnan(feature_row)):
                 print('possible error - there is a None in feature {}'.format(feature))
                 print('This feature will NOT be included')
             else:
+                successful_fields.append(feature)
                 feature_rows.append(feature_row)
+        print(successful_fields)
         D = getattr(records, treatment_feature)
         X = np.array(feature_rows)
         X = np.transpose(X)
