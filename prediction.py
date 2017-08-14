@@ -41,7 +41,7 @@ def get_data(platform, num_rows=None, filter_kwargs=None):
     elif platform == 's':
         qs = SampledStackOverflowPost.objects.all()
         features = common_features + stack_specific_features()
-        outcomes += 'num_pageviews'
+        outcomes += ['num_pageviews', ]
     if filter_kwargs is not None:
         qs = qs.filter(**filter_kwargs)
     qs = qs.order_by('uid')

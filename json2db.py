@@ -104,12 +104,12 @@ def main(platform):
                             print(data)
                             continue
                 try:
-                    obj, created = model.objects.create(**kwargs)
+                    model.objects.create(**kwargs)
                     prefixes[prefix] = True
                 except IntegrityError:
                     continue
                 except Exception as err:
-                    full_msg = '\n'.join([path, data, kwargs, err])
+                    full_msg = '\n'.join([path, str(data), str(kwargs), str(err)])
                     print(full_msg)
                     send_mail(
                         'json2db Error!',
