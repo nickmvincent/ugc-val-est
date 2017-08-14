@@ -79,7 +79,7 @@ def calc_avg_scores():
                 for output_field, val in output_field_to_val.items():
                     setattr(thread, output_field, val)
                 thread.save()
-        print('\n num_errors': num_errors)
+        print('\n num_errors', num_errors)
 
 
 def bulk_save():
