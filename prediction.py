@@ -26,7 +26,7 @@ def values_list_to_records(rows, names):
 
 
 def get_data(platform):
-    num_rows = 10000
+    num_rows = 100000
 
     common_features = [
         # treatment effects
@@ -75,14 +75,15 @@ def causal_inference(platform):
         successful_fields = []
         for feature in features:
             feature_row = getattr(records, feature)
-            if any(np.isnan(feature_row)):
+            if feature == treatment_feature:
+                D = feature_row
+            elif any(np.isnan(feature_row)):
                 print('possible error - there is a None in feature {}'.format(feature))
                 print('This feature will NOT be included')
             else:
                 successful_fields.append(feature)
                 feature_rows.append(feature_row)
         print(successful_fields)
-        D = getattr(records, treatment_feature)
         X = np.array(feature_rows)
         X = np.transpose(X)
         Y = getattr(records, outcome)
