@@ -64,7 +64,7 @@ def extract_vals_and_method_results(qs, field_names):
 
 
 def causal_inference(platform):
-    qs, features, outcomes = get_data(platform, 100000)
+    qs, features, outcomes = get_data(platform)
     outcomes = ['score', ]
     treatment_feature = 'has_wiki_link'
     for outcome in outcomes:
