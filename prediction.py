@@ -70,7 +70,7 @@ def causal_inference(platform):
         print('==={}==='.format(outcome))
         field_names = features + [outcome]
         # rows = extract_vals_and_method_results(qs, field_names)
-        rows = qs.values_list(field_names)
+        rows = qs.values_list(*field_names)
         records = values_list_to_records(rows, field_names)
         feature_rows = []
         for feature in features:
