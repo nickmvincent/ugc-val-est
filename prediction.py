@@ -32,7 +32,7 @@ def get_data(platform, num_rows=None):
         'has_wiki_link', # 'day_of_avg_score',
         # contextual information
         'day_of_week', 'day_of_month', 'hour',
-        'body_length',
+        'body_length', # TODO: 'body_num_links',
     ]
     if platform == 'r':
         qs = SampledRedditThread.objects.all()
