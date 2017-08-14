@@ -27,7 +27,7 @@ def prefix_to_model(prefix):
 # completed stackoverflow-answers 0 to 63
 # error occurred in 64
 
-SAVE_LOC = 'tmp.json'
+SAVE_TEMPLATE = '{}_tmp.json'
 TEST = False
 
 def main(platform):
@@ -64,8 +64,9 @@ def main(platform):
         if TEST and prefixes.get(prefix):
             continue
         model = prefix_to_model(prefix)
-        blob.download_to_filename(SAVE_LOC)
-        with open(SAVE_LOC, 'r', encoding='utf8') as jsonfile:
+        save_location = SAVE_TEMPLATE.format(platform)
+        blob.download_to_filename(save_location)
+        with open(save_location, 'r', encoding='utf8') as jsonfile:
             print('Download + open took {}'.format(time.time() - tic))
             tic = time.time()
             test_counter = 0
