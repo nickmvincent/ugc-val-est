@@ -392,7 +392,8 @@ def change_in_quality(qs):
 def reddit_specific_features():
     return [
         'title_length',
-        'user_comment_karma', 'user_is_mod',
+        'user_comment_karma', 'user_link_karma', 
+        'user_is_mod', 'user_is_suspended', 'user_is_deleted'
     ]
 
 def stack_specific_features():

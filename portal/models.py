@@ -57,13 +57,6 @@ class Post(models.Model):
         super(Post, self).save(*args, **kwargs)
 
 
-
-
-# class AnnotatedRedditPost(RedditPost):
-#     """An annotated reddit post - annotation indicates category of discourse"""
-#     discourse_type = models.CharField(max_length=20)
-
-
 class SampledRedditThread(Post):
     """A sampled reddit THREAD using SQL Rand() function"""
     user_info_processed = models.BooleanField(default=False)
@@ -75,7 +68,7 @@ class SampledRedditThread(Post):
     url = models.CharField(max_length=2083)
     title = models.CharField(max_length=500)
     title_length = models.IntegerField(default=0)
-    
+   
 
     def save(self, *args, **kwargs):
         """overload save method"""
