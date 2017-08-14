@@ -5,7 +5,7 @@ Not for prod use
 Should be run from Anaconda environment with scipy installed
 (Anconda Prompt -> activate sci_basic)
 """
-# pylint: disable C0103
+# pylint: disable=C0103
 
 import os
 import argparse
@@ -45,6 +45,7 @@ def get_data(platform):
     outcomes = ['score', 'num_comments', ]
     return qs, features, outcomes
 
+
 def extract_vals_and_method_results(qs, field_names):
     """Extract either stored values or method results from a django QS"""
     rows = []
@@ -60,6 +61,7 @@ def extract_vals_and_method_results(qs, field_names):
             rows.append(row)
     return rows
 
+
 def causal_inference(platform):
     qs, features, outcomes = get_data(platform)
     treatment_feature = 'has_wiki_link'
@@ -68,11 +70,16 @@ def causal_inference(platform):
         field_names = features + [outcome]
         rows = extract_vals_and_method_results(qs, field_names)
         records = values_list_to_records(rows, field_names)
-        arr = []
+        feature_rows = []
         for feature in features:
-            arr.append(getattr(records, feature))
+            feature_row = getattr(records, feature)
+            if None in feature_row:
+                print('possible error - there is a None in feature {}'.format(feature))
+                print('This feature will NOT be included')
+            else:
+                feature_rows.append(feature_row)
         D = getattr(records, treatment_feature)
-        X = np.array(arr)
+        X = np.array(feature_rows)
         X = np.transpose(X)
         Y = getattr(records, outcome)
         causal = CausalModel(Y, D, X)

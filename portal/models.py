@@ -5,6 +5,7 @@ doing data analysis
 from django.db import models
 from django.utils import timezone
 
+
 class Post(models.Model):
     """
     Abstract model representing any type of post
@@ -68,12 +69,12 @@ class SampledRedditThread(Post):
     url = models.CharField(max_length=2083)
     title = models.CharField(max_length=500)
     title_length = models.IntegerField(default=0)
-   
 
     def save(self, *args, **kwargs):
         """overload save method"""
         self.title_length = len(self.title)
         super(SampledRedditThread, self).save(*args, **kwargs)
+
 
 class SampledStackOverflowPost(Post):
     """
@@ -92,6 +93,7 @@ class SampledStackOverflowPost(Post):
             self.response_time = delta.seconds
         super(SampledStackOverflowPost, self).save(*args, **kwargs)
 
+
 class PostSpecificWikiScores(models.Model):
     """
     Each row corresponding timestamped Wikipedia link that was posted
@@ -103,7 +105,9 @@ class PostSpecificWikiScores(models.Model):
     day_of = models.ForeignKey('RevisionScore', related_name='day_of')
     week_after = models.ForeignKey('RevisionScore', related_name='week_after')
 
+
 WIKI_PATTERN = 'wikipedia.org/wiki/'
+
 
 class WikiLink(models.Model):
     """
@@ -188,7 +192,8 @@ class StackOverflowQuestion(models.Model):
     favorite_count = models.IntegerField(default=0)
     last_activity_date = models.DateTimeField()
     last_edit_date = models.DateTimeField(blank=True, null=True)
-    last_editor_display_name = models.CharField(max_length=30, blank=True, null=True)
+    last_editor_display_name = models.CharField(
+        max_length=30, blank=True, null=True)
     last_editor_user_id = models.IntegerField(blank=True, null=True)
     owner_display_name = models.CharField(max_length=30)
     owner_user_id = models.IntegerField()
@@ -210,13 +215,15 @@ class StackOverflowAnswer(models.Model):
     creation_date = models.DateTimeField()
     last_activity_date = models.DateTimeField()
     last_edit_date = models.DateTimeField(blank=True, null=True)
-    last_editor_display_name = models.CharField(max_length=30, blank=True, null=True)
+    last_editor_display_name = models.CharField(
+        max_length=30, blank=True, null=True)
     last_editor_user_id = models.IntegerField(blank=True, null=True)
     owner_display_name = models.CharField(max_length=30)
     owner_user_id = models.IntegerField(blank=True, null=True)
     post_type_id = models.IntegerField()
     score = models.IntegerField(default=0)
     tags = models.CharField(max_length=115)
+
 
 class StackOverflowUser(models.Model):
     """
@@ -240,16 +247,16 @@ class StackOverflowUser(models.Model):
 class RedditPost(models.Model):
     """
     Each row corresponds to a reddit post
-    
+
     Omitted misleading fields or non-helpful fields
-    
+
     from_kind - always null
     from - always null
     from_id - always null
     downs - always zero
     ups - always equal to score
     """
-    created_utc	= models.IntegerField()
+    created_utc = models.IntegerField()
     subreddit = models.CharField(max_length=21, blank=True, null=True)
     subreddit_id = models.CharField(max_length=8, blank=True, null=True)
     author = models.CharField(max_length=20)
@@ -267,8 +274,10 @@ class RedditPost(models.Model):
     over_18 = models.BooleanField()
     thumbnail = models.CharField(max_length=80, blank=True, null=True)
     hide_score = models.BooleanField()
-    link_flair_css_class = models.CharField(max_length=61, blank=True, null=True)
-    author_flair_css_class = models.CharField(max_length=92, blank=True, null=True)
+    link_flair_css_class = models.CharField(
+        max_length=61, blank=True, null=True)
+    author_flair_css_class = models.CharField(
+        max_length=92, blank=True, null=True)
     archived = models.BooleanField()
     is_self = models.BooleanField()
     permalink = models.CharField(max_length=125)
