@@ -11,6 +11,9 @@ from collections import defaultdict
 from pprint import pprint
 import time
 
+import matplotlib
+matplotlib.use('Agg')
+
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy import stats
