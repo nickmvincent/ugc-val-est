@@ -25,7 +25,7 @@ def values_list_to_records(rows, names):
     return np.core.records.fromrecords(rows, names=names)
 
 
-def get_data(platform, num_rows=None):
+def get_data(platform, num_rows=None, filter_kwargs=None):
     """Get data from DB for regression and/or causal inference"""
     common_features = [
         # treatment effects
@@ -34,16 +34,20 @@ def get_data(platform, num_rows=None):
         'day_of_week', 'day_of_month', 'hour',
         'body_length', # TODO: 'body_num_links',
     ]
+    outcomes = ['score', 'num_comments', ]
     if platform == 'r':
         qs = SampledRedditThread.objects.all()
         features = common_features + reddit_specific_features()
     elif platform == 's':
         qs = SampledStackOverflowPost.objects.all()
         features = common_features + stack_specific_features()
+        outcomes += 'num_pageviews'
+    if filter_kwargs is not None:
+        qs = qs.filter(**filter_kwargs)
     qs = qs.order_by('uid')
     if num_rows is not None:
         qs = qs[:num_rows]
-    outcomes = ['score', 'num_comments', ]
+    
     return qs, features, outcomes
 
 
@@ -64,6 +68,10 @@ def extract_vals_and_method_results(qs, field_names):
 
 
 def causal_inference(platform):
+    """
+    Use causalinference module to perform causal inference analysis
+    Descriptive stats, OLS, PSM
+    """
     qs, features, outcomes = get_data(platform)
     outcomes = ['score', ]
     treatment_feature = 'has_wiki_link'
@@ -108,9 +116,17 @@ def causal_inference(platform):
         
 
 
-def simple_linear(platform):
+def simple_linear(platform, quality_mode=False):
     """Train a linear regression model and test it!"""
-    qs, features, outcomes = get_data(platform)
+    if quality_mode:
+        qs, features, outcomes = get_data(platform, filter_kwargs={
+            'has_wiki_link': True,
+            'wiki_content_analyzed': True,
+            'wiki_content_error': False
+        })
+        features = ['day_of_avg_score']
+    else:
+        qs, features, outcomes = get_data(platform)
     for outcome in outcomes:
         print('==={}==='.format(outcome))
         field_names = features + [outcome]
@@ -160,14 +176,25 @@ def parse():
     parser.add_argument(
         'platform', help='the platform to use. "r" for reddit and "s" for stack overflow')
     parser.add_argument(
+        '--simple',
+        action='store_true',
+        help='performs simple linear regression will all covariates')
+    parser.add_argument(
         '--causal',
         action='store_true',
-        help='Use causal inference?')
+        help='performs causal analysis')
+    parser.add_argument(
+        '--quality',
+        action='store_true',
+        help='performs linear regression on quality')
     args = parser.parse_args()
+    if args.simple:
+        simple_linear(args.platform)
     if args.causal:
         causal_inference(args.platform)
-    else:
-        simple_linear(args.platform)
+    if args.quality:
+        simple_linear(args.platform, True)
+        
 
 
 if __name__ == "__main__":

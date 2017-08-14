@@ -2,6 +2,7 @@
 These models are used to define the tables in the Postgresql database for
 doing data analysis
 """
+# pylint:disable=#C0103
 from django.db import models
 from django.utils import timezone
 from url_helpers import extract_urls
