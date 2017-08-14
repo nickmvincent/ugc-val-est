@@ -26,11 +26,11 @@ def values_list_to_records(rows, names):
 
 
 def get_data(platform):
-    num_rows = 100000
+    num_rows = 10000
 
     common_features = [
         # treatment effects
-        'has_wiki_link', 'num_wiki_links', 'day_of_avg_score',
+        'has_wiki_link', 'num_wiki_links', # 'day_of_avg_score',
         # contextual information
         'day_of_week', 'day_of_month', 'hour',
         'body_length',
@@ -64,16 +64,18 @@ def extract_vals_and_method_results(qs, field_names):
 
 def causal_inference(platform):
     qs, features, outcomes = get_data(platform)
+    list_of_values_rows = qs.values_list(features + outcomes)
     treatment_feature = 'has_wiki_link'
     for outcome in outcomes:
         print('==={}==='.format(outcome))
         field_names = features + [outcome]
-        rows = extract_vals_and_method_results(qs, field_names)
+        # rows = extract_vals_and_method_results(qs, field_names)
+        rows = qs.values_list(field_names)
         records = values_list_to_records(rows, field_names)
         feature_rows = []
         for feature in features:
             feature_row = getattr(records, feature)
-            if None in feature_row:
+            if any(np.isnan(feature_row)):
                 print('possible error - there is a None in feature {}'.format(feature))
                 print('This feature will NOT be included')
             else:
