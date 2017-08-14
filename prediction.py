@@ -174,7 +174,6 @@ def simple_linear(platform, quality_mode=False):
             regr.score(X_test, y_test)
         )
         print(lin_msg)
-    plt.show()
 
 
 def parse():
