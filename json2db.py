@@ -29,6 +29,7 @@ TEST = False
 
 def main(platform):
     prefixes = {}
+    confirmation_sent = False
 
     client = storage.Client()
     bucket = client.get_bucket('datadumpsforme')
@@ -73,15 +74,29 @@ def main(platform):
                     obj, created= model.objects.get_or_create(**kwargs)
                     prefixes[prefix] = True
                 except Exception as err:
+                    full_msg = '\n'.join([path, data, kwargs, err])
                     print(path)
                     print(data)
                     print(kwargs)
                     print(err)
-                    msg = str(err)[:254]
-                    ErrorLog.objects.create(uid=kwargs.get('id'), msg=msg)
+                    send_mail(
+                        'json2db Error!',
+                        full_msg,
+                        settings.EMAIL_HOST_USER,
+                        ['nickmvincent@gmail.com'],
+                        fail_silently=False,
+                    )
                 if TEST and test_counter > 100:
                     break
-
+            if not confirmation_sent:
+                send_mail(
+                    'Confirmation email: json2db ran successfully for one round',
+                    '',
+                    settings.EMAIL_HOST_USER,
+                    ['nickmvincent@gmail.com'],
+                    fail_silently=False,
+                )
+                confirmation_sent = True
 
 def parse():
     """
@@ -99,6 +114,8 @@ if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dja.settings")
     import django
     django.setup()
+    from django.core.mail import send_mail
+    from dja import settings
     from portal.models import (
         RedditPost, StackOverflowAnswer, 
         StackOverflowQuestion, StackOverflowUser,

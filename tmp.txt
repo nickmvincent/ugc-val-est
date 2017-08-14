@@ -1,0 +1,32 @@
+max(length(subreddit)),
+max(length(subreddit_id)),
+max(length(author)),
+max(length(domain)),
+max(length(url)),
+max(length(title)),
+max(length(selftext)),
+max(length(thumbnail)),
+max(length(link_flair_css_class)),
+max(length(author_flair_css_class)),
+max(length(permalink)),
+max(length(name)),
+max(length(author_flair_text)),
+max(length(link_flair_text)),
+max(length(distinguished))
+
+
+max(length(subreddit)), 24
+max(length(subreddit_id)), 8
+max(length(author)), 20
+max(length(domain)), 275
+max(length(url)), 31215
+max(length(title)), 1182
+max(length(selftext)), 74185
+max(length(thumbnail)), 80
+max(length(link_flair_css_class)), 102
+max(length(author_flair_css_class)), 95
+max(length(permalink)), 131
+max(length(name)), 9
+max(length(author_flair_text)), 256
+max(length(link_flair_text)), 128
+max(length(distinguished)) 9

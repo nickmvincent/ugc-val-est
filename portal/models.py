@@ -39,11 +39,14 @@ class Post(models.Model):
     wiki_content_analyzed = models.BooleanField(default=False)
     wiki_content_error = models.IntegerField(default=False)
 
+    # this field is nullable because it will be set in the overloaded save method
     day_of_week = models.IntegerField(blank=True, null=True)
     day_of_month = models.IntegerField(blank=True, null=True)
     hour = models.IntegerField(blank=True, null=True)
 
+    # this field is nullable because it will be set when retrieving reddit author info
     user_created_utc = models.DateTimeField(null=True, blank=True)
+    # this field is nullable because it will be set upon save method call
     seconds_since_user_creation = models.IntegerField(null=True, blank=True)
 
     class Meta:
@@ -56,13 +59,17 @@ class Post(models.Model):
         self.hour = self.timestamp.hour
         self.body_length = len(self.body)
         self.body_num_links = len(extract_urls(self.body))
-        delta = self.timestamp - self.user_created_utc
-        self.seconds_since_user_creation = delta.seconds
+        if self.user_created_utc:
+            delta = self.timestamp - self.user_created_utc
+            self.seconds_since_user_creation = delta.seconds
         super(Post, self).save(*args, **kwargs)
 
 
 class SampledRedditThread(Post):
-    """A sampled reddit THREAD using SQL Rand() function"""
+    """
+    A sampled reddit THREAD using SQL Rand() function
+    Columns are used as regression features - no NULLs allowed
+    """
     user_info_processed = models.BooleanField(default=False)
     user_comment_karma = models.IntegerField(default=0)
     user_link_karma = models.IntegerField(default=0)
@@ -260,15 +267,15 @@ class RedditPost(models.Model):
     ups - always equal to score
     """
     created_utc = models.IntegerField()
-    subreddit = models.CharField(max_length=21, blank=True, null=True)
+    subreddit = models.CharField(max_length=24, blank=True, null=True)
     subreddit_id = models.CharField(max_length=8, blank=True, null=True)
     author = models.CharField(max_length=20)
-    domain = models.CharField(max_length=206)
-    url = models.CharField(max_length=6843)
+    domain = models.CharField(max_length=275)
+    url = models.CharField(max_length=31215)
     num_comments = models.IntegerField()
     score = models.IntegerField()
-    title = models.CharField(max_length=329)
-    selftext = models.CharField(max_length=59994)
+    title = models.CharField(max_length=1182)
+    selftext = models.CharField(max_length=74185)
     saved = models.BooleanField()
     id = models.CharField(primary_key=True, max_length=10)
     gilded = models.IntegerField()
@@ -278,14 +285,14 @@ class RedditPost(models.Model):
     thumbnail = models.CharField(max_length=80, blank=True, null=True)
     hide_score = models.BooleanField()
     link_flair_css_class = models.CharField(
-        max_length=61, blank=True, null=True)
+        max_length=102, blank=True, null=True)
     author_flair_css_class = models.CharField(
-        max_length=92, blank=True, null=True)
+        max_length=95, blank=True, null=True)
     archived = models.BooleanField()
     is_self = models.BooleanField()
-    permalink = models.CharField(max_length=125)
+    permalink = models.CharField(max_length=131)
     name = models.CharField(max_length=9)
-    author_flair_text = models.CharField(max_length=89, blank=True, null=True)
+    author_flair_text = models.CharField(max_length=256, blank=True, null=True)
     quarantine = models.BooleanField()
-    link_flair_text = models.CharField(max_length=67, blank=True, null=True)
+    link_flair_text = models.CharField(max_length=128, blank=True, null=True)
     distinguished = models.CharField(max_length=9, blank=True, null=True)
