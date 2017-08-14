@@ -102,7 +102,7 @@ def plot_bar(counter, title="", filename="tmp.png"):
     axis.set_title(title)
     axis.set_yticks(y_pos)
     axis.set_yticklabels(list(names))
-    axis.invert_yaxis()  # labels read top-to-bottom
+    axis.invert_yaxis()
     axis.set_xlabel('Frequency')
     print('going to save fig...')
     fig.savefig('png_files/' + filename.replace(".csv", ".png"))

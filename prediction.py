@@ -140,13 +140,22 @@ def simple_linear(platform, quality_mode=False):
         X = np.transpose(X)
         Y = getattr(records, outcome)
         # Split the data into training/testing sets
-        test_percent = 30
+        test_percent = 10
         test_len = int(X.shape[0] * test_percent / 100)
         X_train = X[:-test_len]
         X_test = X[-test_len:]
 
         y_train = Y[:-test_len]
         y_test = Y[-test_len:]
+
+        if quality_mode and feature == 'num_pageviews':
+            fig = plt.figure()
+            axis = fig.add_subplot(111)
+            axis.plot(X_train, y_train)
+            axis.set_title('Simple Linear Regression')
+            axis.set_xlabel('Quality')
+            axis.set_ylabel('Pageviews')
+            fig.savefig('output_vs_quality.png')
 
         # Create linear regression object
         regr = linear_model.LinearRegression()
