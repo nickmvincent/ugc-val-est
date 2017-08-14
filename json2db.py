@@ -101,7 +101,7 @@ if __name__ == "__main__":
     django.setup()
     from portal.models import (
         RedditPost, StackOverflowAnswer, 
-        StackOverflowQuestion, StackOverflowUser
+        StackOverflowQuestion, StackOverflowUser,
         ErrorLog
     )
     parse()

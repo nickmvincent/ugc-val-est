@@ -13,7 +13,7 @@ import os
 import argparse
 import matplotlib.pyplot as plt
 import numpy as np
-from sklearn import datasets, linear_model, tree
+from sklearn import linear_model, tree
 from queryset_helpers import batch_qs
 
 # Load the diabetes dataset
@@ -29,7 +29,7 @@ def values_list_to_records(rows, names):
 def train_and_test(platform):
     """Train a linear regression model and test it!"""
     num_rows = 100000
-    
+
     common_features = [
         # treatment effects
         'has_wiki_link', 'num_wiki_links',
@@ -43,7 +43,7 @@ def train_and_test(platform):
         qs = SampledStackOverflowPost.objects.all()
         features = common_features + stack_specific_features()
     qs = qs.order_by('uid')[:num_rows]
-    
+
     outcomes = ['score', 'num_comments', ]
     for outcome in outcomes:
         print('==={}==='.format(outcome))
@@ -119,7 +119,6 @@ if __name__ == "__main__":
     django.setup()
     from portal.models import (
         SampledRedditThread, SampledStackOverflowPost,
-        PostSpecificWikiScores, WikiLink, RevisionScore
     )
     from stats import reddit_specific_features, stack_specific_features
     parse()
