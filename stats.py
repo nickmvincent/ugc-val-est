@@ -435,6 +435,7 @@ def main(platform='r', calculate_frequency=False):
             'name': 'All SO'
         }]
         variables += stack_specific_features()
+        variables += ['num_pageviews', ]
         extractor = get_links_from_body
         extract_from = 'body'
         filter_kwargs = {
