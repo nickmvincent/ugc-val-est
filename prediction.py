@@ -9,6 +9,9 @@ Should be run from Anaconda environment with scipy installed
 
 import os
 import argparse
+import matplotlib
+matplotlib.use('Agg')
+
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn import linear_model, tree
