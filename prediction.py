@@ -122,7 +122,7 @@ def simple_linear(platform, quality_mode=False):
         qs, features, outcomes = get_data(platform, filter_kwargs={
             'has_wiki_link': True,
             'wiki_content_analyzed': True,
-            'wiki_content_error__is_null': True,
+            'wiki_content_error': 0,
             'day_of_avg_score__is_null': False,
         })
         features = ['day_of_avg_score']
