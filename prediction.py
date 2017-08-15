@@ -123,7 +123,6 @@ def causal_inference(platform, num_rows=None):
         out.append(str(causal.summary_stats))
         times.append(mark_time('summary_stats'))
         causal.est_via_ols()
-        times['est_via_ols'] = time.time()
         times.append(mark_time('est_via_ols'))
         out.append(str(causal.estimates))
         causal.est_propensity_s()
