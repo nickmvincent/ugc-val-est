@@ -10,6 +10,7 @@ import os
 from collections import defaultdict
 from pprint import pprint
 import time
+from queryset_helpers import list_textual_metrics
 
 import matplotlib
 matplotlib.use('Agg')
@@ -556,6 +557,5 @@ if __name__ == "__main__":
     django.setup()
     from portal.models import (
         SampledRedditThread, SampledStackOverflowPost,
-        list_textual_metrics,
     )
     parse()

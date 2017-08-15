@@ -16,21 +16,6 @@ def trimmed(val, floor, ceil):
     return ceiled
 
 
-def list_textual_metrics(prefix):
-    """Takes a prefix string (body or title)
-    and returns a list of all the metrics associated with
-    the text. The purpose of this is to help with
-    analysis that wants a list of all
-    textual metric feature names"""
-    ret = []
-    for metric in [
-            'length', 'num_links', 'percent_uppercase',
-            'percent_spaces', 'percent_punctuation',
-            'starts_capitalized', 'coleman_liau_index',
-    ]:
-        ret.append('{}_{}'.format(prefix, metric))
-    return ret
-
 class Post(models.Model):
     """
     Abstract model representing any type of post

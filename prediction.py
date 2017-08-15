@@ -9,6 +9,7 @@ Should be run from Anaconda environment with scipy installed
 
 import os
 import argparse
+from queryset_helpers import list_textual_metrics
 import matplotlib
 matplotlib.use('Agg')
 
@@ -218,7 +219,6 @@ if __name__ == "__main__":
     django.setup()
     from portal.models import (
         SampledRedditThread, SampledStackOverflowPost,
-        list_textual_metrics,
     )
     from stats import reddit_specific_features, stack_specific_features
     parse()
