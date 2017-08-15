@@ -115,7 +115,7 @@ def causal_inference(platform, num_rows=None):
         out = []
         for i, field in enumerate(successful_fields):
             varname_to_field["X{}".format(i)] = field
-        for key, val in varname_to_field.items:
+        for key, val in varname_to_field.items():
             out.append("{}:{}".format(key, val))
         out.append(str(varname_to_field))
         X = np.array(feature_rows)
