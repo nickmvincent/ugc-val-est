@@ -90,13 +90,13 @@ class Post(models.Model):
         if self.body_sentence_count == 0:
             self.body_sentence_count = textstat.sentence_count(self.body)
         if self.body_percent_uppercase == 0:
-            num_uppers = sum(1 for c in message if c.isupper())
+            num_uppers = sum(1 for c in self.body if c.isupper())
             self.body_percent_uppercase = round(num_uppers / self.body_length * 100)
         if self.body_percent_spaces == 0:
-            num_spaces = sum(1 for c in message if c == ' ')
+            num_spaces = sum(1 for c in self.body if c == ' ')
             self.body_percent_spaces = round(num_spaces / self.body_length * 100)
         if self.body_percent_punctuation == 0:
-            num_punctuation = sum(1 for c in message if c in ['.', ','])
+            num_punctuation = sum(1 for c in self.body if c in ['.', ','])
             self.body_percent_punctuation = round(num_punctuation / self.body_length * 100)
         if self.body_starts_capitalized is False:
             self.body_starts_capitalized = self.body[0].isupper()
@@ -132,20 +132,20 @@ class SampledRedditThread(Post):
 
     def save(self, *args, **kwargs):
         """overload save method"""
-        if self.title_length = 0:
+        if self.title_length == 0:
             self.title_length = len(self.title)
         if self.title_lexicon_count == 0:
             self.title_lexicon_count = textstat.lexicon_count(self.body)
         if self.title_sentence_count == 0:
             self.title_sentence_count = textstat.sentence_count(self.body)
         if self.title_percent_uppercase == 0:
-            num_uppers = sum(1 for c in message if c.isupper())
+            num_uppers = sum(1 for c in self.title if c.isupper())
             self.title_percent_uppercase = round(num_uppers / self.title_length * 100)
         if self.title_percent_spaces == 0:
-            num_spaces = sum(1 for c in message if c == ' ')
+            num_spaces = sum(1 for c in self.title if c == ' ')
             self.title_percent_spaces = round(num_spaces / self.title_length * 100)
         if self.title_percent_punctuation == 0:
-            num_punctuation = sum(1 for c in message if c in ['.', ','])
+            num_punctuation = sum(1 for c in self.title if c in ['.', ','])
             self.title_percent_punctuation = round(num_punctuation / self.title_length * 100)
         if self.title_starts_capitalized is False:
             self.title_starts_capitalized = self.title[0].isupper()
