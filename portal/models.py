@@ -20,6 +20,8 @@ class Post(models.Model):
     uid = models.CharField(max_length=100, primary_key=True)
     body = models.CharField(max_length=58431)
     body_length = models.IntegerField(default=0)
+    body_lexicon_count = models.IntegerField(default=0)
+    body_sentence_count = models.IntegerField(default=0)
     body_num_links = models.IntegerField(default=0)
     score = models.IntegerField()
     num_comments = models.IntegerField(default=0)
@@ -64,6 +66,8 @@ class Post(models.Model):
         if self.user_created_utc:
             delta = self.timestamp - self.user_created_utc
             self.seconds_since_user_creation = delta.seconds
+        self.body_lexicon_count = textstat.lexicon_count(self.body)
+        self.body_sentence_count = textstat.sentence_count(self.body)
         super(Post, self).save(*args, **kwargs)
 
 
@@ -81,10 +85,14 @@ class SampledRedditThread(Post):
     url = models.CharField(max_length=2083)
     title = models.CharField(max_length=500)
     title_length = models.IntegerField(default=0)
+    title_lexicon_count = models.IntegerField(default=0)
+    title_sentence_count = models.IntegerField(default=0)
 
     def save(self, *args, **kwargs):
         """overload save method"""
         self.title_length = len(self.title)
+        self.title_lexicon_count = textstat.lexicon_count(self.body)
+        self.title_sentence_count = textstat.sentence_count(self.body)
         super(SampledRedditThread, self).save(*args, **kwargs)
 
 
