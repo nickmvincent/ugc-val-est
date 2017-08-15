@@ -321,7 +321,7 @@ class StackOverflowUser(models.Model):
     Each row corresponds to a SO user from BigQuery table
     """
     id = models.IntegerField(primary_key=True)
-    display_name = models.CharField(max_length=30)
+    display_name = models.CharField(max_length=36)
     about_me = models.CharField(max_length=5999, blank=True, null=True)
     age = models.CharField(max_length=4, blank=True, null=True)
     creation_date = models.DateTimeField()
