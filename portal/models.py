@@ -123,10 +123,13 @@ class Post(models.Model):
                     for field in fields:
                         field_to_score[field] += getattr(link_obj, field).score
                     num_links += 1
-                output_field_to_val = {field + '_avg_score': val / num_links for field, val in field_to_score.items()}
-                for output_field, val in output_field_to_val.items():
-                    setattr(self, output_field, val)
-            if self.has_good_wiki_link is False:
+                if num_links == 0:
+                    self.wiki_content_error = 5 # mystery error requires manual investigation
+                else:
+                    output_field_to_val = {field + '_avg_score': val / num_links for field, val in field_to_score.items()}
+                    for output_field, val in output_field_to_val.items():
+                        setattr(self, output_field, val)
+            if self.has_good_wiki_link is False and self.day_of_avg_score:
                 if self.day_of_avg_score >= 4:
                     self.has_good_wiki_link = True
         super(Post, self).save(*args, **kwargs)
