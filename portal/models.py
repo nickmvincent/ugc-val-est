@@ -48,6 +48,7 @@ class Post(models.Model):
 
     wiki_links = models.ManyToManyField('WikiLink')
     has_wiki_link = models.BooleanField(default=False)
+    has_good_wiki_link = models.BooleanField(default=False)
     num_wiki_links = models.IntegerField(default=0)
 
     post_specific_wiki_links = models.ManyToManyField('PostSpecificWikiScores')

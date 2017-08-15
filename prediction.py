@@ -46,9 +46,12 @@ def get_qs_features_and_outcomes(platform, num_rows=None, filter_kwargs=None):
         outcomes += ['num_pageviews', ]
     if filter_kwargs is not None:
         qs = qs.filter(**filter_kwargs)
-    qs = qs.order_by('uid')
+    
     if num_rows is not None:
         qs = qs[:num_rows]
+        qs = qs.order_by('?')
+    else:
+        qs = qs.order_by('uid')
     return qs, features, outcomes
 
 
@@ -68,14 +71,14 @@ def extract_vals_and_method_results(qs, field_names):
     return rows
 
 
-def causal_inference(platform):
+def causal_inference(platform, num_rows=None):
     """
     Use causalinference module to perform causal inference analysis
     Descriptive stats, OLS, PSM
     """
     filename = '{}_causal_results.txt'
     qs, features, outcomes = get_qs_features_and_outcomes(
-        platform, num_rows=100000)
+        platform, num_rows=num_rows)
     outcomes = ['score', ]
     treatment_feature = 'has_wiki_link'
     for outcome in outcomes:
@@ -196,6 +199,8 @@ def parse():
     parser.add_argument(
         'platform', help='the platform to use. "r" for reddit and "s" for stack overflow')
     parser.add_argument(
+        'num_rows', help='the number of rows to use.')
+    parser.add_argument(
         '--simple',
         action='store_true',
         help='performs simple linear regression will all covariates')
@@ -211,7 +216,7 @@ def parse():
     if args.simple:
         simple_linear(args.platform)
     if args.causal:
-        causal_inference(args.platform)
+        causal_inference(args.platform, args.num_rows)
     if args.quality:
         simple_linear(args.platform, True)
 

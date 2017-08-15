@@ -72,5 +72,6 @@ def list_stack_specific_features():
     """Features unique to SO answers"""
     return [
         'user_reputation', 'num_tags',
-        'response_time',
+        # commented out until this is implemente fully
+        # 'response_time',
     ]
