@@ -10,9 +10,26 @@ from url_helpers import extract_urls
 from textstat.textstat import textstat
 
 def trimmed(val, floor, ceil):
+    """floors and ceils a val"""
     floored = max(val, floor)
     ceiled = min(floored, ceil)
     return ceiled
+
+
+def list_textual_metrics(prefix):
+    """Takes a prefix string (body or title)
+    and returns a list of all the metrics associated with
+    the text. The purpose of this is to help with
+    analysis that wants a list of all
+    textual metric feature names"""
+    ret = []
+    for metric in [
+            'length', 'num_links', 'percent_uppercase',
+            'percent_spaces', 'percent_punctuation',
+            'starts_capitalized', 'coleman_liau_index',
+    ]:
+        ret.append('{}_{}'.format(prefix, metric))
+    return ret
 
 class Post(models.Model):
     """
@@ -85,6 +102,8 @@ class Post(models.Model):
         if self.user_created_utc:
             delta = self.timestamp - self.user_created_utc
             self.seconds_since_user_creation = delta.seconds
+        else:
+            self.seconds_since_user_creation = 0
         if self.body_length != 0:
             if self.body_lexicon_count == 0:
                 self.body_lexicon_count = textstat.lexicon_count(self.body)

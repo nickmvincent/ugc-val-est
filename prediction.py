@@ -28,15 +28,16 @@ def values_list_to_records(rows, names):
     return np.core.records.fromrecords(rows, names=names)
 
 
-def get_data(platform, num_rows=None, filter_kwargs=None):
+def get_qs_features_and_outcomes(platform, num_rows=None, filter_kwargs=None):
     """Get data from DB for regression and/or causal inference"""
     common_features = [
         # treatment effects
         'has_wiki_link', # 'day_of_avg_score',
         # contextual information
         'day_of_week', 'day_of_month', 'hour',
-        'body_length', # TODO: 'body_num_links',
     ]
+    # textual metrics
+    common_features += list_textual_metrics('body)')
     outcomes = ['score', 'num_comments', ]
     if platform == 'r':
         qs = SampledRedditThread.objects.all()
@@ -50,7 +51,6 @@ def get_data(platform, num_rows=None, filter_kwargs=None):
     qs = qs.order_by('uid')
     if num_rows is not None:
         qs = qs[:num_rows]
-    
     return qs, features, outcomes
 
 
@@ -75,7 +75,9 @@ def causal_inference(platform):
     Use causalinference module to perform causal inference analysis
     Descriptive stats, OLS, PSM
     """
-    qs, features, outcomes = get_data(platform)
+    filename = '{}_causal_results.txt'
+    qs, features, outcomes = get_qs_features_and_outcomes(
+        platform, num_rows=100000)
     outcomes = ['score', ]
     treatment_feature = 'has_wiki_link'
     for outcome in outcomes:
@@ -96,33 +98,34 @@ def causal_inference(platform):
             else:
                 successful_fields.append(feature)
                 feature_rows.append(feature_row)
-        print(successful_fields)
-        X = np.array(feature_rows)
-        X = np.transpose(X)
-        Y = getattr(records, outcome)
-        causal = CausalModel(Y, D, X)
-        print(causal.summary_stats)
-        causal.est_via_ols()
-        print(causal.estimates)
-        causal.est_propensity_s()
-        print(causal.propensity)
-        causal.trim_s()
-        print(causal.summary_stats)
-        causal.stratify_s()
-        print(causal.strata)
-        causal.est_via_blocking()
-        print(causal.estimates)
-        causal.est_via_weighting()
-        print(causal.estimates)
-        causal.est_via_matching()
-        print(causal.estimates)
+        with open(filename, 'w') as outfile:
+            outfile.write(successful_fields)
+            X = np.array(feature_rows)
+            X = np.transpose(X)
+            Y = getattr(records, outcome)
+            causal = CausalModel(Y, D, X)
+            outfile.write(causal.summary_stats)
+            causal.est_via_ols()
+            outfile.write(causal.estimates)
+            causal.est_propensity_s()
+            outfile.write(causal.propensity)
+            causal.trim_s()
+            outfile.write(causal.summary_stats)
+            causal.stratify_s()
+            outfile.write(causal.strata)
+            causal.est_via_blocking()
+            outfile.write(causal.estimates)
+            causal.est_via_weighting()
+            outfile.write(causal.estimates)
+            causal.est_via_matching()
+            outfile.write(causal.estimates)
         
 
 
 def simple_linear(platform, quality_mode=False):
     """Train a linear regression model and test it!"""
     if quality_mode:
-        qs, features, outcomes = get_data(platform, filter_kwargs={
+        qs, features, outcomes = get_qs_features_and_outcomes(platform, filter_kwargs={
             'has_wiki_link': True,
             'wiki_content_analyzed': True,
             'wiki_content_error': 0,
@@ -130,7 +133,7 @@ def simple_linear(platform, quality_mode=False):
         })
         features = ['day_of_avg_score']
     else:
-        qs, features, outcomes = get_data(platform)
+        qs, features, outcomes = get_qs_features_and_outcomes(platform)
     for outcome in outcomes:
         print('==={}==='.format(outcome))
         field_names = features + [outcome]
@@ -215,6 +218,7 @@ if __name__ == "__main__":
     django.setup()
     from portal.models import (
         SampledRedditThread, SampledStackOverflowPost,
+        list_textual_metrics,
     )
     from stats import reddit_specific_features, stack_specific_features
     parse()

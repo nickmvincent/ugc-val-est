@@ -393,15 +393,18 @@ def change_in_quality(qs):
 
 
 def reddit_specific_features():
-    return [
-        'title_length',
+    """Features unique to reddit posts"""
+    textual = list_textual_metrics('title')
+    return textual + [
         'user_comment_karma', 'user_link_karma', 
         'user_is_mod', 'user_is_suspended', 'user_is_deleted'
     ]
 
 def stack_specific_features():
+    """Features unique to SO answers"""
     return [
-        'user_reputation',
+        'user_reputation', 'num_tags',
+        'response_time',
     ]
 
 
@@ -414,11 +417,13 @@ def main(platform='r', calculate_frequency=False):
             os.makedirs(directory)
     variables = [
         'score', 'num_comments',
-        make_ln_func('score'),
-        'day_of_week', 'hour', 
+        'day_of_week', 'day_of_month','hour', 
     ]
     if platform == 'r':
         datasets = [{
+            'qs': SampledRedditThread.objects.filter(context='todayilearned'),
+            'name': 'TIL'
+        }, {
             'qs': SampledRedditThread.objects.filter(context__in=TOP_TEN),
             'name': 'Top_Ten'
         }, {
@@ -549,5 +554,8 @@ if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dja.settings")
     import django
     django.setup()
-    from portal.models import SampledRedditThread, SampledStackOverflowPost
+    from portal.models import (
+        SampledRedditThread, SampledStackOverflowPost,
+        list_textual_metrics,
+    )
     parse()
