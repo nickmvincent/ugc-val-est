@@ -101,12 +101,13 @@ class Post(models.Model):
                 self.body_percent_punctuation = round(num_punctuation / self.body_length * 100)
             if self.body_starts_capitalized is False:
                 self.body_starts_capitalized = self.body[0].isupper()
-        try:
-            self.body_coleman_liau_index = round(trimmed(
-                textstat.coleman_liau_index(self.body), 0, 16
-            ))
-        except TypeError:
-            self.body_coleman_liau_index = 0
+            if self.body_lexicon_count != 0:
+                try:
+                    self.body_coleman_liau_index = round(trimmed(
+                        textstat.coleman_liau_index(self.body), 0, 16
+                    ))
+                except TypeError:
+                    self.body_coleman_liau_index = 0
         
         super(Post, self).save(*args, **kwargs)
 
@@ -153,12 +154,13 @@ class SampledRedditThread(Post):
                 self.title_percent_punctuation = round(num_punctuation / self.title_length * 100)
             if self.title_starts_capitalized is False:
                 self.title_starts_capitalized = self.title[0].isupper()
-        try:
-            self.title_coleman_liau_index = round(trimmed(
-                textstat.coleman_liau_index(self.title), 0, 16
-            ))
-        except TypeError:
-            self.title_coleman_liau_index = 0
+            if self.title_lexicon_count != 0:
+                try:
+                    self.title_coleman_liau_index = round(trimmed(
+                        textstat.coleman_liau_index(self.title), 0, 16
+                    ))
+                except TypeError:
+                    self.title_coleman_liau_index = 0
         super(SampledRedditThread, self).save(*args, **kwargs)
 
 
