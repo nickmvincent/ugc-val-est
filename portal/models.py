@@ -65,7 +65,8 @@ class Post(models.Model):
         if self.user_created_utc:
             delta = self.timestamp - self.user_created_utc
             self.seconds_since_user_creation = delta.seconds
-        self.body_flesch_kincaid_grade = round(textstat.flesch_kincaid_grade(self.body), 1)
+        if self.body:
+            self.body_flesch_kincaid_grade = round(textstat.flesch_kincaid_grade(self.body), 1)
         super(Post, self).save(*args, **kwargs)
 
 
@@ -88,7 +89,8 @@ class SampledRedditThread(Post):
     def save(self, *args, **kwargs):
         """overload save method"""
         self.title_length = len(self.title)
-        self.title_flesch_kincaid_grade = round(textstat.flesch_kincaid_grade(self.body), 1)
+        if self.title:
+            self.title_flesch_kincaid_grade = round(textstat.flesch_kincaid_grade(self.body), 1)
         super(SampledRedditThread, self).save(*args, **kwargs)
 
 
