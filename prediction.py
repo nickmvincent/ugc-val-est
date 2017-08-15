@@ -115,16 +115,16 @@ def causal_inference(platform, num_rows=None):
         out = []
         for i, field in enumerate(successful_fields):
             varname_to_field["X{}".format(i)] = field
+        for key, val in varname_to_field.items:
+            out.append("{}:{}".format(key, val))
         out.append(str(varname_to_field))
         X = np.array(feature_rows)
         X = np.transpose(X)
         Y = getattr(records, outcome)
         causal = CausalModel(Y, D, X)
-        out.append(str(causal.summary_stats))
-        times.append(mark_time('summary_stats'))
+        times.append(mark_time('CausalModel'))
         causal.est_via_ols()
         times.append(mark_time('est_via_ols'))
-        out.append(str(causal.estimates))
         causal.est_propensity_s()
         times.append(mark_time('propensity'))        
         out.append(str(causal.propensity))
@@ -136,10 +136,8 @@ def causal_inference(platform, num_rows=None):
         out.append(str(causal.strata))
         causal.est_via_blocking()
         times.append(mark_time('est_via_blocking'))
-        out.append(str(causal.estimates))
         causal.est_via_weighting()
         times.append(mark_time('est_via_weighting'))
-        out.append(str(causal.estimates))
         causal.est_via_matching()
         times.append(mark_time('est_via_matching'))
         out.append(str(causal.estimates))
@@ -148,7 +146,8 @@ def causal_inference(platform, num_rows=None):
         for cur_time, desc in times[1:]:
             timing_info[desc] = cur_time - prev
             prev = cur_time
-        out.append(str(timing_info))
+        for key, val in timing_info.items():
+            out.append("{}:{}".format(key, val))
         with open(filename, 'w') as outfile:
             outfile.write('\n'.join(out))
 
