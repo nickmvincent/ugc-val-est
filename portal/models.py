@@ -7,6 +7,7 @@ from django.db import models
 from django.utils import timezone
 from url_helpers import extract_urls
 
+from textstat.textstat import textstat
 
 class Post(models.Model):
     """
@@ -20,6 +21,7 @@ class Post(models.Model):
     body = models.CharField(max_length=58431)
     body_length = models.IntegerField(default=0)
     body_num_links = models.IntegerField(default=0)
+    body_flesch_kincaid_grade = models.DecimalField(default=0, decimal_places=1, max_digits=3)
     score = models.IntegerField()
     num_comments = models.IntegerField(default=0)
     is_root = models.BooleanField(default=False)
@@ -63,6 +65,7 @@ class Post(models.Model):
         if self.user_created_utc:
             delta = self.timestamp - self.user_created_utc
             self.seconds_since_user_creation = delta.seconds
+        self.body_flesch_kincaid_grade = round(textstat.flesch_kincaid_grade(self.body), 1)
         super(Post, self).save(*args, **kwargs)
 
 
@@ -80,10 +83,12 @@ class SampledRedditThread(Post):
     url = models.CharField(max_length=2083)
     title = models.CharField(max_length=500)
     title_length = models.IntegerField(default=0)
+    title_flesch_kincaid_grade = models.DecimalField(default=0, decimal_places=1, max_digits=3)
 
     def save(self, *args, **kwargs):
         """overload save method"""
         self.title_length = len(self.title)
+        self.title_flesch_kincaid_grade = round(textstat.flesch_kincaid_grade(self.body), 1)
         super(SampledRedditThread, self).save(*args, **kwargs)
 
 

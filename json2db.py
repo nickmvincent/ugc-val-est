@@ -59,7 +59,7 @@ def main(platform):
                 continue
         elif platform == 'r':
             if 'stackoverflow' in prefix:
-                print('Bypassing {} for now'.format(path))                
+                print('Bypassing {} for now'.format(path))
                 continue
         if TEST and prefixes.get(prefix):
             continue
