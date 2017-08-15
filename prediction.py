@@ -9,14 +9,16 @@ Should be run from Anaconda environment with scipy installed
 
 import os
 import argparse
-from queryset_helpers import list_textual_metrics
+from queryset_helpers import (
+    batch_qs, list_common_features,
+    list_reddit_specific_features, list_stack_specific_features
+)
 import matplotlib
 matplotlib.use('Agg')
-
+# pylint:disable=C0413
 import matplotlib.pyplot as plt
 import numpy as np
-from sklearn import linear_model, tree
-from queryset_helpers import batch_qs
+from sklearn import linear_model
 from causalinference import CausalModel
 
 # Load the diabetes dataset
@@ -31,22 +33,16 @@ def values_list_to_records(rows, names):
 
 def get_qs_features_and_outcomes(platform, num_rows=None, filter_kwargs=None):
     """Get data from DB for regression and/or causal inference"""
-    common_features = [
-        # treatment effects
-        'has_wiki_link', # 'day_of_avg_score',
-        # contextual information
-        'day_of_week', 'day_of_month', 'hour',
-        'body_num_links',
-    ]
+    common_features = list_common_features()
+    common_features.append('has_wiki_link')
     # textual metrics
-    common_features += list_textual_metrics('body')
     outcomes = ['score', 'num_comments', ]
     if platform == 'r':
         qs = SampledRedditThread.objects.all()
-        features = common_features + reddit_specific_features()
+        features = common_features + list_reddit_specific_features()
     elif platform == 's':
         qs = SampledStackOverflowPost.objects.all()
-        features = common_features + stack_specific_features()
+        features = common_features + list_stack_specific_features()
         outcomes += ['num_pageviews', ]
     if filter_kwargs is not None:
         qs = qs.filter(**filter_kwargs)
@@ -59,7 +55,7 @@ def get_qs_features_and_outcomes(platform, num_rows=None, filter_kwargs=None):
 def extract_vals_and_method_results(qs, field_names):
     """Extract either stored values or method results from a django QS"""
     rows = []
-    for start, end, total, batch in batch_qs(qs, batch_size=1000):
+    for _, _, _, batch in batch_qs(qs, batch_size=1000):
         for obj in batch:
             row = []
             for field_name in field_names:
@@ -215,7 +211,7 @@ def parse():
         causal_inference(args.platform)
     if args.quality:
         simple_linear(args.platform, True)
-        
+
 
 
 if __name__ == "__main__":
@@ -225,5 +221,4 @@ if __name__ == "__main__":
     from portal.models import (
         SampledRedditThread, SampledStackOverflowPost,
     )
-    from stats import reddit_specific_features, stack_specific_features
     parse()

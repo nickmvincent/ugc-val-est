@@ -46,3 +46,31 @@ def list_textual_metrics(prefix):
     ]:
         ret.append('{}_{}'.format(prefix, metric))
     return ret
+
+def list_common_features():
+    """
+    Returns common features.
+    Does NOT return outcome variables
+    Helpful for stats/prediction functions
+    that make heavy use of getattr
+    """
+    body_features = list_textual_metrics('body')
+    return body_features + [
+        'day_of_week', 'day_of_month',
+        'hour', 'body_num_links',
+    ]
+
+def list_reddit_specific_features():
+    """Features unique to reddit posts"""
+    textual = list_textual_metrics('title')
+    return textual + [
+        'user_comment_karma', 'user_link_karma', 
+        'user_is_mod', 'user_is_suspended', 'user_is_deleted'
+    ]
+
+def list_stack_specific_features():
+    """Features unique to SO answers"""
+    return [
+        'user_reputation', 'num_tags',
+        'response_time',
+    ]

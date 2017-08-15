@@ -2,7 +2,6 @@
 Performs statistical analysis on sampled data
 """
 # pylint: disable=E0401
-
 import argparse
 import csv
 import operator
@@ -10,20 +9,23 @@ import os
 from collections import defaultdict
 from pprint import pprint
 import time
-from queryset_helpers import list_textual_metrics
+from queryset_helpers import (
+    batch_qs,
+    list_textual_metrics, list_common_features,
+    list_stack_specific_features,
+    list_reddit_specific_features
+)
+from url_helpers import extract_urls
 
 import matplotlib
 matplotlib.use('Agg')
-
+# pylint:disable=C0413
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy import stats
 
 
-from url_helpers import extract_urls
-from queryset_helpers import batch_qs
 WIKI = 'wikipedia.org/wiki/'
-
 
 
 def percent_bias(x_arr, y_arr):
@@ -42,7 +44,7 @@ def alt_cohen_d(x_arr, y_arr):
     """
     delta = np.mean(x_arr) - np.mean(y_arr)
     pooled_std = np.sqrt((np.std(x_arr, ddof=1) ** 2 +
-                   np.std(y_arr, ddof=1) ** 2) / 2.0)
+                          np.std(y_arr, ddof=1) ** 2) / 2.0)
     return delta / pooled_std
 
 
@@ -60,6 +62,7 @@ def cohen_d(x_arr, y_arr):
         ) / (len(x_arr) + len(y_arr))
     )
     return delta / pooled_std
+
 
 def cles(lessers, greaters):
     """
@@ -90,7 +93,6 @@ def plot_bar(counter, title="", filename="tmp.png"):
     :param ax: an axis of matplotlib
     :return: the axis wit the object in it
     """
-
 
     fig = plt.figure()
     axis = fig.add_subplot(111)
@@ -170,7 +172,6 @@ def frequency_distribution(qs, field, qs_name, extractor=None):
         writer.writerows(rows)
 
 
-
 def tags_frequency_distribution(qs):
     """
     Takes a qs and figure out which tags to links are found in
@@ -244,8 +245,10 @@ def univariate_analysis(groups):
             'standard deviation': np.std(group['vals']),
         }
     for group in groups_to_analyze:
-        basic[group['name']]['percent_of_total_items'] = basic[group['name']]['num_items'] / len(all_vals) * 100
-        basic[group['name']]['percent_of_total_sum'] = basic[group['name']]['sum'] / sum(all_vals) * 100
+        basic[group['name']]['percent_of_total_items'] = basic[group['name']
+                                                              ]['num_items'] / len(all_vals) * 100
+        basic[group['name']]['percent_of_total_sum'] = basic[group['name']
+                                                            ]['sum'] / sum(all_vals) * 100
     return {
         'basic': basic,
         'central_tendencies': central_tendencies,
@@ -275,7 +278,6 @@ def inferential_analysis(x_arr, y_arr):
             }
         }
     }
-
 
 
 def get_links_from_body(body):
@@ -334,7 +336,8 @@ def output_stats(output_filename, descriptive_stats, inferential_stats):
     for subset_name, variables in output.items():
         for variable, stat_categories in variables.items():
             # one row per subset/variable combo
-            row_description = "Variable `{}` in subset `{}`".format(variable, subset_name)
+            row_description = "Variable `{}` in subset `{}`".format(
+                variable, subset_name)
             row = []
             row.append(row_description)
             for stat_category, subgroups in stat_categories.items():
@@ -360,13 +363,14 @@ def output_stats(output_filename, descriptive_stats, inferential_stats):
         writer.writerows(arr)
     return output
 
+
 def make_ln_func(variable):
     """Take an qs and computed the natural log of a variable"""
     def safe_ln_queryset(qs):
         """Takes the natural log of a queryset's values and handles zeros"""
         vals = qs.values_list(variable, flat=True)
         ret = np.log(vals)
-        ret[ret==-np.inf] = 0
+        ret[ret == -np.inf] = 0
         return ret
     return safe_ln_queryset
 
@@ -374,6 +378,7 @@ def make_ln_func(variable):
 def make_method_getter(method_name):
     """todo"""
     def get_method_outputs(qs):
+        """Call the model method and return list of results"""
         vals = []
         for start, end, total, batch in batch_qs(qs):
             for item in batch:
@@ -386,27 +391,12 @@ def make_method_getter(method_name):
 def change_in_quality(qs):
     """The difference in quality between one week after posting"""
     ret = []
-    qs = qs.filter(has_wiki_link=True, week_after_avg_score__isnull=False).order_by('uid')
-    for start, end, total, batch in batch_qs(qs):
+    qs = qs.filter(has_wiki_link=True,
+                   week_after_avg_score__isnull=False).order_by('uid')
+    for _, _, _, batch in batch_qs(qs):
         for obj in batch:
             ret.append(obj.week_after_avg_score - obj.day_of_avg_score)
     return ret
-
-
-def reddit_specific_features():
-    """Features unique to reddit posts"""
-    textual = list_textual_metrics('title')
-    return textual + [
-        'user_comment_karma', 'user_link_karma', 
-        'user_is_mod', 'user_is_suspended', 'user_is_deleted'
-    ]
-
-def stack_specific_features():
-    """Features unique to SO answers"""
-    return [
-        'user_reputation', 'num_tags',
-        'response_time',
-    ]
 
 
 def main(platform='r', calculate_frequency=False):
@@ -416,10 +406,8 @@ def main(platform='r', calculate_frequency=False):
     for directory in [csv_dir, png_dir]:
         if not os.path.exists(directory):
             os.makedirs(directory)
-    variables = [
-        'score', 'num_comments',
-        'day_of_week', 'day_of_month','hour', 
-    ]
+    variables = ['score', 'num_comments', ]
+    variables += list_common_features()
     if platform == 'r':
         datasets = [{
             'qs': SampledRedditThread.objects.filter(context='todayilearned'),
@@ -431,7 +419,7 @@ def main(platform='r', calculate_frequency=False):
             'qs': SampledRedditThread.objects.all(),
             'name': 'All',
         }]
-        variables += reddit_specific_features()
+        variables += list_reddit_specific_features()
         filter_kwargs = {
             'url__contains': WIKI
         }
@@ -443,7 +431,7 @@ def main(platform='r', calculate_frequency=False):
             'qs': SampledStackOverflowPost.objects.all(),
             'name': 'All SO'
         }]
-        variables += stack_specific_features()
+        variables += list_stack_specific_features()
         variables += ['num_pageviews', ]
         extractor = get_links_from_body
         extract_from = 'body'
@@ -483,9 +471,10 @@ def main(platform='r', calculate_frequency=False):
                 if calculate_frequency:
                     if platform == 'r':
                         frequency_distribution(
-                            group['qs'], 'context', name +'_' + group['name'])
-            
-            len1, len2 = len(has_wikilink_group['vals']), len(no_wikilink_group['vals'])
+                            group['qs'], 'context', name + '_' + group['name'])
+
+            len1, len2 = len(has_wikilink_group['vals']), len(
+                no_wikilink_group['vals'])
             if len1 == 0 or len2 == 0:
                 print('Skipping variable {} because {}, {}.'.format(
                     variable, len1, len2))
@@ -499,16 +488,17 @@ def main(platform='r', calculate_frequency=False):
                     variable, err
                 ))
     pprint(descriptive_stats)
-    output = output_stats(output_filename, descriptive_stats, inferential_stats)
+    output = output_stats(
+        output_filename, descriptive_stats, inferential_stats)
     print(output)
     # plt.show()
 
 
-def visualize(platform, ln=False):
+def visualize(platform, natty_log=False):
     """Visualize distribution"""
     if platform == 's':
         qs = SampledStackOverflowPost.objects.all()
-    if ln:
+    if natty_log:
         safe_ln = make_ln_func('user_reputation')
         vals = safe_ln(qs)
     else:
@@ -518,6 +508,7 @@ def visualize(platform, ln=False):
     print(bin_edges)
     plt.plot(hist)
     plt.show()
+
 
 def parse():
     """
