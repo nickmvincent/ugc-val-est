@@ -54,6 +54,8 @@ class MissingOresResponse(Exception):
         err_log.save()
         handle_err(post, 4)
 
+
+# 5 is mystery
 def generate_revid_endpoint(prefix, title, wiki_timestamp):
     """
     Returns an endpoint that will give us a revid in json format
