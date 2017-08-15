@@ -216,7 +216,7 @@ def parse():
     if args.simple:
         simple_linear(args.platform)
     if args.causal:
-        causal_inference(args.platform, args.num_rows)
+        causal_inference(args.platform, int(args.num_rows))
     if args.quality:
         simple_linear(args.platform, True)
 

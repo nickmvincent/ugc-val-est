@@ -113,7 +113,22 @@ class Post(models.Model):
                     ))
                 except TypeError:
                     self.body_coleman_liau_index = 0
-        
+        # calculate average scores if needed
+        if self.has_wiki_link and self.wiki_content_analyzed and self.wiki_content_error == 0:
+            if self.day_of_avg_score is None:
+                fields = ['day_prior',  'day_of', 'week_after', ]
+                num_links = 0
+                field_to_score = {field: 0 for field in fields}
+                for link_obj in self.post_specific_wiki_links.all():
+                    for field in fields:
+                        field_to_score[field] += getattr(link_obj, field).score
+                    num_links += 1
+                output_field_to_val = {field + '_avg_score': val / num_links for field, val in field_to_score.items()}
+                for output_field, val in output_field_to_val.items():
+                    setattr(self, output_field, val)
+            if self.has_good_wiki_link is False:
+                if self.day_of_avg_score >= 4:
+                    self.has_good_wiki_link = True
         super(Post, self).save(*args, **kwargs)
 
 
