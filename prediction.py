@@ -46,10 +46,9 @@ def get_qs_features_and_outcomes(platform, num_rows=None, filter_kwargs=None):
         outcomes += ['num_pageviews', ]
     if filter_kwargs is not None:
         qs = qs.filter(**filter_kwargs)
-    
     if num_rows is not None:
-        qs = qs[:num_rows]
         qs = qs.order_by('?')
+        qs = qs[:num_rows]
     else:
         qs = qs.order_by('uid')
     return qs, features, outcomes
@@ -76,7 +75,9 @@ def causal_inference(platform, num_rows=None):
     Use causalinference module to perform causal inference analysis
     Descriptive stats, OLS, PSM
     """
-    filename = '{}_causal_results.txt'
+    filename = '{}_{}_causal_results.txt'.format(
+        platform,
+        num_rows if num_rows else 'All')
     qs, features, outcomes = get_qs_features_and_outcomes(
         platform, num_rows=num_rows)
     outcomes = ['score', ]
