@@ -9,6 +9,9 @@ Should be run from Anaconda environment with scipy installed
 
 import os
 import argparse
+import time
+# ==== END NATIVE IMPORTS
+# ==== START LOCAL IMPORTS
 from queryset_helpers import (
     batch_qs, list_common_features,
     list_reddit_specific_features, list_stack_specific_features
@@ -20,9 +23,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sklearn import linear_model
 from causalinference import CausalModel
-
-# Load the diabetes dataset
-
 
 def values_list_to_records(rows, names):
     """
@@ -75,6 +75,12 @@ def causal_inference(platform, num_rows=None):
     Use causalinference module to perform causal inference analysis
     Descriptive stats, OLS, PSM
     """
+    def mark_time(desc):
+        """return a tuple of time, description of time"""
+        return (time.time(), desc)
+
+    times = []
+    times.append(mark_time('function_start'))
     filename = '{}_{}_causal_results.txt'.format(
         platform,
         num_rows if num_rows else 'All')
@@ -88,6 +94,7 @@ def causal_inference(platform, num_rows=None):
         # rows = extract_vals_and_method_results(qs, field_names)
         rows = qs.values_list(*field_names)
         records = values_list_to_records(rows, field_names)
+        time.append(mark_time('records_loaded'))
         feature_rows = []
         successful_fields = []
         for feature in features:
@@ -103,32 +110,47 @@ def causal_inference(platform, num_rows=None):
             else:
                 successful_fields.append(feature)
                 feature_rows.append(feature_row)
+        times['feature_rows_loaded'] = time.time()
+        varname_to_field = {}
+        out = []
+        for i, field in enumerate(successful_fields):
+            varname_to_field["X{}".format(i)] = field
+        out.append(str(varname_to_field))
+        X = np.array(feature_rows)
+        X = np.transpose(X)
+        Y = getattr(records, outcome)
+        causal = CausalModel(Y, D, X)
+        out.append(str(causal.summary_stats))
+        times['summary_stats'] = time.time()
+        causal.est_via_ols()
+        times['est_via_ols'] = time.time()
+        out.append(str(causal.estimates))
+        causal.est_propensity_s()
+        out.append(str(causal.propensity))
+        times['propensity'] = time.time()
+        causal.trim_s()
+        out.append(str(causal.summary_stats))
+        times['trim_s'] = time.time()
+        causal.stratify_s()
+        out.append(str(causal.strata))
+        times['stratify_s'] = time.time()
+        causal.est_via_blocking()
+        out.append(str(causal.estimates))
+        times['est_via_blocking'] = time.time()
+        causal.est_via_weighting()
+        out.append(str(causal.estimates))
+        times['est_via_weighting'] = time.time()
+        causal.est_via_matching()
+        out.append(str(causal.estimates))
+        times['est_via_matching'] = time.time()
+        timing_info = {}
+        prev = times[0][0]
+        for cur_time, desc in times[1:]:
+            timing_info[desc] = cur_time - prev
+            prev = cur_time
+        out.append(str(timing_info))
         with open(filename, 'w') as outfile:
-            varname_to_field = {}
-            for i, field in enumerate(successful_fields):
-                varname_to_field["X{}".format(i)] = field
-            outfile.write(str(varname_to_field))
-            X = np.array(feature_rows)
-            X = np.transpose(X)
-            Y = getattr(records, outcome)
-            out = ""
-            causal = CausalModel(Y, D, X)
-            out += str(causal.summary_stats)
-            causal.est_via_ols()
-            out += str(causal.estimates)
-            causal.est_propensity_s()
-            out += str(causal.propensity)
-            causal.trim_s()
-            out += str(causal.summary_stats)
-            causal.stratify_s()
-            out += str(causal.strata)
-            causal.est_via_blocking()
-            out += str(causal.estimates)
-            causal.est_via_weighting()
-            out += str(causal.estimates)
-            causal.est_via_matching()
-            out += str(causal.estimates)
-            outfile.write(out)
+            outfile.write('\n'.join(out))
 
 
 def simple_linear(platform, quality_mode=False):
