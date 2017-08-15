@@ -101,7 +101,10 @@ def causal_inference(platform):
                 successful_fields.append(feature)
                 feature_rows.append(feature_row)
         with open(filename, 'w') as outfile:
-            outfile.write(successful_fields)
+            varname_to_field = {}
+            for i, field in enumerate(successful_fields):
+                varname_to_field["X{}".format(i)] = field
+            outfile.write(str(varname_to_field))
             X = np.array(feature_rows)
             X = np.transpose(X)
             Y = getattr(records, outcome)
