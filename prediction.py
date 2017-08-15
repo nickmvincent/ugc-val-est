@@ -38,7 +38,7 @@ def get_qs_features_and_outcomes(platform, num_rows=None, filter_kwargs=None):
         'day_of_week', 'day_of_month', 'hour',
     ]
     # textual metrics
-    common_features += list_textual_metrics('body)')
+    common_features += list_textual_metrics('body')
     outcomes = ['score', 'num_comments', ]
     if platform == 'r':
         qs = SampledRedditThread.objects.all()
