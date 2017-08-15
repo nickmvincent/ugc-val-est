@@ -40,7 +40,7 @@ def list_textual_metrics(prefix):
     textual metric feature names"""
     ret = []
     for metric in [
-            'length', 'num_links', 'percent_uppercase',
+            'length', 'percent_uppercase',
             'percent_spaces', 'percent_punctuation',
             'starts_capitalized', 'coleman_liau_index',
     ]:

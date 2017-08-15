@@ -36,6 +36,7 @@ def get_qs_features_and_outcomes(platform, num_rows=None, filter_kwargs=None):
         'has_wiki_link', # 'day_of_avg_score',
         # contextual information
         'day_of_week', 'day_of_month', 'hour',
+        'body_num_links',
     ]
     # textual metrics
     common_features += list_textual_metrics('body')
