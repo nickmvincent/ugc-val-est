@@ -90,7 +90,9 @@ class SampledRedditThread(Post):
         """overload save method"""
         self.title_length = len(self.title)
         if self.body:
-            self.title_flesch_kincaid_grade = round(textstat.flesch_kincaid_grade(self.body), 1)
+            exact_score = textstat.flesch_kincaid_grade(self.body)
+            score = round(exact_score, 1)
+            self.title_flesch_kincaid_grade = score
         super(SampledRedditThread, self).save(*args, **kwargs)
 
 
