@@ -108,23 +108,24 @@ def causal_inference(platform):
             X = np.array(feature_rows)
             X = np.transpose(X)
             Y = getattr(records, outcome)
+            out = ""
             causal = CausalModel(Y, D, X)
-            outfile.write(causal.summary_stats)
+            out += (causal.summary_stats)
             causal.est_via_ols()
-            outfile.write(causal.estimates)
+            out += (causal.estimates)
             causal.est_propensity_s()
-            outfile.write(causal.propensity)
+            out += (causal.propensity)
             causal.trim_s()
-            outfile.write(causal.summary_stats)
+            out += (causal.summary_stats)
             causal.stratify_s()
-            outfile.write(causal.strata)
+            out += (causal.strata)
             causal.est_via_blocking()
-            outfile.write(causal.estimates)
+            out += (causal.estimates)
             causal.est_via_weighting()
-            outfile.write(causal.estimates)
+            out += (causal.estimates)
             causal.est_via_matching()
-            outfile.write(causal.estimates)
-        
+            out += (causal.estimates)
+            outfile.write(out)
 
 
 def simple_linear(platform, quality_mode=False):
