@@ -94,7 +94,7 @@ def causal_inference(platform, num_rows=None):
         # rows = extract_vals_and_method_results(qs, field_names)
         rows = qs.values_list(*field_names)
         records = values_list_to_records(rows, field_names)
-        time.append(mark_time('records_loaded'))
+        times.append(mark_time('records_loaded'))
         feature_rows = []
         successful_fields = []
         for feature in features:
@@ -110,7 +110,7 @@ def causal_inference(platform, num_rows=None):
             else:
                 successful_fields.append(feature)
                 feature_rows.append(feature_row)
-        times['feature_rows_loaded'] = time.time()
+        times.append(mark_time('feature_rows_loaded'))
         varname_to_field = {}
         out = []
         for i, field in enumerate(successful_fields):
@@ -121,28 +121,29 @@ def causal_inference(platform, num_rows=None):
         Y = getattr(records, outcome)
         causal = CausalModel(Y, D, X)
         out.append(str(causal.summary_stats))
-        times['summary_stats'] = time.time()
+        times.append(mark_time('summary_stats'))
         causal.est_via_ols()
         times['est_via_ols'] = time.time()
+        times.append(mark_time('est_via_ols'))
         out.append(str(causal.estimates))
         causal.est_propensity_s()
+        times.append(mark_time('propensity'))        
         out.append(str(causal.propensity))
-        times['propensity'] = time.time()
         causal.trim_s()
+        times.append(mark_time('trim_s'))
         out.append(str(causal.summary_stats))
-        times['trim_s'] = time.time()
         causal.stratify_s()
+        times.append(mark_time('stratify_s'))
         out.append(str(causal.strata))
-        times['stratify_s'] = time.time()
         causal.est_via_blocking()
+        times.append(mark_time('est_via_blocking'))
         out.append(str(causal.estimates))
-        times['est_via_blocking'] = time.time()
         causal.est_via_weighting()
+        times.append(mark_time('est_via_weighting'))
         out.append(str(causal.estimates))
-        times['est_via_weighting'] = time.time()
         causal.est_via_matching()
+        times.append(mark_time('est_via_matching'))
         out.append(str(causal.estimates))
-        times['est_via_matching'] = time.time()
         timing_info = {}
         prev = times[0][0]
         for cur_time, desc in times[1:]:
