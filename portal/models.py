@@ -18,13 +18,21 @@ class Post(models.Model):
         Reddit - root=thread and comment=comment
     """
     uid = models.CharField(max_length=100, primary_key=True)
+    
     body = models.CharField(max_length=58431)
+    # textual metrics for the body field
     body_length = models.IntegerField(default=0)
     body_lexicon_count = models.IntegerField(default=0)
     body_sentence_count = models.IntegerField(default=0)
     body_num_links = models.IntegerField(default=0)
+    body_percent_uppercase = models.IntegerField(default=0)
+    body_percent_spaces = models.IntegerField(default=0)
+    body_percent_punctuation = models.IntegerField(default=0)
+    body_starts_capitalized = models.BooleanField(default=False)
+
     score = models.IntegerField()
     num_comments = models.IntegerField(default=0)
+
     is_root = models.BooleanField(default=False)
     context = models.CharField(max_length=115, null=True, blank=True)
     author = models.CharField(max_length=50)
@@ -58,16 +66,34 @@ class Post(models.Model):
 
     def save(self, *args, **kwargs):
         """overload save method"""
-        self.day_of_week = self.timestamp.weekday()
-        self.day_of_month = self.timestamp.day
-        self.hour = self.timestamp.hour
-        self.body_length = len(self.body)
-        self.body_num_links = len(extract_urls(self.body))
+        if self.day_of_week is None:
+            self.day_of_week = self.timestamp.weekday()
+        if self.day_of_month is None:
+            self.day_of_month = self.timestamp.day
+        if self.hour is None:
+            self.hour = self.timestamp.hour
+        if self.body_length == 0:
+            self.body_length = len(self.body)
+        if self.body_num_links == 0:
+            self.body_num_links = len(extract_urls(self.body))
         if self.user_created_utc:
             delta = self.timestamp - self.user_created_utc
             self.seconds_since_user_creation = delta.seconds
-        self.body_lexicon_count = textstat.lexicon_count(self.body)
-        self.body_sentence_count = textstat.sentence_count(self.body)
+        if self.body_lexicon_count == 0:
+            self.body_lexicon_count = textstat.lexicon_count(self.body)
+        if self.body_sentence_count == 0:
+            self.body_sentence_count = textstat.sentence_count(self.body)
+        if self.body_percent_uppercase == 0:
+            num_uppers = sum(1 for c in message if c.isupper())
+            self.body_percent_uppercase = round(num_uppers / self.body_length * 100)
+        if self.body_percent_spaces == 0:
+            num_spaces = sum(1 for c in message if c == ' ')
+            self.body_percent_spaces = round(num_spaces / self.body_length * 100)
+        if self.body_percent_punctuation == 0:
+            num_punctuation = sum(1 for c in message if c in ['.', ','])
+            self.body_percent_punctuation = round(num_punctuation / self.body_length * 100)
+        if self.body_starts_capitalized is False:
+            self.body_starts_capitalized = self.body[0].isupper()
         super(Post, self).save(*args, **kwargs)
 
 
@@ -87,12 +113,30 @@ class SampledRedditThread(Post):
     title_length = models.IntegerField(default=0)
     title_lexicon_count = models.IntegerField(default=0)
     title_sentence_count = models.IntegerField(default=0)
+    title_percent_uppercase = models.IntegerField(default=0)
+    title_percent_spaces = models.IntegerField(default=0)
+    title_percent_punctuation = models.IntegerField(default=0)
+    title_starts_capitalized = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         """overload save method"""
-        self.title_length = len(self.title)
-        self.title_lexicon_count = textstat.lexicon_count(self.body)
-        self.title_sentence_count = textstat.sentence_count(self.body)
+        if self.title_length = 0:
+            self.title_length = len(self.title)
+        if self.title_lexicon_count == 0:
+            self.title_lexicon_count = textstat.lexicon_count(self.body)
+        if self.title_sentence_count == 0:
+            self.title_sentence_count = textstat.sentence_count(self.body)
+        if self.title_percent_uppercase == 0:
+            num_uppers = sum(1 for c in message if c.isupper())
+            self.title_percent_uppercase = round(num_uppers / self.title_length * 100)
+        if self.title_percent_spaces == 0:
+            num_spaces = sum(1 for c in message if c == ' ')
+            self.title_percent_spaces = round(num_spaces / self.title_length * 100)
+        if self.title_percent_punctuation == 0:
+            num_punctuation = sum(1 for c in message if c in ['.', ','])
+            self.title_percent_punctuation = round(num_punctuation / self.title_length * 100)
+        if self.title_starts_capitalized is False:
+            self.title_starts_capitalized = self.title[0].isupper()
         super(SampledRedditThread, self).save(*args, **kwargs)
 
 
@@ -104,6 +148,7 @@ class SampledStackOverflowPost(Post):
     question_asked_utc = models.DateTimeField(null=True, blank=True)
     num_pageviews = models.IntegerField(default=0)
     tags_string = models.CharField(max_length=115, blank=True, null=True)
+    num_tags = models.IntegerField(default=0)
     response_time = models.IntegerField(blank=True, null=True)
 
     def save(self, *args, **kwargs):
