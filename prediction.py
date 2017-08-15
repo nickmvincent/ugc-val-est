@@ -117,12 +117,12 @@ def causal_inference(platform, num_rows=None):
             varname_to_field["X{}".format(i)] = field
         for key, val in varname_to_field.items():
             out.append("{}:{}".format(key, val))
-        out.append(str(varname_to_field))
         X = np.array(feature_rows)
         X = np.transpose(X)
         Y = getattr(records, outcome)
         causal = CausalModel(Y, D, X)
         times.append(mark_time('CausalModel'))
+        out.append(str(causal.summary_stats))
         causal.est_via_ols()
         times.append(mark_time('est_via_ols'))
         causal.est_propensity_s()
