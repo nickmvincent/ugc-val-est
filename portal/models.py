@@ -9,6 +9,11 @@ from url_helpers import extract_urls
 
 from textstat.textstat import textstat
 
+def trimmed(val, floor, ceil):
+    floored = max(val, floor)
+    ceiled = min(floored, ceil)
+    return ceiled
+
 class Post(models.Model):
     """
     Abstract model representing any type of post
@@ -29,6 +34,7 @@ class Post(models.Model):
     body_percent_spaces = models.IntegerField(default=0)
     body_percent_punctuation = models.IntegerField(default=0)
     body_starts_capitalized = models.BooleanField(default=False)
+    body_coleman_liau_index = models.IntegerField(default=0)
 
     score = models.IntegerField()
     num_comments = models.IntegerField(default=0)
@@ -94,6 +100,11 @@ class Post(models.Model):
             self.body_percent_punctuation = round(num_punctuation / self.body_length * 100)
         if self.body_starts_capitalized is False:
             self.body_starts_capitalized = self.body[0].isupper()
+        if self.body_coleman_liau_index == 0:
+            self.body_coleman_liau_index = round(trimmed(
+                textstat.coleman_liau_index(self.body), 0, 100
+            ))
+        
         super(Post, self).save(*args, **kwargs)
 
 
@@ -117,6 +128,7 @@ class SampledRedditThread(Post):
     title_percent_spaces = models.IntegerField(default=0)
     title_percent_punctuation = models.IntegerField(default=0)
     title_starts_capitalized = models.BooleanField(default=False)
+    title_coleman_liau_index = models.IntegerField(default=0)
 
     def save(self, *args, **kwargs):
         """overload save method"""
@@ -137,6 +149,10 @@ class SampledRedditThread(Post):
             self.title_percent_punctuation = round(num_punctuation / self.title_length * 100)
         if self.title_starts_capitalized is False:
             self.title_starts_capitalized = self.title[0].isupper()
+        if self.title_coleman_liau_index == 0:
+            self.title_coleman_liau_index = round(trimmed(
+                textstat.coleman_liau_index(self.title), 0, 100
+            ))
         super(SampledRedditThread, self).save(*args, **kwargs)
 
 
@@ -156,6 +172,8 @@ class SampledStackOverflowPost(Post):
         if self.question_asked_utc:
             delta = self.timestamp - self.question_asked_utc
             self.response_time = delta.seconds
+        if self.num_tags == 0:
+            self.num_tags = len(self.tags_string.split('|'))
         super(SampledStackOverflowPost, self).save(*args, **kwargs)
 
 
