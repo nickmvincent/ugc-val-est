@@ -99,8 +99,7 @@ def causal_inference(platform, num_rows=None):
         successful_fields = []
         for feature in features:
             feature_row = getattr(records, feature)
-            variance = np.var(feature_row)
-            print(feature, variance)
+            print(feature, np.std(feature_row), min(feature_row), max(feature_row))
             if feature == treatment_feature:
                 D = feature_row
             elif all(x == 0 for x in feature_row):
