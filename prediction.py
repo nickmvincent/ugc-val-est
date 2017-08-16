@@ -10,6 +10,8 @@ Should be run from Anaconda environment with scipy installed
 import os
 import argparse
 import time
+import traceback
+
 # ==== END NATIVE IMPORTS
 # ==== START LOCAL IMPORTS
 from queryset_helpers import (
@@ -23,6 +25,17 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sklearn import linear_model
 from causalinference import CausalModel
+
+
+def err_handle(msg, out):
+    """error handling for this exploratory code"""
+    print(msg)
+    out.append(msg)
+    trace = traceback.format_exc()
+    print(trace)
+    out.append(trace)
+    return out
+
 
 def values_list_to_records(rows, names):
     """
@@ -166,27 +179,23 @@ def causal_inference(
             causal.est_via_blocking()
             times.append(mark_time('est_via_blocking'))
         except np.linalg.linalg.LinAlgError as err:
-            msg = 'Error with est_via_blocking: {}'.format(err)
-            print(msg)
-            out.append(msg)
+            msg = 'LinAlgError with est_via_blocking: {}'.format(err)
+            err_handle(msg, out)
         try:
             causal.est_via_weighting()
             times.append(mark_time('est_via_weighting'))
         except np.linalg.linalg.LinAlgError as err:
-            msg = 'Error with est_via_weighting: {}'.format(err)
-            print(msg)
-            out.append(msg)
+            msg = 'LinAlgError with est_via_weighting: {}'.format(err)
+            err_handle(msg, out)
         except ValueError as err:
-            print(err)
-            out.append('ValueError with est_via_weighting')
-            out.append(err)
+            msg = 'ValueError with est_via_weighting: {}'.format(err)
+            err_handle(msg, out)
         try:
             causal.est_via_matching()
             times.append(mark_time('est_via_matching'))
         except np.linalg.linalg.LinAlgError as err:
-            print(err)
-            out.append('Error with est_via_matching')
-            out.append(err)
+            msg = 'LinAlgError with est_via_weighting: {}'.format(err)
+            err_handle(msg, out)
         out.append(str(causal.estimates))
         timing_info = {}
         prev = times[0][0]
