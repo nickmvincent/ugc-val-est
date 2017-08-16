@@ -29,6 +29,8 @@ class Strata(object):
 
 		return self._strata[index]
 
+	def __setitem__(self, index, value):
+		self._strata[index] = value
 
 	def __str__(self):
 

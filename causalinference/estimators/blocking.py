@@ -13,7 +13,9 @@ class Blocking(Estimator):
 	def __init__(self, strata, adj):
 	
 		self._method = 'Blocking'
-		for s in strata:
+
+		
+		for i, s in enumerate(strata):
 			try:
 				s.est_via_ols(adj)
 			except np.linalg.linalg.LinAlgError as err:
@@ -25,18 +27,16 @@ class Blocking(Estimator):
 				to_delete = []
 				for col_num, ndiff_val in enumerate(s.summary_stats['ndiff']):
 					if np.isnan(ndiff_val):
-						print('Found a nan ndiff val, not including this!')
 						to_delete.append(col_num)
 				cols_deleted = 0
 				for col_num in to_delete:
-					print('Deleting column...')
-					np.delete(X, col_num - cols_deleted, 1)
+					X = np.delete(X, col_num - cols_deleted, 1)
 					cols_deleted += 1
-				s = causal.CausalModel(Y, D, X)
+				strata[i] = causal.CausalModel(Y, D, X)
 				print('New causal model created!')
-				print(s.summary_stats)
-				s.est_via_ols(adj)
-				
+				print(strata[i].summary_stats)
+				strata[i].est_via_ols(adj)
+				print(strata[i].estimates)
 
 		Ns = [s.raw_data['N'] for s in strata]
 		N_cs = [s.raw_data['N_c'] for s in strata]
