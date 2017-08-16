@@ -70,7 +70,7 @@ def extract_vals_and_method_results(qs, field_names):
     return rows
 
 
-def causal_inference(platform, num_rows=None, simple=False):
+def causal_inference(platform, num_rows=None, simple_psm=False, simple_bin=False):
     """
     Use causalinference module to perform causal inference analysis
     Descriptive stats, OLS, PSM
@@ -128,7 +128,7 @@ def causal_inference(platform, num_rows=None, simple=False):
         out.append(str(causal.summary_stats))
         causal.est_via_ols()
         times.append(mark_time('est_via_ols'))
-        if simple:
+        if simple_psm:
             causal.est_propensity()
             times.append(mark_time('propensity'))            
         else:
@@ -138,7 +138,7 @@ def causal_inference(platform, num_rows=None, simple=False):
         causal.trim_s()
         times.append(mark_time('trim_s'))
         out.append(str(causal.summary_stats))
-        if simple:
+        if simple_bin:
             causal.stratify()
             times.append(mark_time('stratify'))        
         else:        
@@ -257,9 +257,13 @@ def parse():
         action='store_true',
         help='performs causal analysis')
     parser.add_argument(
-        '--simple',
+        '--simple_psm',
         action='store_true',
-        help='to use simple PSM, trim, and bin')
+        help='to use simple PSM')
+    parser.add_argument(
+        '--simple_bin',
+        action='store_true',
+        help='to use simple PSM')
     parser.add_argument(
         '--quality',
         action='store_true',
@@ -268,7 +272,7 @@ def parse():
     if args.simple:
         simple_linear(args.platform)
     if args.causal:
-        causal_inference(args.platform, args.num_rows, args.simple)
+        causal_inference(args.platform, args.num_rows, args.simple_psm, args.simple_bin)
     if args.quality:
         simple_linear(args.platform, True)
 
