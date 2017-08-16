@@ -2,7 +2,7 @@ from __future__ import division
 import numpy as np
 
 from .base import Estimator
-from ..causal import CausalModel
+from .. import causal.CausalModel as CM
 
 
 class Blocking(Estimator):
@@ -20,6 +20,7 @@ class Blocking(Estimator):
 			except np.linalg.linalg.LinAlgError as err:
 				# if there is a variable that is uniform for a stratum
 				# this will cause ndiff to be calculated as nan (zero std)
+				print('Entering singular matrix fixing code')
 				Y, D, X = s.raw_data['Y'], s.raw_data['D'], s.raw_data['X']
 				to_delete = []
 				for col_num, ndiff_val in enumerate(s.summary_stats['ndiff']):
@@ -30,7 +31,8 @@ class Blocking(Estimator):
 				for col_num in to_delete:
 					np.delete(X, col_num - cols_deleted, 1)
 					cols_deleted += 1
-				s = CausalModel(Y, D, X)
+				s = CM(Y, D, X)
+				s.est_via_ols(adj)
 				
 
 		Ns = [s.raw_data['N'] for s in strata]
