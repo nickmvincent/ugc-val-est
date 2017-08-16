@@ -47,7 +47,6 @@ def values_list_to_records(rows, names):
 def get_qs_features_and_outcomes(platform, num_rows=None, filter_kwargs=None):
     """Get data from DB for regression and/or causal inference"""
     common_features = list_common_features()
-    common_features.append('has_wiki_link')
     outcomes = ['score', 'num_comments', ]
     if platform == 'r':
         qs = SampledRedditThread.objects.all()
@@ -94,9 +93,7 @@ def causal_inference(
 
     times = []
     times.append(mark_time('function_start'))
-    filename = 'causal_results_for_treatment_{}_on_{}_subset_{}.txt'.format(
-        treatment_feature, platform,
-        num_rows if num_rows else 'All')
+    
     if treatment_feature == 'has_good_wiki_link':
         filter_kwargs = {'has_wiki_link': True}
     else:
@@ -105,9 +102,11 @@ def causal_inference(
         platform, num_rows=num_rows, filter_kwargs=filter_kwargs)
     # outcomes = ['score', ]
     for outcome in outcomes:
+        filename = 'causal_X_{}_Y_{}_platform_{}_subset_{}.txt'.format(
+        treatment_feature, outcome, platform,
+        num_rows if num_rows else 'All')
         print('==={}==='.format(outcome))
-        field_names = features + [outcome]
-        # rows = extract_vals_and_method_results(qs, field_names)
+        field_names = features + [outcome] + [treatment_feature]
         rows = qs.values_list(*field_names)
         records = values_list_to_records(rows, field_names)
         times.append(mark_time('records_loaded'))
