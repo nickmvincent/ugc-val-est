@@ -70,7 +70,7 @@ def extract_vals_and_method_results(qs, field_names):
     return rows
 
 
-def causal_inference(platform, num_rows=None):
+def causal_inference(platform, num_rows=None, simple=False):
     """
     Use causalinference module to perform causal inference analysis
     Descriptive stats, OLS, PSM
@@ -99,7 +99,6 @@ def causal_inference(platform, num_rows=None):
         successful_fields = []
         for feature in features:
             feature_row = getattr(records, feature)
-            print(feature, np.std(feature_row), min(feature_row), max(feature_row))
             if feature == treatment_feature:
                 D = feature_row
             elif all(x == 0 for x in feature_row):
@@ -129,14 +128,22 @@ def causal_inference(platform, num_rows=None):
         out.append(str(causal.summary_stats))
         causal.est_via_ols()
         times.append(mark_time('est_via_ols'))
-        causal.est_propensity_s()
-        times.append(mark_time('propensity'))        
+        if simple:
+            causal.est_propensity()
+            times.append(mark_time('propensity'))            
+        else:
+            causal.est_propensity_s()
+            times.append(mark_time('propensity_s'))
         out.append(str(causal.propensity))
         causal.trim_s()
         times.append(mark_time('trim_s'))
         out.append(str(causal.summary_stats))
-        causal.stratify_s()
-        times.append(mark_time('stratify_s'))
+        if simple:
+            causal.stratify()
+            times.append(mark_time('stratify'))        
+        else:        
+            causal.stratify_s()
+            times.append(mark_time('stratify_s'))
         out.append(str(causal.strata))
         try:
             causal.est_via_blocking()
@@ -151,12 +158,14 @@ def causal_inference(platform, num_rows=None):
         except np.linalg.linalg.LinAlgError as err:
             print(err)
             out.append('Error with est_via_weighting')
+            out.append(err)
         try:
             causal.est_via_matching()
             times.append(mark_time('est_via_matching'))
         except np.linalg.linalg.LinAlgError as err:
             print(err)
             out.append('Error with est_via_matching')
+            out.append(err)
         out.append(str(causal.estimates))
         timing_info = {}
         prev = times[0][0]
@@ -248,6 +257,10 @@ def parse():
         action='store_true',
         help='performs causal analysis')
     parser.add_argument(
+        '--simple',
+        action='store_true',
+        help='to use simple PSM, trim, and bin')
+    parser.add_argument(
         '--quality',
         action='store_true',
         help='performs linear regression on quality')
@@ -255,7 +268,7 @@ def parse():
     if args.simple:
         simple_linear(args.platform)
     if args.causal:
-        causal_inference(args.platform, args.num_rows)
+        causal_inference(args.platform, args.num_rows, args.simple)
     if args.quality:
         simple_linear(args.platform, True)
 
