@@ -95,7 +95,7 @@ def causal_inference(platform, num_rows=None):
         rows = qs.values_list(*field_names)
         records = values_list_to_records(rows, field_names)
         times.append(mark_time('records_loaded'))
-        feature_rows = np.array([])
+        feature_rows = []
         successful_fields = []
         for feature in features:
             feature_row = getattr(records, feature)
@@ -109,9 +109,7 @@ def causal_inference(platform, num_rows=None):
                 print('This feature will NOT be included')
             else:
                 successful_fields.append(feature)
-                np.append(feature_rows, feature_row)
-                print(feature_rows.shape)
-                print(np.linalg.matrix_rank(feature_rows))
+                feature_rows.append(feature_row)
         times.append(mark_time('feature_rows_loaded'))
         varname_to_field = {}
         out = []
@@ -119,8 +117,10 @@ def causal_inference(platform, num_rows=None):
             varname_to_field["X{}".format(i)] = field
         for key, val in varname_to_field.items():
             out.append("{}:{}".format(key, val))
-        # each feature should correspond to a column
-        X = np.transpose(feature_rows)
+        X = np.array(feature_rows)
+        print(np.linalg.matrix_rank(X))
+        print(X.shape)
+        X = np.transpose(X)
         Y = getattr(records, outcome)
         causal = CausalModel(Y, D, X)
         times.append(mark_time('CausalModel'))
