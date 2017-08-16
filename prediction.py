@@ -176,14 +176,12 @@ def causal_inference(
             print(stratum.summary_stats)
             stratum.est_via_ols(adj=1)
             print(stratum.estimates)
-            out.append(stratum.estimates)
-        
-        # try:
-        #     causal.est_via_blocking()
-        #     times.append(mark_time('est_via_blocking'))
-        # except np.linalg.linalg.LinAlgError as err:
-        #     msg = 'LinAlgError with est_via_blocking: {}'.format(err)
-        #     err_handle(msg, out)
+        try:
+            causal.est_via_blocking()
+            times.append(mark_time('est_via_blocking'))
+        except np.linalg.linalg.LinAlgError as err:
+            msg = 'LinAlgError with est_via_blocking: {}'.format(err)
+            err_handle(msg, out)
         try:
             causal.est_via_weighting()
             times.append(mark_time('est_via_weighting'))
