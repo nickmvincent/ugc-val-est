@@ -70,7 +70,8 @@ def extract_vals_and_method_results(qs, field_names):
     return rows
 
 
-def causal_inference(platform, num_rows=None, simple_psm=False, simple_bin=False):
+def causal_inference(
+    platform, num_rows=None, simple_psm=False, simple_bin=False, trim_val=None):
     """
     Use causalinference module to perform causal inference analysis
     Descriptive stats, OLS, PSM
@@ -135,9 +136,19 @@ def causal_inference(platform, num_rows=None, simple_psm=False, simple_bin=False
             causal.est_propensity_s()
             times.append(mark_time('propensity_s'))
         out.append(str(causal.propensity))
-        causal.trim_s()
-        times.append(mark_time('trim_s'))
-        out.append(str(causal.summary_stats))
+        if trim_val:
+            if trim_val == 'auto':
+                causal.trim_s()
+                times.append(mark_time('trim_s'))
+                out.append(str(causal.summary_stats))
+            else:
+                try:
+                    causal.cutoff = float(trim_val)
+                    causal.trim()
+                    times.append(mark_time('trim_{}'.format(trim_val)))
+                    out.append(str(causal.summary_stats))
+                except:
+                    pass
         if simple_bin:
             causal.stratify()
             times.append(mark_time('stratify'))        
@@ -272,11 +283,15 @@ def parse():
         '--quality',
         action='store_true',
         help='performs linear regression on quality')
+    parser.add_argument(
+        '--trim_val',
+        help='to perform PSM trimming')
     args = parser.parse_args()
     if args.simple:
         simple_linear(args.platform)
     if args.causal:
-        causal_inference(args.platform, args.num_rows, args.simple_psm, args.simple_bin)
+        causal_inference(
+            args.platform, args.num_rows, args.simple_psm, args.simple_bin, args.trim_val)
     if args.quality:
         simple_linear(args.platform, True)
 
