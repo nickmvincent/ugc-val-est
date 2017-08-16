@@ -105,7 +105,11 @@ class Post(models.Model):
                 num_punctuation = sum(1 for c in self.body if c in ['.', ','])
                 self.body_percent_punctuation = round(num_punctuation / self.body_length * 100)
             if self.body_starts_capitalized is False:
-                self.body_starts_capitalized = self.body[0].isupper()
+                if self.body[0] == '<':
+                    first_char_index = self.body.find('>') + 1
+                    self.body_starts_capitalized = self.body[first_char_index].isupper()
+                else:
+                    self.body_starts_capitalized = self.body[0].isupper()
             if self.body_lexicon_count != 0:
                 try:
                     self.body_coleman_liau_index = round(trimmed(

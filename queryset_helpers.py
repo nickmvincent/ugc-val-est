@@ -42,7 +42,8 @@ def list_textual_metrics(prefix):
     for metric in [
             'length', 'percent_uppercase',
             'percent_spaces', 'percent_punctuation',
-            'starts_capitalized', 'coleman_liau_index',
+            # 'starts_capitalized',
+            'coleman_liau_index',
     ]:
         ret.append('{}_{}'.format(prefix, metric))
     return ret
