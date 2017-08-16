@@ -122,8 +122,6 @@ def causal_inference(platform, num_rows=None):
         print(np.linalg.matrix_rank(X))
         print(X.shape) 
         print(np.linalg.cond(X))
-        U, s, V = np.linalg.svd(X, full_matrices=True)
-        print(s)
         Y = getattr(records, outcome)
         causal = CausalModel(Y, D, X)
         times.append(mark_time('CausalModel'))
