@@ -159,7 +159,7 @@ def causal_inference(platform, num_rows=None, simple_psm=False, simple_bin=False
             print(err)
             out.append('Error with est_via_weighting')
             out.append(err)
-        except ValueError:
+        except ValueError as err:
             print(err)
             out.append('ValueError with est_via_weighting')
             out.append(err)
