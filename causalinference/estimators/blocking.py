@@ -20,6 +20,7 @@ class Blocking(Estimator):
 				# if there is a variable that is uniform for a stratum
 				# this will cause ndiff to be calculated as nan (zero std)
 				print('Entering singular matrix fixing code')
+				print(s.summary_stats)
 				Y, D, X = s.raw_data['Y'], s.raw_data['D'], s.raw_data['X']
 				to_delete = []
 				for col_num, ndiff_val in enumerate(s.summary_stats['ndiff']):
@@ -28,9 +29,12 @@ class Blocking(Estimator):
 						to_delete.append(col_num)
 				cols_deleted = 0
 				for col_num in to_delete:
+					print('Deleting column...')
 					np.delete(X, col_num - cols_deleted, 1)
 					cols_deleted += 1
 				s = causal.CausalModel(Y, D, X)
+				print('New causal model created!')
+				print(s.summary_stats)
 				s.est_via_ols(adj)
 				
 
