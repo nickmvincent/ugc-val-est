@@ -2,8 +2,7 @@ from __future__ import division
 import numpy as np
 
 from .base import Estimator
-from .. import causal.CausalModel as CM
-
+from ..causal import CausalModel as CM
 
 class Blocking(Estimator):
 
