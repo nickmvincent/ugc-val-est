@@ -83,10 +83,10 @@ def extract_vals_and_method_results(qs, field_names):
 
 
 def causal_inference(
-    platform, num_rows=None, simple_psm=False, simple_bin=None, trim_val=None):
+        platform, treatment_feature,
+        num_rows=None, simple_psm=False, simple_bin=None, trim_val=None):
     """
     Use causalinference module to perform causal inference analysis
-    Descriptive stats, OLS, PSM
     """
     def mark_time(desc):
         """return a tuple of time, description of time"""
@@ -94,13 +94,16 @@ def causal_inference(
 
     times = []
     times.append(mark_time('function_start'))
-    filename = '{}_{}_causal_results.txt'.format(
-        platform,
+    filename = 'causal_results_for_treatment_{}_on_{}_subset_{}.txt'.format(
+        treatment_feature, platform,
         num_rows if num_rows else 'All')
+    if treatment_feature == 'has_good_wiki_link':
+        filter_kwargs = {'has_wiki_link': True}
+    else:
+        filter_kwargs = None
     qs, features, outcomes = get_qs_features_and_outcomes(
-        platform, num_rows=num_rows)
-    outcomes = ['score', ]
-    treatment_feature = 'has_wiki_link'
+        platform, num_rows=num_rows, filter_kwargs=filter_kwargs)
+    # outcomes = ['score', ]
     for outcome in outcomes:
         print('==={}==='.format(outcome))
         field_names = features + [outcome]
@@ -115,7 +118,8 @@ def causal_inference(
             if feature == treatment_feature:
                 D = feature_row
             elif all(x == 0 for x in feature_row):
-                print('Feature {} is all zeros - will lead to singular matrix...'.format(feature))
+                print(
+                    'Feature {} is all zeros - will lead to singular matrix...'.format(feature))
                 print('This feature will NOT be included')
             elif any(np.isnan(feature_row)):
                 print('Feature {} has a nan value...'.format(feature))
@@ -132,7 +136,6 @@ def causal_inference(
         for key, val in varname_to_field.items():
             out.append("{}:{}".format(key, val))
         X = np.array(feature_rows)
-        # print(np.corrcoef(X))
         X = np.transpose(X)
         Y = getattr(records, outcome)
         causal = CausalModel(Y, D, X)
@@ -143,7 +146,7 @@ def causal_inference(
         print('est_via_ols_done')
         if simple_psm:
             causal.est_propensity()
-            times.append(mark_time('propensity'))            
+            times.append(mark_time('propensity'))
         else:
             causal.est_propensity_s()
             times.append(mark_time('propensity_s'))
@@ -166,13 +169,13 @@ def causal_inference(
         if simple_bin:
             causal.blocks = int(simple_bin)
             causal.stratify()
-            times.append(mark_time('stratify_{}'.format(simple_bin)))        
-        else:        
+            times.append(mark_time('stratify_{}'.format(simple_bin)))
+        else:
             causal.stratify_s()
             times.append(mark_time('stratify_s'))
         out.append(str(causal.strata))
         print(causal.strata)
-        #for stratum in causal.strata:
+        # for stratum in causal.strata:
         #    print(stratum.summary_stats)
         #   stratum.est_via_ols(adj=1)
         #   print(stratum.estimates)
@@ -276,7 +279,9 @@ def parse():
     parser = argparse.ArgumentParser(
         description='Train predictive model')
     parser.add_argument(
-        'platform', help='the platform to use. "r" for reddit and "s" for stack overflow')
+        '--platform', help='the platform to use. "r" for reddit and "s" for stack overflow')
+    parser.add_argument(
+        '--treatment', nargs='?', default=None, help='the treatment feature to use')
     parser.add_argument(
         '--num_rows', nargs='?', default=None, help='the number of rows to use.', type=int)
     parser.add_argument(
@@ -305,11 +310,19 @@ def parse():
     if args.simple:
         simple_linear(args.platform)
     if args.causal:
-        causal_inference(
-            args.platform, args.num_rows, args.simple_psm, args.simple_bin, args.trim_val)
+        if args.treatment_feature is None:
+            for treatment_feature in ['has_wiki_link', 'has_good_wiki_link', ]:
+                causal_inference(
+                    args.platform, treatment_feature,
+                    args.num_rows, args.simple_psm,
+                    args.simple_bin, args.trim_val)
+        else:
+            causal_inference(
+                args.platform, args.treatment_feature,
+                args.num_rows, args.simple_psm,
+                args.simple_bin, args.trim_val)
     if args.quality:
         simple_linear(args.platform, True)
-
 
 
 if __name__ == "__main__":
