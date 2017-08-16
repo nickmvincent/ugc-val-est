@@ -159,6 +159,10 @@ def causal_inference(platform, num_rows=None, simple_psm=False, simple_bin=False
             print(err)
             out.append('Error with est_via_weighting')
             out.append(err)
+        except ValueError:
+            print(err)
+            out.append('ValueError with est_via_weighting')
+            out.append(err)
         try:
             causal.est_via_matching()
             times.append(mark_time('est_via_matching'))
