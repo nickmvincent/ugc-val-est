@@ -138,12 +138,25 @@ def causal_inference(platform, num_rows=None):
         causal.stratify_s()
         times.append(mark_time('stratify_s'))
         out.append(str(causal.strata))
-        causal.est_via_blocking()
-        times.append(mark_time('est_via_blocking'))
-        causal.est_via_weighting()
-        times.append(mark_time('est_via_weighting'))
-        causal.est_via_matching()
-        times.append(mark_time('est_via_matching'))
+        try:
+            causal.est_via_blocking()
+            times.append(mark_time('est_via_blocking'))
+        except np.linalg.linalg.LinAlgError as err:
+            print(err)
+            out.append('Error with est_via_blocking')
+            out.append(err)
+        try:
+            causal.est_via_weighting()
+            times.append(mark_time('est_via_weighting'))
+        except np.linalg.linalg.LinAlgError as err:
+            print(err)
+            out.append('Error with est_via_weighting')
+        try:
+            causal.est_via_matching()
+            times.append(mark_time('est_via_matching'))
+        except np.linalg.linalg.LinAlgError as err:
+            print(err)
+            out.append('Error with est_via_matching')
         out.append(str(causal.estimates))
         timing_info = {}
         prev = times[0][0]
