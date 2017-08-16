@@ -132,9 +132,8 @@ def causal_inference(
         for key, val in varname_to_field.items():
             out.append("{}:{}".format(key, val))
         X = np.array(feature_rows)
-        print(np.corrcoef(X))
+        # print(np.corrcoef(X))
         X = np.transpose(X)
-        print(np.linalg.matrix_rank(X))
         Y = getattr(records, outcome)
         causal = CausalModel(Y, D, X)
         times.append(mark_time('CausalModel'))
@@ -171,8 +170,9 @@ def causal_inference(
             causal.stratify_s()
             times.append(mark_time('stratify_s'))
         out.append(str(causal.strata))
+        print(causal.strata)
         for stratum in causal.strata:
-            print(stratum)
+            print(stratum.summary_stats)
             stratum.est_via_ols(adj=1)
             print(stratum.estimates)
             out.append(stratum.estimates)
