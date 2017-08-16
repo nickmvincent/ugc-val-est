@@ -132,6 +132,7 @@ def causal_inference(
         for key, val in varname_to_field.items():
             out.append("{}:{}".format(key, val))
         X = np.array(feature_rows)
+        print(np.corrcoef(X))
         X = np.transpose(X)
         print(np.linalg.matrix_rank(X))
         print(X.shape) 
