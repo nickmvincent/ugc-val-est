@@ -127,6 +127,12 @@ def causal_inference(
         causal = CausalModel(Y, D, X)
         times.append(mark_time('CausalModel'))
         out.append(str(causal.summary_stats))
+
+        print(causal.summary_stats['X_c_mean'])
+        print(causal.summary_stats['X_t_mean'])
+        print(causal.summary_stats['X_c_sd'])
+        print(causal.summary_stats['X_t_sd'])
+
         causal.est_via_ols()
         times.append(mark_time('est_via_ols'))
         if simple_psm:
@@ -160,16 +166,16 @@ def causal_inference(
             causal.est_via_blocking()
             times.append(mark_time('est_via_blocking'))
         except np.linalg.linalg.LinAlgError as err:
-            print(err)
-            out.append('Error with est_via_blocking')
-            out.append(err)
+            msg = 'Error with est_via_blocking: {}'.format(err)
+            print(msg)
+            out.append(msg)
         try:
             causal.est_via_weighting()
             times.append(mark_time('est_via_weighting'))
         except np.linalg.linalg.LinAlgError as err:
-            print(err)
-            out.append('Error with est_via_weighting')
-            out.append(err)
+            msg = 'Error with est_via_weighting: {}'.format(err)
+            print(msg)
+            out.append(msg)
         except ValueError as err:
             print(err)
             out.append('ValueError with est_via_weighting')
