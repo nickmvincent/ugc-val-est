@@ -118,9 +118,10 @@ def causal_inference(platform, num_rows=None):
         for key, val in varname_to_field.items():
             out.append("{}:{}".format(key, val))
         X = np.array(feature_rows)
-        print(np.linalg.matrix_rank(X))
-        print(X.shape)
         X = np.transpose(X)
+        print(np.linalg.matrix_rank(X))
+        print(X.shape) 
+        print(np.lingalg.cond(X))
         Y = getattr(records, outcome)
         causal = CausalModel(Y, D, X)
         times.append(mark_time('CausalModel'))
