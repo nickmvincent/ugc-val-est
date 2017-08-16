@@ -24,7 +24,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn import linear_model
-from .causalinference import CausalModel
+from causalinference import CausalModel
 
 
 def err_handle(msg, out):

@@ -13,7 +13,7 @@ class CausalModel(object):
 	"""
 
 	def __init__(self, Y, D, X):
-
+		print('Iniating custom CausalModel code...')
 		self.old_data = Data(Y, D, X)
 		self.reset()
 
