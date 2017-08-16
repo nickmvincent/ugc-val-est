@@ -100,19 +100,21 @@ def causal_inference(
         filter_kwargs = None
     qs, features, outcomes = get_qs_features_and_outcomes(
         platform, num_rows=num_rows, filter_kwargs=filter_kwargs)
+    features.append(treatment_feature)
     # outcomes = ['score', ]
     for outcome in outcomes:
         filename = 'causal_X_{}_Y_{}_platform_{}_subset_{}.txt'.format(
         treatment_feature, outcome, platform,
         num_rows if num_rows else 'All')
         print('==={}==='.format(outcome))
-        field_names = features + [outcome] + [treatment_feature]
+        field_names = features + [outcome]
         rows = qs.values_list(*field_names)
         records = values_list_to_records(rows, field_names)
         times.append(mark_time('records_loaded'))
+
         feature_rows = []
         successful_fields = []
-        for feature in features:
+        for feature in features + [treatment_feature]:
             feature_row = getattr(records, feature)
             if feature == treatment_feature:
                 D = feature_row
