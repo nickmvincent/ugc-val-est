@@ -164,7 +164,8 @@ def causal_inference(
                 except:
                     pass
         if simple_bin:
-            causal.stratify(int(simple_bin))
+            causal.blocks = int(simple_bin)
+            causal.stratify()
             times.append(mark_time('stratify_{}'.format(simple_bin)))        
         else:        
             causal.stratify_s()
@@ -294,8 +295,7 @@ def parse():
         help='to use simple PSM')
     parser.add_argument(
         '--simple_bin',
-        action='store_true',
-        help='to use simple PSM')
+        help='add this arguement if you want to just simple manual binning (i.e. 2 bins)')
     parser.add_argument(
         '--quality',
         action='store_true',
