@@ -54,8 +54,7 @@ def list_common_features():
     Helpful for stats/prediction functions
     that make heavy use of getattr
     """
-    body_features = list_textual_metrics('body')
-    return body_features + [
+    return [
         'day_of_week', 'day_of_month',
         'hour', 'body_num_links',
         'seconds_since_user_creation',
@@ -71,8 +70,10 @@ def list_reddit_specific_features():
 
 def list_stack_specific_features():
     """Features unique to SO answers"""
-    return [
-        'user_reputation', 'num_tags',
+    body_features = list_textual_metrics('body')
+    return body_features + [
+        'user_reputation', 
+        # 'num_tags',
         # commented out until this is implemente fully
         # 'response_time',
     ]
