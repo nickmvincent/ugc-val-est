@@ -48,7 +48,6 @@ def get_qs_features_and_outcomes(platform, num_rows=None, filter_kwargs=None):
     """Get data from DB for regression and/or causal inference"""
     common_features = list_common_features()
     common_features.append('has_wiki_link')
-    # textual metrics
     outcomes = ['score', 'num_comments', ]
     if platform == 'r':
         qs = SampledRedditThread.objects.all()
@@ -129,6 +128,7 @@ def causal_inference(
         out = []
         for i, field in enumerate(successful_fields):
             varname_to_field["X{}".format(i)] = field
+        print(varname_to_field)
         for key, val in varname_to_field.items():
             out.append("{}:{}".format(key, val))
         X = np.array(feature_rows)
