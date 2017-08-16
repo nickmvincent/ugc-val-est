@@ -172,10 +172,10 @@ def causal_inference(
             times.append(mark_time('stratify_s'))
         out.append(str(causal.strata))
         print(causal.strata)
-        for stratum in causal.strata:
-            print(stratum.summary_stats)
-            stratum.est_via_ols(adj=1)
-            print(stratum.estimates)
+        #for stratum in causal.strata:
+        #    print(stratum.summary_stats)
+        #   stratum.est_via_ols(adj=1)
+        #   print(stratum.estimates)
         try:
             causal.est_via_blocking()
             times.append(mark_time('est_via_blocking'))

@@ -2,7 +2,7 @@ from __future__ import division
 import numpy as np
 
 from .base import Estimator
-from ..causal import CausalModel as CM
+from .. import causal
 
 class Blocking(Estimator):
 
@@ -30,7 +30,7 @@ class Blocking(Estimator):
 				for col_num in to_delete:
 					np.delete(X, col_num - cols_deleted, 1)
 					cols_deleted += 1
-				s = CM(Y, D, X)
+				s = causal.CausalModel(Y, D, X)
 				s.est_via_ols(adj)
 				
 
