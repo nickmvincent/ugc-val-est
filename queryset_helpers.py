@@ -58,6 +58,7 @@ def list_common_features():
     return body_features + [
         'day_of_week', 'day_of_month',
         'hour', 'body_num_links',
+        'seconds_since_user_creation',
     ]
 
 def list_reddit_specific_features():
