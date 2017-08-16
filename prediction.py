@@ -84,7 +84,7 @@ def extract_vals_and_method_results(qs, field_names):
 
 
 def causal_inference(
-    platform, num_rows=None, simple_psm=False, simple_bin=False, trim_val=None):
+    platform, num_rows=None, simple_psm=False, simple_bin=None, trim_val=None):
     """
     Use causalinference module to perform causal inference analysis
     Descriptive stats, OLS, PSM
@@ -135,20 +135,13 @@ def causal_inference(
         print(np.corrcoef(X))
         X = np.transpose(X)
         print(np.linalg.matrix_rank(X))
-        print(X.shape) 
-        print(np.linalg.cond(X))
         Y = getattr(records, outcome)
         causal = CausalModel(Y, D, X)
         times.append(mark_time('CausalModel'))
         out.append(str(causal.summary_stats))
-
-        print(causal.summary_stats['X_c_mean'])
-        print(causal.summary_stats['X_t_mean'])
-        print(causal.summary_stats['X_c_sd'])
-        print(causal.summary_stats['X_t_sd'])
-
         causal.est_via_ols()
         times.append(mark_time('est_via_ols'))
+        print('est_via_ols_done')
         if simple_psm:
             causal.est_propensity()
             times.append(mark_time('propensity'))            
@@ -156,10 +149,12 @@ def causal_inference(
             causal.est_propensity_s()
             times.append(mark_time('propensity_s'))
         out.append(str(causal.propensity))
+        print(causal.propensity)
         if trim_val:
             if trim_val == 'auto':
                 causal.trim_s()
                 times.append(mark_time('trim_s'))
+                out.append('TRIM PERFORMED')
                 out.append(str(causal.summary_stats))
             else:
                 try:
@@ -170,18 +165,24 @@ def causal_inference(
                 except:
                     pass
         if simple_bin:
-            causal.stratify()
-            times.append(mark_time('stratify'))        
+            causal.stratify(int(simple_bin))
+            times.append(mark_time('stratify_{}'.format(simple_bin)))        
         else:        
             causal.stratify_s()
             times.append(mark_time('stratify_s'))
         out.append(str(causal.strata))
-        try:
-            causal.est_via_blocking()
-            times.append(mark_time('est_via_blocking'))
-        except np.linalg.linalg.LinAlgError as err:
-            msg = 'LinAlgError with est_via_blocking: {}'.format(err)
-            err_handle(msg, out)
+        for stratum in causal.strata:
+            print(stratum)
+            stratum.est_via_ols(adj=1)
+            print(stratum.estimates)
+            out.append(stratum.estimates)
+        
+        # try:
+        #     causal.est_via_blocking()
+        #     times.append(mark_time('est_via_blocking'))
+        # except np.linalg.linalg.LinAlgError as err:
+        #     msg = 'LinAlgError with est_via_blocking: {}'.format(err)
+        #     err_handle(msg, out)
         try:
             causal.est_via_weighting()
             times.append(mark_time('est_via_weighting'))
