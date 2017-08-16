@@ -297,7 +297,7 @@ def parse():
         action='store_true',
         help='to use simple PSM')
     parser.add_argument(
-        '--simple_bin',
+        '--simple_bin', nargs='?', default=None,
         help='add this arguement if you want to just simple manual binning (i.e. 2 bins)')
     parser.add_argument(
         '--quality',
@@ -310,15 +310,15 @@ def parse():
     if args.simple:
         simple_linear(args.platform)
     if args.causal:
-        if args.treatment_feature is None:
-            for treatment_feature in ['has_wiki_link', 'has_good_wiki_link', ]:
+        if args.treatment is None:
+            for treatment in ['has_wiki_link', 'has_good_wiki_link', ]:
                 causal_inference(
-                    args.platform, treatment_feature,
+                    args.platform, treatment,
                     args.num_rows, args.simple_psm,
                     args.simple_bin, args.trim_val)
         else:
             causal_inference(
-                args.platform, args.treatment_feature,
+                args.platform, args.treatment,
                 args.num_rows, args.simple_psm,
                 args.simple_bin, args.trim_val)
     if args.quality:
