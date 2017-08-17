@@ -2,7 +2,7 @@
 These models are used to define the tables in the Postgresql database for
 doing data analysis
 """
-# pylint:disable=#C0103
+# pylint:disable=C0103
 
 import datetime
 from django.db import models
@@ -10,6 +10,7 @@ from django.utils import timezone
 from url_helpers import extract_urls
 
 from textstat.textstat import textstat
+
 
 def trimmed(val, floor, ceil):
     """floors and ceils a val"""
@@ -19,6 +20,7 @@ def trimmed(val, floor, ceil):
 
 
 def get_closest_to(qs, target):
+    """Returns the closest object in time"""
     closest_greater_qs = qs.filter(timestamp__gt=target).order_by('timestamp')
     closest_less_qs = qs.filter(timestamp__lt=target).order_by('-timestamp')
     try:
@@ -32,8 +34,7 @@ def get_closest_to(qs, target):
 
     if closest_greater.timestamp - target > target - closest_less.timestamp:
         return closest_less
-    else:
-        return closest_greater
+    return closest_greater
 
 
 class Post(models.Model):
@@ -45,7 +46,7 @@ class Post(models.Model):
         Reddit - root=thread and comment=comment
     """
     uid = models.CharField(max_length=100, primary_key=True)
-    
+
     body = models.CharField(max_length=58431)
     # textual metrics for the body field
     body_length = models.IntegerField(default=0)
@@ -88,7 +89,7 @@ class Post(models.Model):
     user_created_utc = models.DateTimeField(null=True, blank=True)
     # this field is nullable because it will be set upon save method call
     seconds_since_user_creation = models.IntegerField(null=True, blank=True)
-    
+
     num_edits = models.IntegerField(default=0)
     num_new_edits = models.IntegerField(default=0)
     num_old_edits = models.IntegerField(default=0)
@@ -122,17 +123,21 @@ class Post(models.Model):
                 self.body_sentence_count = textstat.sentence_count(self.body)
             if self.body_percent_uppercase == 0:
                 num_uppers = sum(1 for c in self.body if c.isupper())
-                self.body_percent_uppercase = round(num_uppers / self.body_length * 100)
+                self.body_percent_uppercase = round(
+                    num_uppers / self.body_length * 100)
             if self.body_percent_spaces == 0:
                 num_spaces = sum(1 for c in self.body if c == ' ')
-                self.body_percent_spaces = round(num_spaces / self.body_length * 100)
+                self.body_percent_spaces = round(
+                    num_spaces / self.body_length * 100)
             if self.body_percent_punctuation == 0:
                 num_punctuation = sum(1 for c in self.body if c in ['.', ','])
-                self.body_percent_punctuation = round(num_punctuation / self.body_length * 100)
+                self.body_percent_punctuation = round(
+                    num_punctuation / self.body_length * 100)
             if self.body_starts_capitalized is False:
                 if self.body[0] == '<':
                     first_char_index = self.body.find('>') + 1
-                    self.body_starts_capitalized = self.body[first_char_index].isupper()
+                    self.body_starts_capitalized = self.body[first_char_index].isupper(
+                    )
                 else:
                     self.body_starts_capitalized = self.body[0].isupper()
             if self.body_lexicon_count != 0:
@@ -157,7 +162,8 @@ class Post(models.Model):
                     num_links += 1
                     revisions = Revision.objects.filter(wiki_link=link_obj)
                     for field, dt in field_to_dt.items():
-                        field_to_score[field] = get_closest_to(revisions, dt).score
+                        field_to_score[field] = get_closest_to(
+                            revisions, dt).score
                     for revision in revisions:
                         self.num_edits += 1
                         if revision.editcount <= 5:
@@ -169,9 +175,10 @@ class Post(models.Model):
                         else:
                             self.num_old_edits += 1
                 if num_links == 0:
-                    self.wiki_content_error = 5 # mystery error requires manual investigation
+                    self.wiki_content_error = 5  # mystery error requires manual investigation
                 else:
-                    output_field_to_val = {field + '_avg_score': val / num_links for field, val in field_to_score.items()}
+                    output_field_to_val = {
+                        field + '_avg_score': val / num_links for field, val in field_to_score.items()}
                     for output_field, val in output_field_to_val.items():
                         setattr(self, output_field, val)
             if self.has_good_wiki_link is False and self.day_of_avg_score:
@@ -213,13 +220,16 @@ class SampledRedditThread(Post):
                 self.title_sentence_count = textstat.sentence_count(self.body)
             if self.title_percent_uppercase == 0:
                 num_uppers = sum(1 for c in self.title if c.isupper())
-                self.title_percent_uppercase = round(num_uppers / self.title_length * 100)
+                self.title_percent_uppercase = round(
+                    num_uppers / self.title_length * 100)
             if self.title_percent_spaces == 0:
                 num_spaces = sum(1 for c in self.title if c == ' ')
-                self.title_percent_spaces = round(num_spaces / self.title_length * 100)
+                self.title_percent_spaces = round(
+                    num_spaces / self.title_length * 100)
             if self.title_percent_punctuation == 0:
                 num_punctuation = sum(1 for c in self.title if c in ['.', ','])
-                self.title_percent_punctuation = round(num_punctuation / self.title_length * 100)
+                self.title_percent_punctuation = round(
+                    num_punctuation / self.title_length * 100)
             if self.title_starts_capitalized is False:
                 self.title_starts_capitalized = self.title[0].isupper()
             if self.title_lexicon_count != 0:
@@ -310,8 +320,8 @@ class Revision(models.Model):
     user = models.CharField(max_length=100)
     editcount = models.IntegerField(default=0)
     registration = models.DateTimeField(default=timezone.now)
-    flags = models.BooleanField(default=True) # whether the edit was minor edit
-
+    # whether the edit was minor edit
+    flags = models.BooleanField(default=True)
 
 
 class ErrorLog(models.Model):

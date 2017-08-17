@@ -4,10 +4,8 @@ checks for Wikipedia content, and get ORES score
 """
 
 import sys
-import re
 import datetime
 import os
-from pprint import pprint
 
 import requests
 
@@ -16,6 +14,7 @@ from url_helpers import extract_urls
 
 
 def handle_err(post, err_num):
+    """handles an error by add the err_num to Post table"""
     post.wiki_content_error = err_num
     post.save()
 
@@ -27,6 +26,7 @@ class MissingRevisionId(Exception):
         err_log.msg = '#2: MissingRevisionId: {}'.format(endpoint)[:500]
         err_log.save()
         handle_err(post, 2)
+        super(MissingRevisionId, self).__init__(self)
 
 
 class ContextNotSupported(Exception):
@@ -36,6 +36,7 @@ class ContextNotSupported(Exception):
         err_log.msg = '#3: ContextNotSupported: {}'.format(ores_context)[:500]
         err_log.save()
         handle_err(post, 3)
+        super(ContextNotSupported, self).__init__(self)
 
 class BrokenLinkError(Exception):
     """Used to catch Broken Links"""
@@ -44,6 +45,7 @@ class BrokenLinkError(Exception):
         err_log.msg = '#1: BrokenLinkError: {}'.format(url)[:500]
         err_log.save()
         handle_err(post, 1)
+        super(BrokenLinkError, self).__init__(self)
 
 
 class MissingOresResponse(Exception):
@@ -53,7 +55,7 @@ class MissingOresResponse(Exception):
         err_log.msg = '#4: MissingOresResponse: {}'.format(url)[:500]
         err_log.save()
         handle_err(post, 4)
-
+        super(MissingOresResponse, self).__init__(self)
 
 # 5 is mystery
 def generate_revid_endpoint(prefix, title, start, end=None, get_last=False):
@@ -149,8 +151,8 @@ def check_posts(model, field):
                 month_before_post = month_before_post.strftime(wiki_api_str_fmt)
                 month_after_post = month_after_post.strftime(wiki_api_str_fmt)
                 endpoint = generate_revid_endpoint(
-                        dja_link.language_code, dja_link.title, month_before_post,
-                        month_after_post)
+                    dja_link.language_code, dja_link.title, month_before_post,
+                    month_after_post)
                 try:
                     pages = requests.get(endpoint).json()['query']['pages']
                 except:
@@ -165,7 +167,7 @@ def check_posts(model, field):
                         pages = requests.get(alt_endpoint).json()['query']['pages']
                     except:
                         raise ValueError
-                    for _, pageid in pages.tiems():
+                    for _, page in pages.tiems():
                         val = page
                 if 'revisions' not in val:  # STILL???
                     print('Could NOT find a revision for this article')
@@ -173,22 +175,20 @@ def check_posts(model, field):
                 for rev_obj in val['revisions']:
                     print(rev_obj)
                     rev_kwargs = {}
-                    for field in Revision._meta.get_fields():
-                        if rev_obj.get(field.name):
-                            rev_kwargs[field.name] = rev_obj[field.name]
+                    for rev_field in Revision._meta.get_fields():
+                        if rev_obj.get(rev_field.name):
+                            rev_kwargs[rev_field.name] = rev_obj[rev_field.name]
                     if rev_kwargs.get('user'):
-                        endpoint = generate_user_endpoint(dja_link.language_code, rev_kwargs.get('user'))
+                        endpoint = generate_user_endpoint(
+                            dja_link.language_code, rev_kwargs.get('user'))
                         print(endpoint)
                         resp = requests.get(endpoint)
-                        try:
-                            print(resp.json())
-                            user = resp.json()['query']['users'][0]
-                            rev_kwargs['editcount'] = user.get('editcount', 0)
-                            if user.get('registration')
-                                rev_kwargs['registration'] = user.get('registration')
-                        except Exception as err:
-                            print('err with getting user info')
-                            print(err)
+                        print(resp.json())
+                        user = resp.json()['query']['users'][0]
+                        rev_kwargs['editcount'] = user.get('editcount', 0)
+                        if user.get('registration'):
+                            rev_kwargs['registration'] = user.get('registration')
+
                     rev_kwargs['wiki_link'] = dja_link
                     dja_rev, created = Revision.objects.get_or_create(**rev_kwargs)
                     if created or dja_rev.score == -1:
