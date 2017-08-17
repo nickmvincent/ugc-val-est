@@ -8,12 +8,22 @@ import os
 import time
 import argparse
 
+
 import requests
 
 from scoring_helpers import map_ores_code_to_int
 from url_helpers import extract_urls
 
 WIK = 'wikipedia.org/wiki/'
+
+
+
+from itertools import zip_longest
+def grouper(iterable, n, fillvalue=None):
+    args = [iter(iterable)] * n
+    group = zip_longest(*args, fillvalue=fillvalue)
+    return [member for member in group if member]
+
 
 def handle_err(post, err_num):
     """handles an error by add the err_num to Post table"""
@@ -185,16 +195,18 @@ def check_single_post(post, ores_ep_template, session):
             rev_kwargs_lst.append(rev_kwargs)
         num_unique_users = len(username_to_user_kwargs.keys())
 
-        users = []
-        user_result_pages = make_user_request(
-            session, dja_link.language_code, username_to_user_kwargs.keys())
-        for page in user_result_pages:
-            users += page['users']
-        for user in users:
-            user_kwargs = username_to_user_kwargs[user['name']]
-            user_kwargs['editcount'] = user.get('editcount', 0)
-            if user.get('registration'):
-                user_kwargs['registration'] = user.get('registration')
+
+        for userbatch in grouper(username_to_user_kwargs.keys(), 50):
+            users = []
+            user_result_pages = make_user_request(
+                session, dja_link.language_code, userbatch)
+            for page in user_result_pages:
+                users += page['users']
+            for user in users:
+                user_kwargs = username_to_user_kwargs[user['name']]
+                user_kwargs['editcount'] = user.get('editcount', 0)
+                if user.get('registration'):
+                    user_kwargs['registration'] = user.get('registration')
         for rev_kwargs in rev_kwargs_lst:
             if 'user' in rev_kwargs:
                 for key, val in username_to_user_kwargs.get(rev_kwargs['user'], {}):
@@ -205,6 +217,9 @@ def check_single_post(post, ores_ep_template, session):
                 pass
         dja_revs = Revision.objects.filter(wiki_link=dja_link)
         num_dja_revs = len(dja_revs)
+        print('{} revisions were returned, made by {} unique users. From this, {} revision rows were added'.format(
+            num_revisions_returned, num_dja_revs, num_dja_revs
+        ))
         for timestamp in [day_before_post, post.timestamp, week_after_post, ]:
             closest_rev = get_closest_to(dja_revs, timestamp)
             ores_context = dja_link.language_code + 'wiki'
@@ -227,10 +242,6 @@ def check_single_post(post, ores_ep_template, session):
                 raise MissingOresResponse(post, closest_rev.revid)
             closest_rev.score = map_ores_code_to_int(predicted_code)
             closest_rev.save()
-        print('{} revisions were returned, made by {} unique users. From this, {} revision rows were added'.format(
-            num_revisions_returned, num_dja_revs, num_dja_revs
-        ))
-        print('Took {}'.format(time.time() - tic))
 
 
 
