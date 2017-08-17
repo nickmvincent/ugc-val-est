@@ -110,7 +110,7 @@ if __name__ == "__main__":
         if sys.argv[1] == 'delete':
             delete_old_errors()
         elif sys.argv[1] == 'reset':
-            reset_wiki_links()
+            reset_revision_info()
         elif sys.argv[1] == 'show':
             show_samples()
         elif sys.argv[1] == 'calc_avg_scores':

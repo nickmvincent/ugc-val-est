@@ -173,6 +173,7 @@ def check_single_post(post, ores_ep_template, session):
         print('About to process {} revisions'.format(len(revisions)))
         username_to_user_kwargs = {}
         rev_kwargs_lst = []
+        num_revisions_returned = len(revisions)
         for rev_obj in revisions:
             rev_kwargs = {}
             for rev_field in Revision._meta.get_fields():
@@ -182,6 +183,7 @@ def check_single_post(post, ores_ep_template, session):
             if 'user' in rev_kwargs:
                 username_to_user_kwargs[rev_kwargs['user']] = {}
             rev_kwargs_lst.append(rev_kwargs)
+        num_unique_users = len(username_to_user_kwargs.keys())
 
         users = []
         user_result_pages = make_user_request(
@@ -202,6 +204,7 @@ def check_single_post(post, ores_ep_template, session):
             except IntegrityError:
                 pass
         dja_revs = Revision.objects.filter(wiki_link=dja_link)
+        num_dja_revs = len(dja_revs)
         for timestamp in [day_before_post, post.timestamp, week_after_post, ]:
             closest_rev = get_closest_to(dja_revs, timestamp)
             ores_context = dja_link.language_code + 'wiki'
@@ -220,6 +223,9 @@ def check_single_post(post, ores_ep_template, session):
                 raise MissingOresResponse(post, closest_rev.revid)
             closest_rev.score = map_ores_code_to_int(predicted_code)
             closest_rev.save()
+        print('{} revisions were returned, made by {} unique users. From this, {} revision rows were added'.format(
+            num_revisions_returned, num_dja_revs, num_dja_revs
+        ))
         print('Took {}'.format(time.time() - tic))
 
 
