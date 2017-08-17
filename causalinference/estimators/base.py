@@ -2,6 +2,13 @@ import causalinference.utils.tools as tools
 from ..core import Dict
 
 
+def estimation_names():
+	return ['ate', 'atc', 'att', ]
+
+
+def standard_err_names():
+	return ['ate_se', 'atc_se', 'att_se', ]
+
 class Estimator(Dict):
 
 	"""
@@ -11,10 +18,9 @@ class Estimator(Dict):
 	def __str__(self):
 
 		table_width = 80
-
-		names = ['ate', 'atc', 'att']
-		coefs = [self[name] for name in names if name in self.keys()]
-		ses = [self[name+'_se'] for name in names if name+'_se' in self.keys()]
+		names = estimation_names()
+		coefs_lst = [self[name] for name in names if name in self.keys()]
+		ses_lst = [self[name] for name in standard_err_names() if name in self.keys()]
 
 		output = '\n'
 		output += 'Treatment Effect Estimates: ' + self._method + '\n\n'
@@ -29,13 +35,15 @@ class Estimator(Dict):
 
 		entry_types2 = ['string'] + ['float']*6
 		col_spans2 = [1]*7
-		for (name, coef, se) in zip(names, coefs, ses):
-			entries2 = tools.gen_reg_entries(name.upper(), coef, se)
-			output += tools.add_row(entries2, entry_types2,
-			                        col_spans2, table_width)
+		for coefs, ses in zip(coefs_lst, ses_lst):
+			for (name, coef, se) in zip(names, coefs, ses):
+				entries2 = tools.gen_reg_entries(name.upper(), coef, se)
+				output += tools.add_row(entries2, entry_types2,
+										col_spans2, table_width)
 
 		return output
 
+	
 
 class Estimators(Dict):
 

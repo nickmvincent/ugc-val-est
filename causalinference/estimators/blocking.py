@@ -1,7 +1,7 @@
 from __future__ import division
 import numpy as np
 
-from .base import Estimator
+from .base import Estimator, estimation_names, standard_err_names
 from .. import causal
 
 class Blocking(Estimator):
@@ -14,7 +14,6 @@ class Blocking(Estimator):
 	
 		self._method = 'Blocking'
 
-		
 		for i, s in enumerate(strata):
 			try:
 				s.est_via_ols(adj)
@@ -23,7 +22,7 @@ class Blocking(Estimator):
 				# this will cause ndiff to be calculated as nan (zero std)
 				print('Entering singular matrix fixing code')
 				print(s.summary_stats)
-				Y, D, X = s.raw_data['Y'], s.raw_data['D'], s.raw_data['X']
+				X = s.raw_data['X']
 				to_delete = []
 				for col_num, ndiff_val in enumerate(s.summary_stats['ndiff']):
 					if np.isnan(ndiff_val):
@@ -32,7 +31,7 @@ class Blocking(Estimator):
 				for col_num in to_delete:
 					X = np.delete(X, col_num - cols_deleted, 1)
 					cols_deleted += 1
-				strata[i] = causal.CausalModel(Y, D, X)
+				strata[i] = causal.CausalModel(s.raw_data['Y'], s.raw_data['D'], X)
 				print('New causal model created!')
 				print(strata[i].summary_stats)
 				strata[i].est_via_ols(adj)
@@ -54,16 +53,27 @@ class Blocking(Estimator):
 			att_ses = [s.estimates['ols']['att_se'] for s in strata]
 
 		self._dict = dict()
-		self._dict['ate'] = calc_atx(ates, Ns)
-		self._dict['atc'] = calc_atx(atcs, N_cs)
-		self._dict['att'] = calc_atx(atts, N_ts)
-
-		self._dict['ate_se'] = calc_atx_se(ate_ses, Ns)
-		self._dict['atc_se'] = calc_atx_se(atc_ses, N_cs)
-		self._dict['att_se'] = calc_atx_se(att_ses, N_ts)
+		for key in estimation_names() + standard_err_names():
+			self._dict[key] = []
+		for vals in ates:
+			self._dict['ate'].append(calc_atx(vals, Ns))
+		for vals in atcs:
+			self._dict['atc'].append(calc_atx(vals, N_cs))
+		for vals in atts:
+			self._dict['att'].append(calc_atx(vals, N_ts))
+		for errvals in ate_ses:
+			self._dict['ate_se'].append(calc_atx_se(errvals, Ns))
+		for errvals in atc_ses:
+			self._dict['atc_se'].append(calc_atx_se(errvals, N_cs))
+		for errvals in att_ses:
+			self._dict['att_se'].append(calc_atx_se(errvals, N_ts))
 
 
 def calc_atx(atxs, Ns):
+	"""Calculate average treatment effect for a given set of
+	treatment effects computed for a set of strat.
+	Uses Ns to weight.
+	"""
 
 	N = sum(Ns)
 

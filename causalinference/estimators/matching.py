@@ -3,7 +3,7 @@ import numpy as np
 from itertools import chain
 from functools import reduce
 
-from .base import Estimator
+from .base import Estimator, estimation_names, standard_err_names
 
 
 class Matching(Estimator):
@@ -20,35 +20,42 @@ class Matching(Estimator):
 		Y_c, Y_t = data['Y_c'], data['Y_t']
 		X_c, X_t = data['X_c'], data['X_t']
 
-		matches_c = [match(X_i, X_t, W, m) for X_i in X_c]
-		matches_t = [match(X_i, X_c, W, m) for X_i in X_t]
-		Yhat_c = np.array([Y_t[idx].mean() for idx in matches_c])
-		Yhat_t = np.array([Y_c[idx].mean() for idx in matches_t])
-		ITT_c = Yhat_c - Y_c
-		ITT_t = Y_t - Yhat_t
-
-		if bias_adj:
-			bias_coefs_c = bias_coefs(matches_c, Y_t, X_t)
-			bias_coefs_t = bias_coefs(matches_t, Y_c, X_c)
-			bias_c = bias(X_c, X_t, matches_c, bias_coefs_c)
-			bias_t = bias(X_t, X_c, matches_t, bias_coefs_t)
-			ITT_c = ITT_c - bias_c
-			ITT_t = ITT_t + bias_t
-
 		self._dict = dict()
-		self._dict['atc'] = ITT_c.mean()
-		self._dict['att'] = ITT_t.mean()
-		self._dict['ate'] = (N_c/N)*self['atc'] + (N_t/N)*self['att']
+		for name in estimation_names() + standard_err_names():
+			self._dict[name] = []
 
-		scaled_counts_c = scaled_counts(N_c, matches_t)
-		scaled_counts_t = scaled_counts(N_t, matches_c)
-		vars_c = np.repeat(ITT_c.var(), N_c)  # conservative
-		vars_t = np.repeat(ITT_t.var(), N_t)  # conservative
-		self._dict['atc_se'] = calc_atc_se(vars_c, vars_t, scaled_counts_t)
-		self._dict['att_se'] = calc_att_se(vars_c, vars_t, scaled_counts_c)
-		self._dict['ate_se'] = calc_ate_se(vars_c, vars_t,
-		                                   scaled_counts_c,
-						   scaled_counts_t)
+		for y_c, y_t in zip(Y_c.T, Y_t.T):
+			matches_c = [match(X_i, X_t, W, m) for X_i in X_c]
+			matches_t = [match(X_i, X_c, W, m) for X_i in X_t]
+			yhat_c = np.array([y_t[idx].mean() for idx in matches_c])
+			yhat_t = np.array([y_c[idx].mean() for idx in matches_t])
+			ITT_c = yhat_c - y_c
+			ITT_t = y_t - yhat_t
+
+			if bias_adj:
+				bias_coefs_c = bias_coefs(matches_c, y_t, X_t)
+				bias_coefs_t = bias_coefs(matches_t, y_c, X_c)
+				bias_c = bias(X_c, X_t, matches_c, bias_coefs_c)
+				bias_t = bias(X_t, X_c, matches_t, bias_coefs_t)
+				ITT_c = ITT_c - bias_c
+				ITT_t = ITT_t + bias_t
+
+			atc = ITT_c.mean()
+			att = ITT_t.mean()
+			ate = (N_c/N)*atc + (N_t/N)*att
+			self._dict['atc'].append(atc)
+			self._dict['att'].append(att)
+			self._dict['ate'].append(ate)
+
+			scaled_counts_c = scaled_counts(N_c, matches_t)
+			scaled_counts_t = scaled_counts(N_t, matches_c)
+			vars_c = np.repeat(ITT_c.var(), N_c)  # conservative
+			vars_t = np.repeat(ITT_t.var(), N_t)  # conservative
+			self._dict['atc_se'].append(calc_atc_se(vars_c, vars_t, scaled_counts_t))
+			self._dict['att_se'].append(calc_att_se(vars_c, vars_t, scaled_counts_c))
+			self._dict['ate_se'].append(
+				calc_ate_se(vars_c, vars_t, scaled_counts_c, scaled_counts_t)
+			)
 
 
 def norm(X_i, X_m, W):

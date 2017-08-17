@@ -22,19 +22,18 @@ class Summary(Dict):
 
 		self._dict['N'], self._dict['K'] = data['N'], data['K']
 		self._dict['N_c'], self._dict['N_t'] = data['N_c'], data['N_t']
-		self._dict['Y_c_mean'] = data['Y_c'].mean()
-		self._dict['Y_t_mean'] = data['Y_t'].mean()
-		self._dict['Y_c_sd'] = np.sqrt(data['Y_c'].var(ddof=1))
-		self._dict['Y_t_sd'] = np.sqrt(data['Y_t'].var(ddof=1))
+		self._dict['Y_c_mean'] = data['Y_c'].mean(0)
+		self._dict['Y_t_mean'] = data['Y_t'].mean(0)
+		self._dict['Y_c_sd'] = np.sqrt(data['Y_c'].var(0, ddof=1))
+		self._dict['Y_t_sd'] = np.sqrt(data['Y_t'].var(0, ddof=1))
 		self._dict['rdiff'] = self['Y_t_mean'] - self['Y_c_mean']
 		self._dict['X_c_mean'] = data['X_c'].mean(0)
 		self._dict['X_t_mean'] = data['X_t'].mean(0)
 		self._dict['X_c_sd'] = np.sqrt(data['X_c'].var(0, ddof=1))
 		self._dict['X_t_sd'] = np.sqrt(data['X_t'].var(0, ddof=1))
-		self._dict['ndiff'] = calc_ndiff(self['X_c_mean'],
-		                                 self['X_t_mean'],
-						 self['X_c_sd'],
-						 self['X_t_sd'])
+		self._dict['ndiff'] = calc_ndiff(
+			self['X_c_mean'], self['X_t_mean'],
+			self['X_c_sd'], self['X_t_sd'])
 
 
 	def _summarize_pscore(self, pscore_c, pscore_t):
@@ -60,6 +59,7 @@ class Summary(Dict):
 		X_c_sd, X_t_sd = self['X_c_sd'], self['X_t_sd']
 		rdiff, ndiff = self['rdiff'], self['ndiff']
 		varnames = ['X'+str(i) for i in range(K)]
+		outputnames = ['Y'+str(i) for i in range(self['num_outputs'])]
 		
 		output = '\n'
 		output += 'Summary Statistics\n\n'
@@ -82,7 +82,9 @@ class Summary(Dict):
 		entries3 = ['Y', Y_c_mean, Y_c_sd, Y_t_mean, Y_t_sd, rdiff]
 		entry_types3 = ['string'] + ['float']*5
 		col_spans3 = [1]*6
-		output += tools.add_row(entries3, entry_types3,
+		for entries3 in zip(outputnames, Y_c_mean, Y_c_sd,
+							Y_t_mean, Y_t_sd, rdiff):
+			output += tools.add_row(entries3, entry_types3,
 		                        col_spans3, table_width)
 
 		output += '\n'

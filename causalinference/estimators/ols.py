@@ -2,7 +2,7 @@ from __future__ import division
 import numpy as np
 import scipy.linalg
 
-from .base import Estimator
+from .base import Estimator, estimation_names, standard_err_names
 
 
 class OLS(Estimator):
@@ -18,22 +18,27 @@ class OLS(Estimator):
 		X_c, X_t = data['X_c'], data['X_t']
 
 		Z = form_matrix(D, X, adj)
-		olscoef = np.linalg.lstsq(Z, Y)[0]
-		u = Y - Z.dot(olscoef)
-		cov = calc_cov(Z, u)
-
+		# foreach COLUMN in the Y matrix
 		self._dict = dict()
-		self._dict['ate'] = calc_ate(olscoef)
-		self._dict['ate_se'] = calc_ate_se(cov)
+		for name in estimation_names() + standard_err_names():
+			self._dict[name] = []
+		for y in Y.T:
+			olscoef = np.linalg.lstsq(Z, y)[0]
+			u = y - Z.dot(olscoef)
+			cov = calc_cov(Z, u)
 
-		if adj == 2:
-			Xmean = X.mean(0)
-			meandiff_c = X_c.mean(0) - Xmean
-			meandiff_t = X_t.mean(0) - Xmean
-			self._dict['atc'] = calc_atx(olscoef, meandiff_c)
-			self._dict['att'] = calc_atx(olscoef, meandiff_t)
-			self._dict['atc_se'] = calc_atx_se(cov, meandiff_c)
-			self._dict['att_se'] = calc_atx_se(cov, meandiff_t)
+			self._dict = dict()
+			self._dict['ate'].append(calc_ate(olscoef))
+			self._dict['ate_se'].append(calc_ate_se(cov))
+
+			if adj == 2:
+				Xmean = X.mean(0)
+				meandiff_c = X_c.mean(0) - Xmean
+				meandiff_t = X_t.mean(0) - Xmean
+				self._dict['atc'].append(calc_atx(olscoef, meandiff_c))
+				self._dict['att'].append(calc_atx(olscoef, meandiff_t))
+				self._dict['atc_se'].append(calc_atx_se(cov, meandiff_c))
+				self._dict['att_se'].append(calc_atx_se(cov, meandiff_t))
 
 
 def form_matrix(D, X, adj):

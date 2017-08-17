@@ -4,6 +4,7 @@ import numpy as np
 from .base import Estimator
 from .ols import calc_cov, calc_ate, calc_ate_se
 
+# TODO
 
 class Weighting(Estimator):
 
