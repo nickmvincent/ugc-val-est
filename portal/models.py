@@ -163,24 +163,25 @@ class Post(models.Model):
                 for link_obj in self.wiki_links.all():
                     num_links += 1
                     revisions = Revision.objects.filter(wiki_link=link_obj)
-                    for field, dt in field_to_dt.items():
-                        field_to_score[field] = get_closest_to(
-                            revisions, dt).score
-                    for revision in revisions:
-                        if revision.timestamp > self.timestamp:
-                            self.num_edits += 1
-                            if revision.editcount <= 5:
-                                self.num_inactive_edits += 1
-                            else:
-                                self.num_active_edits += 1
-                            if revision.registration > self.timestamp:
-                                self.num_new_edits += 1
-                            else:
-                                self.num_old_edits += 1
-                            if revision.flags:
-                                self.num_minor_edits += 1
-                            else:
-                                self.num_major_edits += 1
+                    if len(revisions) > 0:
+                        for field, dt in field_to_dt.items():
+                            field_to_score[field] = get_closest_to(
+                                revisions, dt).score
+                        for revision in revisions:
+                            if revision.timestamp > self.timestamp:
+                                self.num_edits += 1
+                                if revision.editcount <= 5:
+                                    self.num_inactive_edits += 1
+                                else:
+                                    self.num_active_edits += 1
+                                if revision.registration > self.timestamp:
+                                    self.num_new_edits += 1
+                                else:
+                                    self.num_old_edits += 1
+                                if revision.flags:
+                                    self.num_minor_edits += 1
+                                else:
+                                    self.num_major_edits += 1
                 if num_links == 0:
                     self.wiki_content_error = 5  # mystery error requires manual investigation
                 else:

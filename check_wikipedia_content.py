@@ -131,22 +131,15 @@ def check_single_post(post, field, ores_ep_template):
         endpoint = generate_revid_endpoint(
             dja_link.language_code, dja_link.title, month_before_post,
             month_after_post)
-        try:
-            pages = requests.get(endpoint).json()['query']['pages']
-            print(pages)
-        except:
-            raise ValueError
+        pages = requests.get(endpoint).json()['query']['pages']
         for _, page in pages.items():
             val = page
         if 'revisions' not in val:
             alt_endpoint = generate_revid_endpoint(
                 dja_link.language_code, dja_link.title, month_before_post,
                 get_last=True)
-            try:
-                print(alt_endpoint)
-                pages = requests.get(alt_endpoint).json()['query']['pages']
-            except:
-                raise ValueError
+            print(alt_endpoint)
+            pages = requests.get(alt_endpoint).json()['query']['pages']
             for _, page in pages.items():
                 val = page
         if 'revisions' not in val:  # STILL???
