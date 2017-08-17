@@ -131,7 +131,13 @@ def check_single_post(post, field, ores_ep_template):
         endpoint = generate_revid_endpoint(
             dja_link.language_code, dja_link.title, month_before_post,
             month_after_post)
-        pages = requests.get(endpoint).json()['query']['pages']
+        try:
+            resp = requests.get(endpoint).json()
+            pages = resp['query']['pages']
+        except KeyError as err:
+            print(err)
+            print(endpoint)
+            print(resp)
         for _, page in pages.items():
             val = page
         if 'revisions' not in val:
@@ -139,7 +145,14 @@ def check_single_post(post, field, ores_ep_template):
                 dja_link.language_code, dja_link.title, month_before_post,
                 get_last=True)
             print(alt_endpoint)
-            pages = requests.get(alt_endpoint).json()['query']['pages']
+            try:
+                resp = requests.get(alt_endpoint).json()
+                pages = resp['query']['pages']
+            except KeyError as err:
+                print('Err with ALT endpoint')
+                print(err)
+                print(alt_endpoint)
+                print(resp)
             for _, page in pages.items():
                 val = page
         if 'revisions' not in val:  # STILL???
@@ -153,8 +166,13 @@ def check_single_post(post, field, ores_ep_template):
             if rev_kwargs.get('user'):
                 endpoint = generate_user_endpoint(
                     dja_link.language_code, rev_kwargs.get('user'))
-                resp = requests.get(endpoint)
-                user = resp.json()['query']['users'][0]
+                resp = requests.get(endpoint).json()
+                try:
+                    user = resp['query']['users'][0]
+                except KeyError as err:
+                    print(err)
+                    print(endpoint)
+                    print(resp)
                 rev_kwargs['editcount'] = user.get('editcount', 0)
                 if user.get('registration'):
                     rev_kwargs['registration'] = user.get('registration')
@@ -204,13 +222,15 @@ def check_posts(model, field):
         count += 1
         try:
             check_single_post(post, field, ores_ep_template)
-        except (MissingRevisionId, ContextNotSupported, BrokenLinkError, MissingOresResponse):
-            continue
-        except ValueError:
-            continue
-        finally:
             post.wiki_content_analyzed = True
             post.save()
+        except (
+            MissingRevisionId, ContextNotSupported, BrokenLinkError,
+            MissingOresResponse, ValueError
+        ):
+            post.wiki_content_analyzed = True
+            post.save()
+            
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dja.settings")
