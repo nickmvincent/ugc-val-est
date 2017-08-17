@@ -155,19 +155,18 @@ def check_single_post(post, field, ores_ep_template):
         if 'revisions' not in val:  # STILL???
             print('Could NOT find a revision for this article')
             raise MissingRevisionId(post, alt_endpoint)
+        tic = time.time()        
         for rev_obj in val['revisions']:
             rev_kwargs = {}
             for rev_field in Revision._meta.get_fields():
                 if rev_obj.get(rev_field.name):
                     rev_kwargs[rev_field.name] = rev_obj[rev_field.name]
             if rev_kwargs.get('user'):
-                tic = time.time()
                 endpoint = generate_user_endpoint(
                     dja_link.language_code, rev_kwargs.get('user'))
                 resp = requests.get(endpoint).json()
                 try:
                     user = resp['query']['users'][0]
-                    print('Getting user data took {}'.format(time.time() - tic))
                 except KeyError as err:
                     print('Err with user endpoint', endpoint, resp)
                 rev_kwargs['editcount'] = user.get('editcount', 0)
@@ -181,11 +180,9 @@ def check_single_post(post, field, ores_ep_template):
                     'context': ores_context,
                     'revid': rev_obj['revid']
                 })
-                tic = time.time()
                 ores_resp = requests.get(ores_ep).json()
                 try:
                     scores = ores_resp['scores'][ores_context]['wp10']['scores']
-                    print('Getting ores data took {}'.format(time.time() - tic))
                 except KeyError:
                     raise ContextNotSupported(post, ores_context)
                 try:
@@ -196,6 +193,9 @@ def check_single_post(post, field, ores_ep_template):
                 dja_rev.save()
             except IntegrityError:
                 pass
+        print('Getting user/ores data for {} revisions took {}'.format(
+            len(val['revisions'], time.time() - tic)
+        ))
 
 
 
