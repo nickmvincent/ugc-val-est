@@ -182,7 +182,10 @@ def check_posts(model, field):
                         if user.get('registration'):
                             rev_kwargs['registration'] = user.get('registration')
                     rev_kwargs['wiki_link'] = dja_link
-                    dja_rev, created = Revision.objects.get_or_create(**rev_kwargs)
+                    dja_rev, created = Revision.objects.get_or_create(rev_kwargs['revid'])
+                    for field_name, field_val in rev_kwargs.items():
+                        setattr(dja_rev, field_name, field_val)
+                    # avoid unneeded ORES calls
                     if created or dja_rev.score == -1:
                         ores_context = dja_link.language_code + 'wiki'
                         ores_ep = ores_ep_template.format(**{
@@ -199,6 +202,7 @@ def check_posts(model, field):
                         except KeyError:
                             raise MissingOresResponse(post, rev_obj['revid'])
                         dja_rev.score = map_ores_code_to_int(predicted_code)
+                    dja_rev.save()
         except (MissingRevisionId, ContextNotSupported, BrokenLinkError, MissingOresResponse):
             continue
         except ValueError:

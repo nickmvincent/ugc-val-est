@@ -95,6 +95,8 @@ class Post(models.Model):
     num_old_edits = models.IntegerField(default=0)
     num_inactive_edits = models.IntegerField(default=0)
     num_active_edits = models.IntegerField(default=0)
+    num_minor_edits = models.IntegerField(default=0)
+    num_major_edits = models.IntegerField(default=0)
 
     class Meta:
         abstract = True
@@ -165,15 +167,20 @@ class Post(models.Model):
                         field_to_score[field] = get_closest_to(
                             revisions, dt).score
                     for revision in revisions:
-                        self.num_edits += 1
-                        if revision.editcount <= 5:
-                            self.num_inactive_edits += 1
-                        else:
-                            self.num_active_edits += 1
-                        if revision.registration > self.timestamp:
-                            self.num_new_edits += 1
-                        else:
-                            self.num_old_edits += 1
+                        if revision.timestamp > self.timestamp:
+                            self.num_edits += 1
+                            if revision.editcount <= 5:
+                                self.num_inactive_edits += 1
+                            else:
+                                self.num_active_edits += 1
+                            if revision.registration > self.timestamp:
+                                self.num_new_edits += 1
+                            else:
+                                self.num_old_edits += 1
+                            if revision.flags:
+                                self.num_minor_edits += 1
+                            else:
+                                self.num_major_edits += 1
                 if num_links == 0:
                     self.wiki_content_error = 5  # mystery error requires manual investigation
                 else:
@@ -185,6 +192,7 @@ class Post(models.Model):
                 if self.day_of_avg_score >= 4:
                     self.has_good_wiki_link = True
         super(Post, self).save(*args, **kwargs)
+
 
 
 class SampledRedditThread(Post):
