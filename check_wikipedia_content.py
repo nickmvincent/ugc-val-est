@@ -6,6 +6,7 @@ checks for Wikipedia content, and get ORES score
 import sys
 import datetime
 import os
+import time
 
 import requests
 
@@ -128,11 +129,13 @@ def check_single_post(post, field, ores_ep_template):
         month_after_post = post.timestamp + datetime.timedelta(days=30)
         month_before_post = month_before_post.strftime(wiki_api_str_fmt)
         month_after_post = month_after_post.strftime(wiki_api_str_fmt)
+        tic = time.time()
         endpoint = generate_revid_endpoint(
             dja_link.language_code, dja_link.title, month_before_post,
             month_after_post)
         try:
             resp = requests.get(endpoint).json()
+            print('Getting revid data took {}'.format(time.time() - tic))
             pages = resp['query']['pages']
         except KeyError as err:
             print('Err with first endpoint', endpoint, resp)
@@ -158,11 +161,13 @@ def check_single_post(post, field, ores_ep_template):
                 if rev_obj.get(rev_field.name):
                     rev_kwargs[rev_field.name] = rev_obj[rev_field.name]
             if rev_kwargs.get('user'):
+                tic = time.time()
                 endpoint = generate_user_endpoint(
                     dja_link.language_code, rev_kwargs.get('user'))
                 resp = requests.get(endpoint).json()
                 try:
                     user = resp['query']['users'][0]
+                    print('Getting user data took {}'.format(time.time() - tic))
                 except KeyError as err:
                     print('Err with user endpoint', endpoint, resp)
                 rev_kwargs['editcount'] = user.get('editcount', 0)
@@ -176,9 +181,11 @@ def check_single_post(post, field, ores_ep_template):
                     'context': ores_context,
                     'revid': rev_obj['revid']
                 })
+                tic = time.time()
                 ores_resp = requests.get(ores_ep).json()
                 try:
                     scores = ores_resp['scores'][ores_context]['wp10']['scores']
+                    print('Getting ores data took {}'.format(time.time() - tic))
                 except KeyError:
                     raise ContextNotSupported(post, ores_context)
                 try:
@@ -208,9 +215,11 @@ def check_posts(model, field):
         raise ValueError('Invalid choice of field... try "url" or "body"')
     print('About to run through {} threads'.format(len(filtered)))
     count = 0
+    process_start = time.time()
     for post in filtered:
-        if count % 100 == 0:
+        if count % 10 == 0:
             print('Posts processed: {}'.format(count))
+            print('total runtime: {}'.format(time.time() - process_start))
         count += 1
         try:
             check_single_post(post, field, ores_ep_template)
@@ -221,7 +230,9 @@ def check_posts(model, field):
             MissingOresResponse, ValueError
         ):
             post.wiki_content_analyzed = True
+            tic = time.time()
             post.save()
+            print('Saving post took: {}'.format(time.time() - tic))
             
 
 if __name__ == "__main__":
