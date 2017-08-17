@@ -21,8 +21,7 @@ WIK = 'wikipedia.org/wiki/'
 from itertools import zip_longest
 def grouper(iterable, n, fillvalue=None):
     args = [iter(iterable)] * n
-    group = zip_longest(*args, fillvalue=fillvalue)
-    return [member for member in group if member]
+    return zip_longest(*args, fillvalue=fillvalue)
 
 
 def handle_err(post, err_num):
@@ -131,6 +130,7 @@ def make_user_request(session, prefix, users):
     closest to the timestamp, but prior to to the timestamp.
     """
     print('making user request with {} users...'.format(len(users)))
+    print(users)
     base = 'https://{}.wikipedia.org/w/api.php?action=query&'.format(prefix)
     usprop_params = ['editcount', 'registration', ]
     params = {
@@ -197,6 +197,7 @@ def check_single_post(post, ores_ep_template, session):
 
 
         for userbatch in grouper(username_to_user_kwargs.keys(), 50):
+            userbatch = [user for user in userbatch if user]
             users = []
             user_result_pages = make_user_request(
                 session, dja_link.language_code, userbatch)
