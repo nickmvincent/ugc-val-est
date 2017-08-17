@@ -309,7 +309,7 @@ class Revision(models.Model):
     score = models.IntegerField(default=-1)
     user = models.CharField(max_length=100)
     editcount = models.IntegerField(default=0)
-    registration = models.DateTimeField()
+    registration = models.DateTimeField(default=timezone.now)
     flags = models.BooleanField(default=True) # whether the edit was minor edit
 
 

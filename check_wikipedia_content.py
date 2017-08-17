@@ -140,6 +140,7 @@ def check_posts(model, field):
                         month_after_post)
                 resp = requests.get(endpoint)
                 try:
+                    print(resp.json())
                     pages = resp.json()['query']['pages']
                 except:
                     raise ValueError
@@ -152,11 +153,13 @@ def check_posts(model, field):
                                 rev_kwargs[field.name] = rev_obj[field.name]
                         if rev_kwargs.get('user'):
                             endpoint = generate_user_endpoint(dja_link.language_code, rev_kwargs.get('user'))
+                            print(endpoint)
                             resp = requests.get(endpoint)
                             try:
+                                print(resp.json())
                                 user = resp.json()['query']['users'][0]
-                                rev_kwargs['editcount'] = user['editcount']
-                                rev_kwargs['registration'] = user['registration']
+                                rev_kwargs['editcount'] = user.get('editcount', 0)
+                                rev_kwargs['registration'] = user.get('registration', None)
                             except Exception as err:
                                 print('err with getting user info')
                                 print(err)
