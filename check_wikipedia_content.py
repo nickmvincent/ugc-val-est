@@ -120,6 +120,7 @@ def make_user_request(session, prefix, users):
     Returns an endpoint that will give us a revid in json format
     closest to the timestamp, but prior to to the timestamp.
     """
+    print('making user request with {} users...'.format(len(users)))
     base = 'https://{}.wikipedia.org/w/api.php?action=query&'.format(prefix)
     usprop_params = ['editcount', 'registration', ]
     params = {
@@ -192,14 +193,12 @@ def check_single_post(post, ores_ep_template, session):
             rev_kwargs['editcount'] = user.get('editcount', 0)
             if user.get('registration'):
                 rev_kwargs['registration'] = user.get('registration')
-        dja_revs = []
         for rev_kwargs in rev_kwargs_lst:
             try:
                 dja_rev = Revision.objects.create(**rev_kwargs)
-                dja_revs.append(dja_rev)
             except IntegrityError:
                 pass
-
+        dja_revs = Revision.objects.filter(wiki_link=dja_link)
         for timestamp in [day_before_post, post.timestamp, week_after_post, ]:
             closest_rev = get_closest_to(dja_revs, timestamp)
             ores_context = dja_link.language_code + 'wiki'
