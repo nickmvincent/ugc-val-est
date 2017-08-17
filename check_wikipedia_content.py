@@ -166,11 +166,8 @@ def check_single_post(post, field, ores_ep_template):
                 if user.get('registration'):
                     rev_kwargs['registration'] = user.get('registration')
             rev_kwargs['wiki_link'] = dja_link
-            dja_rev, created = Revision.objects.get_or_create(rev_kwargs['revid'])
-            for field_name, field_val in rev_kwargs.items():
-                setattr(dja_rev, field_name, field_val)
-            # avoid unneeded ORES calls
-            if created or dja_rev.score == -1:
+            try:
+                dja_rev = Revision.objects.create(**rev_kwargs)
                 ores_context = dja_link.language_code + 'wiki'
                 ores_ep = ores_ep_template.format(**{
                     'context': ores_context,
@@ -186,7 +183,9 @@ def check_single_post(post, field, ores_ep_template):
                 except KeyError:
                     raise MissingOresResponse(post, rev_obj['revid'])
                 dja_rev.score = map_ores_code_to_int(predicted_code)
-            dja_rev.save()
+                dja_rev.save()
+            except IntegrityError:
+                pass
 
 
 
@@ -223,6 +222,7 @@ def check_posts(model, field):
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dja.settings")
     import django
+    from django.db.utils import IntegrityError
     django.setup()
     from portal.models import (
         SampledRedditThread, SampledStackOverflowPost,
