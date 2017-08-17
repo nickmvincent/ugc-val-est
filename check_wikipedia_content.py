@@ -76,6 +76,24 @@ def generate_revid_endpoint(prefix, title, start, end):
     return rev_endpoint.format(title, start, end)
 
 
+def generate_user_endpoint(prefix, user):
+    """
+    Returns an endpoint that will give us a revid in json format
+    closest to the timestamp, but prior to to the timestamp.
+    """
+    base = 'https://{}.wikipedia.org/w/api.php?action=query&'.format(prefix)
+    usprop_params = ['editcount', 'registration', ]
+    query_params = {
+        'format': 'json',
+        'list': 'users',
+        'usprop': 's%7C'.join(usprop_params),
+    }
+    query_pairs = ['{}={}'.format(key, val)
+                   for key, val in query_params.items()]
+    rev_endpoint = base + '&'.join(query_pairs) + '&ususers={}'
+    return rev_endpoint.format(user)
+
+
 def check_posts(model, field):
     """
     Run through sampled threads and get corresponding Wiki data
@@ -113,12 +131,12 @@ def check_posts(model, field):
                 post.has_wiki_link = True
                 post.num_wiki_links += 1
                 wiki_api_str_fmt = '%Y%m%d%H%M%S'
-                day_before_post = post.timestamp - datetime.timedelta(days=1)
+                month_before_post = post.timestamp - datetime.timedelta(days=30)
                 month_after_post = post.timestamp + datetime.timedelta(days=30)
-                day_before_post = day_before_post.strftime(wiki_api_str_fmt)
+                month_before_post = month_before_post.strftime(wiki_api_str_fmt)
                 month_after_post = month_after_post.strftime(wiki_api_str_fmt)
                 endpoint = generate_revid_endpoint(
-                        dja_link.language_code, dja_link.title, day_before_post,
+                        dja_link.language_code, dja_link.title, month_before_post,
                         month_after_post)
                 resp = requests.get(endpoint)
                 try:
@@ -126,33 +144,40 @@ def check_posts(model, field):
                 except:
                     raise ValueError
                 for _, val in pages.items():
-                    try:
-                        rev_obj = val['revisions'][0]
-                    except KeyError:
-                        raise MissingRevisionId(post, endpoint)
-                    revid = rev_obj['revid']
-                    rev_kwargs = {}
-                    for field in Revision._meta.get_fields():
-                        if rev_obj.get(field.name):
-                            rev_kwargs[field.name] = rev_obj[field.name]
-                    dja_rev, created = Revision.objects.get_or_create(**rev_kwargs)
-                    dja_rev.wiki_link = dja_link
-                    if created or dja_rev.score == -1:
-                        ores_context = dja_link.language_code + 'wiki'
-                        ores_ep = ores_ep_template.format(**{
-                            'context': ores_context,
-                            'revid': revid
-                        })
-                        ores_resp = requests.get(ores_ep).json()
-                        try:
-                            scores = ores_resp['scores'][ores_context]['wp10']['scores']
-                        except KeyError:
-                            raise ContextNotSupported(post, ores_context)
-                        try:
-                            predicted_code = scores[str(revid)]['prediction']
-                        except KeyError:
-                            raise MissingOresResponse(post, revid)
-                        dja_rev.score = map_ores_code_to_int(predicted_code)
+                    for rev_obj in val['revisions']:
+                        print(rev_obj)
+                        rev_kwargs = {}
+                        for field in Revision._meta.get_fields():
+                            if rev_obj.get(field.name):
+                                rev_kwargs[field.name] = rev_obj[field.name]
+                        if rev_kwargs.get('user'):
+                            endpoint = generate_user_endpoint(dja_link.language_code, rev_kwargs.get('user'))
+                            resp = requests.get(endpoint)
+                            try:
+                                user = resp.json()['query']['users'][0]
+                                rev_kwargs['editcount'] = user['editcount']
+                                rev_kwargs['registration'] = user['registration']
+                            except Exception as err:
+                                print('err with getting user info')
+                                print(err)
+                        dja_rev, created = Revision.objects.get_or_create(**rev_kwargs)
+                        dja_rev.wiki_link = dja_link
+                        if created or dja_rev.score == -1:
+                            ores_context = dja_link.language_code + 'wiki'
+                            ores_ep = ores_ep_template.format(**{
+                                'context': ores_context,
+                                'revid': rev_obj['revid']
+                            })
+                            ores_resp = requests.get(ores_ep).json()
+                            try:
+                                scores = ores_resp['scores'][ores_context]['wp10']['scores']
+                            except KeyError:
+                                raise ContextNotSupported(post, ores_context)
+                            try:
+                                predicted_code = scores[str(rev_obj['revid'])]['prediction']
+                            except KeyError:
+                                raise MissingOresResponse(post, rev_obj['revid'])
+                            dja_rev.score = map_ores_code_to_int(predicted_code)
         except (MissingRevisionId, ContextNotSupported, BrokenLinkError, MissingOresResponse):
             continue
         except ValueError:

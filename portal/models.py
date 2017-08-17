@@ -3,6 +3,8 @@ These models are used to define the tables in the Postgresql database for
 doing data analysis
 """
 # pylint:disable=#C0103
+
+import datetime
 from django.db import models
 from django.utils import timezone
 from url_helpers import extract_urls
@@ -14,6 +16,24 @@ def trimmed(val, floor, ceil):
     floored = max(val, floor)
     ceiled = min(floored, ceil)
     return ceiled
+
+
+def get_closest_to(qs, target):
+    closest_greater_qs = qs.filter(timestamp__gt=target).order_by('dt')
+    closest_less_qs = qs.filter(timestamp__lt=target).order_by('-dt')
+    try:
+        closest_greater = closest_greater_qs[0]
+    except IndexError:
+        return closest_less_qs[0]
+    try:
+        closest_less = closest_less_qs[0]
+    except IndexError:
+        return closest_greater_qs[0]
+
+    if closest_greater.dt - target > target - closest_less.dt:
+        return closest_less
+    else:
+        return closest_greater
 
 
 class Post(models.Model):
@@ -68,6 +88,12 @@ class Post(models.Model):
     user_created_utc = models.DateTimeField(null=True, blank=True)
     # this field is nullable because it will be set upon save method call
     seconds_since_user_creation = models.IntegerField(null=True, blank=True)
+    
+    num_edits = models.IntegerField(default=0)
+    num_new_edits = models.IntegerField(default=0)
+    num_old_edits = models.IntegerField(default=0)
+    num_inactive_edits = models.IntegerField(default=0)
+    num_active_edits = models.IntegerField(default=0)
 
     class Meta:
         abstract = True
@@ -119,13 +145,29 @@ class Post(models.Model):
         # calculate average scores if needed
         if self.has_wiki_link and self.wiki_content_analyzed and self.wiki_content_error == 0:
             if self.day_of_avg_score is None:
-                fields = ['day_prior',  'day_of', 'week_after', ]
+                field_to_dt = {
+                    'day_prior': self.timestamp - datetime.timedelta(days=1),
+                    'day_of': self.timestamp,
+                    'week_after': self.timestamp + datetime.timedelta(days=7),
+                }
                 num_links = 0
-                field_to_score = {field: 0 for field in fields}
-                # for link_obj in self.post_specific_wiki_links.all():
-                #    for field in fields:
-                #        field_to_score[field] += getattr(link_obj, field).score
-                #     num_links += 1
+                field_to_score = {field: 0 for field in field_to_dt}
+                self.num_edits = 0
+                for link_obj in self.wiki_links.all():
+                    num_links += 1
+                    revisions = Revision.objects.filter(wiki_link=link_obj)
+                    for field, dt in field_to_dt.items():
+                        field_to_score[field] = get_closest_to(revisions, dt).score
+                    for revision in revisions:
+                        self.num_edits += 1
+                        if revision.editcount <= 5:
+                            self.num_inactive_edits += 1
+                        else:
+                            self.num_active_edits += 1
+                        if revision.registration > self.timestamp:
+                            self.num_new_edits += 1
+                        else:
+                            self.num_old_edits += 1
                 if num_links == 0:
                     self.wiki_content_error = 5 # mystery error requires manual investigation
                 else:
@@ -268,7 +310,8 @@ class Revision(models.Model):
     user = models.CharField(max_length=100)
     editcount = models.IntegerField(default=0)
     registration = models.DateTimeField()
-    minor_edit = models.BooleanField(default=True)
+    flags = models.BooleanField(default=True) # whether the edit was minor edit
+
 
 
 class ErrorLog(models.Model):
