@@ -66,7 +66,7 @@ def generate_revid_endpoint(prefix, title, start, end):
     query_params = {
         'format': 'json',
         'prop': 'revisions',
-        'rvprop': 's%7C'.join(rvprop_params),
+        'rvprop': '|'.join(rvprop_params),
         'rvdir': 'newer',
         'rvlimit': '500',
     }
@@ -86,7 +86,7 @@ def generate_user_endpoint(prefix, user):
     query_params = {
         'format': 'json',
         'list': 'users',
-        'usprop': 's%7C'.join(usprop_params),
+        'usprop': '|'.join(usprop_params),
     }
     query_pairs = ['{}={}'.format(key, val)
                    for key, val in query_params.items()]
