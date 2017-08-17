@@ -19,8 +19,8 @@ def trimmed(val, floor, ceil):
 
 
 def get_closest_to(qs, target):
-    closest_greater_qs = qs.filter(timestamp__gt=target).order_by('dt')
-    closest_less_qs = qs.filter(timestamp__lt=target).order_by('-dt')
+    closest_greater_qs = qs.filter(timestamp__gt=target).order_by('timestamp')
+    closest_less_qs = qs.filter(timestamp__lt=target).order_by('-timestamp')
     try:
         closest_greater = closest_greater_qs[0]
     except IndexError:
