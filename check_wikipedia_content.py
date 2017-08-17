@@ -129,8 +129,6 @@ def make_user_request(session, prefix, users):
     Returns an endpoint that will give us a revid in json format
     closest to the timestamp, but prior to to the timestamp.
     """
-    print('making user request with {} users...'.format(len(users)))
-    print(users)
     base = 'https://{}.wikipedia.org/w/api.php?action=query&'.format(prefix)
     usprop_params = ['editcount', 'registration', ]
     params = {
@@ -180,7 +178,6 @@ def check_single_post(post, ores_ep_template, session):
             )
             raise MissingRevisionId(post, info)
         tic = time.time()
-        print('About to process {} revisions'.format(len(revisions)))
         username_to_user_kwargs = {}
         rev_kwargs_lst = []
         num_revisions_returned = len(revisions)
@@ -210,7 +207,7 @@ def check_single_post(post, ores_ep_template, session):
                     user_kwargs['registration'] = user.get('registration')
         for rev_kwargs in rev_kwargs_lst:
             if 'user' in rev_kwargs:
-                for key, val in username_to_user_kwargs.get(rev_kwargs['user'], {}):
+                for key, val in username_to_user_kwargs.get(rev_kwargs['user'], {}).items():
                     rev_kwargs[key] = val
             try:
                 Revision.objects.create(**rev_kwargs)
@@ -219,7 +216,7 @@ def check_single_post(post, ores_ep_template, session):
         dja_revs = Revision.objects.filter(wiki_link=dja_link)
         num_dja_revs = len(dja_revs)
         print('{} revisions were returned, made by {} unique users. From this, {} revision rows were added'.format(
-            num_revisions_returned, num_dja_revs, num_dja_revs
+            num_revisions_returned, num_unique_users, num_dja_revs
         ))
         for timestamp in [day_before_post, post.timestamp, week_after_post, ]:
             closest_rev = get_closest_to(dja_revs, timestamp)
@@ -288,7 +285,7 @@ def retrieve_links_info(filtered):
             post.save()
         except (
                 MissingRevisionId, ContextNotSupported, BrokenLinkError,
-                MissingOresResponse, ValueError
+                MissingOresResponse
         ):
             post.wiki_content_analyzed = True
             post.save()
@@ -315,6 +312,7 @@ def parse():
     filter_kwargs = {field + '__contains': WIK}
     if args.mode == 'retrieve':
         filter_kwargs['has_wiki_link'] = True
+        filter_kwargs['wiki_content_analyzed'] = False
     filtered = model.objects.filter(**filter_kwargs)
     print('Using kwargs {}, {} items were found to be processed'.format(
         str(filter_kwargs), len(filtered)
