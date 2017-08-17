@@ -101,116 +101,122 @@ def causal_inference(
     qs, features, outcomes = get_qs_features_and_outcomes(
         platform, num_rows=num_rows, filter_kwargs=filter_kwargs)
     features.append(treatment_feature)
-    # outcomes = ['score', ]
-    for outcome in outcomes:
-        filename = 'causal_X_{}_Y_{}_platform_{}_subset_{}.txt'.format(
-        treatment_feature, outcome, platform,
-        num_rows if num_rows else 'All')
-        print('==={}==='.format(outcome))
-        field_names = features + [outcome]
-        rows = qs.values_list(*field_names)
-        records = values_list_to_records(rows, field_names)
-        times.append(mark_time('records_loaded'))
 
-        feature_rows = []
-        successful_fields = []
-        for feature in features + [treatment_feature]:
-            feature_row = getattr(records, feature)
-            if feature == treatment_feature:
-                D = feature_row
-            elif all(x == 0 for x in feature_row):
-                print(
-                    'Feature {} is all zeros - will lead to singular matrix...'.format(feature))
-                print('This feature will NOT be included')
-            elif any(np.isnan(feature_row)):
-                print('Feature {} has a nan value...'.format(feature))
-                print('This feature will NOT be included')
-            else:
-                successful_fields.append(feature)
-                feature_rows.append(feature_row)
-        times.append(mark_time('feature_rows_loaded'))
-        varname_to_field = {}
-        out = []
-        for i, field in enumerate(successful_fields):
-            varname_to_field["X{}".format(i)] = field
-        print(varname_to_field)
-        for key, val in varname_to_field.items():
-            out.append("{}:{}".format(key, val))
-        X = np.array(feature_rows)
-        X = np.transpose(X)
-        Y = getattr(records, outcome)
-        causal = CausalModel(Y, D, X)
-        times.append(mark_time('CausalModel'))
-        out.append(str(causal.summary_stats))
-        causal.est_via_ols()
-        times.append(mark_time('est_via_ols'))
-        print('est_via_ols_done')
-        if simple_psm:
-            causal.est_propensity()
-            times.append(mark_time('propensity'))
+    filename = 'causal_treatment_{}_platform_{}_subset_{}.txt'.format(
+        treatment_feature, platform,
+        num_rows if num_rows else 'All')
+    print('==={}==='.format(outcomes))
+    field_names = features + outcomes
+    rows = qs.values_list(*field_names)
+    records = values_list_to_records(rows, field_names)
+    times.append(mark_time('records_loaded'))
+
+    feature_rows = []
+    successful_fields = []
+    for feature in features:
+        feature_row = getattr(records, feature)
+        if feature == treatment_feature:
+            D = feature_row
+        elif all(x == 0 for x in feature_row):
+            print(
+                'Feature {} is all zeros - will lead to singular matrix...'.format(feature))
+            print('This feature will NOT be included')
+        elif any(np.isnan(feature_row)):
+            print('Feature {} has a nan value...'.format(feature))
+            print('This feature will NOT be included')
         else:
-            causal.est_propensity_s()
-            times.append(mark_time('propensity_s'))
-        out.append(str(causal.propensity))
-        print(causal.propensity)
-        if trim_val:
-            if trim_val == 'auto':
-                causal.trim_s()
-                times.append(mark_time('trim_s'))
-                out.append('TRIM PERFORMED')
+            successful_fields.append(feature)
+            feature_rows.append(feature_row)
+    outcome_rows = []
+    for outcome in outcomes:
+        outcome_row = getattr(records, outcome)
+        outcome_rows.append(outcome_row)
+
+    times.append(mark_time('rows_loaded'))
+    varname_to_field = {"X:{}".format(i):field for i, field in enumerate(successful_fields)}
+    outname_to_field = {"Y:{}".format(i):field for i, field in enumerate(outcomes)}
+    out = []
+    
+    for dic in [varname_to_field, outname_to_field]:
+        for key, val in dic.items():
+            out.append("{}:{}".format(key, val))
+
+        
+    X = np.transpose(np.array(feature_rows))
+    Y = np.transpose(np.array(outcome_rows))
+
+    causal = CausalModel(Y, D, X)
+    times.append(mark_time('CausalModel'))
+    out.append(str(causal.summary_stats))
+    causal.est_via_ols()
+    times.append(mark_time('est_via_ols'))
+    print('est_via_ols_done')
+    if simple_psm:
+        causal.est_propensity()
+        times.append(mark_time('propensity'))
+    else:
+        causal.est_propensity_s()
+        times.append(mark_time('propensity_s'))
+    out.append(str(causal.propensity))
+    print(causal.propensity)
+    if trim_val:
+        if trim_val == 'auto':
+            causal.trim_s()
+            times.append(mark_time('trim_s'))
+            out.append('TRIM PERFORMED')
+            out.append(str(causal.summary_stats))
+        else:
+            try:
+                causal.cutoff = float(trim_val)
+                causal.trim()
+                times.append(mark_time('trim_{}'.format(trim_val)))
                 out.append(str(causal.summary_stats))
-            else:
-                try:
-                    causal.cutoff = float(trim_val)
-                    causal.trim()
-                    times.append(mark_time('trim_{}'.format(trim_val)))
-                    out.append(str(causal.summary_stats))
-                except:
-                    pass
-        if simple_bin:
-            causal.blocks = int(simple_bin)
-            causal.stratify()
-            times.append(mark_time('stratify_{}'.format(simple_bin)))
-        else:
-            causal.stratify_s()
-            times.append(mark_time('stratify_s'))
-        out.append(str(causal.strata))
-        print(causal.strata)
-        # for stratum in causal.strata:
-        #    print(stratum.summary_stats)
-        #   stratum.est_via_ols(adj=1)
-        #   print(stratum.estimates)
-        try:
-            causal.est_via_blocking()
-            times.append(mark_time('est_via_blocking'))
-        except np.linalg.linalg.LinAlgError as err:
-            msg = 'LinAlgError with est_via_blocking: {}'.format(err)
-            err_handle(msg, out)
-        try:
-            causal.est_via_weighting()
-            times.append(mark_time('est_via_weighting'))
-        except np.linalg.linalg.LinAlgError as err:
-            msg = 'LinAlgError with est_via_weighting: {}'.format(err)
-            err_handle(msg, out)
-        except ValueError as err:
-            msg = 'ValueError with est_via_weighting: {}'.format(err)
-            err_handle(msg, out)
-        try:
-            causal.est_via_matching()
-            times.append(mark_time('est_via_matching'))
-        except np.linalg.linalg.LinAlgError as err:
-            msg = 'LinAlgError with est_via_weighting: {}'.format(err)
-            err_handle(msg, out)
-        out.append(str(causal.estimates))
-        timing_info = {}
-        prev = times[0][0]
-        for cur_time, desc in times[1:]:
-            timing_info[desc] = cur_time - prev
-            prev = cur_time
-        for key, val in timing_info.items():
-            out.append("{}:{}".format(key, val))
-        with open(filename, 'w') as outfile:
-            outfile.write('\n'.join(out))
+            except:
+                pass
+    if simple_bin:
+        causal.blocks = int(simple_bin)
+        causal.stratify()
+        times.append(mark_time('stratify_{}'.format(simple_bin)))
+    else:
+        causal.stratify_s()
+        times.append(mark_time('stratify_s'))
+    out.append(str(causal.strata))
+    print(causal.strata)
+    # for stratum in causal.strata:
+    #    print(stratum.summary_stats)
+    #   stratum.est_via_ols(adj=1)
+    #   print(stratum.estimates)
+    try:
+        causal.est_via_blocking()
+        times.append(mark_time('est_via_blocking'))
+    except np.linalg.linalg.LinAlgError as err:
+        msg = 'LinAlgError with est_via_blocking: {}'.format(err)
+        err_handle(msg, out)
+    try:
+        causal.est_via_weighting()
+        times.append(mark_time('est_via_weighting'))
+    except np.linalg.linalg.LinAlgError as err:
+        msg = 'LinAlgError with est_via_weighting: {}'.format(err)
+        err_handle(msg, out)
+    except ValueError as err:
+        msg = 'ValueError with est_via_weighting: {}'.format(err)
+        err_handle(msg, out)
+    try:
+        causal.est_via_matching()
+        times.append(mark_time('est_via_matching'))
+    except np.linalg.linalg.LinAlgError as err:
+        msg = 'LinAlgError with est_via_weighting: {}'.format(err)
+        err_handle(msg, out)
+    out.append(str(causal.estimates))
+    timing_info = {}
+    prev = times[0][0]
+    for cur_time, desc in times[1:]:
+        timing_info[desc] = cur_time - prev
+        prev = cur_time
+    for key, val in timing_info.items():
+        out.append("{}:{}".format(key, val))
+    with open(filename, 'w') as outfile:
+        outfile.write('\n'.join(out))
 
 
 def simple_linear(platform, quality_mode=False):
