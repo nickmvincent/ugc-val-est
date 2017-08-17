@@ -129,17 +129,13 @@ def check_posts(model, field):
         if count % 100 == 0:
             print(count)
         count += 1
-        if field == 'body':
-            urls = extract_urls(post.body, w)
-        else:
-            urls = [post.url]
+        urls = extract_urls(post.body, w) if field == 'body' else [post.url]
         try:
             for url in urls:
                 try:
                     dja_link, _ = WikiLink.objects.get_or_create(url=url)
                 except:
                     raise BrokenLinkError(post, url)
-
                 post.wiki_links.add(dja_link)
                 if dja_link.language_code != 'en':
                     raise ValueError
@@ -171,7 +167,7 @@ def check_posts(model, field):
                         val = page
                 if 'revisions' not in val:  # STILL???
                     print('Could NOT find a revision for this article')
-                    raise MissingRevisionId
+                    raise MissingRevisionId(post, alt_endpoint)
                 for rev_obj in val['revisions']:
                     rev_kwargs = {}
                     for rev_field in Revision._meta.get_fields():
