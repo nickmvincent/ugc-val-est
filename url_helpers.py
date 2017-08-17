@@ -25,6 +25,4 @@ def test_extract_urls():
     <a href="https://www.google.com">
     <a href="https://www.wikipedia.org/wiki/">
     """
-
-    
-    print(extract_urls(test_so, w))
+    extract_urls(test_so, w)

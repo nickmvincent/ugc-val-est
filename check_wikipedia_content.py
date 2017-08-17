@@ -135,24 +135,18 @@ def check_single_post(post, field, ores_ep_template):
             resp = requests.get(endpoint).json()
             pages = resp['query']['pages']
         except KeyError as err:
-            print(err)
-            print(endpoint)
-            print(resp)
+            print('Err with first endpoint', endpoint, resp)
         for _, page in pages.items():
             val = page
         if 'revisions' not in val:
             alt_endpoint = generate_revid_endpoint(
                 dja_link.language_code, dja_link.title, month_before_post,
                 get_last=True)
-            print(alt_endpoint)
             try:
                 resp = requests.get(alt_endpoint).json()
                 pages = resp['query']['pages']
             except KeyError as err:
-                print('Err with ALT endpoint')
-                print(err)
-                print(alt_endpoint)
-                print(resp)
+                print('Err with alt endpoint', alt_endpoint, resp)
             for _, page in pages.items():
                 val = page
         if 'revisions' not in val:  # STILL???
@@ -170,9 +164,7 @@ def check_single_post(post, field, ores_ep_template):
                 try:
                     user = resp['query']['users'][0]
                 except KeyError as err:
-                    print(err)
-                    print(endpoint)
-                    print(resp)
+                    print('Err with user endpoint', endpoint, resp)
                 rev_kwargs['editcount'] = user.get('editcount', 0)
                 if user.get('registration'):
                     rev_kwargs['registration'] = user.get('registration')
@@ -218,7 +210,7 @@ def check_posts(model, field):
     count = 0
     for post in filtered:
         if count % 100 == 0:
-            print(count)
+            print('Posts processed: {}'.format(count))
         count += 1
         try:
             check_single_post(post, field, ores_ep_template)
@@ -241,7 +233,6 @@ if __name__ == "__main__":
         SampledRedditThread, SampledStackOverflowPost,
         WikiLink, Revision, ErrorLog
     )
-    print('Django settings initialized, running "check_posts"')
     if sys.argv[1] == 'r':
         check_posts(SampledRedditThread, 'url')
     elif sys.argv[1] == 's':
