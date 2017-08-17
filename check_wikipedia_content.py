@@ -12,6 +12,7 @@ import requests
 from scoring_helpers import map_ores_code_to_int
 from url_helpers import extract_urls
 
+WIK = 'wikipedia.org/wiki/'
 
 def handle_err(post, err_num):
     """handles an error by add the err_num to Post table"""
@@ -109,18 +110,98 @@ def generate_user_endpoint(prefix, user):
     return rev_endpoint.format(user)
 
 
+def check_single_post(post, field, ores_ep_template):
+    """check a single post"""
+    urls = extract_urls(post.body, WIK) if field == 'body' else [post.url]
+    for url in urls:
+        try:
+            dja_link, _ = WikiLink.objects.get_or_create(url=url)
+        except:
+            raise BrokenLinkError(post, url)
+        post.wiki_links.add(dja_link)
+        if dja_link.language_code != 'en':
+            raise ValueError
+        post.has_wiki_link = True
+        post.num_wiki_links += 1
+        wiki_api_str_fmt = '%Y%m%d%H%M%S'
+        month_before_post = post.timestamp - datetime.timedelta(days=30)
+        month_after_post = post.timestamp + datetime.timedelta(days=30)
+        month_before_post = month_before_post.strftime(wiki_api_str_fmt)
+        month_after_post = month_after_post.strftime(wiki_api_str_fmt)
+        endpoint = generate_revid_endpoint(
+            dja_link.language_code, dja_link.title, month_before_post,
+            month_after_post)
+        try:
+            pages = requests.get(endpoint).json()['query']['pages']
+            print(pages)
+        except:
+            raise ValueError
+        for _, page in pages.items():
+            val = page
+        if 'revisions' not in val:
+            alt_endpoint = generate_revid_endpoint(
+                dja_link.language_code, dja_link.title, month_before_post,
+                get_last=True)
+            try:
+                print(alt_endpoint)
+                pages = requests.get(alt_endpoint).json()['query']['pages']
+            except:
+                raise ValueError
+            for _, page in pages.items():
+                val = page
+        if 'revisions' not in val:  # STILL???
+            print('Could NOT find a revision for this article')
+            raise MissingRevisionId(post, alt_endpoint)
+        for rev_obj in val['revisions']:
+            rev_kwargs = {}
+            for rev_field in Revision._meta.get_fields():
+                if rev_obj.get(rev_field.name):
+                    rev_kwargs[rev_field.name] = rev_obj[rev_field.name]
+            if rev_kwargs.get('user'):
+                endpoint = generate_user_endpoint(
+                    dja_link.language_code, rev_kwargs.get('user'))
+                resp = requests.get(endpoint)
+                user = resp.json()['query']['users'][0]
+                rev_kwargs['editcount'] = user.get('editcount', 0)
+                if user.get('registration'):
+                    rev_kwargs['registration'] = user.get('registration')
+            rev_kwargs['wiki_link'] = dja_link
+            dja_rev, created = Revision.objects.get_or_create(rev_kwargs['revid'])
+            for field_name, field_val in rev_kwargs.items():
+                setattr(dja_rev, field_name, field_val)
+            # avoid unneeded ORES calls
+            if created or dja_rev.score == -1:
+                ores_context = dja_link.language_code + 'wiki'
+                ores_ep = ores_ep_template.format(**{
+                    'context': ores_context,
+                    'revid': rev_obj['revid']
+                })
+                ores_resp = requests.get(ores_ep).json()
+                try:
+                    scores = ores_resp['scores'][ores_context]['wp10']['scores']
+                except KeyError:
+                    raise ContextNotSupported(post, ores_context)
+                try:
+                    predicted_code = scores[str(rev_obj['revid'])]['prediction']
+                except KeyError:
+                    raise MissingOresResponse(post, rev_obj['revid'])
+                dja_rev.score = map_ores_code_to_int(predicted_code)
+            dja_rev.save()
+
+
+
 def check_posts(model, field):
     """
     Run through sampled threads and get corresponding Wiki data
     """
     ores_ep_template = 'https://ores.wikimedia.org/v2/scores/{context}/wp10?revids={revid}'
-    w = 'wikipedia.org/wiki/'
+
     if field == 'url':
         filtered = model.objects.filter(
-            wiki_content_analyzed=False, url__contains=w)
+            wiki_content_analyzed=False, url__contains=WIK)
     elif field == 'body':
         filtered = model.objects.filter(
-            wiki_content_analyzed=False, body__contains=w)
+            wiki_content_analyzed=False, body__contains=WIK)
     else:
         raise ValueError('Invalid choice of field... try "url" or "body"')
     print('About to run through {} threads'.format(len(filtered)))
@@ -129,90 +210,15 @@ def check_posts(model, field):
         if count % 100 == 0:
             print(count)
         count += 1
-        urls = extract_urls(post.body, w) if field == 'body' else [post.url]
         try:
-            for url in urls:
-                try:
-                    dja_link, _ = WikiLink.objects.get_or_create(url=url)
-                except:
-                    raise BrokenLinkError(post, url)
-                post.wiki_links.add(dja_link)
-                if dja_link.language_code != 'en':
-                    raise ValueError
-                post.has_wiki_link = True
-                post.num_wiki_links += 1
-                wiki_api_str_fmt = '%Y%m%d%H%M%S'
-                month_before_post = post.timestamp - datetime.timedelta(days=30)
-                month_after_post = post.timestamp + datetime.timedelta(days=30)
-                month_before_post = month_before_post.strftime(wiki_api_str_fmt)
-                month_after_post = month_after_post.strftime(wiki_api_str_fmt)
-                endpoint = generate_revid_endpoint(
-                    dja_link.language_code, dja_link.title, month_before_post,
-                    month_after_post)
-                try:
-                    pages = requests.get(endpoint).json()['query']['pages']
-                except:
-                    raise ValueError
-                for _, page in pages.items():
-                    val = page
-                if 'revisions' not in val:
-                    alt_endpoint = generate_revid_endpoint(
-                        dja_link.language_code, dja_link.title, month_before_post,
-                        get_last=True)
-                    try:
-                        pages = requests.get(alt_endpoint).json()['query']['pages']
-                    except:
-                        raise ValueError
-                    for _, page in pages.items():
-                        val = page
-                if 'revisions' not in val:  # STILL???
-                    print('Could NOT find a revision for this article')
-                    raise MissingRevisionId(post, alt_endpoint)
-                for rev_obj in val['revisions']:
-                    rev_kwargs = {}
-                    for rev_field in Revision._meta.get_fields():
-                        if rev_obj.get(rev_field.name):
-                            rev_kwargs[rev_field.name] = rev_obj[rev_field.name]
-                    if rev_kwargs.get('user'):
-                        endpoint = generate_user_endpoint(
-                            dja_link.language_code, rev_kwargs.get('user'))
-                        resp = requests.get(endpoint)
-                        user = resp.json()['query']['users'][0]
-                        rev_kwargs['editcount'] = user.get('editcount', 0)
-                        if user.get('registration'):
-                            rev_kwargs['registration'] = user.get('registration')
-                    rev_kwargs['wiki_link'] = dja_link
-                    dja_rev, created = Revision.objects.get_or_create(rev_kwargs['revid'])
-                    for field_name, field_val in rev_kwargs.items():
-                        setattr(dja_rev, field_name, field_val)
-                    # avoid unneeded ORES calls
-                    if created or dja_rev.score == -1:
-                        ores_context = dja_link.language_code + 'wiki'
-                        ores_ep = ores_ep_template.format(**{
-                            'context': ores_context,
-                            'revid': rev_obj['revid']
-                        })
-                        ores_resp = requests.get(ores_ep).json()
-                        try:
-                            scores = ores_resp['scores'][ores_context]['wp10']['scores']
-                        except KeyError:
-                            raise ContextNotSupported(post, ores_context)
-                        try:
-                            predicted_code = scores[str(rev_obj['revid'])]['prediction']
-                        except KeyError:
-                            raise MissingOresResponse(post, rev_obj['revid'])
-                        dja_rev.score = map_ores_code_to_int(predicted_code)
-                    dja_rev.save()
+            check_single_post(post, field, ores_ep_template)
         except (MissingRevisionId, ContextNotSupported, BrokenLinkError, MissingOresResponse):
             continue
         except ValueError:
             continue
-        except Exception as err:
-            print(err)
         finally:
             post.wiki_content_analyzed = True
             post.save()
-
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dja.settings")
