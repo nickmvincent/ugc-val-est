@@ -21,6 +21,7 @@ class Summary(Dict):
 		self._dict = dict()
 
 		self._dict['N'], self._dict['K'] = data['N'], data['K']
+		self._dict['num_outputs'] = data['num_outputs']
 		self._dict['N_c'], self._dict['N_t'] = data['N_c'], data['N_t']
 		self._dict['Y_c_mean'] = data['Y_c'].mean(0)
 		self._dict['Y_t_mean'] = data['Y_t'].mean(0)
