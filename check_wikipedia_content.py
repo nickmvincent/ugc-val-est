@@ -171,7 +171,7 @@ def check_single_post(post, ores_ep_template, session):
             raise MissingRevisionId(post, info)
         tic = time.time()
         print('About to process {} revisions'.format(len(revisions)))
-        username_to_rev_kwargs = {}
+        username_to_user_kwargs = {}
         rev_kwargs_lst = []
         for rev_obj in revisions:
             rev_kwargs = {}
@@ -180,22 +180,25 @@ def check_single_post(post, ores_ep_template, session):
                     rev_kwargs[rev_field.name] = rev_obj[rev_field.name]
             rev_kwargs['wiki_link'] = dja_link
             if 'user' in rev_kwargs:
-                username_to_rev_kwargs[rev_kwargs['user']] = rev_kwargs
+                username_to_user_kwargs[rev_kwargs['user']] = {}
             rev_kwargs_lst.append(rev_kwargs)
 
         users = []
         user_result_pages = make_user_request(
-            session, dja_link.language_code, username_to_rev_kwargs.keys())
+            session, dja_link.language_code, username_to_user_kwargs.keys())
         for page in user_result_pages:
             users += page['users']
         for user in users:
-            rev_kwargs = username_to_rev_kwargs[user['name']]
-            rev_kwargs['editcount'] = user.get('editcount', 0)
+            user_kwargs = username_to_user_kwargs[user['name']]
+            user_kwargs['editcount'] = user.get('editcount', 0)
             if user.get('registration'):
-                rev_kwargs['registration'] = user.get('registration')
+                user_kwargs['registration'] = user.get('registration')
         for rev_kwargs in rev_kwargs_lst:
+            if 'user' in rev_kwargs:
+                for key, val in username_to_user_kwargs.get(rev_kwargs['user'], {}):
+                    rev_kwargs[key] = val
             try:
-                dja_rev = Revision.objects.create(**rev_kwargs)
+                Revision.objects.create(**rev_kwargs)
             except IntegrityError:
                 pass
         dja_revs = Revision.objects.filter(wiki_link=dja_link)
