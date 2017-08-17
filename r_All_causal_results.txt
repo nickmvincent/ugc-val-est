@@ -117,12 +117,12 @@ Treatment Effect Estimates: Matching
            ATC     13.411     64.159      0.209      0.834   -112.340    139.163
            ATT     78.774     37.114      2.123      0.034      6.031    151.518
 
-records_loaded:14.664934873580933
-feature_rows_loaded:0.6851534843444824
-CausalModel:0.5219392776489258
-est_via_ols:1.6825385093688965
-propensity:52.573485374450684
-stratify_s:1.6348648071289062
-est_via_blocking:1.3689563274383545
-est_via_weighting:0.7583200931549072
-est_via_matching:547.5903472900391
+records_loaded:14.570401668548584
+feature_rows_loaded:0.6825783252716064
+CausalModel:0.5207464694976807
+est_via_ols:1.5398430824279785
+propensity:60.746140003204346
+stratify_s:1.419921636581421
+est_via_blocking:0.5914630889892578
+est_via_weighting:0.8720993995666504
+est_via_matching:564.5371999740601

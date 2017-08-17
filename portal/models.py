@@ -51,7 +51,6 @@ class Post(models.Model):
     has_good_wiki_link = models.BooleanField(default=False)
     num_wiki_links = models.IntegerField(default=0)
 
-    post_specific_wiki_links = models.ManyToManyField('PostSpecificWikiScores')
     # poor naming choices... the following refer to ORES score...
     day_prior_avg_score = models.IntegerField(blank=True, null=True)
     day_of_avg_score = models.IntegerField(blank=True, null=True)
@@ -123,10 +122,10 @@ class Post(models.Model):
                 fields = ['day_prior',  'day_of', 'week_after', ]
                 num_links = 0
                 field_to_score = {field: 0 for field in fields}
-                for link_obj in self.post_specific_wiki_links.all():
-                    for field in fields:
-                        field_to_score[field] += getattr(link_obj, field).score
-                    num_links += 1
+                # for link_obj in self.post_specific_wiki_links.all():
+                #    for field in fields:
+                #        field_to_score[field] += getattr(link_obj, field).score
+                #     num_links += 1
                 if num_links == 0:
                     self.wiki_content_error = 5 # mystery error requires manual investigation
                 else:
