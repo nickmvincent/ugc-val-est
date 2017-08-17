@@ -225,24 +225,23 @@ def check_single_post(post, ores_ep_template, session):
 def identify_links(filtered, field):
     """identify links in post and mark it in the db"""
     count = 0
-    process_start = time.time()
     for post in filtered:
         if count % 100 == 0:
-            print('Posts processed: {}'.format(count))
-            print('total runtime: {}'.format(time.time() - process_start))
+            print('{}'.format(count), end='|')
         count += 1
         urls = extract_urls(post.body, WIK) if field == 'body' else [post.url]
         for url in urls:
             try:
                 dja_link, _ = WikiLink.objects.get_or_create(url=url)
-            except:
-                raise BrokenLinkError(post, url)
+            except Exception as err:
+                print(err)
+                print(url)
             post.wiki_links.add(dja_link)
             post.has_wiki_link = True
             post.num_wiki_links += 1
             post.save()
 
-def check_posts(filtered):
+def retrieve_links_info(filtered):
     """
     Run through sampled threads and get corresponding Wiki data
     """
@@ -282,7 +281,7 @@ def parse():
     parser.add_argument(
         '--platform', help='the platform to use. "r" for reddit and "s" for stack overflow')
     parser.add_argument(
-        '--mode', help='parse or apis')
+        '--mode', help='identify or retrieve')
     args = parser.parse_args()
     if args.platform == 'r':
         field = 'url'
@@ -291,7 +290,7 @@ def parse():
         field = 'body'
         model = SampledStackOverflowPost
     filter_kwargs = {field + '__contains': WIK}
-    if args.mode == 'apis':
+    if args.mode == 'retrieve':
         filter_kwargs['has_wiki_link'] = True
     filtered = model.objects.filter(**filter_kwargs)
     print('Using kwargs {}, {} items were found to be processed'.format(
@@ -300,8 +299,8 @@ def parse():
 
     if args.mode == 'identify':
         identify_links(filtered, field)
-    elif args.mode == 'apis':
-        check_posts(filtered)
+    elif args.mode == 'retrieve':
+        retrieve_links_info(filtered)
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dja.settings")
