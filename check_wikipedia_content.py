@@ -216,10 +216,14 @@ def check_single_post(post, ores_ep_template, session):
             try:
                 scores = ores_resp['scores'][ores_context]['wp10']['scores']
             except KeyError:
+                print('raising a ContextNotSupported error')
+                print(closest_rev.revid)
                 raise ContextNotSupported(post, ores_context)
             try:
                 predicted_code = scores[str(closest_rev.revid)]['prediction']
             except KeyError:
+                print('Raising MissingOresResponse')
+                print(closest_rev.revid)
                 raise MissingOresResponse(post, closest_rev.revid)
             closest_rev.score = map_ores_code_to_int(predicted_code)
             closest_rev.save()
@@ -269,7 +273,6 @@ def retrieve_links_info(filtered):
         try:
             check_single_post(post, ores_ep_template, session)
             post.wiki_content_analyzed = True
-            tic = time.time()
             post.save()
         except (
                 MissingRevisionId, ContextNotSupported, BrokenLinkError,
@@ -277,7 +280,7 @@ def retrieve_links_info(filtered):
         ):
             post.wiki_content_analyzed = True
             post.save()
-        print('Saving post took: {}'.format(time.time() - tic))
+        
 
 
 def parse():

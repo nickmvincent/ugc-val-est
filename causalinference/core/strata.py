@@ -69,9 +69,8 @@ class Strata(object):
 			p_min, p_max = summary['p_min'], summary['p_max']
 			p_c_mean = summary['p_c_mean']
 			p_t_mean = summary['p_t_mean']
-			within = summary['rdiff']
 			entries3 = [i+1, p_min, p_max, N_c, N_t,
-			            p_c_mean, p_t_mean, within]
+			            p_c_mean, p_t_mean]
 			for rdiff in summary['rdiff']:
 				entries3.append(rdiff)
 			output += tools.add_row(entries3, entry_types3,
