@@ -25,19 +25,16 @@ def clear_json2db():
             qs.delete()
 
 
-def reset_wiki_links():
+def reset_revision_info():
     """Reset"""
     for model in [SampledRedditThread, SampledStackOverflowPost]:
         model.objects.filter(wiki_content_analyzed=True).update(
-            has_wiki_link=False,
-            num_wiki_links=0,
             day_prior_avg_score=None,
             day_of_avg_score=None,
             week_after_avg_score=None,
             wiki_content_analyzed=False,
         )
     Revision.objects.all().delete()
-    WikiLink.objects.all().delete()
     ErrorLog.objects.all().delete()
 
 
@@ -105,7 +102,8 @@ if __name__ == "__main__":
         ErrorLog, ThreadLog, SampledRedditThread,
         SampledStackOverflowPost,
         WikiLink, Revision,
-        RedditPost, StackOverflowAnswer, StackOverflowQuestion, StackOverflowUser
+        RedditPost, StackOverflowAnswer, StackOverflowQuestion, StackOverflowUser,
+        get_closest_to
     )
     from queryset_helpers import batch_qs
     if len(sys.argv) > 1:

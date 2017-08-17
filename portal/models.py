@@ -160,13 +160,18 @@ class Post(models.Model):
                 num_links = 0
                 field_to_score = {field: 0 for field in field_to_dt}
                 self.num_edits = 0
+                missing_necessary_ores = False
                 for link_obj in self.wiki_links.all():
                     num_links += 1
                     revisions = Revision.objects.filter(wiki_link=link_obj)
                     if len(revisions) > 0:
                         for field, dt in field_to_dt.items():
-                            field_to_score[field] = get_closest_to(
+                            ores_score = get_closest_to(
                                 revisions, dt).score
+                            if ores_score == -1:
+                                missing_necessary_ores = True
+                            else:
+                                field_to_score[field] += ores_score
                         for revision in revisions:
                             if revision.timestamp > self.timestamp:
                                 self.num_edits += 1
@@ -182,12 +187,12 @@ class Post(models.Model):
                                     self.num_minor_edits += 1
                                 else:
                                     self.num_major_edits += 1
-                if num_links == 0:
-                    self.wiki_content_error = 5  # mystery error requires manual investigation
-                else:
-                    output_field_to_val = {
-                        field + '_avg_score': val / num_links for field, val in field_to_score.items()}
-                    for output_field, val in output_field_to_val.items():
+                output_field_to_val = {
+                    field + '_avg_score': val / num_links for field, val in field_to_score.items()}
+                for output_field, val in output_field_to_val.items():
+                    if missing_necessary_ores:
+                        setattr(self, output_field, None)
+                    else:
                         setattr(self, output_field, val)
             if self.has_good_wiki_link is False and self.day_of_avg_score:
                 if self.day_of_avg_score >= 4:

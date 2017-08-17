@@ -187,15 +187,15 @@ def causal_inference(
     except np.linalg.linalg.LinAlgError as err:
         msg = 'LinAlgError with est_via_blocking: {}'.format(err)
         err_handle(msg, out)
-    try:
-        causal.est_via_weighting()
-        times.append(mark_time('est_via_weighting'))
-    except np.linalg.linalg.LinAlgError as err:
-        msg = 'LinAlgError with est_via_weighting: {}'.format(err)
-        err_handle(msg, out)
-    except ValueError as err:
-        msg = 'ValueError with est_via_weighting: {}'.format(err)
-        err_handle(msg, out)
+    # try:
+    #     causal.est_via_weighting()
+    #     times.append(mark_time('est_via_weighting'))
+    # except np.linalg.linalg.LinAlgError as err:
+    #     msg = 'LinAlgError with est_via_weighting: {}'.format(err)
+    #     err_handle(msg, out)
+    # except ValueError as err:
+    #     msg = 'ValueError with est_via_weighting: {}'.format(err)
+    #     err_handle(msg, out)
     try:
         causal.est_via_matching()
         times.append(mark_time('est_via_matching'))

@@ -3,10 +3,10 @@ This module runs through all posts in the DB,
 checks for Wikipedia content, and get ORES score
 """
 
-import sys
 import datetime
 import os
 import time
+import argparse
 
 import requests
 
@@ -60,179 +60,248 @@ class MissingOresResponse(Exception):
         super(MissingOresResponse, self).__init__(self)
 
 # 5 is mystery
-def generate_revid_endpoint(prefix, title, start, end=None, get_last=False):
+
+
+def make_mediawiki_request(session, base, params):
+    """
+    Args:
+        endpoint - a mediawiki api endpoint, fully formated (not template)
+    Returns:
+        full results, with pagination processed
+    """
+    results = []
+    last_continue = {}
+    while True:
+        # Clone original request
+        req = params.copy()
+        # Modify it with the values returned in the 'continue' section of the last result.
+        req.update(last_continue)
+        # Call API
+        result = session.get(base, params=req).json()
+        if 'error' in result:
+            print('err', result['error'])
+        if 'warnings' in result:
+            print('warning', result['warnings'])
+        if 'query' in result:
+            results.append(result['query'])
+        if 'continue' not in result:
+            break
+        last_continue = result['continue']
+    return results
+
+
+def make_revid_request(session, prefix, title, start, end=None):
     """
     Returns an endpoint that will give us a revid in json format
     closest to the timestamp, but prior to to the timestamp.
     """
-    base = 'https://{}.wikipedia.org/w/api.php?action=query&'.format(prefix)
+    base = 'https://{}.wikipedia.org/w/api.php'.format(prefix)
     rvprop_params = ['ids', 'timestamp', 'flags', 'user', ]
-    if get_last:
-        query_params = {
-            'format': 'json',
-            'prop': 'revisions',
-            'rvprop': '|'.join(rvprop_params),
-            'rvdir': 'older',
-            'rvlimit': '1',
-        }
+    params = {
+        'format': 'json',
+        'action': 'query',
+        'prop': 'revisions',
+        'rvdir': 'newer',
+        'rvlimit': 500,
+        'rvprop': '|'.join(rvprop_params),
+        'rvstart': start,
+        'titles': title,
+    }
+    if end is None:
+        params['rvdir'] = 'older'
+        params['rvlimit'] = 1
     else:
-        query_params = {
-            'format': 'json',
-            'prop': 'revisions',
-            'rvprop': '|'.join(rvprop_params),
-            'rvdir': 'newer',
-            'rvlimit': '500',
-        }
-    query_pairs = ['{}={}'.format(key, val)
-                   for key, val in query_params.items()]
-    rev_endpoint = '{}{}&titles={}&rvstart={}'.format(
-        base, '&'.join(query_pairs), title, start
-    )
-    if end:
-        rev_endpoint += '&rvend=' + end
-    return rev_endpoint
+        params['rvend'] = end
+    return make_mediawiki_request(session, base, params)
 
 
-def generate_user_endpoint(prefix, user):
+def make_user_request(session, prefix, users):
     """
     Returns an endpoint that will give us a revid in json format
     closest to the timestamp, but prior to to the timestamp.
     """
     base = 'https://{}.wikipedia.org/w/api.php?action=query&'.format(prefix)
     usprop_params = ['editcount', 'registration', ]
-    query_params = {
+    params = {
         'format': 'json',
         'list': 'users',
         'usprop': '|'.join(usprop_params),
+        'ususers': '|'.join(users)
     }
-    query_pairs = ['{}={}'.format(key, val)
-                   for key, val in query_params.items()]
-    rev_endpoint = base + '&'.join(query_pairs) + '&ususers={}'
-    return rev_endpoint.format(user)
+    return make_mediawiki_request(session, base, params)
 
 
-def check_single_post(post, field, ores_ep_template):
+def check_single_post(post, ores_ep_template, session):
     """check a single post"""
-    urls = extract_urls(post.body, WIK) if field == 'body' else [post.url]
-    for url in urls:
-        try:
-            dja_link, _ = WikiLink.objects.get_or_create(url=url)
-        except:
-            raise BrokenLinkError(post, url)
-        post.wiki_links.add(dja_link)
+    dja_links = post.wiki_links.all()
+    for dja_link in dja_links:
         if dja_link.language_code != 'en':
-            raise ValueError
-        post.has_wiki_link = True
-        post.num_wiki_links += 1
+            continue
         wiki_api_str_fmt = '%Y%m%d%H%M%S'
         day_before_post = post.timestamp - datetime.timedelta(days=1)
         week_after_post = post.timestamp + datetime.timedelta(days=7)
-        day_before_post = day_before_post.strftime(wiki_api_str_fmt)
-        week_after_post = week_after_post.strftime(wiki_api_str_fmt)
+        day_before_post_str = day_before_post.strftime(wiki_api_str_fmt)
+        week_after_post_str = week_after_post.strftime(wiki_api_str_fmt)
         tic = time.time()
-        endpoint = generate_revid_endpoint(
-            dja_link.language_code, dja_link.title, day_before_post,
-            week_after_post)
-        try:
-            resp = requests.get(endpoint).json()
-            print('Getting revid data took {}'.format(time.time() - tic))
-            pages = resp['query']['pages']
-        except KeyError as err:
-            print('Err with first endpoint', endpoint, resp)
-        for _, page in pages.items():
-            val = page
-        if 'revisions' not in val:
-            alt_endpoint = generate_revid_endpoint(
-                dja_link.language_code, dja_link.title, day_before_post,
-                get_last=True)
-            try:
-                resp = requests.get(alt_endpoint).json()
-                pages = resp['query']['pages']
-            except KeyError as err:
-                print('Err with alt endpoint', alt_endpoint, resp)
+
+        revisions = []
+        revid_result_pages = make_revid_request(
+            session, dja_link.language_code, dja_link.title, day_before_post_str,
+            week_after_post_str)
+        for result_page in revid_result_pages:
+            pages = result_page['pages']
             for _, page in pages.items():
-                val = page
-        if 'revisions' not in val:  # STILL???
+                if 'revisions' in page:
+                    revisions += page['revisions']
+        if not revisions:
+            revid_result_pages = make_revid_request(
+                session, dja_link.language_code,
+                dja_link.title, day_before_post_str)
+            for result_page in revid_result_pages:
+                pages = result_page['pages']
+                for _, page in pages.items():
+                    if 'revisions' in page:
+                        revisions += page['revisions']
+        if not revisions:  # STILL???
             print('Could NOT find a revision for this article')
-            raise MissingRevisionId(post, alt_endpoint)
+            info = '{}_{}_{}'.format(
+                dja_link.title, day_before_post, week_after_post
+            )
+            raise MissingRevisionId(post, info)
         tic = time.time()
-        print('About to process {} revisions'.format(len(val['revisions'])))
-        for rev_obj in val['revisions']:
+        print('About to process {} revisions'.format(len(revisions)))
+        username_to_rev_kwargs = {}
+        rev_kwargs_lst = []
+        for rev_obj in revisions:
             rev_kwargs = {}
             for rev_field in Revision._meta.get_fields():
                 if rev_obj.get(rev_field.name):
                     rev_kwargs[rev_field.name] = rev_obj[rev_field.name]
-            if rev_kwargs.get('user'):
-                endpoint = generate_user_endpoint(
-                    dja_link.language_code, rev_kwargs.get('user'))
-                resp = requests.get(endpoint).json()
-                try:
-                    user = resp['query']['users'][0]
-                except KeyError as err:
-                    print('Err with user endpoint', endpoint, resp)
-                rev_kwargs['editcount'] = user.get('editcount', 0)
-                if user.get('registration'):
-                    rev_kwargs['registration'] = user.get('registration')
             rev_kwargs['wiki_link'] = dja_link
+            if 'user' in rev_kwargs:
+                username_to_rev_kwargs[rev_kwargs['user']] = rev_kwargs
+            rev_kwargs_lst.append(rev_kwargs)
+
+        users = []
+        user_result_pages = make_user_request(
+            session, dja_link.language_code, username_to_rev_kwargs.keys())
+        for page in user_result_pages:
+            users += page['users']
+        for user in users:
+            rev_kwargs = username_to_rev_kwargs[user['name']]
+            rev_kwargs['editcount'] = user.get('editcount', 0)
+            if user.get('registration'):
+                rev_kwargs['registration'] = user.get('registration')
+        dja_revs = []
+        for rev_kwargs in rev_kwargs_lst:
             try:
                 dja_rev = Revision.objects.create(**rev_kwargs)
-                ores_context = dja_link.language_code + 'wiki'
-                ores_ep = ores_ep_template.format(**{
-                    'context': ores_context,
-                    'revid': rev_obj['revid']
-                })
-                ores_resp = requests.get(ores_ep).json()
-                try:
-                    scores = ores_resp['scores'][ores_context]['wp10']['scores']
-                except KeyError:
-                    raise ContextNotSupported(post, ores_context)
-                try:
-                    predicted_code = scores[str(rev_obj['revid'])]['prediction']
-                except KeyError:
-                    raise MissingOresResponse(post, rev_obj['revid'])
-                dja_rev.score = map_ores_code_to_int(predicted_code)
-                dja_rev.save()
+                dja_revs.append(dja_rev)
             except IntegrityError:
                 pass
+
+        for timestamp in [day_before_post, post.timestamp, week_after_post, ]:
+            closest_rev = get_closest_to(dja_revs, timestamp)
+            ores_context = dja_link.language_code + 'wiki'
+            ores_ep = ores_ep_template.format(**{
+                'context': ores_context,
+                'revid': closest_rev.revid
+            })
+            ores_resp = session.get(ores_ep).json()
+            try:
+                scores = ores_resp['scores'][ores_context]['wp10']['scores']
+            except KeyError:
+                raise ContextNotSupported(post, ores_context)
+            try:
+                predicted_code = scores[str(closest_rev.revid)]['prediction']
+            except KeyError:
+                raise MissingOresResponse(post, closest_rev.revid)
+            closest_rev.score = map_ores_code_to_int(predicted_code)
+            closest_rev.save()
         print('Took {}'.format(time.time() - tic))
 
 
 
-def check_posts(model, field):
+def identify_links(filtered, field):
+    """identify links in post and mark it in the db"""
+    count = 0
+    process_start = time.time()
+    for post in filtered:
+        if count % 100 == 0:
+            print('Posts processed: {}'.format(count))
+            print('total runtime: {}'.format(time.time() - process_start))
+        count += 1
+        urls = extract_urls(post.body, WIK) if field == 'body' else [post.url]
+        for url in urls:
+            try:
+                dja_link, _ = WikiLink.objects.get_or_create(url=url)
+            except:
+                raise BrokenLinkError(post, url)
+            post.wiki_links.add(dja_link)
+            post.has_wiki_link = True
+            post.num_wiki_links += 1
+            post.save()
+
+def check_posts(filtered):
     """
     Run through sampled threads and get corresponding Wiki data
     """
     ores_ep_template = 'https://ores.wikimedia.org/v2/scores/{context}/wp10?revids={revid}'
-
-    if field == 'url':
-        filtered = model.objects.filter(
-            wiki_content_analyzed=False, url__contains=WIK)
-    elif field == 'body':
-        filtered = model.objects.filter(
-            wiki_content_analyzed=False, body__contains=WIK)
-    else:
-        raise ValueError('Invalid choice of field... try "url" or "body"')
     print('About to run through {} threads'.format(len(filtered)))
+    session = requests.Session()
+    session.headers.update(
+        {'User-Agent': 'ugc-val-est; nickvincent@u.northwestern.edu; research tool'})
+
     count = 0
     process_start = time.time()
     for post in filtered:
-        if count % 10 == 0:
+        if count % 100 == 0:
             print('Posts processed: {}'.format(count))
             print('total runtime: {}'.format(time.time() - process_start))
         count += 1
         try:
-            check_single_post(post, field, ores_ep_template)
-            post.wiki_content_analyzed = True
-            post.save()
-        except (
-            MissingRevisionId, ContextNotSupported, BrokenLinkError,
-            MissingOresResponse, ValueError
-        ):
+            check_single_post(post, ores_ep_template, session)
             post.wiki_content_analyzed = True
             tic = time.time()
             post.save()
-            print('Saving post took: {}'.format(time.time() - tic))
-            
+        except (
+                MissingRevisionId, ContextNotSupported, BrokenLinkError,
+                MissingOresResponse, ValueError
+        ):
+            post.wiki_content_analyzed = True
+            post.save()
+        print('Saving post took: {}'.format(time.time() - tic))
+
+
+def parse():
+    """
+    Parse args and do the appropriate analysis
+    """
+    parser = argparse.ArgumentParser(
+        description='Identify wikipedia links and get info about them')
+    parser.add_argument(
+        '--platform', help='the platform to use. "r" for reddit and "s" for stack overflow')
+    parser.add_argument(
+        '--mode', help='parse or apis')
+    args = parser.parse_args()
+    if args.platform == 'r':
+        field = 'url'
+        model = SampledRedditThread
+    else:
+        field = 'body'
+        model = SampledStackOverflowPost
+    filter_kwargs = {field + '__contains': WIK}
+    if args.mode == 'apis':
+        filter_kwargs['has_wiki_link'] = True
+    filtered = model.objects.filter(**filter_kwargs)
+    print('Using kwargs {}, {} items were found to be processed'.format(
+        str(filter_kwargs), len(filtered)
+    ))
+
+    if args.mode == 'identify':
+        identify_links(filtered, field)
+    elif args.mode == 'apis':
+        check_posts(filtered)
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dja.settings")
@@ -241,11 +310,7 @@ if __name__ == "__main__":
     django.setup()
     from portal.models import (
         SampledRedditThread, SampledStackOverflowPost,
-        WikiLink, Revision, ErrorLog
+        WikiLink, Revision, ErrorLog,
+        get_closest_to
     )
-    if sys.argv[1] == 'r':
-        check_posts(SampledRedditThread, 'url')
-    elif sys.argv[1] == 's':
-        check_posts(SampledStackOverflowPost, 'body')
-    else:
-        print('Please choose either "r" for reddit or "s" for Stack Overflow')
+    parse()
