@@ -163,8 +163,8 @@ def check_posts(model, field):
                             except Exception as err:
                                 print('err with getting user info')
                                 print(err)
+                        rev_kwargs['wiki_link'] = dja_link
                         dja_rev, created = Revision.objects.get_or_create(**rev_kwargs)
-                        dja_rev.wiki_link = dja_link
                         if created or dja_rev.score == -1:
                             ores_context = dja_link.language_code + 'wiki'
                             ores_ep = ores_ep_template.format(**{

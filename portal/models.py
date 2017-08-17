@@ -30,7 +30,7 @@ def get_closest_to(qs, target):
     except IndexError:
         return closest_greater_qs[0]
 
-    if closest_greater.dt - target > target - closest_less.dt:
+    if closest_greater.timestamp - target > target - closest_less.timestamp:
         return closest_less
     else:
         return closest_greater
