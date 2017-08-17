@@ -155,7 +155,8 @@ def check_single_post(post, field, ores_ep_template):
         if 'revisions' not in val:  # STILL???
             print('Could NOT find a revision for this article')
             raise MissingRevisionId(post, alt_endpoint)
-        tic = time.time()        
+        tic = time.time()
+        print('About to process {} revisions'.format(len(val['revisions'])))
         for rev_obj in val['revisions']:
             rev_kwargs = {}
             for rev_field in Revision._meta.get_fields():
@@ -193,9 +194,7 @@ def check_single_post(post, field, ores_ep_template):
                 dja_rev.save()
             except IntegrityError:
                 pass
-        print('Getting user/ores data for {} revisions took {}'.format(
-            len(val['revisions'], time.time() - tic)
-        ))
+        print('Took {}'.format(time.time() - tic))
 
 
 
