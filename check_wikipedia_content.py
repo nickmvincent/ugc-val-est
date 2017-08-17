@@ -159,7 +159,8 @@ def check_posts(model, field):
                                 print(resp.json())
                                 user = resp.json()['query']['users'][0]
                                 rev_kwargs['editcount'] = user.get('editcount', 0)
-                                rev_kwargs['registration'] = user.get('registration', None)
+                                if user.get('registration')
+                                    rev_kwargs['registration'] = user.get('registration')
                             except Exception as err:
                                 print('err with getting user info')
                                 print(err)
