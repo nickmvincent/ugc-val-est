@@ -46,17 +46,23 @@ class Strata(object):
 		output += tools.add_row(entries1, entry_types1,
 		                        col_spans1, table_width)
 
+
 		entries2 = ['Stratum', 'Min.', 'Max.', 'Controls', 'Treated',
-		            'Controls', 'Treated', 'Raw-diff']
-		entry_types2 = ['string']*8
-		col_spans2 = [1]*8
+		            'Controls', 'Treated', ]
+		entry_types3 = ['integer', 'float', 'float', 'integer',
+		                'integer', 'float', 'float', ]
+		strata = self._strata
+		for i, rdiff in enumerate(strata[0].summary_stats['rdiff']):
+			entries2.append('Y{} raw-diff'.format(i))
+			entry_types3.append('float')
+
+		entry_types2 = ['string'] * len(entries2)
+		col_spans2 = [1] * len(entries2)
 		output += tools.add_row(entries2, entry_types2,
 		                        col_spans2, table_width)
 		output += tools.add_line(table_width)
 
-		strata = self._strata
-		entry_types3 = ['integer', 'float', 'float', 'integer',
-		                'integer', 'float', 'float', 'float']
+		
 		for i in range(len(strata)):
 			summary = strata[i].summary_stats
 			N_c, N_t = summary['N_c'], summary['N_t']
@@ -66,6 +72,8 @@ class Strata(object):
 			within = summary['rdiff']
 			entries3 = [i+1, p_min, p_max, N_c, N_t,
 			            p_c_mean, p_t_mean, within]
+			for rdiff in summary['rdiff']:
+				entries3.append(rdiff)
 			output += tools.add_row(entries3, entry_types3,
 			                        col_spans2, table_width)
 

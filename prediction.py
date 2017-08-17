@@ -119,11 +119,9 @@ def causal_inference(
             D = feature_row
         elif all(x == 0 for x in feature_row):
             print(
-                'Feature {} is all zeros - will lead to singular matrix...'.format(feature))
-            print('This feature will NOT be included')
+                'Feature {} is all zeros - will lead to singular matrix'.format(feature))
         elif any(np.isnan(feature_row)):
             print('Feature {} has a nan value...'.format(feature))
-            print('This feature will NOT be included')
         else:
             successful_fields.append(feature)
             feature_rows.append(feature_row)
@@ -148,9 +146,10 @@ def causal_inference(
     causal = CausalModel(Y, D, X)
     times.append(mark_time('CausalModel'))
     out.append(str(causal.summary_stats))
+    print(causal.summary_stats)
     causal.est_via_ols()
     times.append(mark_time('est_via_ols'))
-    print('est_via_ols_done')
+    print(causal.estimates)
     if simple_psm:
         causal.est_propensity()
         times.append(mark_time('propensity'))
@@ -182,10 +181,6 @@ def causal_inference(
         times.append(mark_time('stratify_s'))
     out.append(str(causal.strata))
     print(causal.strata)
-    # for stratum in causal.strata:
-    #    print(stratum.summary_stats)
-    #   stratum.est_via_ols(adj=1)
-    #   print(stratum.estimates)
     try:
         causal.est_via_blocking()
         times.append(mark_time('est_via_blocking'))
