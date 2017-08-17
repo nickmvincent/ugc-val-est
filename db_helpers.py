@@ -36,8 +36,7 @@ def reset_wiki_links():
             week_after_avg_score=None,
             wiki_content_analyzed=False,
         )
-    RevisionScore.objects.all().delete()
-    PostSpecificWikiScores.objects.all().delete()
+    Revision.objects.all().delete()
     WikiLink.objects.all().delete()
     ErrorLog.objects.all().delete()
 
@@ -105,7 +104,7 @@ if __name__ == "__main__":
     from portal.models import (
         ErrorLog, ThreadLog, SampledRedditThread,
         SampledStackOverflowPost,
-        WikiLink, RevisionScore, PostSpecificWikiScores,
+        WikiLink, Revision,
         RedditPost, StackOverflowAnswer, StackOverflowQuestion, StackOverflowUser
     )
     from queryset_helpers import batch_qs

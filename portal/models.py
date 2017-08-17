@@ -212,18 +212,6 @@ class SampledStackOverflowPost(Post):
         super(SampledStackOverflowPost, self).save(*args, **kwargs)
 
 
-class PostSpecificWikiScores(models.Model):
-    """
-    Each row corresponding timestamped Wikipedia link that was posted
-    This table mainly exists for convenience when doing analysis
-    But if we decide to use other metrics than day prior, day of, week after
-    We will need to use the normal WikiLink table instead
-    """
-    day_prior = models.ForeignKey('RevisionScore', related_name='day_prior')
-    day_of = models.ForeignKey('RevisionScore', related_name='day_of')
-    week_after = models.ForeignKey('RevisionScore', related_name='week_after')
-
-
 WIKI_PATTERN = 'wikipedia.org/wiki/'
 
 
@@ -233,8 +221,8 @@ class WikiLink(models.Model):
     reddit or Stack Overflow
 
     A WikiLink object is JUST a url that links to a Wikipedia article.
-    Infinitely mainly RevisionScores may be associated with one WikiLink via
-    ForeignKeys (on the RevisionScore table)
+    Infinitely mainly Revision may be associated with one WikiLink via
+    ForeignKeys (on the Revision table)
     """
     url = models.CharField(max_length=300)
     language_code = models.CharField(max_length=10, blank=True, null=True)
@@ -260,7 +248,7 @@ class WikiLink(models.Model):
         super(WikiLink, self).save(*args, **kwargs)
 
 
-class RevisionScore(models.Model):
+class Revision(models.Model):
     """
     Each row is the ORES score for a given revision.
     Main purpose of this table to reduce repeat calls to Wikimedia API
@@ -277,7 +265,11 @@ class RevisionScore(models.Model):
     timestamp = models.DateTimeField(default=timezone.now)
     wiki_link = models.ForeignKey(WikiLink)
     revid = models.CharField(max_length=50, primary_key=True)
-    score = models.IntegerField(default=0)
+    score = models.IntegerField(default=-1)
+    user = models.CharField(max_length=100)
+    editcount = models.IntegerField(default=0)
+    registration = models.DateTimeField()
+    minor_edit = models.BooleanField(default=True)
 
 
 class ErrorLog(models.Model):

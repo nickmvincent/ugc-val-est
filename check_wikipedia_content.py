@@ -56,23 +56,24 @@ class MissingOresResponse(Exception):
 
 
 # 5 is mystery
-def generate_revid_endpoint(prefix, title, wiki_timestamp):
+def generate_revid_endpoint(prefix, title, start, end):
     """
     Returns an endpoint that will give us a revid in json format
     closest to the timestamp, but prior to to the timestamp.
     """
     base = 'https://{}.wikipedia.org/w/api.php?action=query&'.format(prefix)
+    rvprop_params = ['ids', 'timestamp', 'flags', 'user', ]
     query_params = {
         'format': 'json',
         'prop': 'revisions',
-        'rvprop': 'ids%7Ctimestamp',
-        'rvdir': 'older',
-        'rvlimit': '1',
+        'rvprop': 's%7C'.join(rvprop_params),
+        'rvdir': 'newer',
+        'rvlimit': '500',
     }
     query_pairs = ['{}={}'.format(key, val)
                    for key, val in query_params.items()]
-    rev_endpoint = base + '&'.join(query_pairs) + '&titles={}&rvstart={}'
-    return rev_endpoint.format(title, wiki_timestamp)
+    rev_endpoint = base + '&'.join(query_pairs) + '&titles={}&rvstart={}&rvend={}'
+    return rev_endpoint.format(title, start, end)
 
 
 def check_posts(model, field):
@@ -92,9 +93,9 @@ def check_posts(model, field):
     print('About to run through {} threads'.format(len(filtered)))
     count = 0
     for post in filtered:
-        count += 1
         if count % 100 == 0:
             print(count)
+        count += 1
         if field == 'body':
             urls = extract_urls(post.body, w)
         else:
@@ -111,41 +112,32 @@ def check_posts(model, field):
                     raise ValueError
                 post.has_wiki_link = True
                 post.num_wiki_links += 1
-                scores_by_offset = {}
-                dt = post.timestamp
-                for offset in ['day_prior', 'day_of', 'week_after']:
-                    if offset == 'day_prior':
-                        offset_dt = dt - datetime.timedelta(days=1)
-                    elif offset == 'day_of':
-                        offset_dt = dt
-                    elif offset == 'week_after':
-                        offset_dt = dt + datetime.timedelta(days=7)
-                    wiki_timestamp = offset_dt.strftime('%Y%m%d%H%M%S')
-                    endpoint = generate_revid_endpoint(
-                        dja_link.language_code, dja_link.title, wiki_timestamp)
-                    resp = requests.get(endpoint)
+                wiki_api_str_fmt = '%Y%m%d%H%M%S'
+                day_before_post = post.timestamp - datetime.timedelta(days=1)
+                month_after_post = post.timestamp + datetime.timedelta(days=30)
+                day_before_post = day_before_post.strftime(wiki_api_str_fmt)
+                month_after_post = month_after_post.strftime(wiki_api_str_fmt)
+                endpoint = generate_revid_endpoint(
+                        dja_link.language_code, dja_link.title, day_before_post,
+                        month_after_post)
+                resp = requests.get(endpoint)
+                try:
+                    pages = resp.json()['query']['pages']
+                except:
+                    raise ValueError
+                for _, val in pages.items():
                     try:
-                        pages = resp.json()['query']['pages']
-                    except:
-                        raise ValueError
-                    for _, val in pages.items():
-                        try:
-                            rev_obj = val['revisions'][0]
-                        except KeyError:
-                            alt_endpoint = endpoint.replace(
-                                'rvdir=older', 'rvdir=newer')
-                            resp = requests.get(alt_endpoint)
-                            pages = resp.json()['query']['pages']
-                            try:
-                                for _, altval in pages.items():
-                                    rev_obj = altval['revisions'][0]
-                            except KeyError as err:
-                                raise MissingRevisionId(post, alt_endpoint)
-                        revid = rev_obj['revid']
-                        rev_timestamp = rev_obj['timestamp']
-                    try:
-                        dja_score = RevisionScore.objects.get(revid=revid)
-                    except RevisionScore.DoesNotExist:
+                        rev_obj = val['revisions'][0]
+                    except KeyError:
+                        raise MissingRevisionId(post, endpoint)
+                    revid = rev_obj['revid']
+                    rev_kwargs = {}
+                    for field in Revision._meta.get_fields():
+                        if rev_obj.get(field.name):
+                            rev_kwargs[field.name] = rev_obj[field.name]
+                    dja_rev, created = Revision.objects.get_or_create(**rev_kwargs)
+                    dja_rev.wiki_link = dja_link
+                    if created or dja_rev.score == -1:
                         ores_context = dja_link.language_code + 'wiki'
                         ores_ep = ores_ep_template.format(**{
                             'context': ores_context,
@@ -160,15 +152,7 @@ def check_posts(model, field):
                             predicted_code = scores[str(revid)]['prediction']
                         except KeyError:
                             raise MissingOresResponse(post, revid)
-                        score_as_int = map_ores_code_to_int(predicted_code)
-                        dja_score = RevisionScore.objects.create(
-                            revid=revid, timestamp=rev_timestamp,
-                            score=score_as_int, wiki_link=dja_link
-                        )
-                    scores_by_offset[offset] = dja_score
-                dja_post_specific_link = PostSpecificWikiScores.objects.create(
-                    **scores_by_offset)
-                post.post_specific_wiki_links.add(dja_post_specific_link)
+                        dja_rev.score = map_ores_code_to_int(predicted_code)
         except (MissingRevisionId, ContextNotSupported, BrokenLinkError, MissingOresResponse):
             continue
         except ValueError:
@@ -184,9 +168,8 @@ if __name__ == "__main__":
     django.setup()
     from portal.models import (
         SampledRedditThread, SampledStackOverflowPost,
-        PostSpecificWikiScores, WikiLink, RevisionScore, ErrorLog
+        WikiLink, Revision, ErrorLog
     )
-    os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "C:\\Users\\nickm\\Desktop\\research\\wikipedia_and_stack_overflow\\client_secrets.json"
     print('Django settings initialized, running "check_posts"')
     if sys.argv[1] == 'r':
         check_posts(SampledRedditThread, 'url')
