@@ -19,8 +19,8 @@ class Estimator(Dict):
 
 		table_width = 80
 		names = estimation_names()
-		coefs_lst = [self[name] for name in names if name in self.keys()]
-		ses_lst = [self[name] for name in standard_err_names() if name in self.keys()]
+		coefs = [self[name] for name in names if name in self.keys()]
+		ses = [self[name] for name in standard_err_names() if name in self.keys()]
 
 		output = '\n'
 		output += 'Treatment Effect Estimates: ' + self._method + '\n\n'
@@ -35,9 +35,10 @@ class Estimator(Dict):
 
 		entry_types2 = ['string'] + ['float']*6
 		col_spans2 = [1]*7
-		for coefs, ses in zip(coefs_lst, ses_lst):
-			for (name, coef, se) in zip(names, coefs, ses):
-				entries2 = tools.gen_reg_entries(name.upper(), coef, se)
+		for (name, coef, se) in zip(names, coefs, ses):
+			for i, (coef_val, se_val) in enumerate(zip(coef, se)):
+				entries2 = tools.gen_reg_entries(
+					'Y{}: {}'.format(i, name.upper()), coef_val, se_val)
 				output += tools.add_row(entries2, entry_types2,
 										col_spans2, table_width)
 
