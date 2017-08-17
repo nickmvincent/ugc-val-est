@@ -167,13 +167,12 @@ def check_posts(model, field):
                         pages = requests.get(alt_endpoint).json()['query']['pages']
                     except:
                         raise ValueError
-                    for _, page in pages.tiems():
+                    for _, page in pages.items():
                         val = page
                 if 'revisions' not in val:  # STILL???
                     print('Could NOT find a revision for this article')
                     raise MissingRevisionId
                 for rev_obj in val['revisions']:
-                    print(rev_obj)
                     rev_kwargs = {}
                     for rev_field in Revision._meta.get_fields():
                         if rev_obj.get(rev_field.name):
@@ -181,14 +180,11 @@ def check_posts(model, field):
                     if rev_kwargs.get('user'):
                         endpoint = generate_user_endpoint(
                             dja_link.language_code, rev_kwargs.get('user'))
-                        print(endpoint)
                         resp = requests.get(endpoint)
-                        print(resp.json())
                         user = resp.json()['query']['users'][0]
                         rev_kwargs['editcount'] = user.get('editcount', 0)
                         if user.get('registration'):
                             rev_kwargs['registration'] = user.get('registration')
-
                     rev_kwargs['wiki_link'] = dja_link
                     dja_rev, created = Revision.objects.get_or_create(**rev_kwargs)
                     if created or dja_rev.score == -1:
@@ -211,6 +207,8 @@ def check_posts(model, field):
             continue
         except ValueError:
             continue
+        except Exception as err:
+            print(err)
         finally:
             post.wiki_content_analyzed = True
             post.save()
