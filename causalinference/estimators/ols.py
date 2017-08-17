@@ -27,7 +27,6 @@ class OLS(Estimator):
 			u = y - Z.dot(olscoef)
 			cov = calc_cov(Z, u)
 
-			self._dict = dict()
 			self._dict['ate'].append(calc_ate(olscoef))
 			self._dict['ate_se'].append(calc_ate_se(cov))
 
