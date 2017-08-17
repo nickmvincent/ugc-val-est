@@ -125,14 +125,14 @@ def check_single_post(post, field, ores_ep_template):
         post.has_wiki_link = True
         post.num_wiki_links += 1
         wiki_api_str_fmt = '%Y%m%d%H%M%S'
-        month_before_post = post.timestamp - datetime.timedelta(days=30)
-        month_after_post = post.timestamp + datetime.timedelta(days=30)
-        month_before_post = month_before_post.strftime(wiki_api_str_fmt)
-        month_after_post = month_after_post.strftime(wiki_api_str_fmt)
+        day_before_post = post.timestamp - datetime.timedelta(days=1)
+        week_after_post = post.timestamp + datetime.timedelta(days=7)
+        day_before_post = day_before_post.strftime(wiki_api_str_fmt)
+        week_after_post = week_after_post.strftime(wiki_api_str_fmt)
         tic = time.time()
         endpoint = generate_revid_endpoint(
-            dja_link.language_code, dja_link.title, month_before_post,
-            month_after_post)
+            dja_link.language_code, dja_link.title, day_before_post,
+            week_after_post)
         try:
             resp = requests.get(endpoint).json()
             print('Getting revid data took {}'.format(time.time() - tic))
@@ -143,7 +143,7 @@ def check_single_post(post, field, ores_ep_template):
             val = page
         if 'revisions' not in val:
             alt_endpoint = generate_revid_endpoint(
-                dja_link.language_code, dja_link.title, month_before_post,
+                dja_link.language_code, dja_link.title, day_before_post,
                 get_last=True)
             try:
                 resp = requests.get(alt_endpoint).json()
