@@ -201,6 +201,7 @@ def check_single_post(post, ores_ep_template, session):
             raise MissingRevisionId(post, info)
         username_to_user_kwargs = {}
         rev_kwargs_lst = []
+        revids = []
         num_revisions_returned = len(revisions)
         for rev_obj in revisions:
             rev_kwargs = {}
@@ -211,6 +212,7 @@ def check_single_post(post, ores_ep_template, session):
             if 'user' in rev_kwargs:
                 username_to_user_kwargs[rev_kwargs['user']] = {}
             rev_kwargs_lst.append(rev_kwargs)
+            revids.append(rev_kwargs['revid'])
         num_unique_users = len(username_to_user_kwargs.keys())
 
 
@@ -234,7 +236,7 @@ def check_single_post(post, ores_ep_template, session):
                 Revision.objects.create(**rev_kwargs)
             except IntegrityError:
                 pass
-        dja_revs = Revision.objects.filter(wiki_link=dja_link)
+        dja_revs = Revision.objects.filter(revid__in=revids)
         num_dja_revs = len(dja_revs)
         if not dja_revs.exists():
             print(revisions)
@@ -244,6 +246,7 @@ def check_single_post(post, ores_ep_template, session):
             From this, {} revision rows were added""".format(
                 num_revisions_returned, num_unique_users, num_dja_revs
             ))
+            print('wiki_link_id of this dja_link is: {}'.format())
             return
         for timestamp in [day_before_post, post.timestamp, week_after_post, ]:
             closest_rev = get_closest_to(dja_revs, timestamp)
