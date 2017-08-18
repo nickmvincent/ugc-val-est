@@ -8,6 +8,7 @@ import os
 import time
 import argparse
 
+from urllib.parse import unquote
 
 import requests
 
@@ -95,6 +96,8 @@ def make_mediawiki_request(session, base, params):
             results.append(result['query'])
         if 'continue' not in result:
             break
+        if 'end' not in req:
+            break
         last_continue = result['continue']
     return results
 
@@ -114,7 +117,8 @@ def make_revid_request(session, prefix, title, start, end=None):
         'rvlimit': 500,
         'rvprop': '|'.join(rvprop_params),
         'rvstart': start,
-        'titles': title,
+        'titles': unquote(title),
+        'redirects': 1,
     }
     if end is None:
         params['rvdir'] = 'older'
@@ -172,7 +176,12 @@ def check_single_post(post, ores_ep_template, session):
                     if 'revisions' in page:
                         revisions += page['revisions']
         if not revisions:  # STILL???
+            print(make_revid_request(
+                session, dja_link.language_code,
+                dja_link.title, day_before_post_str))
+            print(day_before_post_str, week_after_post_str)
             print('Could NOT find a revision for this article')
+            print(dja_link.title)
             info = '{}_{}_{}'.format(
                 dja_link.title, day_before_post, week_after_post
             )
@@ -215,9 +224,12 @@ def check_single_post(post, ores_ep_template, session):
                 pass
         dja_revs = Revision.objects.filter(wiki_link=dja_link)
         num_dja_revs = len(dja_revs)
-        print('{} revisions were returned, made by {} unique users. From this, {} revision rows were added'.format(
-            num_revisions_returned, num_unique_users, num_dja_revs
-        ))
+        #print('{} revisions were returned, made by {} unique users. From this, {} revision rows were added'.format(
+        #    num_revisions_returned, num_unique_users, num_dja_revs
+        #))
+        if len(dja_revs) == 0:
+            print('link {} has no dja_revs...'.format(dja_link))
+            return
         for timestamp in [day_before_post, post.timestamp, week_after_post, ]:
             closest_rev = get_closest_to(dja_revs, timestamp)
             ores_context = dja_link.language_code + 'wiki'
