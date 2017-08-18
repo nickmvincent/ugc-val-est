@@ -60,6 +60,17 @@ class BrokenLinkError(Exception):
         super(BrokenLinkError, self).__init__(self)
 
 
+class PostMissingValidLink(Exception):
+    """Used to catch missing article, improperly formatted links, etc"""
+    def __init__(self, post, link):
+        post.wiki_links.remove(link)
+        post.num_wiki_links -= 1
+        if post.num_wiki_links == 0:
+            post.has_wiki_link = False
+        post.save()
+        super(PostMissingValidLink, self).__init__(self)
+
+
 class MissingOresResponse(Exception):
     """Used to catch missing ores response"""
     def __init(self, post, url):
@@ -155,7 +166,6 @@ def check_single_post(post, ores_ep_template, session):
         week_after_post = post.timestamp + datetime.timedelta(days=7)
         day_before_post_str = day_before_post.strftime(wiki_api_str_fmt)
         week_after_post_str = week_after_post.strftime(wiki_api_str_fmt)
-        tic = time.time()
 
         revisions = []
         revid_result_pages = make_revid_request(
@@ -164,6 +174,8 @@ def check_single_post(post, ores_ep_template, session):
         for result_page in revid_result_pages:
             pages = result_page['pages']
             for _, page in pages.items():
+                if 'missing' in page:
+                    raise PostMissingValidLink(post, dja_link)
                 if 'revisions' in page:
                     revisions += page['revisions']
         if not revisions:
@@ -186,7 +198,6 @@ def check_single_post(post, ores_ep_template, session):
                 dja_link.title, day_before_post, week_after_post
             )
             raise MissingRevisionId(post, info)
-        tic = time.time()
         username_to_user_kwargs = {}
         rev_kwargs_lst = []
         num_revisions_returned = len(revisions)
@@ -224,11 +235,13 @@ def check_single_post(post, ores_ep_template, session):
                 pass
         dja_revs = Revision.objects.filter(wiki_link=dja_link)
         num_dja_revs = len(dja_revs)
-        #print('{} revisions were returned, made by {} unique users. From this, {} revision rows were added'.format(
-        #    num_revisions_returned, num_unique_users, num_dja_revs
-        #))
         if len(dja_revs) == 0:
+            print(revisions)
+            print(rev_kwargs)
             print('link {} has no dja_revs...'.format(dja_link.url))
+            print('{} revisions were returned, made by {} unique users. From this, {} revision rows were added'.format(
+                num_revisions_returned, num_unique_users, num_dja_revs
+            ))
             return
         for timestamp in [day_before_post, post.timestamp, week_after_post, ]:
             closest_rev = get_closest_to(dja_revs, timestamp)
@@ -293,7 +306,7 @@ def retrieve_links_info(filtered):
     count = 0
     process_start = time.time()
     for post in filtered:
-        if count % 100 == 0:
+        if count % 500 == 0:
             print('Posts processed: {}'.format(count))
             print('total runtime: {}'.format(time.time() - process_start))
         count += 1
@@ -303,7 +316,7 @@ def retrieve_links_info(filtered):
             post.save()
         except (
                 MissingRevisionId, ContextNotSupported, BrokenLinkError,
-                MissingOresResponse
+                MissingOresResponse, PostMissingValidLink
         ):
             post.wiki_content_analyzed = True
             post.save()
