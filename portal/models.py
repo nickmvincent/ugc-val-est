@@ -150,6 +150,7 @@ class Post(models.Model):
                 except TypeError:
                     self.body_coleman_liau_index = 0
         # calculate average scores if needed
+
         if self.has_wiki_link and self.wiki_content_analyzed and self.wiki_content_error == 0:
             if self.day_of_avg_score is None:
                 field_to_dt = {

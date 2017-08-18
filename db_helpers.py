@@ -3,7 +3,6 @@ Helper functions to interface with DB so we don't have to use pgadmin...
 """
 import os
 import sys
-from pprint import pprint
 
 
 
@@ -16,7 +15,7 @@ def delete_old_errors():
 def clear_json2db():
     """Delete entries populated by the json2db script"""
     for model in [
-        RedditPost, StackOverflowAnswer, StackOverflowQuestion, StackOverflowUser
+            RedditPost, StackOverflowAnswer, StackOverflowQuestion, StackOverflowUser
     ]:
         qs = model.objects.all()
         print('Going to delete {} entries from model {}'.format(qs.count(), model))
@@ -29,11 +28,14 @@ def reset_revision_info():
     """Reset"""
     for model in [SampledRedditThread, SampledStackOverflowPost]:
         model.objects.filter(wiki_content_analyzed=True).update(
+            has_wiki_link=False,
+            num_wiki_links=0,
             day_prior_avg_score=None,
             day_of_avg_score=None,
             week_after_avg_score=None,
             wiki_content_analyzed=False,
         )
+    WikiLink.objects.all().delete()
     Revision.objects.all().delete()
     ErrorLog.objects.all().delete()
 
@@ -43,42 +45,17 @@ def show_samples():
     samples = SampledRedditThread.objects.all()[:10]
     for sample in samples.values():
         print(sample)
-    
+
     so_samples = SampledStackOverflowPost.objects.all()[:10]
     for sample in so_samples.values():
         print(sample)
 
 
-def calc_avg_scores():
-    """
-    Calculates average wiki scores at various time intervals
-    """
-    fields = ['day_prior',  'day_of', 'week_after', ]
-    reddit_threads = SampledRedditThread.objects.filter(has_wiki_link=True).order_by('uid')
-    stack_posts = SampledStackOverflowPost.objects.filter(has_wiki_link=True).order_by('uid')
-    for qs in [reddit_threads, stack_posts]:
-        num_errors = 0
-        for start, end, total, batch in batch_qs(qs):
-            print(start, end, total)
-            for thread in batch:
-                num_links = 0
-                field_to_score = {field: 0 for field in fields}
-                for link_obj in thread.post_specific_wiki_links.all():
-                    for field in fields:
-                        field_to_score[field] += getattr(link_obj, field).score
-                    num_links += 1
-                if num_links == 0:
-                    print(thread.wiki_content_error, end='|')
-                    num_errors += 1
-                    continue
-                output_field_to_val = {field + '_avg_score': val / num_links for field, val in field_to_score.items()}
-                for output_field, val in output_field_to_val.items():
-                    setattr(thread, output_field, val)
-                thread.save()
-        print('\n num_errors', num_errors)
 
 
 def bulk_save():
+    """Runs through all the rows and re-saves to trigger
+    computation"""
     reddit = SampledRedditThread.objects.all().order_by('uid')
     stack = SampledStackOverflowPost.objects.all().order_by('uid')
 
@@ -99,22 +76,19 @@ if __name__ == "__main__":
     import django
     django.setup()
     from portal.models import (
-        ErrorLog, ThreadLog, SampledRedditThread,
+        ErrorLog, SampledRedditThread,
         SampledStackOverflowPost,
         WikiLink, Revision,
         RedditPost, StackOverflowAnswer, StackOverflowQuestion, StackOverflowUser,
-        get_closest_to
     )
     from queryset_helpers import batch_qs
     if len(sys.argv) > 1:
         if sys.argv[1] == 'delete':
             delete_old_errors()
-        elif sys.argv[1] == 'reset':
+        elif sys.argv[1] == 'reset_revision_info':
             reset_revision_info()
         elif sys.argv[1] == 'show':
             show_samples()
-        elif sys.argv[1] == 'calc_avg_scores':
-            calc_avg_scores()
         elif sys.argv[1] == 'bulk_save':
             bulk_save()
         elif sys.argv[1] == 'clear_json2db':

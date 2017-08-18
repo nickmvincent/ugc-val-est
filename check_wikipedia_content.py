@@ -9,7 +9,7 @@ import time
 import argparse
 
 from urllib.parse import unquote
-
+from itertools import zip_longest
 import requests
 
 from scoring_helpers import map_ores_code_to_int
@@ -19,9 +19,10 @@ WIK = 'wikipedia.org/wiki/'
 
 
 
-from itertools import zip_longest
-def grouper(iterable, n, fillvalue=None):
-    args = [iter(iterable)] * n
+
+def grouper(iterable, groupsize, fillvalue=None):
+    """Separate an iterable into groups of size groupsize"""
+    args = [iter(iterable)] * groupsize
     return zip_longest(*args, fillvalue=fillvalue)
 
 
@@ -235,11 +236,12 @@ def check_single_post(post, ores_ep_template, session):
                 pass
         dja_revs = Revision.objects.filter(wiki_link=dja_link)
         num_dja_revs = len(dja_revs)
-        if len(dja_revs) == 0:
+        if not dja_revs.exists():
             print(revisions)
             print(rev_kwargs)
             print('link {} has no dja_revs...'.format(dja_link.url))
-            print('{} revisions were returned, made by {} unique users. From this, {} revision rows were added'.format(
+            print("""{} revisions were returned, made by {} unique users.
+            From this, {} revision rows were added""".format(
                 num_revisions_returned, num_unique_users, num_dja_revs
             ))
             return
@@ -285,7 +287,7 @@ def identify_links(filtered, field):
                 continue
             try:
                 dja_link, _ = WikiLink.objects.get_or_create(url=url)
-            except Exception as err:
+            except Exception:
                 print(url)
                 continue
             post.wiki_links.add(dja_link)
@@ -307,8 +309,7 @@ def retrieve_links_info(filtered):
     process_start = time.time()
     for post in filtered:
         if count % 500 == 0:
-            print('Posts processed: {}'.format(count))
-            print('total runtime: {}'.format(time.time() - process_start))
+            print('Done: {}, Time: {}'.format(count, time.time() - process_start))
         count += 1
         try:
             check_single_post(post, ores_ep_template, session)
@@ -320,7 +321,7 @@ def retrieve_links_info(filtered):
         ):
             post.wiki_content_analyzed = True
             post.save()
-        
+
 
 
 def parse():
@@ -340,18 +341,13 @@ def parse():
     else:
         field = 'body'
         model = SampledStackOverflowPost
-    filter_kwargs = {field + '__contains': WIK}
-    if args.mode == 'retrieve':
-        filter_kwargs['has_wiki_link'] = True
-        filter_kwargs['wiki_content_analyzed'] = False
-    filtered = model.objects.filter(**filter_kwargs)
-    print('Using kwargs {}, {} items were found to be processed'.format(
-        str(filter_kwargs), len(filtered)
-    ))
-
-    if args.mode == 'identify':
+    if args.mode == 'identify' or args.mode == 'full':
+        filtered = model.objects.filter(**{field + '__contains': WIK})
+        print('Going to IDENTIFY {} items'.format(len(filtered)))
         identify_links(filtered, field)
-    elif args.mode == 'retrieve':
+    if args.mode == 'retrieve' or args.mode == 'full':
+        filtered = model.objects.filter(has_wiki_link=True, wiki_content_analyzed=False)
+        print('Going to RETRIEVE INFO for {} items'.format(len(filtered)))
         retrieve_links_info(filtered)
 
 if __name__ == "__main__":
