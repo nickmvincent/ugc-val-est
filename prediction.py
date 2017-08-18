@@ -95,7 +95,7 @@ def causal_inference(
     times.append(mark_time('function_start'))
     
     if treatment_feature == 'has_good_wiki_link':
-        filter_kwargs = {'has_wiki_link': True}
+        filter_kwargs = {'has_wiki_link': True, 'day_of_avg_score__isnull'=False}
     else:
         filter_kwargs = None
     qs, features, outcomes = get_qs_features_and_outcomes(
