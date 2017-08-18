@@ -115,7 +115,7 @@ class Post(models.Model):
             self.body_num_links = len(extract_urls(self.body))
         if self.user_created_utc:
             delta = self.timestamp - self.user_created_utc
-            self.seconds_since_user_creation = delta.seconds
+            self.seconds_since_user_creation = delta.total_seconds()
         else:
             self.seconds_since_user_creation = 0
         if self.body_length != 0:
