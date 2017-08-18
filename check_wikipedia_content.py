@@ -228,7 +228,7 @@ def check_single_post(post, ores_ep_template, session):
         #    num_revisions_returned, num_unique_users, num_dja_revs
         #))
         if len(dja_revs) == 0:
-            print('link {} has no dja_revs...'.format(dja_link))
+            print('link {} has no dja_revs...'.format(dja_link.url))
             return
         for timestamp in [day_before_post, post.timestamp, week_after_post, ]:
             closest_rev = get_closest_to(dja_revs, timestamp)
@@ -258,17 +258,23 @@ def check_single_post(post, ores_ep_template, session):
 def identify_links(filtered, field):
     """identify links in post and mark it in the db"""
     count = 0
+    filtered.update(has_wiki_link=False, num_wiki_links=0)
     for post in filtered:
+        post.wiki_links.clear()
         if count % 100 == 0:
             print('{}'.format(count), end='|')
         count += 1
         urls = extract_urls(post.body, WIK) if field == 'body' else [post.url]
         for url in urls:
+            if 'File:' in url:
+                print('Skipping File: link')
+                print(url)
+                continue
             try:
                 dja_link, _ = WikiLink.objects.get_or_create(url=url)
             except Exception as err:
-                print(err)
                 print(url)
+                continue
             post.wiki_links.add(dja_link)
             post.has_wiki_link = True
             post.num_wiki_links += 1
