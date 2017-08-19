@@ -47,10 +47,10 @@ class Blocking(Estimator):
 			atcs, atts = ates, ates
 			atc_ses, att_ses = ate_ses, ate_ses
 		else:
-			atcs = [s.estimates['ols']['atc'] for s in strata]
-			atts = [s.estimates['ols']['att'] for s in strata]
-			atc_ses = [s.estimates['ols']['atc_se'] for s in strata]
-			att_ses = [s.estimates['ols']['att_se'] for s in strata]
+			atcs = np.array([s.estimates['ols']['atc'] for s in strata]).T
+			atts = np.array([s.estimates['ols']['att'] for s in strata]).T
+			atc_ses = np.array([s.estimates['ols']['atc_se'] for s in strata]).T
+			att_ses = np.array([s.estimates['ols']['att_se'] for s in strata]).T
 
 		self._dict = dict()
 		for key in estimation_names() + standard_err_names():
