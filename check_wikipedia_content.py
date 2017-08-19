@@ -33,10 +33,13 @@ def handle_err(post, err_num):
 
 
 class MissingRevisionId(Exception):
-    """Used to catch MissingRevision Media Wiki"""
-    def __init__(self, post, endpoint):
+    """
+    Used to catch MissingRevision Media Wiki
+    Get a list of all such errors by querying for wiki_error_content=2
+    """
+    def __init__(self, post, info):
         err_log, _ = ErrorLog.objects.get_or_create(uid=post.uid)
-        err_log.msg = '#2: MissingRevisionId: {}'.format(endpoint)[:500]
+        err_log.msg = '#2: MissingRevisionId: {}'.format(info)[:500]
         err_log.save()
         handle_err(post, 2)
         super(MissingRevisionId, self).__init__(self)
@@ -163,7 +166,7 @@ def check_single_post(post, ores_ep_template, session):
         if dja_link.language_code != 'en':
             continue
         wiki_api_str_fmt = '%Y%m%d%H%M%S'
-        day_before_post = post.timestamp - datetime.timedelta(days=1)
+        day_before_post = post.timestamp - datetime.timedelta(days=7)
         week_after_post = post.timestamp + datetime.timedelta(days=7)
         day_before_post_str = day_before_post.strftime(wiki_api_str_fmt)
         week_after_post_str = week_after_post.strftime(wiki_api_str_fmt)
@@ -189,12 +192,6 @@ def check_single_post(post, ores_ep_template, session):
                     if 'revisions' in page:
                         revisions += page['revisions']
         if not revisions:  # STILL???
-            print(make_revid_request(
-                session, dja_link.language_code,
-                dja_link.title, day_before_post_str))
-            print(day_before_post_str, week_after_post_str)
-            print('Could NOT find a revision for this article')
-            print(dja_link.title)
             info = '{}_{}_{}'.format(
                 dja_link.title, day_before_post, week_after_post
             )
@@ -239,14 +236,11 @@ def check_single_post(post, ores_ep_template, session):
         dja_revs = Revision.objects.filter(revid__in=revids)
         num_dja_revs = len(dja_revs)
         if not dja_revs.exists():
-            print(revisions)
             print(rev_kwargs)
-            print('link {} has no dja_revs...'.format(dja_link.url))
             print("""{} revisions were returned, made by {} unique users.
             From this, {} revision rows were added""".format(
                 num_revisions_returned, num_unique_users, num_dja_revs
             ))
-            print('wiki_link_id of this dja_link is: {}'.format())
             return
         for timestamp in [day_before_post, post.timestamp, week_after_post, ]:
             closest_rev = get_closest_to(dja_revs, timestamp)
@@ -255,18 +249,24 @@ def check_single_post(post, ores_ep_template, session):
                 'context': ores_context,
                 'revid': closest_rev.revid
             })
-            ores_resp = session.get(ores_ep).json()
+            ores_resp = session.get(ores_ep)
+            try:
+                ores_resp = ores_resp.json()
+            except Exception:
+                print('converting response to json failed... here is the raw response')
+                # TODO: double check this... .content
+                print(ores_resp.content)
             try:
                 scores = ores_resp['scores'][ores_context]['wp10']['scores']
             except KeyError:
                 print('raising a ContextNotSupported error')
-                print(closest_rev.revid)
+                print(ores_resp)
                 raise ContextNotSupported(post, ores_context)
             try:
                 predicted_code = scores[str(closest_rev.revid)]['prediction']
             except KeyError:
                 print('Raising MissingOresResponse')
-                print(closest_rev.revid)
+                print(scores)
                 raise MissingOresResponse(post, closest_rev.revid)
             closest_rev.score = map_ores_code_to_int(predicted_code)
             closest_rev.save()

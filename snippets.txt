@@ -1,4 +1,6 @@
 Explaining SO and reddit
+===
+
 
 Explaining methodology
 ===
@@ -16,3 +18,11 @@ For RQ2, we restrict analysis to items that include a valid Wikipedia link (the 
 Finally, to answer RQ3, we identify new output metrics. With RQ3, we are interested in measurements of how Wikipedia editing behavior changed in response to Wikipedia links being posted on external sites. The simplest measurement to answer this question is the change in number of edits that were made to a given article. Edit count is not necessarily a strong indicator of increased quality - Wikipedia even has an article detailing why edit count is a poor measurement of user contribution to the community [cite]. Therefore, we examine the relative change in edit count (number of edits made 1 week after posting divided by number of edits made 1 week before posting). This means that "hot" articles that already have a large number of edits made regularly will not overly influence results. Likewise, "finished" articles that are relatively stagnant will not also not exert undue influence on the results.
 
 While the relative change in edit count is a reasonable way to approximate the general effect that SO/reddit posts have on Wikipedia edit behavior, we also seek to investigate what type of edit behavior is occurring. This is possible to investigate because the MediaWiki api allows us to identify the age of editor accounts, the number of edits made by each editor, and whether a given edit was a "minor" edit. Using account age and edit count, we classify editors into 3 classifications: brand new users (created after the link was posted), active existing users (user created before the link was posted, with more than 5 edits), and inactive existing users (user created before the link was posted, but with 5 or less total edits). For each classification, we can calculate the change in editing behavior for the subgroup, and therefore gain insight into what type of behavior change occurred. Additionally, we can see if link posts are promoting minor edits or major edits. Finally, we also check for two specific phenomena that we speculated may occur. First, are there any cases where a Wikipedia article is heavily edited immediately before it is posted (implying that users may be using Wikipedia as a sort of malleable citation source to support a point or arguement)? Second, do we observe an increase in quality (implying a symbiotic relationship between the UGC platforms)?
+
+
+The results for each RQ are presented below. Summarized key results appear in Table X.
+
+Results
+===
+
+To answer RQ1, we first examine 
