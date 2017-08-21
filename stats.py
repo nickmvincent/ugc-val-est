@@ -502,7 +502,7 @@ def explain():
         counter = defaultdict(int)
         for obj in qs:
             counter[obj.day_of_avg_score] += 1
-        vals = [counter[key] for key in sorted(counter.keys())]
+        vals = [str(counter[key]) for key in sorted(counter.keys())]
         print(','.join(vals))
         pprint(counter)
 
