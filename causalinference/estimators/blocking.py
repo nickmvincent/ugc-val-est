@@ -42,7 +42,7 @@ class Blocking(Estimator):
 		N_ts = [s.raw_data['N_t'] for s in strata]
 
 		ates = np.array([s.estimates['ols']['ate'] for s in strata]).T
-		ate_ses = np.array([s.estimates['ols']['ate_se'] for s in strata]).T
+		ate_ses = np.array([s.estimates['ols']['ate_se'] for s in strata]).T 	
 		if adj <= 1:
 			atcs, atts = ates, ates
 			atc_ses, att_ses = ate_ses, ate_ses

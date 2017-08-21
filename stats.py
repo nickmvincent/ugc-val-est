@@ -494,20 +494,15 @@ def main(platform='r', calculate_frequency=False):
     # plt.show()
 
 
-def visualize(platform, natty_log=False):
-    """Visualize distribution"""
-    if platform == 's':
-        qs = SampledStackOverflowPost.objects.all()
-    if natty_log:
-        safe_ln = make_ln_func('user_reputation')
-        vals = safe_ln(qs)
-    else:
-        vals = qs.values_list('user_reputation', flat=True)
-    hist, bin_edges = np.histogram(vals, bins='auto')
-    print(hist)
-    print(bin_edges)
-    plt.plot(hist)
-    plt.show()
+def explain():
+    """explain distribution"""
+    for platform in [SampledRedditThread, SampledStackOverflowPost]:
+        print('==={}==='.format(platform.__name__))
+        qs = platform.objects.filter(has_wiki_link=True, day_of_avg_score__isnull=False)
+        counter = defaultdict(int)
+        for obj in qs:
+            counter[obj.day_of_avg_score] += 1
+        pprint(counter)
 
 
 def parse():
@@ -527,7 +522,7 @@ def parse():
         action='store_true',
         help='Only compute tags frequency dist')
     parser.add_argument(
-        '--visualize',
+        '--explain',
         action='store_true',
         help='Performs some data visualization')
     args = parser.parse_args()
@@ -536,8 +531,8 @@ def parse():
             SampledStackOverflowPost.objects.all())
         tags_frequency_distribution(
             SampledStackOverflowPost.objects.filter(body__contains=WIKI))
-    elif args.visualize:
-        visualize(args.platform)
+    elif args.explain:
+        explain(args.platform)
     else:
         main(args.platform, args.frequency)
 
