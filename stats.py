@@ -402,7 +402,10 @@ def main(platform='r', rq=1, calculate_frequency=False):
         subsample_kwargs = {}        
         treatment_kwargs = {'has_good_wiki_link': True, }
     if rq == 3:
-        subsample_kwargs = {'has_wiki_link': True}        
+        subsample_kwargs = {
+            'has_wiki_link': True,
+            'num_edits_prev_week__gte': 1,
+        }
         treatment_kwargs = {}
 
     if platform == 'r':
@@ -462,29 +465,34 @@ def main(platform='r', rq=1, calculate_frequency=False):
         inferential_stats[name] = {}
         for variable in variables:
             print('processing variable {}'.format(variable))
-            for group in groups:
-                if callable(variable):
-                    group['vals'] = variable(group['qs'])
-                else:
-                    group['vals'] = np.array(
-                        group['qs'].values_list(variable, flat=True))
-                if calculate_frequency:
-                    if platform == 'r':
-                        frequency_distribution(
-                            group['qs'], 'context', name + '_' + group['name'])
-
-            len1, len2 = len(treatment['vals']), len(control['vals'])
-            if len1 == 0 or len2 == 0:
-                print('Skipping variable {} because {}, {}.'.format(
-                    variable, len1, len2))
             try:
-                inferential_stats[name][variable] = inferential_analysis(
-                    treatment['vals'], control['vals'])
-                # groups = [group for group in groups if group['vals']]
-                descriptive_stats[name][variable] = univariate_analysis(groups)
-            except TypeError as err:
-                print('analysis of variable {} failed because {}'.format(
-                    variable, err
+                for group in groups:
+                    if callable(variable):
+                        group['vals'] = variable(group['qs'])
+                    else:
+                        group['vals'] = np.array(
+                            group['qs'].values_list(variable, flat=True))
+                    if calculate_frequency:
+                        if platform == 'r':
+                            frequency_distribution(
+                                group['qs'], 'context', name + '_' + group['name'])
+
+                len1, len2 = len(treatment['vals']), len(control['vals'])
+                if len1 == 0 or len2 == 0:
+                    print('Skipping variable {} because {}, {}.'.format(
+                        variable, len1, len2))
+                try:
+                    inferential_stats[name][variable] = inferential_analysis(
+                        treatment['vals'], control['vals'])
+                    # groups = [group for group in groups if group['vals']]
+                    descriptive_stats[name][variable] = univariate_analysis(groups)
+                except TypeError as err:
+                    print('analysis of variable {} failed because {}'.format(
+                        variable, err
+                    ))
+            except ZeroDivisionError:
+                print('Skipping variable {} bc zero division'.format(
+                    variables
                 ))
     pprint(descriptive_stats)
     output = output_stats(
