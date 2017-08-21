@@ -532,7 +532,7 @@ def parse():
         tags_frequency_distribution(
             SampledStackOverflowPost.objects.filter(body__contains=WIKI))
     elif args.explain:
-        explain(args.platform)
+        explain()
     else:
         main(args.platform, args.frequency)
 
