@@ -25,9 +25,6 @@ import numpy as np
 from scipy import stats
 
 
-WIKI = 'wikipedia.org/wiki/'
-
-
 def percent_bias(x_arr, y_arr):
     """Calculate the percent bias for two groups
     Inputs should be numerical arrays corresponding to the two groups
@@ -388,18 +385,7 @@ def make_method_getter(method_name):
     return get_method_outputs
 
 
-def change_in_quality(qs):
-    """The difference in quality between one week after posting"""
-    ret = []
-    qs = qs.filter(has_wiki_link=True,
-                   week_after_avg_score__isnull=False).order_by('uid')
-    for _, _, _, batch in batch_qs(qs):
-        for obj in batch:
-            ret.append(obj.week_after_avg_score - obj.day_of_avg_score)
-    return ret
-
-
-def main(platform='r', calculate_frequency=False):
+def main(platform='r', rq=1, calculate_frequency=False):
     """Driver"""
     csv_dir = 'csv_files'
     png_dir = 'png_files'
@@ -408,37 +394,50 @@ def main(platform='r', calculate_frequency=False):
             os.makedirs(directory)
     variables = ['score', 'num_comments', ]
     variables += list_common_features()
+    if rq == 1:
+        subsample_kwargs = {}
+        treatment_kwargs = {'has_wiki_link': True, }
+    if rq == 2:
+        subsample_kwargs = {}        
+        treatment_kwargs = {'has_good_wiki_link': True, }
+    if rq == 3:
+        subsample_kwargs = {'has_wiki_link': True}        
+        treatment_kwargs = {}
+
     if platform == 'r':
         datasets = [{
-            'qs': SampledRedditThread.objects.filter(context='todayilearned'),
-            'name': 'TIL'
-        }, {
-            'qs': SampledRedditThread.objects.filter(context__in=TOP_TEN),
-            'name': 'Top_Ten'
-        }, {
-            'qs': SampledRedditThread.objects.all(),
+            'qs': SampledRedditThread.objects.filter(**subsample_kwargs),
             'name': 'All',
         }]
+        if rq == 1 or rq == 2:
+            datasets += [{
+                'qs': SampledRedditThread.objects.filter(context='todayilearned'),
+                'name': 'TIL'
+            }, {
+                'qs': SampledRedditThread.objects.filter(context__in=TOP_TEN),
+                'name': 'Top_Ten'
+            }]
         variables += list_reddit_specific_features()
-        filter_kwargs = {
-            'url__contains': WIKI
-        }
         extractor = get_links_from_url
         extract_from = 'url'
-        output_filename = "reddit_stats.csv"
     elif platform == 's':
         datasets = [{
-            'qs': SampledStackOverflowPost.objects.all(),
+            'qs': SampledStackOverflowPost.objects.filter(**subsample_kwargs),
             'name': 'All SO'
         }]
         variables += list_stack_specific_features()
-        variables += ['num_pageviews', ]
         extractor = get_links_from_body
         extract_from = 'body'
-        filter_kwargs = {
-            'body__contains': WIKI
-        }
-        output_filename = "stack_overflow_stats.csv"
+    if rq == 3:
+        methods = [
+            'raw_change_edits', 'rel_change_edits', 
+            'percent_new_editors', 'rel_change_active_editors,'
+            'rel_change_inactive_editors', 'rel_change_major_edits',
+            'rel_change_minor_edits', 'percent_of_revs_preceding_post',
+            'change_in_quality',
+        ]
+        variables = [make_method_getter(method) for method in methods]
+    output_filename = "{}_{}_stats.csv".format(platform, rq)
     descriptive_stats = {}
     inferential_stats = {}
     for dataset in datasets:
@@ -448,15 +447,15 @@ def main(platform='r', calculate_frequency=False):
             # extracts LINK BASES from URL
             frequency_distribution(
                 qs, extract_from, name, extractor)
-        has_wikilink_group = {
+        treatment = {
             'name': 'Treatment',
-            'qs': qs.filter(**filter_kwargs)
+            'qs': qs.filter(**treatment_kwargs)
         }
-        no_wikilink_group = {
+        control = {
             'name': 'Control',
-            'qs': qs.exclude(**filter_kwargs)
+            'qs': qs.exclude(**treatment_kwargs)
         }
-        groups = [has_wikilink_group, no_wikilink_group]
+        groups = [treatment, control]
 
         descriptive_stats[name] = {}
         inferential_stats[name] = {}
@@ -473,14 +472,13 @@ def main(platform='r', calculate_frequency=False):
                         frequency_distribution(
                             group['qs'], 'context', name + '_' + group['name'])
 
-            len1, len2 = len(has_wikilink_group['vals']), len(
-                no_wikilink_group['vals'])
+            len1, len2 = len(treatment['vals']), len(control['vals'])
             if len1 == 0 or len2 == 0:
                 print('Skipping variable {} because {}, {}.'.format(
                     variable, len1, len2))
             try:
                 inferential_stats[name][variable] = inferential_analysis(
-                    has_wikilink_group['vals'], no_wikilink_group['vals'])
+                    treatment['vals'], control['vals'])
                 # groups = [group for group in groups if group['vals']]
                 descriptive_stats[name][variable] = univariate_analysis(groups)
             except TypeError as err:
@@ -516,27 +514,29 @@ def parse():
     parser.add_argument(
         'platform', help='the platform to use. "r" for reddit and "s" for stack overflow')
     parser.add_argument(
+        'rq', help='the research question to answer. 1, 2, or 3', type=int)
+    parser.add_argument(
         '--frequency',
         action='store_true',
         help='Compute the frequency distributions of urls, subreddits, and tags (slow)')
     parser.add_argument(
         '--tags',
         action='store_true',
-        help='Only compute tags frequency dist')
+        help='Only compute tags frequency dist. Overrides other options.')
     parser.add_argument(
         '--explain',
         action='store_true',
-        help='Performs some data visualization')
+        help='Performs some data visualization. Overrides other options.')
     args = parser.parse_args()
     if args.tags:
         tags_frequency_distribution(
             SampledStackOverflowPost.objects.all())
         tags_frequency_distribution(
-            SampledStackOverflowPost.objects.filter(body__contains=WIKI))
+            SampledStackOverflowPost.objects.filter(has_wiki_link=True))
     elif args.explain:
         explain()
     else:
-        main(args.platform, args.frequency)
+        main(args.platform, args.rq, args.frequency)
 
 
 if __name__ == "__main__":
