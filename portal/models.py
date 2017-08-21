@@ -105,9 +105,23 @@ class Post(models.Model):
     num_edits_preceding_post = models.IntegerField(default=0)
     
 
+    def raw_change_edits(self):
+        return self.num_edits - self.num_edits_prev_week
+    def rel_change_edits(self):
+        return self.num_edits / self.num_edits_prev_week
+    def percent_new_editors(self):
+        return self.num_new_edits / self.num_edits
+    def rel_change_active_editors(self):
+        return self.num_active_edits / self.num_active_edits_prev_week
+    def rel_change_inactive_editors(self):
+        return self.num_inactive_edits / self.num_inactive_edits_prev_week
+    def rel_change_major_edits(self):
+        return self.num_major_edits / self.num_major_edits_prev_week
+    def rel_change_minor_edits(self):
+        return self.num_minor_edits / self.num_minor_edits_prev_week
 
-    def raw_change_in_num_edits(self):
-        return num_new_edits - 
+    def change_in_quality(self):
+        return self.week_after_avg_score - self.day_of_avg_score
 
     class Meta:
         abstract = True
