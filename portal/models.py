@@ -120,6 +120,9 @@ class Post(models.Model):
     def rel_change_minor_edits(self):
         return self.num_minor_edits / self.num_minor_edits_prev_week
 
+    def percent_of_revs_preceding_post(self):
+        return self.num_edits_preceding_post / (self.num_edits + self.num_edits_prev_week)
+    
     def change_in_quality(self):
         return self.week_after_avg_score - self.day_of_avg_score
 
