@@ -377,6 +377,7 @@ def make_method_getter(method_name):
     def get_method_outputs(qs):
         """Call the model method and return list of results"""
         vals = []
+        qs = qs.order_by('uid')
         for start, end, total, batch in batch_qs(qs):
             for item in batch:
                 vals.append(getattr(item, method_name)())
