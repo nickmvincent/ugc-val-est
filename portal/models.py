@@ -97,6 +97,17 @@ class Post(models.Model):
     num_active_edits = models.IntegerField(default=0)
     num_minor_edits = models.IntegerField(default=0)
     num_major_edits = models.IntegerField(default=0)
+    num_edits_prev_week = models.IntegerField(default=0)
+    num_inactive_edits_prev_week = models.IntegerField(default=0)
+    num_active_edits_prev_week = models.IntegerField(default=0)
+    num_minor_edits_prev_week = models.IntegerField(default=0)
+    num_major_edits_prev_week = models.IntegerField(default=0)
+    num_edits_preceding_post = models.IntegerField(default=0)
+    
+
+
+    def raw_change_in_num_edits(self):
+        return num_new_edits - 
 
     class Meta:
         abstract = True
@@ -176,18 +187,30 @@ class Post(models.Model):
                         for revision in revisions:
                             if revision.timestamp > self.timestamp:
                                 self.num_edits += 1
-                                if revision.editcount <= 5:
-                                    self.num_inactive_edits += 1
-                                else:
-                                    self.num_active_edits += 1
                                 if revision.registration > self.timestamp:
                                     self.num_new_edits += 1
                                 else:
                                     self.num_old_edits += 1
+                                if revision.editcount <= 5:
+                                    self.num_inactive_edits += 1
+                                else:
+                                    self.num_active_edits += 1
                                 if revision.flags:
                                     self.num_minor_edits += 1
                                 else:
                                     self.num_major_edits += 1
+                            else:
+                                if self.timestamp - revision.timestamp > datetime.timedelta(hour=6):
+                                    self.num_edits_preceding_post += 1
+                                self.num_edits_prev_week += 1
+                                if revision.editcount <= 5:
+                                    self.num_inactive_edits_prev_week += 1
+                                else:
+                                    self.num_active_edits_prev_week += 1
+                                if revision.flags:
+                                    self.num_minor_edits_prev_week += 1
+                                else:
+                                    self.num_major_edits_prev_week += 1
                 output_field_to_val = {
                     field + '_avg_score': val / num_links for field, val in field_to_score.items()}
                 for output_field, val in output_field_to_val.items():

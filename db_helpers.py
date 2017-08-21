@@ -69,6 +69,22 @@ def bulk_save():
             item.save()
 
 
+def link_save():
+    """
+    Runs through all the rows and re-saves to trigger
+    computation
+    """
+    reddit = SampledRedditThread.objects.filter(has_wiki_link=True).order_by('uid')
+    stack = SampledStackOverflowPost.objects.filter(has_wiki_link=True).order_by('uid')
+
+    for start, end, total, batch in batch_qs(reddit):
+        print('reddit', start, end, total)
+        for item in batch:
+            item.save()
+    for start, end, total, batch in batch_qs(stack):
+        print('stack', start, end, total)
+        for item in batch:
+            item.save()
 
 
 if __name__ == "__main__":
@@ -91,5 +107,7 @@ if __name__ == "__main__":
             show_samples()
         elif sys.argv[1] == 'bulk_save':
             bulk_save()
+        elif sys.argv[1] == 'link_save':
+            link_save()
         elif sys.argv[1] == 'clear_json2db':
             clear_json2db()
