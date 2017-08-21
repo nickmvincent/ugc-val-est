@@ -405,6 +405,8 @@ def main(platform='r', rq=1, calculate_frequency=False):
         subsample_kwargs = {
             'has_wiki_link': True,
             'num_edits_prev_week__gte': 1,
+            'day_of_avg_score__isnull': False,
+            'week_after_avg_score__isnull': False,
         }
         treatment_kwargs = {}
 
@@ -435,7 +437,7 @@ def main(platform='r', rq=1, calculate_frequency=False):
     if rq == 3:
         methods = [
             'raw_change_edits', 'rel_change_edits', 
-            'percent_new_editors', 'rel_change_active_editors,'
+            'percent_new_editors', 'rel_change_active_editors',
             'rel_change_inactive_editors', 'rel_change_major_edits',
             'rel_change_minor_edits', 'percent_of_revs_preceding_post',
             'change_in_quality',
@@ -492,7 +494,7 @@ def main(platform='r', rq=1, calculate_frequency=False):
                     ))
             except ZeroDivisionError:
                 print('Skipping variable {} bc zero division'.format(
-                    variables
+                    variable.__name__
                 ))
     pprint(descriptive_stats)
     output = output_stats(
