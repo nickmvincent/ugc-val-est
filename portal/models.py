@@ -107,22 +107,32 @@ class Post(models.Model):
 
     def raw_change_edits(self):
         return self.num_edits - self.num_edits_prev_week
-    def rel_change_edits(self):
-        return self.num_edits / self.num_edits_prev_week
+    def norm_change_edits(self):
+        total = self.num_edits + self.num_active_edits_prev_week
+        if total:
+            return (self.num_edits - self.num_edits_prev_week) / total
+        else:
+            return 0
     def percent_new_editors(self):
-        return self.num_new_edits / self.num_edits * 100.0
-    def rel_change_active_editors(self):
-        return self.num_active_edits / self.num_active_edits_prev_week
-    def rel_change_inactive_editors(self):
-        return self.num_inactive_edits / self.num_inactive_edits_prev_week
-    def rel_change_major_edits(self):
-        return self.num_major_edits / self.num_major_edits_prev_week
-    def rel_change_minor_edits(self):
-        return self.num_minor_edits / self.num_minor_edits_prev_week
+        if self.num_edits:
+            return self.num_new_edits / self.num_edits * 100.0
+        else:
+            return 0
+    def raw_change_active_editors(self):
+        return self.num_active_edits - self.num_active_edits_prev_week
+    def raw_change_inactive_editors(self):
+        return self.num_inactive_edits - self.num_inactive_edits_prev_week
+    def raw_change_major_edits(self):
+        return self.num_major_edits - self.num_major_edits_prev_week
+    def raw_change_minor_edits(self):
+        return self.num_minor_edits - self.num_minor_edits_prev_week
     def percent_of_revs_preceding_post(self):
         return self.num_edits_preceding_post / (self.num_edits + self.num_edits_prev_week)
     def change_in_quality(self):
-        return self.week_after_avg_score - self.day_of_avg_score
+        if self.week_after_avg_score is None or self.day_of_avg_score is None:
+            return 0
+        else:
+            return self.week_after_avg_score - self.day_of_avg_score
 
     class Meta:
         abstract = True

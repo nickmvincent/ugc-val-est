@@ -404,9 +404,7 @@ def main(platform='r', rq=1, calculate_frequency=False):
     if rq == 3:
         subsample_kwargs = {
             'has_wiki_link': True,
-            'num_edits_prev_week__gte': 1,
             'day_of_avg_score__isnull': False,
-            'week_after_avg_score__isnull': False,
         }
         treatment_kwargs = {}
 
@@ -442,7 +440,8 @@ def main(platform='r', rq=1, calculate_frequency=False):
             'rel_change_minor_edits', 'percent_of_revs_preceding_post',
             'change_in_quality',
         ]
-        variables = [make_method_getter(method) for method in methods]
+        variables = [
+            (method, make_method_getter(method)) for method in methods]
     output_filename = "{}_{}_stats.csv".format(platform, rq)
     descriptive_stats = {}
     inferential_stats = {}
@@ -466,11 +465,15 @@ def main(platform='r', rq=1, calculate_frequency=False):
         descriptive_stats[name] = {}
         inferential_stats[name] = {}
         for variable in variables:
-            print('processing variable {}'.format(variable))
+            variable_name = variable
+            method = None
+            if isinstance(variable, ()):
+                variable_name, method = variable
+            print('processing variable {}'.format(variable_name))
             try:
                 for group in groups:
-                    if callable(variable):
-                        group['vals'] = variable(group['qs'])
+                    if method:
+                        group['vals'] = method(group['qs'])
                     else:
                         group['vals'] = np.array(
                             group['qs'].values_list(variable, flat=True))
@@ -482,15 +485,15 @@ def main(platform='r', rq=1, calculate_frequency=False):
                 len1, len2 = len(treatment['vals']), len(control['vals'])
                 if len1 == 0 or len2 == 0:
                     print('Skipping variable {} because {}, {}.'.format(
-                        variable, len1, len2))
+                        variable_name, len1, len2))
                 try:
-                    inferential_stats[name][variable] = inferential_analysis(
+                    inferential_stats[name][variable_name] = inferential_analysis(
                         treatment['vals'], control['vals'])
                     # groups = [group for group in groups if group['vals']]
-                    descriptive_stats[name][variable] = univariate_analysis(groups)
+                    descriptive_stats[name][variable_name] = univariate_analysis(groups)
                 except TypeError as err:
                     print('analysis of variable {} failed because {}'.format(
-                        variable, err
+                        variable_name, err
                     ))
             except ZeroDivisionError:
                 print('Skipping variable {} bc zero division'.format(
