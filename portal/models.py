@@ -106,12 +106,13 @@ class Post(models.Model):
 
     def norm_change_edits(self):
         total = self.num_edits + self.num_active_edits_prev_week
-        if total:
-            return (self.num_edits - self.num_edits_prev_week) / total
-        else:
-            return 0
+        return (
+            self.num_edits - self.num_edits_prev_week) / total if total else 0
+
     def percent_of_revs_preceding_post(self):
-        return self.num_edits_preceding_post / (self.num_edits + self.num_edits_prev_week)
+        denom = (self.num_edits + self.num_edits_prev_week)
+        return self.num_edits_preceding_post / denom * 100.0 if denom else 0
+
     def percent_new_editors(self):
         if self.num_edits:
             return self.num_new_edits / self.num_edits * 100.0
