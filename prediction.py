@@ -176,6 +176,8 @@ def causal_inference(
                 out.append(str(causal.summary_stats))
             except:
                 pass
+    else:
+        print('Skipping trim value as per request')
     if simple_bin:
         causal.blocks = int(simple_bin)
         causal.stratify()
