@@ -268,21 +268,21 @@ class CausalModel(object):
 						break
 					if D[search_below][0] == 1:
 						break
-			if search_above is None and search_below is None:
-				print('skipping')
-				continue
-			elif search_above is None:
-				subset[search_below] = 1  
-			elif search_below is None:
-				subset[search_above] = 1  				
-			else:
-				diff_above = pscore[match_above] - pscore[i]
-				diff_below = pscore[match_below] - pscore[i]
-				if diff_above <= diff_below:
-					subset[search_above] = 1  
-				else:
+				if search_above is None and search_below is None:
+					print('skipping')
+					continue
+				elif search_above is None:
 					subset[search_below] = 1  
-			subsets.append(Sbuset)
+				elif search_below is None:
+					subset[search_above] = 1  				
+				else:
+					diff_above = pscore[match_above] - pscore[i]
+					diff_below = pscore[match_below] - pscore[i]
+					if diff_above <= diff_below:
+						subset[search_above] = 1  
+					else:
+						subset[search_below] = 1  
+				subsets.append(Sbuset)
 		strata = [CausalModel(Y[s], D[s], X[s]) for s in subsets]
 		self.strata = Strata(strata, subsets, self.raw_data['pscore'])
 
