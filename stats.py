@@ -260,7 +260,7 @@ def inferential_analysis(x_arr, y_arr, samples_related):
     delta = abs(np.mean(x_arr) - np.mean(y_arr))
     if samples_related:
         _, pval = stats.ttest_rel(
-            x_arr, y_arr, equal_var=False)
+            x_arr, y_arr)
     else:    
         _, pval = stats.ttest_ind(
             x_arr, y_arr, equal_var=False)  # _ = tstat
@@ -494,14 +494,15 @@ def main(platform='r', rq=1, calculate_frequency=False):
             if isinstance(variable, tuple):
                 if callable(variable[1]):
                     variable_name, method = variable
-                treatment_var, control_var = variable
-                variable_name = '{} vs {}'.format(treatment_var, control_var)
+                else:
+                    treatment_var, control_var = variable
+                    variable_name = '{} vs {}'.format(treatment_var, control_var)
             print('processing variable {}'.format(variable_name))
             try:
                 for group in groups:
                     if method:
                         group['vals'] = method(group['qs'])
-                    if treatment_var and control_var:
+                    elif treatment_var and control_var:
                         if group['name'] == 'Treatment':
                             group['vals'] = np.array(
                                 group['qs'].values_list(treatment_var, flat=True))
