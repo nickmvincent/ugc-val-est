@@ -117,6 +117,23 @@ def make_mediawiki_request(session, base, params):
     return results
 
 
+def make_lastrev_request(session, prefix, user):
+    """
+    Returns the last revision a user made.
+    """
+    base = 'https://{}.wikipedia.org/w/api.php'.format(prefix)
+    rvprop_params = ['timestamp', ]
+    params = {
+        'format': 'json',
+        'action': 'query',
+        'prop': 'revisions',
+        'rvlimit': 1,
+        'rvprop': '|'.join(rvprop_params),
+        'rvuser': user,
+    }
+    return make_mediawiki_request(session, base, params)
+
+
 def make_revid_request(session, prefix, title, start, end=None):
     """
     Returns an endpoint that will give us a revid in json format
@@ -162,6 +179,7 @@ def make_user_request(session, prefix, users):
 def check_single_post(post, ores_ep_template, session):
     """check a single post"""
     dja_links = post.wiki_links.all()
+    username_cache = {}
     for dja_link in dja_links:
         if dja_link.language_code != 'en':
             continue
@@ -207,14 +225,14 @@ def check_single_post(post, ores_ep_template, session):
                     rev_kwargs[rev_field.name] = rev_obj[rev_field.name]
             rev_kwargs['wiki_link'] = dja_link
             if 'user' in rev_kwargs:
-                username_to_user_kwargs[rev_kwargs['user']] = {}
+                username_to_user_kwargs[rev_kwargs['user']] = username_cache.get('user', {})
             rev_kwargs_lst.append(rev_kwargs)
             revids.append(rev_kwargs['revid'])
         num_unique_users = len(username_to_user_kwargs.keys())
 
 
         for userbatch in grouper(username_to_user_kwargs.keys(), 50):
-            userbatch = [user for user in userbatch if user]
+            userbatch = [user for user in userbatch if user and not username_to_user_kwargs[user]]
             users = []
             user_result_pages = make_user_request(
                 session, dja_link.language_code, userbatch)
@@ -225,6 +243,16 @@ def check_single_post(post, ores_ep_template, session):
                 user_kwargs['editcount'] = user.get('editcount', 0)
                 if user.get('registration'):
                     user_kwargs['registration'] = user.get('registration')
+                lastrev_pages = make_lastrev_request(
+                    session, dja_link.language_code,
+                    user['name'])
+                for result_page in lastrev_pages:
+                    pages = result_page['pages']
+                    for _, page in pages.items():
+                        if 'revisions' in page:
+                            lastrev = page['revisions'][0]
+                            user_kwargs['lastrev_date'] = lastrev['timestamp']
+                username_cache[user['name']] = user_kwargs
         for rev_kwargs in rev_kwargs_lst:
             if 'user' in rev_kwargs:
                 for key, val in username_to_user_kwargs.get(rev_kwargs['user'], {}).items():

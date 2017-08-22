@@ -32,13 +32,6 @@ TEST = False
 
 def main(platform):
     """main driver"""
-    soa_template = 'stackoverflow-answers/0000000000{}'
-    completed = []
-    for i in range(0, 10):
-        completed.append(soa_template.format('0' + str(i)))
-    for i in range (10, 64):
-        completed.append(soa_template.format(str(i)))
-    
 
     prefixes = {}
     confirmation_sent = False
@@ -49,9 +42,6 @@ def main(platform):
         tic = time.time()
         path = blob.name
         print(path)
-        if path in completed:
-            print('Bypassing completed path')
-            continue
         prefix = path[:path.find('/')]
         if platform == 's':
             if 'stackoverflow-questions2' not in prefix:
@@ -139,7 +129,12 @@ def parse():
         description='This module imports data from json (stored in GCS) to DB (postgres)')
     parser.add_argument(
         'platform', help='the platform to use. "r" for reddit and "s" for stack overflow')
+    parser.add_argument(
+        'reset_table', default=None, help='a table to reset')
     args = parser.parse_args()
+    if args.reset_table:
+        if args.reset_table == 'portal_stackoverflowanswer':
+            StackOverflowAnswer.objects.all().delete()
     main(args.platform)
 
 

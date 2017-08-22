@@ -381,12 +381,20 @@ class Revision(models.Model):
     timestamp = models.DateTimeField(default=timezone.now)
     wiki_link = models.ForeignKey(WikiLink)
     revid = models.CharField(max_length=50, primary_key=True)
+    lastrev_date = models.DateTimeField()
+    user_retained = models.BooleanField(default=False)
     score = models.IntegerField(default=-1)
     user = models.CharField(max_length=100)
     editcount = models.IntegerField(default=0)
     registration = models.DateTimeField(default=timezone.now)
     # whether the edit was minor edit
     flags = models.BooleanField(default=True)
+    
+    def save(self, *args, **kwargs):
+        """overload save method"""
+        if self.lastrev_date - self.timestamp > datetime.timedelta(days=30):
+            self.user_retained = True
+        super(Revision, self).save(*args, **kwargs)
 
 
 class ErrorLog(models.Model):
@@ -447,6 +455,7 @@ class StackOverflowAnswer(models.Model):
     last_editor_user_id = models.IntegerField(blank=True, null=True)
     owner_display_name = models.CharField(max_length=30)
     owner_user_id = models.IntegerField(blank=True, null=True)
+    parent_id = models.IntegerField()
     post_type_id = models.IntegerField()
     score = models.IntegerField(default=0)
     tags = models.CharField(max_length=115)
