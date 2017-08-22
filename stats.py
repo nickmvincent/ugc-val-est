@@ -439,13 +439,13 @@ def main(platform='r', rq=1, calculate_frequency=False):
     if rq == 3:
         variables = [
             ('num_edits', 'num_old_edits'),
-            'percent_new_editors',
+            ('percent_new_editors', make_method_getter('percent_new_editors')),
             ('num_active_edits', 'num_active_edits_prev_week'),
             ('num_inactive_edits', 'num_inactive_edits_prev_week'),
             ('num_major_edits', 'num_major_edits_prev_week'),
             ('num_minor_edits', 'num_minor_edits_prev_week'),
-            'percent_of_revs_preceding_post',
-            'change_in_quality',
+            ('percent_of_revs_preceding_post', make_method_getter('percent_of_revs_preceding_post')),
+            ('change_in_quality', make_method_getter('change_in_quality')),
         ]
         # methods = [
         #     'raw_change_edits', 'norm_change_edits', 
@@ -490,13 +490,17 @@ def main(platform='r', rq=1, calculate_frequency=False):
         inferential_stats[name] = {}
         for variable in variables:
             variable_name = variable
-            treatment_var, control_var = None, None
+            treatment_var, control_var, method = None, None, None
             if isinstance(variable, tuple):
+                if callable(variable[1]):
+                    variable_name, method = variable
                 treatment_var, control_var = variable
                 variable_name = '{} vs {}'.format(treatment_var, control_var)
             print('processing variable {}'.format(variable_name))
             try:
                 for group in groups:
+                    if method:
+                        group['vals'] = method(group['qs'])
                     if treatment_var and control_var:
                         if group['name'] == 'Treatment':
                             group['vals'] = np.array(
