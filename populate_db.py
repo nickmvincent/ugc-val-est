@@ -8,7 +8,7 @@ from bq_explore import get_reddit_tables
 from queryset_helpers import utcstamp_to_utcdatetime
 
 QUERY_TEMPLATE = """
-    SELECT {columns}, rand() as rand
+    SELECT {columns}, random() as rand
     FROM {table} ORDER BY rand LIMIT {limit};
     """
 

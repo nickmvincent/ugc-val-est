@@ -251,6 +251,7 @@ def check_single_post(post, ores_ep_template, session):
                     for _, page in pages.items():
                         if 'revisions' in page:
                             lastrev = page['revisions'][0]
+                            print(lastrev)
                             user_kwargs['lastrev_date'] = lastrev['timestamp']
                 username_cache[user['name']] = user_kwargs
         for rev_kwargs in rev_kwargs_lst:

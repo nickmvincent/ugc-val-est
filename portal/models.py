@@ -392,8 +392,9 @@ class Revision(models.Model):
     
     def save(self, *args, **kwargs):
         """overload save method"""
-        if self.lastrev_date - self.timestamp > datetime.timedelta(days=30):
-            self.user_retained = True
+        if self.lastrev_date and self.timestamp:
+            if self.lastrev_date - self.timestamp > datetime.timedelta(days=30):
+                self.user_retained = True
         super(Revision, self).save(*args, **kwargs)
 
 
