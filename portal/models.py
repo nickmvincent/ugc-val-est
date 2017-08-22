@@ -103,8 +103,8 @@ class Post(models.Model):
     num_major_edits_prev_week = models.IntegerField(default=0)
     num_edits_preceding_post = models.IntegerField(default=0)
 
-    num_pageviews = models.IntegerField(default=0)
-    num_pageviews_prev_week = models.IntegerField(default=0)
+    num_wiki_pageviews = models.IntegerField(default=0)
+    num_wiki_pageviews_prev_week = models.IntegerField(default=0)
 
     def norm_change_edits(self):
         total = self.num_edits + self.num_active_edits_prev_week

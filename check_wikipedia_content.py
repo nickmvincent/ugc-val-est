@@ -199,17 +199,17 @@ def check_single_post(post, ores_ep_template, session):
         week_before_post_str = week_before_post.strftime(wiki_api_str_fmt)
         week_after_post_str = week_after_post.strftime(wiki_api_str_fmt)
 
-        day_of_post_short_str = post.timestamp.strftime(pageview_api_str_fmt) + '00'
+        day_of_post_short_str = post.timestamp.strftime(pageview_api_str_fmt)
         pageviews_prev_week = make_pageview_request(
             session,
-            title=dja_link.title, start=week_before_post.strftime(day_of_post_short_str) + '00',
+            title=dja_link.title, start=week_before_post.strftime(day_of_post_short_str),
             end=day_of_post_short_str)['items']
         pageviews = make_pageview_request(
             session,
             title=dja_link.title, start=day_of_post_short_str,
-            end=week_after_post.strftime(day_of_post_short_str) + '00')['items']
-        post.num_pageviews_prev_week = sum([entry['views'] for entry in pageviews_prev_week])
-        post.num_pageviews = sum([entry['views'] for entry in pageviews])
+            end=week_after_post.strftime(day_of_post_short_str))['items']
+        post.num_wiki_pageviews_prev_week = sum([entry['views'] for entry in pageviews_prev_week])
+        post.num_wiki_pageviews = sum([entry['views'] for entry in pageviews])
 
         revisions = []
         revid_result_pages = make_revid_request(
@@ -335,8 +335,6 @@ def identify_links(filtered, field):
         urls = extract_urls(post.body, WIK) if field == 'body' else [post.url]
         for url in urls:
             if 'File:' in url:
-                print('Skipping File: link')
-                print(url)
                 continue
             try:
                 dja_link, _ = WikiLink.objects.get_or_create(url=url)

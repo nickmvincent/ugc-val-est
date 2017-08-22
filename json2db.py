@@ -44,7 +44,7 @@ def main(platform):
         print(path)
         prefix = path[:path.find('/')]
         if platform == 's':
-            if 'stackoverflow-questions2' not in prefix or 'stackoverflow-answers' not in prefix:
+            if 'stackoverflow-questions2' not in prefix and 'stackoverflow-answers' not in prefix:
                 print('prefix {} - manual override'.format(prefix))
                 continue
             if 'reddit' in prefix:
