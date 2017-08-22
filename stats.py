@@ -253,13 +253,17 @@ def univariate_analysis(groups):
     }
 
 
-def inferential_analysis(x_arr, y_arr):
+def inferential_analysis(x_arr, y_arr, samples_related):
     """
     Performs t-test, cohen's d calculation, and mean difference calculations
     """
     delta = abs(np.mean(x_arr) - np.mean(y_arr))
-    _, pval = stats.ttest_ind(
-        x_arr, y_arr, equal_var=False)  # _ = tstat
+    if samples_related:
+        _, pval = stats.ttest_rel(
+            x_arr, y_arr, equal_var=False)
+    else:    
+        _, pval = stats.ttest_ind(
+            x_arr, y_arr, equal_var=False)  # _ = tstat
     cles_score_flipped = cles(x_arr, y_arr)
     cles_score = cles(y_arr, x_arr)
     return {
@@ -406,7 +410,7 @@ def main(platform='r', rq=1, calculate_frequency=False):
             'has_wiki_link': True,
             'day_of_avg_score__isnull': False,
         }
-        treatment_kwargs = {}
+        treatment_kwargs = None
 
     if platform == 'r':
         datasets = [{
@@ -433,15 +437,25 @@ def main(platform='r', rq=1, calculate_frequency=False):
         extractor = get_links_from_body
         extract_from = 'body'
     if rq == 3:
-        methods = [
-            'raw_change_edits', 'norm_change_edits', 
-            'percent_new_editors', 'raw_change_active_editors',
-            'raw_change_inactive_editors', 'raw_change_major_edits',
-            'raw_change_minor_edits', 'percent_of_revs_preceding_post',
+        variables = [
+            ('num_edits', 'num_old_edits'),
+            'percent_new_editors',
+            ('num_active_edits', 'num_active_edits_prev_week'),
+            ('num_inactive_edits', 'num_inactive_edits_prev_week'),
+            ('num_major_edits', 'num_major_edits_prev_week'),
+            ('num_minor_edits', 'num_minor_edits_prev_week'),
+            'percent_of_revs_preceding_post',
             'change_in_quality',
         ]
-        variables = [
-            (method, make_method_getter(method)) for method in methods]
+        # methods = [
+        #     'raw_change_edits', 'norm_change_edits', 
+        #     'percent_new_editors', 'raw_change_active_editors',
+        #     'raw_change_inactive_editors', 'raw_change_major_edits',
+        #     'raw_change_minor_edits', 'percent_of_revs_preceding_post',
+        #     'change_in_quality',
+        # ]
+        # variables = [
+        #     (method, make_method_getter(method)) for method in methods]
     output_filename = "{}_{}_stats.csv".format(platform, rq)
     descriptive_stats = {}
     inferential_stats = {}
@@ -452,28 +466,44 @@ def main(platform='r', rq=1, calculate_frequency=False):
             # extracts LINK BASES from URL
             frequency_distribution(
                 qs, extract_from, name, extractor)
-        treatment = {
-            'name': 'Treatment',
-            'qs': qs.filter(**treatment_kwargs)
-        }
-        control = {
-            'name': 'Control',
-            'qs': qs.exclude(**treatment_kwargs)
-        }
+        if treatment_kwargs:
+            treatment = {
+                'name': 'Treatment',
+                'qs': qs.filter(**treatment_kwargs)
+            }
+            control = {
+                'name': 'Control',
+                'qs': qs.exclude(**treatment_kwargs)
+            }
+        else:
+            treatment = {
+                'name': 'Treatment',
+                'qs': qs
+            }
+            control = {
+                'name': 'Control',
+                'qs': qs
+            }
         groups = [treatment, control]
 
         descriptive_stats[name] = {}
         inferential_stats[name] = {}
         for variable in variables:
             variable_name = variable
-            method = None
+            treatment_var, control_var = None, None
             if isinstance(variable, tuple):
-                variable_name, method = variable
+                treatment_var, control_var = variable
+                variable_name = '{} vs {}'.format(treatment_var, control_var)
             print('processing variable {}'.format(variable_name))
             try:
                 for group in groups:
-                    if method:
-                        group['vals'] = method(group['qs'])
+                    if treatment_var and control_var:
+                        if group['name'] == 'Treatment':
+                            group['vals'] = np.array(
+                                group['qs'].values_list(treatment_var, flat=True))
+                        elif group['name'] == 'Control':
+                            group['vals'] = np.array(
+                                group['qs'].values_list(control_var, flat=True))
                     else:
                         group['vals'] = np.array(
                             group['qs'].values_list(variable, flat=True))
@@ -488,7 +518,7 @@ def main(platform='r', rq=1, calculate_frequency=False):
                         variable_name, len1, len2))
                 try:
                     inferential_stats[name][variable_name] = inferential_analysis(
-                        treatment['vals'], control['vals'])
+                        treatment['vals'], control['vals'], treatment_kwargs is None)
                     # groups = [group for group in groups if group['vals']]
                     descriptive_stats[name][variable_name] = univariate_analysis(groups)
                 except TypeError as err:

@@ -103,10 +103,7 @@ class Post(models.Model):
     num_minor_edits_prev_week = models.IntegerField(default=0)
     num_major_edits_prev_week = models.IntegerField(default=0)
     num_edits_preceding_post = models.IntegerField(default=0)
-    
 
-    def raw_change_edits(self):
-        return self.num_edits - self.num_edits_prev_week
     def norm_change_edits(self):
         total = self.num_edits + self.num_active_edits_prev_week
         if total:
@@ -118,16 +115,6 @@ class Post(models.Model):
             return self.num_new_edits / self.num_edits * 100.0
         else:
             return 0
-    def raw_change_active_editors(self):
-        return self.num_active_edits - self.num_active_edits_prev_week
-    def raw_change_inactive_editors(self):
-        return self.num_inactive_edits - self.num_inactive_edits_prev_week
-    def raw_change_major_edits(self):
-        return self.num_major_edits - self.num_major_edits_prev_week
-    def raw_change_minor_edits(self):
-        return self.num_minor_edits - self.num_minor_edits_prev_week
-    def percent_of_revs_preceding_post(self):
-        return self.num_edits_preceding_post / (self.num_edits + self.num_edits_prev_week)
     def change_in_quality(self):
         if self.week_after_avg_score is None or self.day_of_avg_score is None:
             return 0
