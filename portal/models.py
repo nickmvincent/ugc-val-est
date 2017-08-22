@@ -47,7 +47,7 @@ class Post(models.Model):
     """
     uid = models.CharField(max_length=100, primary_key=True)
 
-    body = models.CharField(max_length=58431)
+    body = models.CharField(max_length=74185)
     # textual metrics for the body field
     body_length = models.IntegerField(default=0)
     body_lexicon_count = models.IntegerField(default=0)
@@ -64,7 +64,7 @@ class Post(models.Model):
 
     is_root = models.BooleanField(default=False)
     context = models.CharField(max_length=115, null=True, blank=True)
-    author = models.CharField(max_length=50)
+    author = models.CharField(max_length=36)
     timestamp = models.DateTimeField()
 
     wiki_links = models.ManyToManyField('WikiLink')
@@ -187,15 +187,15 @@ class Post(models.Model):
                 num_links = 0
                 field_to_score = {field: 0 for field in field_to_dt}
                 for edit_field in [
-                    'num_edits', 'num_new_edits',
-                    'num_old_edits', 'num_inactive_edits',
-                    'num_active_edits', 'num_minor_edits',
-                    'num_major_edits', 'num_edits_prev_week',
-                    'num_inactive_edits_prev_week',
-                    'num_active_edits_prev_week',
-                    'num_minor_edits_prev_week',
-                    'num_major_edits_prev_week',
-                    'num_edits_preceding_post',
+                        'num_edits', 'num_new_edits',
+                        'num_old_edits', 'num_inactive_edits',
+                        'num_active_edits', 'num_minor_edits',
+                        'num_major_edits', 'num_edits_prev_week',
+                        'num_inactive_edits_prev_week',
+                        'num_active_edits_prev_week',
+                        'num_minor_edits_prev_week',
+                        'num_major_edits_prev_week',
+                        'num_edits_preceding_post',
                 ]:
                     setattr(self, edit_field, 0)                
 
@@ -264,7 +264,7 @@ class SampledRedditThread(Post):
     user_is_suspended = models.BooleanField(default=False)
     user_is_deleted = models.BooleanField(default=False)
     url = models.CharField(max_length=2083)
-    title = models.CharField(max_length=500)
+    title = models.CharField(max_length=1182)
     title_length = models.IntegerField(default=0)
     title_lexicon_count = models.IntegerField(default=0)
     title_sentence_count = models.IntegerField(default=0)

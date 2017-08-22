@@ -1,31 +1,16 @@
 """native imports"""
-import json
 import os
 import time
-import datetime
+import argparse
 
-import pytz
-import praw
-from prawcore.exceptions import Forbidden, NotFound
 from google.cloud import bigquery
-from explore import get_reddit_tables
+from bq_explore import get_reddit_tables
+from queryset_helpers import utcstamp_to_utcdatetime
 
-
-# 21684.653096437454
-
-ROWS_PER_QUERY = 10000
-ROWS_TO_SAMPLE = 12 * 100000
 QUERY_TEMPLATE = """
     SELECT {columns}, rand() as rand
     FROM {table} ORDER BY rand LIMIT {limit};
     """
-
-SO_ANSWERS_TABLE = '`bigquery-public-data.stackoverflow.posts_answers`'
-SO_QUESTIONS_TABLE = '`bigquery-public-data.stackoverflow.posts_questions`'
-SO_USERS_TABLE = '`bigquery-public-data.stackoverflow.users`'
-
-
-
 
 def give_truncator(lim):
     """
@@ -34,6 +19,8 @@ def give_truncator(lim):
     """
 
     def truncator(val):
+        """this closure based function truncates a string (val)
+        to a max limit of lim"""
         return val[:lim]
     return truncator
 
@@ -41,6 +28,14 @@ def give_truncator(lim):
 def default_to_zero(val):
     """Return zero if val is None"""
     return 0 if val is None else val
+
+
+def query_django_tables(query):
+    """This function executes raw SQL to query tables created by django"""
+    with connection.cursor() as cursor:
+        cursor.execute(query)
+        rows = cursor.fetchall()
+    return rows
 
 
 def init_count():
@@ -87,14 +82,15 @@ def process_prepared_lines(lines, model):
 
 
 
-
-def sample_from_bq(col_objects, queries, model, rows_per_query):
+def sample_from_data_source(
+        data_source, col_objects, queries, model, rows_to_sample, rows_per_query):
     """
     Populate DB with random samples of SO answers from BigQuery
     """
-    client = bigquery.Client()
+    if data_source == 'bq':
+        client = bigquery.Client()
+
     t_init = time.time()
-    rows_to_sample = ROWS_TO_SAMPLE
     rows_per_iteration = rows_per_query * len(queries)
     iterations_needed = int(rows_to_sample / rows_per_iteration)
     print('To sample {} rows, will use {} iterations with {} rows per iteration'.format(
@@ -103,12 +99,14 @@ def sample_from_bq(col_objects, queries, model, rows_per_query):
     for iteration in range(0, iterations_needed):
         t_start_iteration = time.time()
         for query in queries:
-            t_start_query = time.time()
-            query_results = client.run_sync_query(query)
-            query_results.use_legacy_sql = False
-            query_results.run()
             lines = []
-            row_iter = query_results.fetch_data()
+            if data_source == 'bq':
+                query_results = client.run_sync_query(query)
+                query_results.use_legacy_sql = False
+                query_results.run()
+                row_iter = query_results.fetch_data()
+            elif data_source == 'db':
+                row_iter = query_django_tables(query)
             for row in row_iter:
                 row_dict = {}
                 for i, obj in enumerate(col_objects):
@@ -130,7 +128,7 @@ def sample_from_bq(col_objects, queries, model, rows_per_query):
     print('Total runtime was {}'.format(time.time() - t_init))
 
 
-def sample_so(rows_per_query):
+def sample_so(data_source, rows_to_sample, rows_per_query):
     """
     Sample Stack Overflow Answers
     Args:
@@ -138,43 +136,52 @@ def sample_so(rows_per_query):
     Returns:
         None
     """
+    if data_source == 'bq':
+        answers_table = '`bigquery-public-data.stackoverflow.posts_answers`'
+        questions_table = '`bigquery-public-data.stackoverflow.posts_questions`'
+        users_table = '`bigquery-public-data.stackoverflow.users`'
+    elif data_source == 'db':
+        answers_table = 'portal_stackoverflowanswer'
+        questions_table = 'portal_stackoverflowquestion'
+        users_table = 'portal_stackoverflowuser'
+
     col_objects = [
         {
-            'bq_name': SO_ANSWERS_TABLE + '.body',
+            'bq_name': answers_table + '.body',
             'dja_name': 'body',
             'processing': give_truncator(30000),
         },
         {
-            'bq_name': SO_ANSWERS_TABLE + '.id',
+            'bq_name': answers_table + '.id',
             'dja_name': 'uid',
         },
         {
-            'bq_name': SO_ANSWERS_TABLE + '.score',
+            'bq_name': answers_table + '.score',
             'dja_name': 'score',
         },
         {
-            'bq_name': SO_ANSWERS_TABLE + '.creation_date',
+            'bq_name': answers_table + '.creation_date',
             'dja_name': 'timestamp',
         },
         {
-            'bq_name': SO_ANSWERS_TABLE + '.comment_count',
+            'bq_name': answers_table + '.comment_count',
             'dja_name': 'num_comments',
         },
         {
-            'bq_name': SO_USERS_TABLE + '.reputation',
+            'bq_name': users_table + '.reputation',
             'dja_name': 'user_reputation',
             'processing': default_to_zero,
         },
         {
-            'bq_name': SO_USERS_TABLE + '.creation_date as user_created_utc',
+            'bq_name': users_table + '.creation_date as user_created_utc',
             'dja_name': 'user_created_utc',
         },
         {
-            'bq_name': SO_QUESTIONS_TABLE + '.view_count',
+            'bq_name': questions_table + '.view_count',
             'dja_name': 'num_pageviews',
         },
         {
-            'bq_name': SO_QUESTIONS_TABLE + '.tags',
+            'bq_name': questions_table + '.tags',
             'dja_name': 'tags_string',
         },
     ]
@@ -182,35 +189,33 @@ def sample_so(rows_per_query):
             LEFT JOIN {users} ON {answers}.owner_user_id = {users}.id
             LEFT JOIN {questions} ON {answers}.parent_id = {questions}.id
             """
-    ).format(
-        **{
-            'answers': SO_ANSWERS_TABLE, 'users': SO_USERS_TABLE,
-            'questions': SO_QUESTIONS_TABLE,
-        },
-    )
+            ).format(
+                **{
+                    'answers': answers_table, 'users': users_table,
+                    'questions': questions_table,
+                },
+            )
     tables = [table, ]
     queries = []
     for table in tables:
         query_kwargs = {
             'columns': ', '.join([x['bq_name'] for x in col_objects]),
             'table': table,
-            'limit': ROWS_PER_QUERY,
+            'limit': rows_per_query,
         }
         query = QUERY_TEMPLATE.format(**query_kwargs)
         queries.append(query)
-    sample_from_bq(col_objects, queries, SampledStackOverflowPost, rows_per_query)
-    
+    sample_from_data_source(
+        data_source, col_objects, queries, SampledStackOverflowPost, rows_to_sample, rows_per_query)
 
 
-def sample_reddit(rows_per_query):
+
+def sample_reddit(data_source, rows_to_sample, rows_per_query):
     """Sample Reddit Threads"""
-    
-
     col_objects = [
         {
             'bq_name': 'selftext',
             'dja_name': 'body',
-            'processing': give_truncator(10000)
         },
         {
             'bq_name': 'id',
@@ -245,31 +250,50 @@ def sample_reddit(rows_per_query):
         {
             'bq_name': 'title',
             'dja_name': 'title',
-            'processing': give_truncator(500)
         }
     ]
-    tables = get_reddit_tables()
+    if data_source == 'bq':
+        tables = get_reddit_tables()
+    elif data_source == 'db':
+        tables = ['portal_redditpost']
     queries = []
     for table in tables:
         query_kwargs = {
             'columns': ', '.join([x['bq_name'] for x in col_objects]),
             'table': table,
-            'limit': ROWS_PER_QUERY,
+            'limit': rows_per_query,
         }
         query = QUERY_TEMPLATE.format(**query_kwargs)
         queries.append(query)
-    sample_from_bq(col_objects, queries, SampledRedditThread, rows_per_query)
+    sample_from_data_source(
+        data_source, col_objects, queries, SampledRedditThread, rows_to_sample, rows_per_query)
 
+
+def parse():
+    """
+    Parse args and do the appropriate analysis
+    """
+    parser = argparse.ArgumentParser(
+        description='Populates db')
+    parser.add_argument(
+        '--data_source', help='the data source to use. "bq" for bigquery and "db" for db')
+    parser.add_argument(
+        '--rows_to_sample', type=int, help="the total number of rows to sample")
+    parser.add_argument(
+        '--rows_per_query', type=int, help="the number of rows to sample in each query")
+    args = parser.parse_args()
+    oargs = args.data_source, args.rows_to_sample, args.rows_per_query
+    sample_so(*oargs)
+    sample_reddit(*oargs)
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dja.settings")
     import django
     from django.db.utils import IntegrityError
     django.setup()
+    from django.db import connection
     from portal.models import (
-        ErrorLog, ThreadLog, SampledRedditThread,
+        ErrorLog, SampledRedditThread,
         SampledStackOverflowPost,
     )
-    print('Ready to begin "populate_db" script')
-    # sample_reddit(ROWS_PER_QUERY)
-    sample_so(ROWS_PER_QUERY)
+    parse()
