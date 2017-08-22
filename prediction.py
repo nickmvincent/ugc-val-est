@@ -131,8 +131,8 @@ def causal_inference(
         outcome_rows.append(outcome_row)
 
     times.append(mark_time('rows_loaded'))
-    varname_to_field = {"X:{}".format(i):field for i, field in enumerate(successful_fields)}
-    outname_to_field = {"Y:{}".format(i):field for i, field in enumerate(outcomes)}
+    varname_to_field = {"X{}".format(i):field for i, field in enumerate(successful_fields)}
+    outname_to_field = {"Y{}".format(i):field for i, field in enumerate(outcomes)}
     out = []
     
     for dic in [varname_to_field, outname_to_field]:

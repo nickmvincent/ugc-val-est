@@ -117,6 +117,15 @@ def make_mediawiki_request(session, base, params):
     return results
 
 
+def make_pageview_request(session, **kwargs):
+    """
+    example:  http://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/all-agents/Albert_Einstein/daily/2015100100/2015103100
+    """
+    base = 'http://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/all-agents/{title}/daily/{start}/{end}'
+    endpoint = base.format(**kwargs)
+    result = session.get(endpoint).json()
+    return result
+
 def make_lastrev_request(session, prefix, user):
     """
     Returns the last revision a user made.
@@ -184,14 +193,27 @@ def check_single_post(post, ores_ep_template, session):
         if dja_link.language_code != 'en':
             continue
         wiki_api_str_fmt = '%Y%m%d%H%M%S'
-        day_before_post = post.timestamp - datetime.timedelta(days=7)
+        pageview_api_str_fmt = '%Y%m%d'
+        week_before_post = post.timestamp - datetime.timedelta(days=7)
         week_after_post = post.timestamp + datetime.timedelta(days=7)
-        day_before_post_str = day_before_post.strftime(wiki_api_str_fmt)
+        week_before_post_str = week_before_post.strftime(wiki_api_str_fmt)
         week_after_post_str = week_after_post.strftime(wiki_api_str_fmt)
+
+        day_of_post_short_str = post.timestamp.strftime(pageview_api_str_fmt) + '00'
+        pageviews_prev_week = make_pageview_request(
+            session,
+            title=dja_link.title, start=week_before_post.strftime(day_of_post_short_str) + '00',
+            end=day_of_post_short_str)['items']
+        pageviews = make_pageview_request(
+            session,
+            title=dja_link.title, start=day_of_post_short_str,
+            end=week_after_post.strftime(day_of_post_short_str) + '00')['items']
+        post.num_pageviews_prev_week = sum([entry['views'] for entry in pageviews_prev_week])
+        post.num_pageviews = sum([entry['views'] for entry in pageviews])
 
         revisions = []
         revid_result_pages = make_revid_request(
-            session, dja_link.language_code, dja_link.title, day_before_post_str,
+            session, dja_link.language_code, dja_link.title, week_before_post_str,
             week_after_post_str)
         for result_page in revid_result_pages:
             pages = result_page['pages']
@@ -203,7 +225,7 @@ def check_single_post(post, ores_ep_template, session):
         if not revisions:
             revid_result_pages = make_revid_request(
                 session, dja_link.language_code,
-                dja_link.title, day_before_post_str)
+                dja_link.title, week_before_post_str)
             for result_page in revid_result_pages:
                 pages = result_page['pages']
                 for _, page in pages.items():
@@ -211,7 +233,7 @@ def check_single_post(post, ores_ep_template, session):
                         revisions += page['revisions']
         if not revisions:  # STILL???
             info = '{}_{}_{}'.format(
-                dja_link.title, day_before_post, week_after_post
+                dja_link.title, week_before_post, week_after_post
             )
             raise MissingRevisionId(post, info)
         username_to_user_kwargs = {}
@@ -271,7 +293,7 @@ def check_single_post(post, ores_ep_template, session):
                 num_revisions_returned, num_unique_users, num_dja_revs
             ))
             return
-        for timestamp in [day_before_post, post.timestamp, week_after_post, ]:
+        for timestamp in [post.timestamp, week_after_post, ]:
             closest_rev = get_closest_to(dja_revs, timestamp)
             ores_context = dja_link.language_code + 'wiki'
             ores_ep = ores_ep_template.format(**{
@@ -283,7 +305,6 @@ def check_single_post(post, ores_ep_template, session):
                 ores_resp = ores_resp.json()
             except Exception:
                 print('converting response to json failed... here is the raw response')
-                # TODO: double check this... .content
                 print(ores_resp.content)
             try:
                 scores = ores_resp['scores'][ores_context]['wp10']['scores']

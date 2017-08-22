@@ -11,7 +11,7 @@ from pprint import pprint
 import time
 from queryset_helpers import (
     batch_qs,
-    list_textual_metrics, list_common_features,
+    list_common_features,
     list_stack_specific_features,
     list_reddit_specific_features
 )
@@ -72,7 +72,7 @@ def cles(lessers, greaters):
     numerator = 0
     lessers, greaters = sorted(lessers), sorted(greaters)
     lesser_index = 0
-    for i, greater in enumerate(greaters):
+    for _, greater in enumerate(greaters):
         while lesser_index < len(lessers) and lessers[lesser_index] < greater:
             lesser_index += 1
         numerator += lesser_index  # the count less than the greater
@@ -382,7 +382,7 @@ def make_method_getter(method_name):
         """Call the model method and return list of results"""
         vals = []
         qs = qs.order_by('uid')
-        for start, end, total, batch in batch_qs(qs):
+        for _, _, _, batch in batch_qs(qs):
             for item in batch:
                 vals.append(getattr(item, method_name)())
         return vals
@@ -403,7 +403,7 @@ def main(platform='r', rq=1, calculate_frequency=False):
         subsample_kwargs = {}
         treatment_kwargs = {'has_wiki_link': True, }
     if rq == 2:
-        subsample_kwargs = {}        
+        subsample_kwargs = {}
         treatment_kwargs = {'has_good_wiki_link': True, }
     if rq == 3:
         subsample_kwargs = {
@@ -444,7 +444,8 @@ def main(platform='r', rq=1, calculate_frequency=False):
             ('num_inactive_edits', 'num_inactive_edits_prev_week'),
             ('num_major_edits', 'num_major_edits_prev_week'),
             ('num_minor_edits', 'num_minor_edits_prev_week'),
-            ('percent_of_revs_preceding_post', make_method_getter('percent_of_revs_preceding_post')),
+            ('percent_of_revs_preceding_post',
+                make_method_getter('percent_of_revs_preceding_post')),
             ('change_in_quality', make_method_getter('change_in_quality')),
         ]
         # methods = [

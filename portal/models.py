@@ -73,7 +73,6 @@ class Post(models.Model):
     num_wiki_links = models.IntegerField(default=0)
 
     # poor naming choices... the following refer to ORES score...
-    day_prior_avg_score = models.IntegerField(blank=True, null=True)
     day_of_avg_score = models.IntegerField(blank=True, null=True)
     week_after_avg_score = models.IntegerField(blank=True, null=True)
 
@@ -103,6 +102,9 @@ class Post(models.Model):
     num_minor_edits_prev_week = models.IntegerField(default=0)
     num_major_edits_prev_week = models.IntegerField(default=0)
     num_edits_preceding_post = models.IntegerField(default=0)
+
+    num_pageviews = models.IntegerField(default=0)
+    num_pageviews_prev_week = models.IntegerField(default=0)
 
     def norm_change_edits(self):
         total = self.num_edits + self.num_active_edits_prev_week
@@ -180,7 +182,6 @@ class Post(models.Model):
         if self.has_wiki_link and self.wiki_content_analyzed and self.wiki_content_error == 0:
             if self.day_of_avg_score is None:
                 field_to_dt = {
-                    'day_prior': self.timestamp - datetime.timedelta(days=1),
                     'day_of': self.timestamp,
                     'week_after': self.timestamp + datetime.timedelta(days=7),
                 }
