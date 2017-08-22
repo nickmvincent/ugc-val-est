@@ -236,7 +236,7 @@ class CausalModel(object):
         for i in range(D.shape[0]):
             if D[i] == 1:  # we've found a treatment!
                 print('Found a treatment, analyzing', end='|')
-                subset = np.zeros(D.shape)
+                subset = np.zeros(D.shape[0], )
                 subset[i] = 1
                 search_above, search_below = i, i
                 while True:
@@ -268,6 +268,8 @@ class CausalModel(object):
                     else:
                         subset[search_below] = 1
                 subsets.append(subset)
+        print(subsets[0])
+        print(subsets[0].shape)
         strata = [CausalModel(Y[s], D[s], X[s]) for s in subsets]
         self.strata = Strata(strata, subsets, self.raw_data['pscore'])
 
