@@ -83,7 +83,8 @@ def extract_vals_and_method_results(qs, field_names):
 
 def causal_inference(
         platform, treatment_feature,
-        num_rows=None, simple_psm=False, simple_bin=None, trim_val=None):
+        num_rows=None, simple_psm=False, simple_bin=None, trim_val=None,
+        paired_psm=None):
     """
     Use causalinference module to perform causal inference analysis
     """
@@ -176,6 +177,9 @@ def causal_inference(
         causal.blocks = int(simple_bin)
         causal.stratify()
         times.append(mark_time('stratify_{}'.format(simple_bin)))
+    elif paired_psm:
+        causal.stratify_pairs()
+        times.append(mark_time('paired_psm'))
     else:
         causal.stratify_s()
         times.append(mark_time('stratify_s'))
@@ -306,7 +310,12 @@ def parse():
         action='store_true',
         help='performs linear regression on quality')
     parser.add_argument(
+        '--paired_psm',
+        action='store_true',
+        help='to do paired psm?')
+    parser.add_argument(
         '--trim_val',
+        action='store_true',
         help='to perform PSM trimming')
     args = parser.parse_args()
     if args.simple:
@@ -317,12 +326,14 @@ def parse():
                 causal_inference(
                     args.platform, treatment,
                     args.num_rows, args.simple_psm,
-                    args.simple_bin, args.trim_val)
+                    args.simple_bin, args.trim_val,
+                    args.paired_psm)
         else:
             causal_inference(
                 args.platform, args.treatment,
                 args.num_rows, args.simple_psm,
-                args.simple_bin, args.trim_val)
+                args.simple_bin, args.trim_val,
+                args.paired_psm)
     if args.quality:
         simple_linear(args.platform, True)
 

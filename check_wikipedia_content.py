@@ -386,7 +386,7 @@ def parse():
     parser.add_argument(
         '--platform', help='the platform to use. "r" for reddit and "s" for stack overflow')
     parser.add_argument(
-        '--mode', help='identify or retrieve')
+        '--mode', help='identify, retrieve, full (performs both in sequence)')
     args = parser.parse_args()
     if args.platform == 'r':
         field = 'url'

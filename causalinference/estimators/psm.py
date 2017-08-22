@@ -4,7 +4,7 @@ import numpy as np
 from .base import Estimator, estimation_names, standard_err_names
 from .. import causal
 
-class Blocking(Estimator):
+class PropensityMatching(Estimator):
 
 	"""
 	Dictionary-like class containing treatment effect estimates.

@@ -228,6 +228,64 @@ class CausalModel(object):
 		self.stratify()
 
 
+	def stratify_pairs(self):
+
+		"""
+		Stratifies the sample based on propensity score.
+		
+		By default the sample is divided into five equal-sized bins.
+		The number of bins can be set by modifying the object
+		attribute named blocks. Alternatively, custom-sized bins can
+		be created by setting blocks equal to a sorted list of numbers
+		between 0 and 1 indicating the bin boundaries.
+
+		This method should only be executed after the propensity score
+		has been estimated.
+		"""
+		subsets = []
+		pscore_order = self.raw_data['pscore'].argsort()
+		D = self.raw_data['D'][pscore_order]
+		X = self.raw_data['X'][pscore_order]
+		Y = self.raw_data['Y'][pscore_order]
+		# now D, Y, X are all sorted
+		for i in range(D.shape[0]):
+			if D[i][0] == 1: # we've found a treatment!
+				subset = np.zeros(D.shape)
+				subset[i] = 1
+				search_above, search_below = i, i
+				while True:
+					search_above += 1
+					if search_above == D.shape[0]:
+						search_above = None						
+						break
+					if D[search_above][0] == 1:
+						break
+				while True:
+					search_below -= 1
+					if search_below == 0:
+						search_below = None
+						break
+					if D[search_below][0] == 1:
+						break
+			if search_above is None and search_below is None:
+				print('skipping')
+				continue
+			elif search_above is None:
+				subset[search_below] = 1  
+			elif search_below is None:
+				subset[search_above] = 1  				
+			else:
+				diff_above = pscore[match_above] - pscore[i]
+				diff_below = pscore[match_below] - pscore[i]
+				if diff_above <= diff_below:
+					subset[search_above] = 1  
+				else:
+					subset[search_below] = 1  
+			subsets.append(Sbuset)
+		strata = [CausalModel(Y[s], D[s], X[s]) for s in subsets]
+		self.strata = Strata(strata, subsets, self.raw_data['pscore'])
+
+
 	def est_via_ols(self, adj=2):
 
 		"""
