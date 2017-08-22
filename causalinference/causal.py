@@ -244,6 +244,7 @@ class CausalModel(object):
 		"""
 		subsets = []
 		pscore_order = self.raw_data['pscore'].argsort()
+		pscore = self.raw_data['pscore'][pscore_order]
 		D = self.raw_data['D'][pscore_order]
 		X = self.raw_data['X'][pscore_order]
 		Y = self.raw_data['Y'][pscore_order]
