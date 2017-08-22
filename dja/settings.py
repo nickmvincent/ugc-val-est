@@ -82,6 +82,14 @@ DATABASES = {
         'PASSWORD': os.environ['POSTGRES_PASSWORD'],
         'HOST': '127.0.0.1',
         'PORT': '5432',
+    },
+    'secondary': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ['POSTGRES_SECONDARY_DBNAME'],
+        'USER': os.environ['POSTGRES_USERNAME'],
+        'PASSWORD': os.environ['POSTGRES_PASSWORD'],
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
     }
 }
 

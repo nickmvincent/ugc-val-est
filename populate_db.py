@@ -32,7 +32,7 @@ def default_to_zero(val):
 
 def query_django_tables(query):
     """This function executes raw SQL to query tables created by django"""
-    with connection.cursor() as cursor:
+    with connections['secondary'].cursor() as cursor:
         cursor.execute(query)
         rows = cursor.fetchall()
     return rows
@@ -291,7 +291,7 @@ if __name__ == "__main__":
     import django
     from django.db.utils import IntegrityError
     django.setup()
-    from django.db import connection
+    from django.db import connections
     from portal.models import (
         ErrorLog, SampledRedditThread,
         SampledStackOverflowPost,
