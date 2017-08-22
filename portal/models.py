@@ -185,7 +185,19 @@ class Post(models.Model):
                 }
                 num_links = 0
                 field_to_score = {field: 0 for field in field_to_dt}
-                self.num_edits = 0
+                for edit_field in [
+                    'num_edits', 'num_new_edits',
+                    'num_old_edits', 'num_inactive_edits',
+                    'num_active_edits', 'num_minor_edits',
+                    'num_major_edits', 'num_edits_prev_week',
+                    'num_inactive_edits_prev_week',
+                    'num_active_edits_prev_week',
+                    'num_minor_edits_prev_week',
+                    'num_major_edits_prev_week',
+                    'num_edits_preceding_post',
+                ]:
+                    setattr(self, edit_field, 0)                
+
                 missing_necessary_ores = False
                 for link_obj in self.wiki_links.all():
                     num_links += 1
@@ -214,9 +226,9 @@ class Post(models.Model):
                                 else:
                                     self.num_major_edits += 1
                             else:
+                                self.num_edits_prev_week += 1
                                 if self.timestamp - revision.timestamp > datetime.timedelta(hours=6):
                                     self.num_edits_preceding_post += 1
-                                self.num_edits_prev_week += 1
                                 if revision.editcount <= 5:
                                     self.num_inactive_edits_prev_week += 1
                                 else:

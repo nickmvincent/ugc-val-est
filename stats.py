@@ -438,7 +438,7 @@ def main(platform='r', rq=1, calculate_frequency=False):
         extract_from = 'body'
     if rq == 3:
         variables = [
-            ('num_edits', 'num_old_edits'),
+            ('num_edits', 'num_edits_prev_week'),
             ('percent_new_editors', make_method_getter('percent_new_editors')),
             ('num_active_edits', 'num_active_edits_prev_week'),
             ('num_inactive_edits', 'num_inactive_edits_prev_week'),
