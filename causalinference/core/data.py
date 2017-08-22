@@ -43,7 +43,7 @@ class Data(Dict):
 	Dictionary-like class containing basic data.
 	"""
 
-	def __init__(self, outcome, treatment, covariates):
+	def __init__(self, outcome, treatment, covariates, pairs=False):
 		"""
 		This is where matrix dimensionality N X K is explictly defined
 		ie.
@@ -60,6 +60,7 @@ class Data(Dict):
 		self._dict['Y'] = Y
 		self._dict['D'] = D
 		self._dict['X'] = X
+		self._dict['pairs'] = pairs
 		self._dict['N'], self._dict['K'] = X.shape
 		self._dict['num_outputs'] = Y.shape[1]
 		self._dict['controls'] = (D==0)
@@ -70,12 +71,13 @@ class Data(Dict):
 		self._dict['X_t'] = X[self._dict['treated']]
 		self._dict['N_t'] = D.sum()
 		self._dict['N_c'] = self._dict['N'] - self._dict['N_t']
-		if self._dict['K']+1 > self._dict['N_c']:
-			print(self._dict['K'], self._dict['N_c'])
-			raise ValueError('Too few control units: N_c < K+1')
-		if self._dict['K']+1 > self._dict['N_t']:
-			print(self._dict['K'], self._dict['N_t'])
-			raise ValueError('Too few treated units: N_t < K+1')
+		if not pairs:
+			if self._dict['K']+1 > self._dict['N_c']:
+				print(self._dict['K'], self._dict['N_c'])
+				raise ValueError('Too few control units: N_c < K+1')
+			if self._dict['K']+1 > self._dict['N_t']:
+				print(self._dict['K'], self._dict['N_t'])
+				raise ValueError('Too few treated units: N_t < K+1')
 
 
 def preprocess(Y, D, X):

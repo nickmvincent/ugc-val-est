@@ -12,8 +12,8 @@ class CausalModel(object):
     Class that provides the main tools of Causal Inference.
     """
 
-    def __init__(self, Y, D, X):
-        self.old_data = Data(Y, D, X)
+    def __init__(self, Y, D, X, pairs=False):
+        self.old_data = Data(Y, D, X, pairs)
         self.reset()
 
     def reset(self):
@@ -23,7 +23,8 @@ class CausalModel(object):
         """
 
         Y, D, X = self.old_data['Y'], self.old_data['D'], self.old_data['X']
-        self.raw_data = Data(Y, D, X)
+        pairs = self.old_data['pairs']
+        self.raw_data = Data(Y, D, X, pairs)
         self.summary_stats = Summary(self.raw_data)
         self.propensity = None
         self.cutoff = None
@@ -253,7 +254,6 @@ class CausalModel(object):
                     if D[search_below] == 1:
                         break
                 if search_above is None and search_below is None:
-                    print('skipping', end='|')
                     continue
                 elif search_above is None:
                     subset[search_below] = 1
@@ -267,7 +267,6 @@ class CausalModel(object):
                     else:
                         subset[search_below] = 1
                 subsets.append(subset)
-        print(subsets[0].shape)
         strata = [CausalModel(Y[s], D[s], X[s]) for s in subsets]
         self.strata = Strata(strata, subsets, self.raw_data['pscore'])
 
