@@ -1,7 +1,3 @@
-Explaining SO and reddit
-===
-
-
 Explaining methodology
 ===
 Each RQ is subdivided into two parts: investigating the actual effect (i.e. do posts that link to Wikipedia articles have higher scores) and investigating whether there is a causal relationship. Therefore, in each case we select measurements relevant to the RQ, compare the descriptive stats, and then perform a causal analysis with two different models. For causal analysis, we use a propensity score stratification approach (first described in [CITE] and used in the context of HCI in various cases [a, b, c, d]) in addition to a covariate nearest neighbors matching approach.
@@ -21,8 +17,3 @@ While the relative change in edit count is a reasonable way to approximate the g
 
 
 The results for each RQ are presented below. Summarized key results appear in Table X.
-
-Results
-===
-
-To answer RQ1, we first examine 

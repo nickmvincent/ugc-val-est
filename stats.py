@@ -561,9 +561,11 @@ def parse():
     parser = argparse.ArgumentParser(
         description='Calculates statistics of sampled data')
     parser.add_argument(
-        'platform', help='the platform to use. "r" for reddit and "s" for stack overflow')
+        '--platform', default=None,
+        help='the platform to use. "r" for reddit and "s" for stack overflow. Leave blank to do both')
     parser.add_argument(
-        'rq', help='the research question to answer. 1, 2, or 3', type=int)
+        '--rq', default=None,
+        help='the research question to answer. 1, 2, or 3', type=int)
     parser.add_argument(
         '--frequency',
         action='store_true',
@@ -575,7 +577,7 @@ def parse():
     parser.add_argument(
         '--explain',
         action='store_true',
-        help='Performs some data visualization. Overrides other options.')
+        help='custom helper. Check code not docs.')
     args = parser.parse_args()
     if args.tags:
         tags_frequency_distribution(
@@ -585,7 +587,17 @@ def parse():
     elif args.explain:
         explain()
     else:
-        main(args.platform, args.rq, args.frequency)
+        if args.platform is None:
+            platforms = ['r', 's', ]
+        else:
+            platforms = [args.platform]
+        if args.rq is None:
+            rqs = [1, 2, 3]
+        else:
+            rqs = [args.rq]
+        for platform in platforms:
+            for rq in rqs:
+                main(platform, rq, args.frequency)
 
 
 if __name__ == "__main__":
