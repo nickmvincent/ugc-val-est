@@ -250,6 +250,7 @@ class CausalModel(object):
 		# now D, Y, X are all sorted
 		for i in range(D.shape[0]):
 			if D[i] == 1: # we've found a treatment!
+				print('Found a treatment, analyzing', end='|')
 				subset = np.zeros(D.shape)
 				subset[i] = 1
 				search_above, search_below = i, i
@@ -258,17 +259,17 @@ class CausalModel(object):
 					if search_above == D.shape[0]:
 						search_above = None						
 						break
-					if D[search_above][0] == 1:
+					if D[search_above] == 1:
 						break
 				while True:
 					search_below -= 1
 					if search_below == 0:
 						search_below = None
 						break
-					if D[search_below][0] == 1:
+					if D[search_below] == 1:
 						break
 				if search_above is None and search_below is None:
-					print('skipping')
+					print('skipping', end='|')
 					continue
 				elif search_above is None:
 					subset[search_below] = 1  
@@ -281,7 +282,7 @@ class CausalModel(object):
 						subset[search_above] = 1  
 					else:
 						subset[search_below] = 1  
-				subsets.append(Sbuset)
+				subsets.append(subset)
 		strata = [CausalModel(Y[s], D[s], X[s]) for s in subsets]
 		self.strata = Strata(strata, subsets, self.raw_data['pscore'])
 
