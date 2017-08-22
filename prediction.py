@@ -4,6 +4,9 @@ Not for prod use
 
 Should be run from Anaconda environment with scipy installed
 (Anconda Prompt -> activate sci_basic)
+
+python prediction.py --platform r --treatment has_wiki_link --causal --simple_psm --paired_psm
+
 """
 # pylint: disable=C0103
 

@@ -249,7 +249,6 @@ class CausalModel(object):
 		Y = self.raw_data['Y'][pscore_order]
 		# now D, Y, X are all sorted
 		for i in range(D.shape[0]):
-			print(D[i], X[i], Y[i])
 			if D[i] == 1: # we've found a treatment!
 				subset = np.zeros(D.shape)
 				subset[i] = 1
