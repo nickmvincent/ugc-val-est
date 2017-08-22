@@ -267,7 +267,7 @@ class CausalModel(object):
                     else:
                         subset[search_below] = 1
                 subsets.append(subset)
-        strata = [CausalModel(Y[s], D[s], X[s], True) for s in subsets]
+        strata = [CausalModel(Y[s], D[s], X[s], True) for s in subsets if any(subsets)]
         self.strata = Strata(strata, subsets, self.raw_data['pscore'])
 
     def est_via_ols(self, adj=2):
