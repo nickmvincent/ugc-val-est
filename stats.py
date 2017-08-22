@@ -434,10 +434,10 @@ def main(platform='r', rq=1, calculate_frequency=False):
         extract_from = 'body'
     if rq == 3:
         methods = [
-            'raw_change_edits', 'rel_change_edits', 
-            'percent_new_editors', 'rel_change_active_editors',
-            'rel_change_inactive_editors', 'rel_change_major_edits',
-            'rel_change_minor_edits', 'percent_of_revs_preceding_post',
+            'raw_change_edits', 'norm_change_edits', 
+            'percent_new_editors', 'raw_change_active_editors',
+            'raw_change_inactive_editors', 'raw_change_major_edits',
+            'raw_change_minor_edits', 'percent_of_revs_preceding_post',
             'change_in_quality',
         ]
         variables = [
@@ -467,7 +467,7 @@ def main(platform='r', rq=1, calculate_frequency=False):
         for variable in variables:
             variable_name = variable
             method = None
-            if isinstance(variable, ()):
+            if isinstance(variable, tuple):
                 variable_name, method = variable
             print('processing variable {}'.format(variable_name))
             try:
@@ -497,7 +497,7 @@ def main(platform='r', rq=1, calculate_frequency=False):
                     ))
             except ZeroDivisionError:
                 print('Skipping variable {} bc zero division'.format(
-                    variable.__name__
+                    variable_name
                 ))
     pprint(descriptive_stats)
     output = output_stats(
