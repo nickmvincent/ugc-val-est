@@ -181,6 +181,14 @@ def sample_so(data_source, rows_to_sample, rows_per_query):
             'dja_name': 'num_pageviews',
         },
         {
+            'bq_name': questions_table + '.answer_count',
+            'dja_name': 'num_other_answers',
+        },
+        {
+            'bq_name': questions_table + '.creation_date as question_asked_utc',
+            'dja_name': 'question_asked_utc',
+        },
+        {
             'bq_name': questions_table + '.tags',
             'dja_name': 'tags_string',
         },

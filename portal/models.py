@@ -317,6 +317,7 @@ class SampledStackOverflowPost(Post):
     num_pageviews = models.IntegerField(default=0)
     tags_string = models.CharField(max_length=115, blank=True, null=True)
     num_tags = models.IntegerField(default=0)
+    num_other_answers = models.IntegerField(default=0)
     response_time = models.IntegerField(blank=True, null=True)
 
     def save(self, *args, **kwargs):

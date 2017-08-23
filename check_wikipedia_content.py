@@ -203,14 +203,25 @@ def check_single_post(post, ores_ep_template, session):
         pageviews_prev_week = make_pageview_request(
             session,
             title=dja_link.title, start=week_before_post.strftime(day_of_post_short_str),
-            end=day_of_post_short_str)['items']
+            end=day_of_post_short_str)
         pageviews = make_pageview_request(
             session,
             title=dja_link.title, start=day_of_post_short_str,
-            end=week_after_post.strftime(day_of_post_short_str))['items']
-        post.num_wiki_pageviews_prev_week = sum([entry['views'] for entry in pageviews_prev_week])
-        post.num_wiki_pageviews = sum([entry['views'] for entry in pageviews])
-
+            end=week_after_post.strftime(day_of_post_short_str))
+        try:
+            pageviews_prev_week = pageviews_prev_week['items']
+            post.num_wiki_pageviews_prev_week = sum([entry['views'] for entry in pageviews_prev_week])        
+        except KeyError:
+            print('err with pageviews prev wak')
+            print(pageviews_prev_week)
+            post.num_wiki_pageviews_prev_week = 0
+        try:
+            pageviews = pageviews['items']
+            post.num_wiki_pageviews = sum([entry['views'] for entry in pageviews])
+        except KeyError:
+            print('err with pageviews')
+            print(pageviews)
+            post.num_wiki_pageviews = 0
         revisions = []
         revid_result_pages = make_revid_request(
             session, dja_link.language_code, dja_link.title, week_before_post_str,
