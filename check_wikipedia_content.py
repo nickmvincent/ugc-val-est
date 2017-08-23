@@ -143,8 +143,8 @@ def make_lastrev_request(session, prefix, user):
     base = 'https://{}.wikipedia.org/w/api.php'.format(prefix)
     params = {
         'format': 'json',
-        'action': 'list',
-        'prop': 'usercontribs',
+        'action': 'query',
+        'list': 'usercontribs',
         'rvlimit': 1,
         'ucprop': 'timestamp',
         'ucuser': user,
