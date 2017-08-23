@@ -263,8 +263,6 @@ def check_single_post(post, ores_ep_template, session):
                 username_to_user_kwargs[rev_kwargs['user']] = username_cache.get('user', {})
             rev_kwargs_lst.append(rev_kwargs)
             revids.append(rev_kwargs['revid'])
-        num_unique_users = len(username_to_user_kwargs.keys())
-
 
         for userbatch in grouper(username_to_user_kwargs.keys(), 50):
             userbatch = [user for user in userbatch if user and not username_to_user_kwargs[user]]
@@ -298,7 +296,6 @@ def check_single_post(post, ores_ep_template, session):
             except IntegrityError:
                 pass
         dja_revs = Revision.objects.filter(revid__in=revids)
-        num_dja_revs = len(dja_revs)
         if not dja_revs.exists():
             return
         for timestamp in [post.timestamp, week_after_post, ]:
@@ -309,11 +306,7 @@ def check_single_post(post, ores_ep_template, session):
                 'revid': closest_rev.revid
             })
             ores_resp = session.get(ores_ep)
-            try:
-                ores_resp = ores_resp.json()
-            except Exception:
-                print('converting response to json failed... here is the raw response')
-                print(ores_resp.content)
+            ores_resp = ores_resp.json()
             try:
                 scores = ores_resp['scores'][ores_context]['wp10']['scores']
             except KeyError:
@@ -401,6 +394,18 @@ def parse():
     else:
         field = 'body'
         model = SampledStackOverflowPost
+    if args.clear_first:
+        for obj in model.objects.filter(wiki_content_analyzed=True):
+            for wiki_link in obj.wiki_links.all():
+                Revision.objects.filter(wiki_link=wiki_link).delete()
+            obj.wiki_links.all().delete()
+            ErrorLog.objects.filter(uid=obj.uid).delete()
+        model.objects.filter(wiki_content_analyzed=True).update(
+            has_wiki_link=False,
+            wiki_content_error=0,
+            num_wiki_links=0,
+            wiki_content_analyzed=False,
+        )
     if args.mode == 'identify' or args.mode == 'full':
         filtered = model.objects.filter(**{field + '__contains': WIK})
         print('Going to IDENTIFY {} items'.format(len(filtered)))
@@ -409,6 +414,7 @@ def parse():
         filtered = model.objects.filter(has_wiki_link=True, wiki_content_analyzed=False)
         print('Going to RETRIEVE INFO for {} items'.format(len(filtered)))
         retrieve_links_info(filtered)
+    
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dja.settings")
