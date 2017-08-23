@@ -127,8 +127,6 @@ def make_pageview_request(session, **kwargs):
     try:
         result = result['items']
     except KeyError:
-        print(endpoint)
-        print(result)
         result = []
     return result
 
@@ -223,11 +221,11 @@ def check_single_post(post, ores_ep_template, session):
             session,
             title=norm_title, start=day_of_post_short_str + '00',
             end=week_after_post.strftime(pageview_api_str_fmt) + '00')
-        post.num_wiki_pageviews_prev_week = sum([entry['views'] for entry in pageviews_prev_week])        
+        post.num_wiki_pageviews_prev_week = sum([entry['views'] for entry in pageviews_prev_week])    
         post.num_wiki_pageviews = sum([entry['views'] for entry in pageviews])
         revisions = []
         revid_result_pages = make_revid_request(
-            session, dja_link.language_code, norm_title, week_before_post_str,
+            session, dja_link.language_code, dja_link.title, week_before_post_str,
             week_after_post_str)
         for result_page in revid_result_pages:
             pages = result_page['pages']
@@ -249,6 +247,7 @@ def check_single_post(post, ores_ep_template, session):
             info = '{}_{}_{}'.format(
                 dja_link.title, week_before_post, week_after_post
             )
+            print('No revisions for {}'.format(info))
             raise MissingRevisionId(post, info)
         username_to_user_kwargs = {}
         rev_kwargs_lst = []
@@ -360,8 +359,8 @@ def retrieve_links_info(filtered):
     err_count = 0
     process_start = time.time()
     for post in filtered:
-        if count % 500 == 0:
-            print('Done: {}, Time: {}'.format(count, time.time() - process_start))
+        if count % 100 == 0:
+            print('Finished: {}, Errors: {}, Time: {}'.format(count, err_count, time.time() - process_start))
         count += 1
         try:
             check_single_post(post, ores_ep_template, session)
