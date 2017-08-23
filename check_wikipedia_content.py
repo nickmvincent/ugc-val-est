@@ -286,16 +286,22 @@ def check_single_post(post, ores_ep_template, session):
                             print(lastrev)
                             user_kwargs['lastrev_date'] = lastrev['timestamp']
                 username_cache[user['name']] = user_kwargs
+        revs_made = 0
         for rev_kwargs in rev_kwargs_lst:
             if 'user' in rev_kwargs:
                 for key, val in username_to_user_kwargs.get(rev_kwargs['user'], {}).items():
                     rev_kwargs[key] = val
             try:
                 Revision.objects.create(**rev_kwargs)
+                revs_made += 1
             except IntegrityError:
+                print('integrity error occurred')
+                print(rev_kwargs)
                 pass
+        print('revs_made', revs_made)
         dja_revs = Revision.objects.filter(revid__in=revids)
         if not dja_revs.exists():
+            print('no revs found, so returning!!!')
             return
         for timestamp in [post.timestamp, week_after_post, ]:
             closest_rev = get_closest_to(dja_revs, timestamp)
