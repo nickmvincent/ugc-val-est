@@ -14,6 +14,7 @@ import requests
 
 from scoring_helpers import map_ores_code_to_int
 from url_helpers import extract_urls
+import pytz
 
 WIK = 'wikipedia.org/wiki/'
 
@@ -299,7 +300,7 @@ def check_single_post(post, ores_ep_template, session):
                 for field in ['lastrev_date', 'timestamp']:
                     rev_kwargs[field] = datetime.datetime.strptime(
                         rev_kwargs[field],
-                        '%Y-%m-%dT%H:%M:%SZ')
+                        '%Y-%m-%dT%H:%M:%SZ').astimezone(pytz.UTC)
                 Revision.objects.create(**rev_kwargs)
                 revs_made += 1
             except IntegrityError as err:
