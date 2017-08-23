@@ -102,6 +102,24 @@ def link_save():
         for item in batch:
             item.save()
 
+def sample_articles():
+    """Prints out a sample of URLs to text file"""
+    num_samples = 100
+    models = [SampledRedditThread, SampledStackOverflowPost]
+    for model in models:
+        outfilename = '{}_{}_articles.txt'.format(
+            model.__name__, num_samples
+        )
+        with open(outfilename, 'w') as outfile:
+            qs = model.objects.all().order_by('?')[:num_samples]
+            for obj in qs:
+                for wiki_link in obj.wiki_links:
+                    line = ','.join([
+                        wiki_link.title, wiki_link.language_code, wiki_link.url,
+                    ])
+                    print(line)
+                    outfile.write(line + '\n')
+
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dja.settings")
@@ -129,3 +147,5 @@ if __name__ == "__main__":
             clear_json2db()
         elif sys.argv[1] == 'show_wiki_errors':
             show_wiki_errors()
+        elif sys.argv[1] == 'sample_articles':
+            sample_articles()
