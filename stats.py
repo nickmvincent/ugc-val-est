@@ -500,14 +500,13 @@ def main(platform='r', rq=1, calculate_frequency=False):
                         group['vals'] = method(group['qs'])
                     elif treatment_var and control_var:
                         if group['name'] == 'Treatment':
-                            group['vals'] = np.array(
-                                group['qs'].values_list(treatment_var, flat=True))
+                            group['vals'] = group['qs'].values_list(treatment_var, flat=True)
                         elif group['name'] == 'Control':
-                            group['vals'] = np.array(
-                                group['qs'].values_list(control_var, flat=True))
+                            group['vals'] = group['qs'].values_list(control_var, flat=True)
                     else:
-                        group['vals'] = np.array(
-                            group['qs'].values_list(variable, flat=True))
+                        group['vals'] = group['qs'].values_list(variable, flat=True)
+                    group['vals'] = [x for x in group['vals'] if x is not None]
+                    group['vals'] = np.array(group['vals'])
                     if calculate_frequency:
                         if platform == 'r':
                             frequency_distribution(
