@@ -364,6 +364,7 @@ def retrieve_links_info(filtered):
         {'User-Agent': 'ugc-val-est; nickvincent@u.northwestern.edu; research tool'})
 
     count = 0
+    err_count = 0
     process_start = time.time()
     for post in filtered:
         if count % 500 == 0:
@@ -377,6 +378,7 @@ def retrieve_links_info(filtered):
                 MissingRevisionId, ContextNotSupported, BrokenLinkError,
                 MissingOresResponse, PostMissingValidLink
         ):
+            err_count += 1
             post.wiki_content_analyzed = True
             post.save()
 
