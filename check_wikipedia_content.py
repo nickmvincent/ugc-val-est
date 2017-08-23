@@ -124,6 +124,12 @@ def make_pageview_request(session, **kwargs):
     base = 'http://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/all-agents/{title}/daily/{start}/{end}'
     endpoint = base.format(**kwargs)
     result = session.get(endpoint).json()
+    try:
+        result = results['items']
+    except KeyError:
+        print(endpoint)
+        print(result)
+        result = []
     return result
 
 def make_lastrev_request(session, prefix, user):
@@ -208,20 +214,8 @@ def check_single_post(post, ores_ep_template, session):
             session,
             title=dja_link.title, start=day_of_post_short_str,
             end=week_after_post.strftime(day_of_post_short_str))
-        try:
-            pageviews_prev_week = pageviews_prev_week['items']
-            post.num_wiki_pageviews_prev_week = sum([entry['views'] for entry in pageviews_prev_week])        
-        except KeyError:
-            print('err with pageviews prev wak')
-            print(pageviews_prev_week)
-            post.num_wiki_pageviews_prev_week = 0
-        try:
-            pageviews = pageviews['items']
-            post.num_wiki_pageviews = sum([entry['views'] for entry in pageviews])
-        except KeyError:
-            print('err with pageviews')
-            print(pageviews)
-            post.num_wiki_pageviews = 0
+        post.num_wiki_pageviews_prev_week = sum([entry['views'] for entry in pageviews_prev_week])        
+        post.num_wiki_pageviews = sum([entry['views'] for entry in pageviews])
         revisions = []
         revid_result_pages = make_revid_request(
             session, dja_link.language_code, dja_link.title, week_before_post_str,
@@ -298,11 +292,6 @@ def check_single_post(post, ores_ep_template, session):
         dja_revs = Revision.objects.filter(revid__in=revids)
         num_dja_revs = len(dja_revs)
         if not dja_revs.exists():
-            print(rev_kwargs)
-            print("""{} revisions were returned, made by {} unique users.
-            From this, {} revision rows were added""".format(
-                num_revisions_returned, num_unique_users, num_dja_revs
-            ))
             return
         for timestamp in [post.timestamp, week_after_post, ]:
             closest_rev = get_closest_to(dja_revs, timestamp)
@@ -320,8 +309,6 @@ def check_single_post(post, ores_ep_template, session):
             try:
                 scores = ores_resp['scores'][ores_context]['wp10']['scores']
             except KeyError:
-                print('raising a ContextNotSupported error')
-                print(ores_resp)
                 raise ContextNotSupported(post, ores_context)
             try:
                 predicted_code = scores[str(closest_rev.revid)]['prediction']
