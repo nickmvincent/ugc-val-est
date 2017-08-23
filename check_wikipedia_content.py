@@ -420,6 +420,8 @@ def parse():
             ErrorLog.objects.filter(uid=obj.uid).delete()
         model.objects.filter(wiki_content_analyzed=True).update(
             has_wiki_link=False,
+            day_of_avg_score=None,
+            week_after_avg_score=None,
             wiki_content_error=0,
             num_wiki_links=0,
             wiki_content_analyzed=False,

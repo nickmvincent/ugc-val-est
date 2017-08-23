@@ -59,10 +59,13 @@ def reset_revision_info():
 def show_samples():
     """Show samples of reddit threads"""
     for model in [SampledRedditThread, SampledStackOverflowPost]:
-        samples1 = model.objects.all().values()[:10]
-        samples2 = model.objects.filter(has_wiki_link=True).values()[:10]
+        samples1 = model.objects.all().values()[:5]
+        samples2 = model.objects.filter(has_wiki_link=True).values()[:5]
         for samples in [samples1, samples2]:
-            pprint(samples)
+            for sample in samples:
+                print(model.__name__)
+                pprint(sample)
+                print('====\n')
 
 
 
@@ -138,7 +141,7 @@ if __name__ == "__main__":
             delete_old_errors()
         elif sys.argv[1] == 'reset_revision_info':
             reset_revision_info()
-        elif sys.argv[1] == 'show':
+        elif sys.argv[1] == 'show_samples':
             show_samples()
         elif sys.argv[1] == 'bulk_save':
             bulk_save()
