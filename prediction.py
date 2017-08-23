@@ -178,33 +178,24 @@ def causal_inference(
                 pass
     else:
         print('Skipping trim value as per request')
-    if simple_bin:
-        causal.blocks = int(simple_bin)
-        causal.stratify()
-        times.append(mark_time('stratify_{}'.format(simple_bin)))
-    elif paired_psm:
-        causal.stratify_pairs()
-        times.append(mark_time('paired_psm'))
+    if paired_psm:
+        causal.est_via_psm()
     else:
-        causal.stratify_s()
-        times.append(mark_time('stratify_s'))
-    out.append(str(causal.strata))
-    print(causal.strata)
-    try:
-        causal.est_via_blocking()
-        times.append(mark_time('est_via_blocking'))
-    except np.linalg.linalg.LinAlgError as err:
-        msg = 'LinAlgError with est_via_blocking: {}'.format(err)
-        err_handle(msg, out)
-    # try:
-    #     causal.est_via_weighting()
-    #     times.append(mark_time('est_via_weighting'))
-    # except np.linalg.linalg.LinAlgError as err:
-    #     msg = 'LinAlgError with est_via_weighting: {}'.format(err)
-    #     err_handle(msg, out)
-    # except ValueError as err:
-    #     msg = 'ValueError with est_via_weighting: {}'.format(err)
-    #     err_handle(msg, out)
+        if simple_bin:
+            causal.blocks = int(simple_bin)
+            causal.stratify()
+            times.append(mark_time('stratify_{}'.format(simple_bin)))
+        else:
+            causal.stratify_s()
+            times.append(mark_time('stratify_s'))
+        out.append(str(causal.strata))
+        print(causal.strata)
+        try:
+            causal.est_via_blocking()
+            times.append(mark_time('est_via_blocking'))
+        except np.linalg.linalg.LinAlgError as err:
+            msg = 'LinAlgError with est_via_blocking: {}'.format(err)
+            err_handle(msg, out)
     try:
         causal.est_via_matching()
         times.append(mark_time('est_via_matching'))

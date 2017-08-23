@@ -218,12 +218,6 @@ class CausalModel(object):
         """
         Stratifies the sample based on propensity score.
 
-        By default the sample is divided into five equal-sized bins.
-        The number of bins can be set by modifying the object
-        attribute named blocks. Alternatively, custom-sized bins can
-        be created by setting blocks equal to a sorted list of numbers
-        between 0 and 1 indicating the bin boundaries.
-
         This method should only be executed after the propensity score
         has been estimated.
         """
@@ -316,6 +310,58 @@ class CausalModel(object):
         """
 
         self.estimates['weighting'] = Weighting(self.raw_data)
+
+    
+    def est_via_psm(self):
+        """
+        Match each control to one treatment
+        """
+        subsets = []
+        pscore_order = self.raw_data['pscore'].argsort()
+        pscore = self.raw_data['pscore'][pscore_order]
+        D = self.raw_data['D'][pscore_order]
+        X = self.raw_data['X'][pscore_order]
+        Y = self.raw_data['Y'][pscore_order]
+        # now D, Y, X are all sorted
+        new_X = []
+        new_Y = []
+        new_D = []
+        for i in range(D.shape[0]):
+            if D[i] == 1:  # we've found a treatment!
+                new_X.append(X[i])
+                new_Y.append(Y[i])
+                new_D.append(D[i])
+                search_above, search_below = i, i
+                while True:
+                    search_above += 1
+                    if search_above == D.shape[0]:
+                        search_above = None
+                        break
+                    if D[search_above] == 1:
+                        break
+                while True:
+                    search_below -= 1
+                    if search_below == 0:
+                        search_below = None
+                        break
+                    if D[search_below] == 1:
+                        break
+                if search_above is None and search_below is None:
+                    continue
+                elif search_above is None:
+                    match = search_below
+                elif search_below is None:
+                    match = search_above
+                else:
+                    diff_above = pscore[search_above] - pscore[i]
+                    diff_below = pscore[search_below] - pscore[i]
+                    match = search_above if diff_above <= diff_below else search_below
+                new_X.append(X[match])
+                new_Y.append(Y[match])
+                new_D.append(D[match])
+        matched_model = CausalModel(new_Y, new_D, new_X)
+        matched_model.est_via_ols
+        print('===\n', matched_model.estimates, '===')
 
     def est_via_matching(self, weights='inv', matches=1, bias_adj=False):
         """
