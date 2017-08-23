@@ -58,14 +58,11 @@ def reset_revision_info():
 
 def show_samples():
     """Show samples of reddit threads"""
-    samples = SampledRedditThread.objects.all()[:10]
-    for sample in samples.values():
-        print(sample)
-
-    so_samples = SampledStackOverflowPost.objects.all()[:10]
-    for sample in so_samples.values():
-        print(sample)
-
+    for model in [SampledRedditThread, SampledStackOverflowPost]:
+        samples1 = model.objects.all().values()[:10]
+        samples2 = model.objects.filter(has_wiki_link=True).values()[:10]
+        for samples in [samples1, samples2]:
+            pprint(samples)
 
 
 
