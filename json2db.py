@@ -46,7 +46,7 @@ def main(platform):
         if platform == 's':
             try:
                 num = int(path[-3:])
-            except NameError:
+            except:
                 continue
             if num < 46:
                 print('skipping bc less than 46')
