@@ -212,8 +212,8 @@ def check_single_post(post, ores_ep_template, session):
         else:
             norm_title = dja_link.title
         norm_title = norm_title[0].upper() + norm_title[1:]
-        norm_title.replace(' ', '_')
-        norm_title.replace('/', '%2F')
+        norm_title = norm_title.replace(' ', '_')
+        norm_title = norm_title.replace('/', '%2F')
         pageviews_prev_week = make_pageview_request(
             session,
             title=norm_title, start=week_before_post.strftime(pageview_api_str_fmt),
