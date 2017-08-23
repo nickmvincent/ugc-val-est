@@ -359,8 +359,8 @@ class CausalModel(object):
                 new_X.append(X[match])
                 new_Y.append(Y[match])
                 new_D.append(D[match])
-        matched_model = CausalModel(new_Y, new_D, new_X)
-        matched_model.est_via_ols
+        matched_model = CausalModel(np.array(new_Y), np.array(new_D), np.array(new_X))
+        matched_model.est_via_ols()
         print('===\n', matched_model.estimates, '===')
 
     def est_via_matching(self, weights='inv', matches=1, bias_adj=False):
