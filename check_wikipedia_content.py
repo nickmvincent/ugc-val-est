@@ -296,6 +296,10 @@ def check_single_post(post, ores_ep_template, session):
             try:
                 if 'lastrev_date' not in rev_kwargs:
                     rev_kwargs['lastrev_date'] = rev_kwargs['timestamp']
+                for field in ['lastrev_date', 'timestamp']:
+                    rev_kwargs[field] = datetime.datetime.strptime(
+                        rev_kwargs[field],
+                        '%Y-%m-%dT%H:%M:%SZ')
                 Revision.objects.create(**rev_kwargs)
                 revs_made += 1
             except IntegrityError as err:
