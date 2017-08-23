@@ -409,7 +409,6 @@ class Revision(models.Model):
                 self.user_retained = True
         super(Revision, self).save(*args, **kwargs)
 
-
 class ErrorLog(models.Model):
     """Each row corresponds to a post that couldn't be loaded due to some error"""
     uid = models.CharField(max_length=100, primary_key=True)

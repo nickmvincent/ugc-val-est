@@ -145,7 +145,7 @@ def make_lastrev_request(session, prefix, user):
         'format': 'json',
         'action': 'query',
         'list': 'usercontribs',
-        'rvlimit': 1,
+        'uclimit': 1,
         'ucprop': 'timestamp',
         'ucuser': user,
     }
@@ -284,11 +284,9 @@ def check_single_post(post, ores_ep_template, session):
                     session, dja_link.language_code,
                     user['name'])
                 for result_page in lastrev_pages:
-                    pages = result_page['pages']
-                    for _, page in pages.items():
-                        if 'revisions' in page:
-                            lastrev = page['revisions'][0]
-                            user_kwargs['lastrev_date'] = lastrev['timestamp']
+                    contribs = result_page['usercontribs']
+                    lastrev = contribs[0]
+                    user_kwargs['lastrev_date'] = lastrev['timestamp']
                 username_cache[user['name']] = user_kwargs
         revs_made = 0
         for rev_kwargs in rev_kwargs_lst:
