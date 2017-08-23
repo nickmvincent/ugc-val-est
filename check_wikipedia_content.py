@@ -125,7 +125,7 @@ def make_pageview_request(session, **kwargs):
     endpoint = base.format(**kwargs)
     result = session.get(endpoint).json()
     try:
-        result = results['items']
+        result = result['items']
     except KeyError:
         print(endpoint)
         print(result)

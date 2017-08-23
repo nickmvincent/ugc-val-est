@@ -44,7 +44,10 @@ def main(platform):
         print(path)
         prefix = path[:path.find('/')]
         if platform == 's':
-            num = int(path[-3:])
+            try:
+                num = int(path[-3:])
+            except NameError:
+                continue
             if num < 46:
                 print('skipping bc less than 46')
                 continue
