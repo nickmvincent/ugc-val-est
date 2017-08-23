@@ -87,7 +87,7 @@ class MissingOresResponse(Exception):
 # 5 is mystery
 
 
-def make_mediawiki_request(session, base, params):
+def make_mediawiki_request(session, base, params, verbose=False):
     """
     Args:
         endpoint - a mediawiki api endpoint, fully formated (not template)
@@ -102,7 +102,13 @@ def make_mediawiki_request(session, base, params):
         # Modify it with the values returned in the 'continue' section of the last result.
         req.update(last_continue)
         # Call API
+        if verbose:
+            print(base + '?' + '&'.join(
+                ['{}={}'.format(key, val) for key, val in req.items()]
+            ))
         result = session.get(base, params=req).json()
+        if verbose:
+            print(result)
         if 'error' in result:
             print('err', result['error'])
         if 'warnings' in result:
@@ -135,16 +141,15 @@ def make_lastrev_request(session, prefix, user):
     Returns the last revision a user made.
     """
     base = 'https://{}.wikipedia.org/w/api.php'.format(prefix)
-    rvprop_params = ['timestamp', ]
     params = {
         'format': 'json',
         'action': 'query',
         'prop': 'revisions',
         'rvlimit': 1,
-        'rvprop': '|'.join(rvprop_params),
+        'rvprop': 'timestamp',
         'rvuser': user,
     }
-    return make_mediawiki_request(session, base, params)
+    return make_mediawiki_request(session, base, params, verbose=True)
 
 
 def make_revid_request(session, prefix, title, start, end=None):
@@ -283,7 +288,6 @@ def check_single_post(post, ores_ep_template, session):
                     for _, page in pages.items():
                         if 'revisions' in page:
                             lastrev = page['revisions'][0]
-                            print(lastrev)
                             user_kwargs['lastrev_date'] = lastrev['timestamp']
                 username_cache[user['name']] = user_kwargs
         revs_made = 0
@@ -292,6 +296,8 @@ def check_single_post(post, ores_ep_template, session):
                 for key, val in username_to_user_kwargs.get(rev_kwargs['user'], {}).items():
                     rev_kwargs[key] = val
             try:
+                if 'lastrev_date' not in rev_kwargs:
+                    rev_kwargs['lastrev_date'] = rev_kwargs['timestamp']
                 Revision.objects.create(**rev_kwargs)
                 revs_made += 1
             except IntegrityError as err:
