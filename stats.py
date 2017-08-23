@@ -439,7 +439,11 @@ def main(platform='r', rq=1, calculate_frequency=False):
     if rq == 3:
         variables = [
             ('num_edits', 'num_edits_prev_week'),
+            ('norm_change_edits', make_method_getter('norm_change_edits')),
             ('percent_new_editors', make_method_getter('percent_new_editors')),
+            ('percent_active_editors', make_method_getter('percent_active_editors')),
+            ('percent_active_editors', make_method_getter('percent_active_editors')),
+            ('percent_inactive_editors', make_method_getter('percent_inactive_editors')),
             ('num_active_edits', 'num_active_edits_prev_week'),
             ('num_inactive_edits', 'num_inactive_edits_prev_week'),
             ('num_major_edits', 'num_major_edits_prev_week'),
@@ -448,15 +452,6 @@ def main(platform='r', rq=1, calculate_frequency=False):
                 make_method_getter('percent_of_revs_preceding_post')),
             ('change_in_quality', make_method_getter('change_in_quality')),
         ]
-        # methods = [
-        #     'raw_change_edits', 'norm_change_edits', 
-        #     'percent_new_editors', 'raw_change_active_editors',
-        #     'raw_change_inactive_editors', 'raw_change_major_edits',
-        #     'raw_change_minor_edits', 'percent_of_revs_preceding_post',
-        #     'change_in_quality',
-        # ]
-        # variables = [
-        #     (method, make_method_getter(method)) for method in methods]
     output_filename = "{}_{}_stats.csv".format(platform, rq)
     descriptive_stats = {}
     inferential_stats = {}

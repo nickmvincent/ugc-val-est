@@ -42,7 +42,7 @@ def list_textual_metrics(prefix):
     for metric in [
             'length', 'percent_uppercase',
             'percent_spaces', 'percent_punctuation',
-            # 'starts_capitalized',
+            'starts_capitalized',
             'coleman_liau_index',
     ]:
         ret.append('{}_{}'.format(prefix, metric))
@@ -57,8 +57,7 @@ def list_common_features():
     """
     return [
         'day_of_week', 'day_of_month',
-        'hour', 'body_num_links',
-        'seconds_since_user_creation',
+        'hour', 'seconds_since_user_creation',
     ]
 
 def list_reddit_specific_features():
@@ -74,7 +73,8 @@ def list_stack_specific_features():
     body_features = list_textual_metrics('body')
     return body_features + [
         'user_reputation', 
-        # 'num_tags',
+        'body_num_links',
+        'num_tags',
         # commented out until this is implemente fully
-        # 'response_time',
+        'response_time',
     ]

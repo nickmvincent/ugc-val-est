@@ -120,6 +120,16 @@ class Post(models.Model):
             return self.num_new_edits / self.num_edits * 100.0
         else:
             return 0
+    def percent_active_editors(self):
+        if self.num_edits:
+            return self.num_active_edits / self.num_edits * 100.0
+        else:
+            return 0
+    def percent_inactive_editors(self):
+        if self.num_edits:
+            return self.num_inactive_edits / self.num_edits * 100.0
+        else:
+            return 0
     def change_in_quality(self):
         if self.week_after_avg_score is None or self.day_of_avg_score is None:
             return 0
