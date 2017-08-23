@@ -206,19 +206,26 @@ def check_single_post(post, ores_ep_template, session):
         week_after_post_str = week_after_post.strftime(wiki_api_str_fmt)
 
         day_of_post_short_str = post.timestamp.strftime(pageview_api_str_fmt)
+        hashtag_index = dja_link.title.find('#')
+        if hashtag_index != -1:
+            norm_title = dja_link.title[:hashtag_index]
+        else:
+            norm_title = dja_link.title
+        norm_title[0] = norm_title[0].upper()
+        norm_title.replace(' ', '_')
         pageviews_prev_week = make_pageview_request(
             session,
-            title=dja_link.title, start=week_before_post.strftime(day_of_post_short_str),
+            title=norm_title, start=week_before_post.strftime(day_of_post_short_str),
             end=day_of_post_short_str)
         pageviews = make_pageview_request(
             session,
-            title=dja_link.title, start=day_of_post_short_str,
+            title=norm_title, start=day_of_post_short_str,
             end=week_after_post.strftime(day_of_post_short_str))
         post.num_wiki_pageviews_prev_week = sum([entry['views'] for entry in pageviews_prev_week])        
         post.num_wiki_pageviews = sum([entry['views'] for entry in pageviews])
         revisions = []
         revid_result_pages = make_revid_request(
-            session, dja_link.language_code, dja_link.title, week_before_post_str,
+            session, dja_link.language_code, norm_title, week_before_post_str,
             week_after_post_str)
         for result_page in revid_result_pages:
             pages = result_page['pages']
