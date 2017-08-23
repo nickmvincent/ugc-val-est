@@ -393,7 +393,7 @@ class Revision(models.Model):
     timestamp = models.DateTimeField(default=timezone.now)
     wiki_link = models.ForeignKey(WikiLink)
     revid = models.CharField(max_length=50, primary_key=True)
-    lastrev_date = models.DateTimeField()
+    lastrev_date = models.DateTimeField(blank=True, none=True)
     user_retained = models.BooleanField(default=False)
     score = models.IntegerField(default=-1)
     user = models.CharField(max_length=100)
