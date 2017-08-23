@@ -4,6 +4,7 @@ Helper functions to interface with DB so we don't have to use pgadmin...
 import os
 import sys
 from collections import defaultdict
+from pprint import pprint
 
 
 def delete_old_errors():
@@ -44,6 +45,7 @@ def reset_revision_info():
     for model in [SampledRedditThread, SampledStackOverflowPost]:
         model.objects.filter(wiki_content_analyzed=True).update(
             has_wiki_link=False,
+            wiki_content_error=0,
             num_wiki_links=0,
             day_of_avg_score=None,
             week_after_avg_score=None,

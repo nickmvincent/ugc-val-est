@@ -252,7 +252,6 @@ def check_single_post(post, ores_ep_template, session):
         username_to_user_kwargs = {}
         rev_kwargs_lst = []
         revids = []
-        num_revisions_returned = len(revisions)
         for rev_obj in revisions:
             rev_kwargs = {}
             for rev_field in Revision._meta.get_fields():
