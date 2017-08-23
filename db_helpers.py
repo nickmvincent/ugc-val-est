@@ -30,7 +30,6 @@ def reset_revision_info():
         model.objects.filter(wiki_content_analyzed=True).update(
             has_wiki_link=False,
             num_wiki_links=0,
-            day_prior_avg_score=None,
             day_of_avg_score=None,
             week_after_avg_score=None,
             wiki_content_analyzed=False,

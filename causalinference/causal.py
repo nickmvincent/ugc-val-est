@@ -344,7 +344,7 @@ class CausalModel(object):
                     if search_below == 0:
                         search_below = None
                         break
-                    if D[search_below] == 1:
+                    if D[search_below] == 0:
                         break
                 if search_above is None and search_below is None:
                     continue
@@ -359,6 +359,7 @@ class CausalModel(object):
                 new_X.append(X[match])
                 new_Y.append(Y[match])
                 new_D.append(D[match])
+        
         matched_model = CausalModel(np.array(new_Y), np.array(new_D), np.array(new_X))
         matched_model.est_via_ols()
         print('===\n', matched_model.estimates, '===')
