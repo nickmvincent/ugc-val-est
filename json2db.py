@@ -20,7 +20,7 @@ def prefix_to_model(prefix):
         return RedditPost
     return {
         'stackoverflow-answers': StackOverflowAnswer,
-        'stackoverflow-questions': StackOverflowQuestion,
+        'stackoverflow-questions2': StackOverflowQuestion,
         'stackoverflow-users': StackOverflowUser,
     }[prefix]
 
@@ -44,7 +44,11 @@ def main(platform):
         print(path)
         prefix = path[:path.find('/')]
         if platform == 's':
-            if 'stackoverflow-questions2' not in prefix and 'stackoverflow-answers' not in prefix:
+            num = int(path[-3:])
+            if num < 46:
+                print('skipping bc less than 46')
+                continue
+            if 'stackoverflow-questions2' not in prefix:
                 print('prefix {} - manual override'.format(prefix))
                 continue
             if 'reddit' in prefix:
