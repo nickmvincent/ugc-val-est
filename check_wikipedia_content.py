@@ -217,17 +217,12 @@ def check_single_post(post, ores_ep_template, session):
         norm_title = norm_title.replace('/', '%2F')
         pageviews_prev_week = make_pageview_request(
             session,
-            title=norm_title, start=week_before_post.strftime(pageview_api_str_fmt),
-            end=day_of_post_short_str)
+            title=norm_title, start=week_before_post.strftime(pageview_api_str_fmt) + '00',
+            end=day_of_post_short_str + '00')
         pageviews = make_pageview_request(
             session,
-            title=norm_title, start=day_of_post_short_str,
-            end=week_after_post.strftime(pageview_api_str_fmt))
-        if not pageviews_prev_week and not pageviews:
-            msg = '#6: No pageviews, attempted with:{}|{}|{}'.format(
-                norm_title, day_of_post_short_str, week_after_post.strftime(pageview_api_str_fmt)
-            )
-            ErrorLog.objects.create(uid=post.uid, msg=msg)
+            title=norm_title, start=day_of_post_short_str + '00',
+            end=week_after_post.strftime(pageview_api_str_fmt) + '00')
         post.num_wiki_pageviews_prev_week = sum([entry['views'] for entry in pageviews_prev_week])        
         post.num_wiki_pageviews = sum([entry['views'] for entry in pageviews])
         revisions = []
