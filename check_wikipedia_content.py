@@ -144,10 +144,10 @@ def make_lastrev_request(session, prefix, user):
     params = {
         'format': 'json',
         'action': 'query',
-        'prop': 'revisions',
+        'prop': 'usercontribs',
         'rvlimit': 1,
-        'rvprop': 'timestamp',
-        'rvuser': user,
+        'ucprop': 'timestamp',
+        'ucuser': user,
     }
     return make_mediawiki_request(session, base, params, verbose=True)
 
