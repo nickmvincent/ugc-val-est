@@ -294,8 +294,9 @@ def check_single_post(post, ores_ep_template, session):
             try:
                 Revision.objects.create(**rev_kwargs)
                 revs_made += 1
-            except IntegrityError:
+            except IntegrityError as err:
                 print('integrity error occurred')
+                print(err)
                 print(rev_kwargs)
                 pass
         print('revs_made', revs_made)
