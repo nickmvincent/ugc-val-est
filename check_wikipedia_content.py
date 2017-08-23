@@ -226,7 +226,7 @@ def check_single_post(post, ores_ep_template, session):
             msg = '#6: No pageviews, attempted with:{}|{}|{}'.format(
                 norm_title, day_of_post_short_str, week_after_post.strftime(pageview_api_str_fmt)
             )
-            ErrorLog.objects.create(post.uid, msg)
+            ErrorLog.objects.create(uid=post.uid, msg=msg)
         post.num_wiki_pageviews_prev_week = sum([entry['views'] for entry in pageviews_prev_week])        
         post.num_wiki_pageviews = sum([entry['views'] for entry in pageviews])
         revisions = []
