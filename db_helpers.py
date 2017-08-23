@@ -104,19 +104,23 @@ def link_save():
 
 def sample_articles():
     """Prints out a sample of URLs to text file"""
-    num_samples = 100
+    num_samples = 50
     models = [SampledRedditThread, SampledStackOverflowPost]
     for model in models:
         outfilename = '{}_{}_articles.txt'.format(
             model.__name__, num_samples
         )
         with open(outfilename, 'w') as outfile:
-            qs = model.objects.all().order_by('?')[:num_samples]
+            qs = model.objects.filter(has_wiki_link=True).exclude(context='todayilearned').exclude(context__icontains='borntoday').order_by('?')[:num_samples]
             for obj in qs:
-                for wiki_link in obj.wiki_links:
-                    line = ','.join([
-                        wiki_link.title, wiki_link.language_code, wiki_link.url,
-                    ])
+                for wiki_link in obj.wiki_links.all():
+                    if model == SampledRedditThread:
+                        fields = [
+                            obj.title, obj.context, str(obj.timestamp), wiki_link.title
+                        ]
+                    else:
+                        fields = [wiki_link.title, str(obj.timestamp)]
+                    line = ', '.join(fields)
                     print(line)
                     outfile.write(line + '\n')
 
