@@ -1,3 +1,4 @@
+import time
 from __future__ import division
 import numpy as np
 from itertools import chain
@@ -24,8 +25,13 @@ class Matching(Estimator):
 		for name in estimation_names() + standard_err_names():
 			self._dict[name] = []
 
+		y_index = 0
 		for y_c, y_t in zip(Y_c.T, Y_t.T):
+			print('Do calc for variable number {}'.format(y_index))
+			y_index += 1
+			print('  matching controls...')
 			matches_c = [match(X_i, X_t, W, m) for X_i in X_c]
+			print('  matching treatments...')
 			matches_t = [match(X_i, X_c, W, m) for X_i in X_t]
 			yhat_c = np.array([y_t[idx].mean() for idx in matches_c])
 			yhat_t = np.array([y_c[idx].mean() for idx in matches_t])
@@ -84,9 +90,9 @@ def smallestm(d, m):
 
 
 def match(X_i, X_m, W, m):
-
+	start_time = time.time()
 	d = norm(X_i, X_m, W)
-
+	print('norm took {}'.format(time.time() - start_time))
 	return smallestm(d, m)
 
 
