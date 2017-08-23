@@ -32,7 +32,12 @@ def default_to_zero(val):
 
 def query_django_tables(query):
     """This function executes raw SQL to query tables created by django"""
+    
+    print(query)
     with connections['secondary'].cursor() as cursor:
+        cursor.execute("SELECT COUNT(*) from portal_stackoverflowanswer")
+        rows = cursor.fetchall()
+        print(rows)    
         cursor.execute(query)
         rows = cursor.fetchall()
     return rows

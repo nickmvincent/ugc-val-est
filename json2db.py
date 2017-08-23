@@ -136,12 +136,7 @@ def parse():
         description='This module imports data from json (stored in GCS) to DB (postgres)')
     parser.add_argument(
         'platform', help='the platform to use. "r" for reddit and "s" for stack overflow')
-    parser.add_argument(
-        'reset_table', default=None, help='a table to reset')
     args = parser.parse_args()
-    if args.reset_table:
-        if args.reset_table == 'portal_stackoverflowanswer':
-            StackOverflowAnswer.objects.all().delete()
     main(args.platform)
 
 
