@@ -17,8 +17,12 @@ def show_wiki_errors():
         counter = defaultdict(int)
         qs = model.objects.exclude(wiki_content_error=0)
         for obj in qs.values():
-            print(obj)
-            counter[obj.wiki_content_error] += 1
+            if obj.get('url'):
+                print(obj['url'])
+            else:
+                print(obj['body'])
+            print(obj['wiki_content_error'])
+            counter[obj['wiki_content_error']] += 1
         pprint(counter)
 
 
