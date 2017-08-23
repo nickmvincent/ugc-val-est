@@ -215,12 +215,12 @@ def check_single_post(post, ores_ep_template, session):
         norm_title.replace(' ', '_')
         pageviews_prev_week = make_pageview_request(
             session,
-            title=norm_title, start=week_before_post.strftime(day_of_post_short_str),
+            title=norm_title, start=week_before_post.strftime(pageview_api_str_fmt),
             end=day_of_post_short_str)
         pageviews = make_pageview_request(
             session,
             title=norm_title, start=day_of_post_short_str,
-            end=week_after_post.strftime(day_of_post_short_str))
+            end=week_after_post.strftime(pageview_api_str_fmt))
         post.num_wiki_pageviews_prev_week = sum([entry['views'] for entry in pageviews_prev_week])        
         post.num_wiki_pageviews = sum([entry['views'] for entry in pageviews])
         revisions = []
@@ -334,7 +334,7 @@ def identify_links(filtered, field):
     filtered.update(has_wiki_link=False, num_wiki_links=0)
     for post in filtered:
         post.wiki_links.clear()
-        if count % 100 == 0:
+        if count % 500 == 0:
             print('{}'.format(count), end='|')
         count += 1
         urls = extract_urls(post.body, WIK) if field == 'body' else [post.url]
@@ -350,6 +350,7 @@ def identify_links(filtered, field):
             post.has_wiki_link = True
             post.num_wiki_links += 1
             post.save()
+    print('\n')
 
 def retrieve_links_info(filtered):
     """
