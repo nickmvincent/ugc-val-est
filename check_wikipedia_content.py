@@ -211,7 +211,7 @@ def check_single_post(post, ores_ep_template, session):
             norm_title = dja_link.title[:hashtag_index]
         else:
             norm_title = dja_link.title
-        norm_title[0] = norm_title[0].upper()
+        norm_title = norm_title[0].upper() + norm_title[1:]
         norm_title.replace(' ', '_')
         pageviews_prev_week = make_pageview_request(
             session,
