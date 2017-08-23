@@ -150,7 +150,7 @@ def make_lastrev_request(session, prefix, user):
         'ucprop': 'timestamp',
         'ucuser': user,
     }
-    return make_mediawiki_request(session, base, params, verbose=True)
+    return make_mediawiki_request(session, base, params)
 
 
 def make_revid_request(session, prefix, title, start, end=None):

@@ -1,5 +1,5 @@
-import time
 from __future__ import division
+import time
 import numpy as np
 from itertools import chain
 from functools import reduce
@@ -90,9 +90,7 @@ def smallestm(d, m):
 
 
 def match(X_i, X_m, W, m):
-	start_time = time.time()
 	d = norm(X_i, X_m, W)
-	print('norm took {}'.format(time.time() - start_time))
 	return smallestm(d, m)
 
 
