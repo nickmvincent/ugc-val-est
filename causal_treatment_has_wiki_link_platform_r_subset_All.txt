@@ -88,9 +88,9 @@ Treatment Effect Estimates: Matching
        Y0: ATT     77.237     36.765      2.101      0.036      5.178    149.296
        Y1: ATT      6.021      5.426      1.110      0.267     -4.613     16.655
 
-records_loaded:16.102018117904663
-rows_loaded:0.5802145004272461
-CausalModel:0.7941844463348389
-est_via_ols:3.817898750305176
-propensity:96.35267972946167
-est_via_matching:1245.2284240722656
+records_loaded:15.00464129447937
+rows_loaded:0.5287632942199707
+CausalModel:0.7804429531097412
+est_via_ols:4.415544271469116
+propensity:85.0170567035675
+est_via_matching:1236.6337912082672
