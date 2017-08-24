@@ -51,7 +51,7 @@ def main(platform):
             #if num < 46:
             #    print('skipping bc less than 46')
             #    continue
-            if 'stackoverflow-answers' not in prefix:
+            if 'stackoverflow-questions2' not in prefix:
                 print('prefix {} - manual override'.format(prefix))
                 continue
             if 'reddit' in prefix:
