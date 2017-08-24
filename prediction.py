@@ -105,6 +105,7 @@ def causal_inference(
     qs, features, outcomes = get_qs_features_and_outcomes(
         platform, num_rows=num_rows, filter_kwargs=filter_kwargs)
     features.append(treatment_feature)
+    features.append('uid')
 
     filename = 'causal_treatment_{}_platform_{}_subset_{}.txt'.format(
         treatment_feature, platform,
@@ -117,7 +118,7 @@ def causal_inference(
 
     feature_rows = []
     successful_fields = []
-    for feature in features + ['uid']:
+    for feature in features:
         print(feature)
         feature_row = getattr(records, feature)
         if feature == treatment_feature:
