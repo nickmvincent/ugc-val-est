@@ -107,7 +107,7 @@ class Post(models.Model):
     num_wiki_pageviews_prev_week = models.IntegerField(default=0)
 
     def norm_change_edits(self):
-        total = self.num_edits + self.num_edits_prev_week
+        total = float(self.num_edits + self.num_edits_prev_week)
         return (
             self.num_edits - self.num_edits_prev_week) / total if total else None
 
