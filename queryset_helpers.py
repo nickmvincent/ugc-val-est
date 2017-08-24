@@ -76,5 +76,5 @@ def list_stack_specific_features():
         'body_num_links',
         'num_tags',
         # commented out until this is implemente fully
-        'response_time',
+        # 'response_time',
     ]

@@ -140,7 +140,7 @@ def make_pageview_request(session, **kwargs):
     try:
         result = result['items']
     except KeyError:
-        result = []
+        result = None
     return result
 
 def make_lastrev_request(session, prefix, user):
@@ -233,8 +233,10 @@ def check_single_post(post, ores_ep_template, session):
             session,
             title=norm_title, start=day_of_post_short_str + '00',
             end=week_after_post.strftime(pageview_api_str_fmt) + '00')
-        post.num_wiki_pageviews_prev_week = sum([entry['views'] for entry in pageviews_prev_week])    
-        post.num_wiki_pageviews = sum([entry['views'] for entry in pageviews])
+        if pageviews_prev_week:
+            post.num_wiki_pageviews_prev_week = sum([entry['views'] for entry in pageviews_prev_week])    
+        if pageviews:
+            post.num_wiki_pageviews = sum([entry['views'] for entry in pageviews])
         revisions = []
         revid_result_pages = make_revid_request(
             session, dja_link.language_code, dja_link.title, week_before_post_str,
