@@ -144,11 +144,11 @@ def extract_pairs(first, second):
         features = list_common_features() + list_stack_specific_features()
     
     treated_vals_string = '|'.join(['{}:{}'.format(
-        feature, getattr(treated, feature) for feature in features
-    )])
+        feature, getattr(treated, feature)) for feature in features
+    ])
     control_vals_string = '|'.join(['{}:{}'.format(
-        feature, getattr(treated, feature) for feature in features
-    )])
+        feature, getattr(treated, feature)) for feature in features
+    ])
     treated_output = 'Treatment\n{}\n{}\n'.format(
         url_template.format(first),
         treated_vals_string
