@@ -6,6 +6,12 @@ import sys
 from collections import defaultdict
 from pprint import pprint
 
+from queryset_helpers import (
+    list_common_features,
+    list_stack_specific_features,
+    list_reddit_specific_features
+)
+
 
 def delete_old_errors():
     """one off script"""
@@ -124,6 +130,36 @@ def sample_articles():
                     print(line)
                     outfile.write(line + '\n')
 
+def extract_pairs(first, second):
+    filename = 'pair_{}_{}'.format(first, second)
+    try:
+        treated = SampledRedditThread.objects.get(uid=first)
+        control = SampledRedditThread.objects.get(uid=second)
+        url_template = 'https://www.reddit.com/by_id/t3_{}'
+        features = list_common_features() + list_reddit_specific_features()
+    except Exception:
+        treated = SampledStackOverflowPost.objects.get(uid=first)
+        control = SampledStackOverflowPost.objects.get(uid=second)
+        url_template = 'https://stackoverflow.com/questions/{}'
+        features = list_common_features() + list_stack_specific_features()
+    
+    treated_vals_string = '|'.join(['{}:{}'.format(
+        feature, getattr(treated, feature) for feature in features
+    )]
+    control_vals_string = '|'.join(['{}:{}'.format(
+        feature, getattr(treated, feature) for feature in features
+    )]
+    treated_output = 'Treatment\n{}\n{}\n'.format(
+        url_template.format(first),
+        treated_vals_string
+    )
+    control_output = 'Control\n{}\n{}\n'.format(
+        url_template.format(second),
+        control_vals_string
+    )
+    with open(filename, 'w') as outfile:
+        output.write(treated_output)
+        output.write(control_output)
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dja.settings")
@@ -153,3 +189,5 @@ if __name__ == "__main__":
             show_wiki_errors()
         elif sys.argv[1] == 'sample_articles':
             sample_articles()
+        elif sys.argv[1] == 'extract_pairs':
+            extract_pairs(sys.argv[2], sys.argv[3])

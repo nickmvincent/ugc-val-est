@@ -332,7 +332,7 @@ def parse():
         else:
             treatments = [args.treatment]
         if args.platform is None:
-            platforms = ['r', 's']
+            platforms = ['r', 's', ]
         else:
             platforms = [args.platform]
         for platform in platforms:
@@ -342,12 +342,7 @@ def parse():
                     args.num_rows, args.simple_psm,
                     args.simple_bin, args.trim_val,
                     args.paired_psm)
-        else:
-            causal_inference(
-                args.platform, args.treatment,
-                args.num_rows, args.simple_psm,
-                args.simple_bin, args.trim_val,
-                args.paired_psm)
+
     if args.quality:
         simple_linear(args.platform, True)
 
