@@ -331,8 +331,6 @@ def check_single_post(post, ores_ep_template, session):
             try:
                 predicted_code = scores[str(closest_rev.revid)]['prediction']
             except KeyError:
-                print('Raising MissingOresResponse')
-                print(scores)
                 raise MissingOresResponse(post, closest_rev.revid)
             closest_rev.score = map_ores_code_to_int(predicted_code)
             closest_rev.save()

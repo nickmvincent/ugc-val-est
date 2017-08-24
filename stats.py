@@ -403,7 +403,10 @@ def main(platform='r', rq=1, calculate_frequency=False):
         subsample_kwargs = {}
         treatment_kwargs = {'has_wiki_link': True, }
     if rq == 2:
-        subsample_kwargs = {}
+        subsample_kwargs = {
+            'has_wiki_link': True,
+            'day_of_avg_score__isnull': False,
+        }
         treatment_kwargs = {'has_good_wiki_link': True, }
     if rq == 3:
         subsample_kwargs = {
@@ -433,6 +436,7 @@ def main(platform='r', rq=1, calculate_frequency=False):
             'qs': SampledStackOverflowPost.objects.filter(**subsample_kwargs),
             'name': 'All SO'
         }]
+        variables += ['num_pageviews']
         variables += list_stack_specific_features()
         extractor = get_links_from_body
         extract_from = 'body'
@@ -440,6 +444,8 @@ def main(platform='r', rq=1, calculate_frequency=False):
         variables = [
             ('num_edits', 'num_edits_prev_week'),
             ('norm_change_edits', make_method_getter('norm_change_edits')),
+            'num_new_editors',
+            'num_new_editors_retained',
             ('percent_new_editors', make_method_getter('percent_new_editors')),
             ('percent_active_editors', make_method_getter('percent_active_editors')),
             ('percent_active_editors', make_method_getter('percent_active_editors')),
@@ -450,6 +456,8 @@ def main(platform='r', rq=1, calculate_frequency=False):
             ('num_minor_edits', 'num_minor_edits_prev_week'),
             ('percent_of_revs_preceding_post',
                 make_method_getter('percent_of_revs_preceding_post')),
+            ('change_in_quality',
+                make_method_getter('change_in_quality')),
             ('num_wiki_pageviews', 'num_wiki_pageviews_prev_week')
         ]
     output_filename = "{}_{}_stats.csv".format(platform, rq)

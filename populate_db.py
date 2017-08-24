@@ -190,6 +190,10 @@ def sample_so(data_source, rows_to_sample, rows_per_query):
             'dja_name': 'num_other_answers',
         },
         {
+            'bq_name': questions_table + '.answer_count',
+            'dja_name': 'question_score',
+        },
+        {
             'bq_name': questions_table + '.creation_date as question_asked_utc',
             'dja_name': 'question_asked_utc',
         },
@@ -199,7 +203,7 @@ def sample_so(data_source, rows_to_sample, rows_per_query):
         },
     ]
     table = ("""{answers}
-            LEFT JOIN {users} ON {answers}.owner_user_id = {users}.id
+            LEFT JOIN {users} AS ownertable ON {answers}.owner_user_id = {users}.id
             LEFT JOIN {questions} ON {answers}.parent_id = {questions}.id
             """
             ).format(
@@ -280,6 +284,10 @@ def sample_reddit(data_source, rows_to_sample, rows_per_query):
         queries.append(query)
     sample_from_data_source(
         data_source, col_objects, queries, SampledRedditThread, rows_to_sample, rows_per_query)
+
+def sample_using_django_api():
+    pass
+
 
 
 def parse():
