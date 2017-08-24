@@ -117,11 +117,13 @@ def causal_inference(
 
     feature_rows = []
     successful_fields = []
-    for feature in features:
+    for feature in features + ['uid']:
         print(feature)
         feature_row = getattr(records, feature)
         if feature == treatment_feature:
             D = feature_row
+        if feature == 'uid':
+            ids = feature_row
         elif all(x == 0 for x in feature_row):
             print(
                 'Feature {} is all zeros - will lead to singular matrix'.format(feature))
@@ -148,7 +150,7 @@ def causal_inference(
     X = np.transpose(np.array(feature_rows))
     Y = np.transpose(np.array(outcome_rows))
 
-    causal = CausalModel(Y, D, X)
+    causal = CausalModel(Y, D, X, ids=ids)
     times.append(mark_time('CausalModel'))
     out.append(str(causal.summary_stats))
     print(causal.summary_stats)
@@ -180,9 +182,12 @@ def causal_inference(
     else:
         print('Skipping trim value as per request')
     if paired_psm:
-        psm_est = causal.est_via_psm()
+        psm_est, psm_rows = causal.est_via_psm()
         print(str(psm_est))
         out.append(str(psm_est))
+
+        with open('PSM_PAIRS' + filename, 'w') as outfile:
+            outfile.write('\n'.join(psm_rows))
     else:
         if simple_bin:
             causal.blocks = int(simple_bin)

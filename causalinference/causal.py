@@ -12,8 +12,8 @@ class CausalModel(object):
     Class that provides the main tools of Causal Inference.
     """
 
-    def __init__(self, Y, D, X, pairs=False):
-        self.old_data = Data(Y, D, X, pairs)
+    def __init__(self, Y, D, X, pairs=False, ids=None):
+        self.old_data = Data(Y, D, X, pairs, ids)
         self.reset()
 
     def reset(self):
@@ -24,7 +24,8 @@ class CausalModel(object):
 
         Y, D, X = self.old_data['Y'], self.old_data['D'], self.old_data['X']
         pairs = self.old_data['pairs']
-        self.raw_data = Data(Y, D, X, pairs)
+        ids = self.old_data['ids']
+        self.raw_data = Data(Y, D, X, pairs, ids)
         self.summary_stats = Summary(self.raw_data)
         self.propensity = None
         self.cutoff = None
@@ -322,10 +323,12 @@ class CausalModel(object):
         D = self.raw_data['D'][pscore_order]
         X = self.raw_data['X'][pscore_order]
         Y = self.raw_data['Y'][pscore_order]
+        ids = self.raw_data['ids'][pscore_order]
         # now D, Y, X are all sorted
         new_X = []
         new_Y = []
         new_D = []
+        psm_rows = []
         for i in range(D.shape[0]):
             if D[i] == 1:  # we've found a treatment!
                 new_X.append(X[i])
@@ -359,10 +362,15 @@ class CausalModel(object):
                 new_X.append(X[match])
                 new_Y.append(Y[match])
                 new_D.append(D[match])
+                psm_rows.append(
+                    'Treated item {} with pscore {} paired to control item {} with pscore {}'.format(
+                        ids[i], pscore[i], ids[match], pscore[match]
+                    )
+                )
         
         matched_model = CausalModel(np.array(new_Y), np.array(new_D), np.array(new_X))
         matched_model.est_via_ols()
-        return matched_model.estimates
+        return matched_model.estimates, psm_rows
 
     def est_via_matching(self, weights='inv', matches=1, bias_adj=False):
         """

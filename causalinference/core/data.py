@@ -43,7 +43,7 @@ class Data(Dict):
 	Dictionary-like class containing basic data.
 	"""
 
-	def __init__(self, outcome, treatment, covariates, pairs=False):
+	def __init__(self, outcome, treatment, covariates, pairs=False, ids=None):
 		"""
 		This is where matrix dimensionality N X K is explictly defined
 		ie.
@@ -61,6 +61,7 @@ class Data(Dict):
 		self._dict['D'] = D
 		self._dict['X'] = X
 		self._dict['pairs'] = pairs
+		self._dict['ids'] = ids
 		self._dict['N'], self._dict['K'] = X.shape
 		self._dict['num_outputs'] = Y.shape[1]
 		self._dict['controls'] = (D==0)
