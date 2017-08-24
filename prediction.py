@@ -284,7 +284,8 @@ def parse():
     parser = argparse.ArgumentParser(
         description='Train predictive model')
     parser.add_argument(
-        '--platform', help='the platform to use. "r" for reddit and "s" for stack overflow')
+        '--platform', nargs='?', default=None,
+        help='the platform to use. "r" for reddit and "s" for stack overflow')
     parser.add_argument(
         '--treatment', nargs='?', default=None, help='the treatment feature to use')
     parser.add_argument(
@@ -303,7 +304,7 @@ def parse():
         help='to use simple PSM')
     parser.add_argument(
         '--simple_bin', nargs='?', default=None,
-        help='add this arguement if you want to just simple manual binning (i.e. 2 bins)')
+        help='add this argument if you want to just simple manual binning (i.e. 2 bins)')
     parser.add_argument(
         '--quality',
         action='store_true',
@@ -320,7 +321,6 @@ def parse():
     if args.simple:
         simple_linear(args.platform)
     if args.causal:
-        platforms, rqs = plat_rq_argparse(args)
         if args.treatment is None:
             treatments = ['has_wiki_link', 'has_good_wiki_link']
         else:
@@ -350,7 +350,6 @@ if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dja.settings")
     import django
     django.setup()
-    from stats import plat_rq_argparse
     from portal.models import (
         SampledRedditThread, SampledStackOverflowPost,
     )
