@@ -90,6 +90,8 @@ class Post(models.Model):
     seconds_since_user_creation = models.IntegerField(null=True, blank=True)
 
     num_edits = models.IntegerField(default=0)
+    num_new_editors = models.IntegerField(default=0)
+    num_new_editors_retained = models.IntegerField(default=0)
     num_new_edits = models.IntegerField(default=0)
     num_old_edits = models.IntegerField(default=0)
     num_inactive_edits = models.IntegerField(default=0)
@@ -103,8 +105,21 @@ class Post(models.Model):
     num_major_edits_prev_week = models.IntegerField(default=0)
     num_edits_preceding_post = models.IntegerField(default=0)
 
-    num_wiki_pageviews = models.IntegerField(default=0)
-    num_wiki_pageviews_prev_week = models.IntegerField(default=0)
+    num_wiki_pageviews = models.IntegerField(blank=True, null=True)
+    num_wiki_pageviews_prev_week = models.IntegerField(blank=True, null=True)
+
+    def reset_edit_metrics(self):
+        for metric in [
+            'num_edits',
+            'num_new_editors', 'num_new_editors_retained',
+            'num_new_edits', 'num_old_edits', 'num_inactive_edits',
+            'num_active_edits', 'num_minor_edits', 'num_major_edits',
+            'num_edits_prev_week', 'num_inactive_edits_prev_week',
+            'num_active_edits_prev_week', 'num_minor_edits_prev_week',
+            'num_major_edits_prev_week', 'num_edits_preceding_post',
+        ]:
+            setattr(self, metric, 0)
+
 
     def norm_change_edits(self):
         total = float(self.num_edits + self.num_edits_prev_week)
@@ -190,75 +205,67 @@ class Post(models.Model):
         # calculate average scores if needed
 
         if self.has_wiki_link and self.wiki_content_analyzed and self.wiki_content_error == 0:
-            if self.day_of_avg_score is None:
-                field_to_dt = {
-                    'day_of': self.timestamp,
-                    'week_after': self.timestamp + datetime.timedelta(days=7),
-                }
-                num_links = 0
-                field_to_score = {field: 0 for field in field_to_dt}
-                for edit_field in [
-                        'num_edits', 'num_new_edits',
-                        'num_old_edits', 'num_inactive_edits',
-                        'num_active_edits', 'num_minor_edits',
-                        'num_major_edits', 'num_edits_prev_week',
-                        'num_inactive_edits_prev_week',
-                        'num_active_edits_prev_week',
-                        'num_minor_edits_prev_week',
-                        'num_major_edits_prev_week',
-                        'num_edits_preceding_post',
-                ]:
-                    setattr(self, edit_field, 0)                
-
-                missing_necessary_ores = False
-                for link_obj in self.wiki_links.all():
-                    num_links += 1
-                    revisions = Revision.objects.filter(wiki_link=link_obj)
-                    if len(revisions) > 0:
-                        for field, dt in field_to_dt.items():
-                            ores_score = get_closest_to(
-                                revisions, dt).score
-                            if ores_score == -1:
-                                missing_necessary_ores = True
+            self.reset_edit_metrics()
+            field_to_dt = {
+                'day_of': self.timestamp,
+                'week_after': self.timestamp + datetime.timedelta(days=7),
+            }
+            num_links = 0
+            field_to_score = {field: 0 for field in field_to_dt}
+            missing_necessary_ores = False
+            for link_obj in self.wiki_links.all():
+                num_links += 1
+                revisions = Revision.objects.filter(wiki_link=link_obj)
+                if revisions.exists():
+                    for field, dt in field_to_dt.items():
+                        ores_score = get_closest_to(
+                            revisions, dt).score
+                        if ores_score == -1:
+                            missing_necessary_ores = True
+                        else:
+                            field_to_score[field] += ores_score
+                    for revision in revisions:
+                        users_seen = {}
+                        if revision.timestamp > self.timestamp:
+                            self.num_edits += 1
+                            if revision.registration > self.timestamp:
+                                self.num_new_edits += 1
+                                if users_seen.get(revision.user) is None:
+                                    self.num_new_editors += 1
+                                    users_seen[revision.user] = True
+                                    if revision.user_retained:
+                                        self.num_new_editors_retained += 1
                             else:
-                                field_to_score[field] += ores_score
-                        for revision in revisions:
-                            if revision.timestamp > self.timestamp:
-                                self.num_edits += 1
-                                if revision.registration > self.timestamp:
-                                    self.num_new_edits += 1
-                                else:
-                                    self.num_old_edits += 1
-                                if revision.editcount <= 5:
-                                    self.num_inactive_edits += 1
-                                else:
-                                    self.num_active_edits += 1
-                                if revision.flags:
-                                    self.num_minor_edits += 1
-                                else:
-                                    self.num_major_edits += 1
+                                self.num_old_edits += 1
+                            if revision.editcount <= 5:
+                                self.num_inactive_edits += 1
                             else:
-                                self.num_edits_prev_week += 1
-                                if self.timestamp - revision.timestamp > datetime.timedelta(hours=6):
-                                    self.num_edits_preceding_post += 1
-                                if revision.editcount <= 5:
-                                    self.num_inactive_edits_prev_week += 1
-                                else:
-                                    self.num_active_edits_prev_week += 1
-                                if revision.flags:
-                                    self.num_minor_edits_prev_week += 1
-                                else:
-                                    self.num_major_edits_prev_week += 1
-                output_field_to_val = {
-                    field + '_avg_score': val / num_links for field, val in field_to_score.items()}
-                for output_field, val in output_field_to_val.items():
-                    if missing_necessary_ores:
-                        setattr(self, output_field, None)
-                    else:
-                        setattr(self, output_field, val)
-            if self.has_good_wiki_link is False and self.day_of_avg_score:
-                if self.day_of_avg_score >= 4:
-                    self.has_good_wiki_link = True
+                                self.num_active_edits += 1
+                            if revision.flags:
+                                self.num_minor_edits += 1
+                            else:
+                                self.num_major_edits += 1
+                        else:
+                            self.num_edits_prev_week += 1
+                            if self.timestamp - revision.timestamp > datetime.timedelta(hours=6):
+                                self.num_edits_preceding_post += 1
+                            if revision.editcount <= 5:
+                                self.num_inactive_edits_prev_week += 1
+                            else:
+                                self.num_active_edits_prev_week += 1
+                            if revision.flags:
+                                self.num_minor_edits_prev_week += 1
+                            else:
+                                self.num_major_edits_prev_week += 1
+            output_field_to_val = {
+                field + '_avg_score': val / num_links for field, val in field_to_score.items()}
+            for output_field, val in output_field_to_val.items():
+                if missing_necessary_ores:
+                    setattr(self, output_field, None)
+                else:
+                    setattr(self, output_field, val)
+            if self.day_of_avg_score >= 4:
+                self.has_good_wiki_link = True
         super(Post, self).save(*args, **kwargs)
 
 

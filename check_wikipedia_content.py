@@ -15,6 +15,8 @@ import requests
 from scoring_helpers import map_ores_code_to_int
 from url_helpers import extract_urls
 import pytz
+from json.decoder import JSONDecodeError
+
 
 WIK = 'wikipedia.org/wiki/'
 
@@ -133,9 +135,7 @@ def make_pageview_request(session, **kwargs):
     try:
         result = session.get(endpoint)
         result = result.json()
-    except Exception as err:
-        print(err)
-        print(endpoint)
+    except JSONDecodeError:
         return []
     try:
         result = result['items']
@@ -310,11 +310,7 @@ def check_single_post(post, ores_ep_template, session):
                 Revision.objects.create(**rev_kwargs)
                 revs_made += 1
             except IntegrityError as err:
-                print('integrity error occurred')
-                print(err)
-                print(rev_kwargs)
                 pass
-        print('revs_made', revs_made)
         dja_revs = Revision.objects.filter(revid__in=revids)
         if not dja_revs.exists():
             print('no revs found, so returning!!!')
@@ -350,7 +346,7 @@ def identify_links(filtered, field):
     for post in filtered:
         post.wiki_links.clear()
         if count % 500 == 0:
-            print('{}'.format(count), end='|')
+            print('{}'.format(count))
         count += 1
         urls = extract_urls(post.body, WIK) if field == 'body' else [post.url]
         for url in urls:
@@ -365,7 +361,6 @@ def identify_links(filtered, field):
             post.has_wiki_link = True
             post.num_wiki_links += 1
             post.save()
-    print('\n')
 
 def retrieve_links_info(filtered):
     """

@@ -450,7 +450,7 @@ def main(platform='r', rq=1, calculate_frequency=False):
             ('num_minor_edits', 'num_minor_edits_prev_week'),
             ('percent_of_revs_preceding_post',
                 make_method_getter('percent_of_revs_preceding_post')),
-            ('num_wiki_pageviews', 'num_wiki_pageviews_prev_week'
+            ('num_wiki_pageviews', 'num_wiki_pageviews_prev_week')
         ]
     output_filename = "{}_{}_stats.csv".format(platform, rq)
     descriptive_stats = {}
