@@ -158,8 +158,8 @@ def extract_pairs(first, second):
         control_vals_string
     )
     with open(filename, 'w') as outfile:
-        output.write(treated_output)
-        output.write(control_output)
+        outfile.write(treated_output)
+        outfile.write(control_output)
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dja.settings")
