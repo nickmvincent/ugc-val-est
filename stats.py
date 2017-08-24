@@ -257,7 +257,7 @@ def inferential_analysis(x_arr, y_arr, samples_related):
     """
     Performs t-test, cohen's d calculation, and mean difference calculations
     """
-    delta = abs(np.mean(x_arr) - np.mean(y_arr))
+    delta = np.mean(x_arr) - np.mean(y_arr)
     if samples_related:
         _, pval = stats.ttest_rel(
             x_arr, y_arr)
