@@ -211,7 +211,7 @@ def sample_so(data_source, rows_to_sample, rows_per_query):
         },
     ]
     table = ("""{answers}
-            LEFT JOIN {users} AS ownertable ON {answers}.owner_user_id = {users}.id
+            LEFT JOIN {users} ON {answers}.owner_user_id = {users}.id
             LEFT JOIN {questions} ON {answers}.parent_id = {questions}.id
             """
             ).format(
