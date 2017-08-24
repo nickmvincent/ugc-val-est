@@ -59,6 +59,17 @@ class Post(models.Model):
     body_starts_capitalized = models.BooleanField(default=False)
     body_coleman_liau_index = models.IntegerField(default=0)
 
+    # textual metrics for the title field
+    title = models.CharField(max_length=1182, default="")
+    title_length = models.IntegerField(default=0)
+    title_lexicon_count = models.IntegerField(default=0)
+    title_sentence_count = models.IntegerField(default=0)
+    title_percent_uppercase = models.IntegerField(default=0)
+    title_percent_spaces = models.IntegerField(default=0)
+    title_percent_punctuation = models.IntegerField(default=0)
+    title_starts_capitalized = models.BooleanField(default=False)
+    title_coleman_liau_index = models.IntegerField(default=0)
+
     score = models.IntegerField()
     num_comments = models.IntegerField(default=0)
 
@@ -203,6 +214,34 @@ class Post(models.Model):
                 except TypeError:
                     self.body_coleman_liau_index = 0
         # calculate average scores if needed
+        if self.title_length == 0:
+            self.title_length = len(self.title)
+        if self.title_length != 0:
+            if self.title_lexicon_count == 0:
+                self.title_lexicon_count = textstat.lexicon_count(self.body)
+            if self.title_sentence_count == 0:
+                self.title_sentence_count = textstat.sentence_count(self.body)
+            if self.title_percent_uppercase == 0:
+                num_uppers = sum(1 for c in self.title if c.isupper())
+                self.title_percent_uppercase = round(
+                    num_uppers / self.title_length * 100)
+            if self.title_percent_spaces == 0:
+                num_spaces = sum(1 for c in self.title if c == ' ')
+                self.title_percent_spaces = round(
+                    num_spaces / self.title_length * 100)
+            if self.title_percent_punctuation == 0:
+                num_punctuation = sum(1 for c in self.title if c in ['.', ','])
+                self.title_percent_punctuation = round(
+                    num_punctuation / self.title_length * 100)
+            if self.title_starts_capitalized is False:
+                self.title_starts_capitalized = self.title[0].isupper()
+            if self.title_lexicon_count != 0:
+                try:
+                    self.title_coleman_liau_index = round(trimmed(
+                        textstat.coleman_liau_index(self.title), 0, 16
+                    ))
+                except TypeError:
+                    self.title_coleman_liau_index = 0
 
         if self.has_wiki_link and self.wiki_content_analyzed and self.wiki_content_error == 0:
             self.reset_edit_metrics()
@@ -282,46 +321,10 @@ class SampledRedditThread(Post):
     user_is_suspended = models.BooleanField(default=False)
     user_is_deleted = models.BooleanField(default=False)
     url = models.CharField(max_length=2083)
-    title = models.CharField(max_length=1182)
-    title_length = models.IntegerField(default=0)
-    title_lexicon_count = models.IntegerField(default=0)
-    title_sentence_count = models.IntegerField(default=0)
-    title_percent_uppercase = models.IntegerField(default=0)
-    title_percent_spaces = models.IntegerField(default=0)
-    title_percent_punctuation = models.IntegerField(default=0)
-    title_starts_capitalized = models.BooleanField(default=False)
-    title_coleman_liau_index = models.IntegerField(default=0)
 
     def save(self, *args, **kwargs):
         """overload save method"""
-        if self.title_length == 0:
-            self.title_length = len(self.title)
-        if self.title_length != 0:
-            if self.title_lexicon_count == 0:
-                self.title_lexicon_count = textstat.lexicon_count(self.body)
-            if self.title_sentence_count == 0:
-                self.title_sentence_count = textstat.sentence_count(self.body)
-            if self.title_percent_uppercase == 0:
-                num_uppers = sum(1 for c in self.title if c.isupper())
-                self.title_percent_uppercase = round(
-                    num_uppers / self.title_length * 100)
-            if self.title_percent_spaces == 0:
-                num_spaces = sum(1 for c in self.title if c == ' ')
-                self.title_percent_spaces = round(
-                    num_spaces / self.title_length * 100)
-            if self.title_percent_punctuation == 0:
-                num_punctuation = sum(1 for c in self.title if c in ['.', ','])
-                self.title_percent_punctuation = round(
-                    num_punctuation / self.title_length * 100)
-            if self.title_starts_capitalized is False:
-                self.title_starts_capitalized = self.title[0].isupper()
-            if self.title_lexicon_count != 0:
-                try:
-                    self.title_coleman_liau_index = round(trimmed(
-                        textstat.coleman_liau_index(self.title), 0, 16
-                    ))
-                except TypeError:
-                    self.title_coleman_liau_index = 0
+        
         super(SampledRedditThread, self).save(*args, **kwargs)
 
 
@@ -336,6 +339,7 @@ class SampledStackOverflowPost(Post):
     num_tags = models.IntegerField(default=0)
     num_other_answers = models.IntegerField(default=0)
     question_score = models.IntegerField(default=0)
+    num_question_comments = models.IntegerField(default=0)
     response_time = models.IntegerField(blank=True, null=True)
 
     def save(self, *args, **kwargs):
@@ -441,7 +445,7 @@ class StackOverflowQuestion(models.Model):
     id = models.IntegerField(primary_key=True)
     title = models.CharField(max_length=192)
     body = models.CharField(max_length=58431)
-    accepted_answer_id = models.IntegerField(blank=True, null=True)
+    accepted_answer_id = models.IntegerField(blank=True, null=True, db_index=True)
     answer_count = models.IntegerField(default=0)
     comment_count = models.IntegerField(default=0)
     community_owned_date = models.DateTimeField(blank=True, null=True)
@@ -453,7 +457,7 @@ class StackOverflowQuestion(models.Model):
         max_length=30, blank=True, null=True)
     last_editor_user_id = models.IntegerField(blank=True, null=True)
     owner_display_name = models.CharField(max_length=30)
-    owner_user_id = models.IntegerField()
+    owner_user_id = models.IntegerField(db_index=True)
     post_type_id = models.IntegerField()
     score = models.IntegerField(default=0)
     tags = models.CharField(max_length=115)
@@ -476,8 +480,8 @@ class StackOverflowAnswer(models.Model):
         max_length=30, blank=True, null=True)
     last_editor_user_id = models.IntegerField(blank=True, null=True)
     owner_display_name = models.CharField(max_length=30)
-    owner_user_id = models.IntegerField(blank=True, null=True)
-    parent_id = models.IntegerField()
+    owner_user_id = models.IntegerField(blank=True, null=True, db_index=True)
+    parent_id = models.IntegerField(db_index=True)
     post_type_id = models.IntegerField()
     score = models.IntegerField(default=0)
     tags = models.CharField(max_length=115)

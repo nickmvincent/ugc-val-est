@@ -190,7 +190,15 @@ def sample_so(data_source, rows_to_sample, rows_per_query):
             'dja_name': 'num_other_answers',
         },
         {
-            'bq_name': questions_table + '.answer_count',
+            'bq_name': questions_table + '.title',
+            'dja_name': 'title',
+        },
+        {
+            'bq_name': questions_table + '.comment_count',
+            'dja_name': 'num_question_comments',
+        },
+        {
+            'bq_name': questions_table + '.score',
             'dja_name': 'question_score',
         },
         {
@@ -284,8 +292,6 @@ def sample_reddit(data_source, rows_to_sample, rows_per_query):
         queries.append(query)
     sample_from_data_source(
         data_source, col_objects, queries, SampledRedditThread, rows_to_sample, rows_per_query)
-
-
 
 
 def parse():
