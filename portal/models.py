@@ -247,7 +247,7 @@ class Post(models.Model):
                                 self.num_major_edits += 1
                         else:
                             self.num_edits_prev_week += 1
-                            if self.timestamp - revision.timestamp > datetime.timedelta(hours=6):
+                            if self.timestamp - revision.timestamp < datetime.timedelta(hours=3):
                                 self.num_edits_preceding_post += 1
                             if revision.editcount <= 5:
                                 self.num_inactive_edits_prev_week += 1
