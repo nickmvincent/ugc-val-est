@@ -118,6 +118,7 @@ def causal_inference(
     feature_rows = []
     successful_fields = []
     for feature in features:
+        print(feature)
         feature_row = getattr(records, feature)
         if feature == treatment_feature:
             D = feature_row
