@@ -147,7 +147,7 @@ def extract_pairs(first, second):
         feature, getattr(treated, feature)) for feature in features
     ])
     control_vals_string = '|'.join(['{}:{}'.format(
-        feature, getattr(treated, feature)) for feature in features
+        feature, getattr(control, feature)) for feature in features
     ])
     treated_output = 'Treatment\n{}\n{}\n'.format(
         url_template.format(first),
