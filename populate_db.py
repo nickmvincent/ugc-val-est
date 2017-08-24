@@ -72,7 +72,7 @@ def process_prepared_lines(lines, model):
                 count['rows_added'] += 1
             else:
                 count['already_in_db'] += 1
-        except KeyError as err:
+        except (KeyError, TypeError) as err:
             msg = 'Err loading post: {}'.format(err)
             log, created = ErrorLog.objects.get_or_create(uid=line.get('uid'))
             log.msg = msg[:254]
@@ -83,6 +83,7 @@ def process_prepared_lines(lines, model):
                 count['already_in_errors'] += 1
         except IntegrityError:
             count['already_in_db'] += 1
+
     print(count)
 
 

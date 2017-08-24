@@ -180,7 +180,9 @@ def causal_inference(
     else:
         print('Skipping trim value as per request')
     if paired_psm:
-        causal.est_via_psm()
+        psm_est = causal.est_via_psm()
+        print(str(psm_est))
+        out.append(str(psm_est))
     else:
         if simple_bin:
             causal.blocks = int(simple_bin)
@@ -318,10 +320,19 @@ def parse():
     if args.simple:
         simple_linear(args.platform)
     if args.causal:
+        platforms, rqs = plat_rq_argparse(args)
         if args.treatment is None:
-            for treatment in ['has_wiki_link', 'has_good_wiki_link', ]:
+            treatments = ['has_wiki_link', 'has_good_wiki_link']
+        else:
+            treatments = [args.treatment]
+        if args.platform is None:
+            platforms = ['r', 's']
+        else:
+            platforms = [args.platform]
+        for platform in platforms:
+            for treatment in treatments:
                 causal_inference(
-                    args.platform, treatment,
+                    platform, treatment,
                     args.num_rows, args.simple_psm,
                     args.simple_bin, args.trim_val,
                     args.paired_psm)
@@ -339,6 +350,7 @@ if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dja.settings")
     import django
     django.setup()
+    from stats import plat_rq_argparse
     from portal.models import (
         SampledRedditThread, SampledStackOverflowPost,
     )
