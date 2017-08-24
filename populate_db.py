@@ -285,8 +285,6 @@ def sample_reddit(data_source, rows_to_sample, rows_per_query):
     sample_from_data_source(
         data_source, col_objects, queries, SampledRedditThread, rows_to_sample, rows_per_query)
 
-def sample_using_django_api():
-    pass
 
 
 
@@ -316,5 +314,7 @@ if __name__ == "__main__":
     from portal.models import (
         ErrorLog, SampledRedditThread,
         SampledStackOverflowPost,
+        StackOverflowAnswer, StackOverflowQuestion, StackOverflowUser,
+        RedditPost
     )
     parse()
