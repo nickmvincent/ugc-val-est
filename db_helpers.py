@@ -145,10 +145,10 @@ def extract_pairs(first, second):
     
     treated_vals_string = '|'.join(['{}:{}'.format(
         feature, getattr(treated, feature) for feature in features
-    )]
+    )])
     control_vals_string = '|'.join(['{}:{}'.format(
         feature, getattr(treated, feature) for feature in features
-    )]
+    )])
     treated_output = 'Treatment\n{}\n{}\n'.format(
         url_template.format(first),
         treated_vals_string
