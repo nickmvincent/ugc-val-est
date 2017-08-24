@@ -123,7 +123,7 @@ def causal_inference(
         feature_row = getattr(records, feature)
         if feature == treatment_feature:
             D = feature_row
-        if feature == 'uid':
+        elif feature == 'uid':
             ids = feature_row
         elif all(x == 0 for x in feature_row):
             print(
