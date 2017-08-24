@@ -335,7 +335,9 @@ class SampledStackOverflowPost(Post):
         if self.question_asked_utc:
             delta = self.timestamp - self.question_asked_utc
             self.response_time = delta.seconds
-        if self.num_tags == 0:
+        if not self.tags_string:
+            self.num_tags = 0
+        elif self.num_tags == 0:
             self.num_tags = len(self.tags_string.split('|'))
         super(SampledStackOverflowPost, self).save(*args, **kwargs)
 
