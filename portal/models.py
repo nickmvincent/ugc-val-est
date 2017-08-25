@@ -128,7 +128,10 @@ class Post(models.Model):
         for metric in [
             'num_edits',
             'num_new_editors', 'num_new_editors_retained',
-            'num_new_edits', 'num_old_edits', 'num_inactive_edits',
+            'num_new_editors_prev_week', 'num_new_editors_retained_prev_week',
+            'num_new_edits', 'num_old_edits', 
+            'num_new_edits_prev_week', 'num_old_edits_prev_week', 
+            'num_inactive_edits',
             'num_active_edits', 'num_minor_edits', 'num_major_edits',
             'num_edits_prev_week', 'num_inactive_edits_prev_week',
             'num_active_edits_prev_week', 'num_minor_edits_prev_week',
