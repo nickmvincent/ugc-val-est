@@ -273,6 +273,7 @@ class Post(models.Model):
                             field_to_score[field] += ores_score
                     for revision in revisions:
                         users_seen = {}
+                        starttime = self.timestamp - datetime.timedelta(days=7)
                         if revision.timestamp > self.timestamp:
                             self.num_edits += 1
                             if revision.registration > self.timestamp:
@@ -292,9 +293,8 @@ class Post(models.Model):
                                 self.num_minor_edits += 1
                             else:
                                 self.num_major_edits += 1
-                        else:
+                        elif revision.timestamp > starttime:
                             self.num_edits_prev_week += 1
-                            starttime = self.timestamp - datetime.timedelta(days=7)
                             if revision.registration > starttime:
                                 self.num_new_edits_prev_week += 1
                                 if users_seen.get(revision.user) is None:
