@@ -109,7 +109,12 @@ class Post(models.Model):
     num_active_edits = models.IntegerField(default=0)
     num_minor_edits = models.IntegerField(default=0)
     num_major_edits = models.IntegerField(default=0)
+    
     num_edits_prev_week = models.IntegerField(default=0)
+    num_new_editors_prev_week = models.IntegerField(default=0)
+    num_new_editors_retained_prev_week = models.IntegerField(default=0)
+    num_new_edits_prev_week = models.IntegerField(default=0)
+    num_old_edits_prev_week = models.IntegerField(default=0)
     num_inactive_edits_prev_week = models.IntegerField(default=0)
     num_active_edits_prev_week = models.IntegerField(default=0)
     num_minor_edits_prev_week = models.IntegerField(default=0)
@@ -286,6 +291,17 @@ class Post(models.Model):
                                 self.num_major_edits += 1
                         else:
                             self.num_edits_prev_week += 1
+                            starttime = self.timestamp - datetime.timedelta(days=7)
+                            if revision.registration > starttime:
+                                self.num_new_edits_prev_week += 1
+                                if users_seen.get(revision.user) is None:
+                                    self.num_new_editors_prev_week += 1
+                                    users_seen[revision.user] = True
+                                    if revision.user_retained:
+                                        self.num_new_editors_retained_prev_week += 1
+                            else:
+                                self.num_old_edits_prev_week += 1
+
                             if self.timestamp - revision.timestamp < datetime.timedelta(hours=3):
                                 self.num_edits_preceding_post += 1
                             if revision.editcount <= 5:

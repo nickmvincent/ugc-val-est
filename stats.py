@@ -444,8 +444,8 @@ def main(platform='r', rq=1, calculate_frequency=False):
         variables = [
             ('num_edits', 'num_edits_prev_week'),
             ('norm_change_edits', make_method_getter('norm_change_edits')),
-            'num_new_editors',
-            'num_new_editors_retained',
+            ('num_new_editors', 'num_new_editors_prev_week'),
+            ('num_new_editors_retained', 'num_new_editors_retained_prev_week'),            
             ('percent_new_editors', make_method_getter('percent_new_editors')),
             ('percent_active_editors', make_method_getter('percent_active_editors')),
             ('percent_active_editors', make_method_getter('percent_active_editors')),
