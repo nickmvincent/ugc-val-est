@@ -315,15 +315,16 @@ class Post(models.Model):
                                 self.num_minor_edits_prev_week += 1
                             else:
                                 self.num_major_edits_prev_week += 1
-            output_field_to_val = {
-                field + '_avg_score': val / num_links for field, val in field_to_score.items()}
-            for output_field, val in output_field_to_val.items():
-                if missing_necessary_ores:
-                    setattr(self, output_field, None)
-                else:
-                    setattr(self, output_field, val)
-            if self.day_of_avg_score and self.day_of_avg_score >= 4:
-                self.has_good_wiki_link = True
+            if num_links:
+                output_field_to_val = {
+                    field + '_avg_score': val / num_links for field, val in field_to_score.items()}
+                for output_field, val in output_field_to_val.items():
+                    if missing_necessary_ores:
+                        setattr(self, output_field, None)
+                    else:
+                        setattr(self, output_field, val)
+                if self.day_of_avg_score and self.day_of_avg_score >= 4:
+                    self.has_good_wiki_link = True
         super(Post, self).save(*args, **kwargs)
 
 

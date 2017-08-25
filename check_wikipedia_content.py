@@ -227,15 +227,14 @@ def check_single_post(post, ores_ep_template, session):
         norm_title = norm_title.replace('/', '%2F')
         pageviews_prev_week = make_pageview_request(
             session,
-            title=norm_title, start=week_before_post.strftime(pageview_api_str_fmt) + '00',
-            end=day_of_post_short_str + '00')
+            title=norm_title, start=week_before_post.strftime(pageview_api_str_fmt),
+            end=day_of_post_short_str)
         pageviews = make_pageview_request(
             session,
-            title=norm_title, start=day_of_post_short_str + '00',
-            end=week_after_post.strftime(pageview_api_str_fmt) + '00')
-        if pageviews_prev_week:
+            title=norm_title, start=day_of_post_short_str,
+            end=week_after_post.strftime(pageview_api_str_fmt))
+        if pageviews_prev_week and pageviews:
             post.num_wiki_pageviews_prev_week = sum([entry['views'] for entry in pageviews_prev_week])    
-        if pageviews:
             post.num_wiki_pageviews = sum([entry['views'] for entry in pageviews])
         revisions = []
         revid_result_pages = make_revid_request(
