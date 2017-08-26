@@ -241,7 +241,7 @@ def check_single_post(post, ores_ep_template, session):
             session, dja_link.language_code, dja_link.title, week_before_post_str,
             week_after_post_str)
         for result_page in revid_result_pages:
-            pages = result_page['pages']
+            pages = result_page.get('pages', {})
             for _, page in pages.items():
                 if 'missing' in page:
                     raise PostMissingValidLink(post, dja_link)
@@ -252,7 +252,7 @@ def check_single_post(post, ores_ep_template, session):
                 session, dja_link.language_code,
                 dja_link.title, week_before_post_str)
             for result_page in revid_result_pages:
-                pages = result_page['pages']
+                pages = result_page.get('pages', {})
                 for _, page in pages.items():
                     if 'revisions' in page:
                         revisions += page['revisions']
@@ -282,7 +282,7 @@ def check_single_post(post, ores_ep_template, session):
             user_result_pages = make_user_request(
                 session, dja_link.language_code, userbatch)
             for page in user_result_pages:
-                users += page['users']
+                users += page.get('users', [])
             for user in users:
                 user_kwargs = username_to_user_kwargs[user['name']]
                 user_kwargs['editcount'] = user.get('editcount', 0)
