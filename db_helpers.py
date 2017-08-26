@@ -13,10 +13,19 @@ from queryset_helpers import (
 )
 
 
-def delete_old_errors():
+def clear_fixed_errors():
     """one off script"""
-    ErrorLog.objects.filter(msg__contains="not-null").delete()
-    ErrorLog.objects.filter(msg="").delete()
+    count = 0
+    for obj in ErrorLog.objects.all():
+        if (
+            SampledRedditThread.objects.filter(uid=obj.uid).exists() or
+            SampledStackOverflowPost.objects.filter(uid=obj.uid).exists()):
+            obj.delete()
+            count += 1
+    print('Deleted', count)
+    for obj in ErrorLog.objects.all():
+        print(obj)
+        input()
 
 
 def show_wiki_errors():
