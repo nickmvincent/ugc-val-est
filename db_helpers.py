@@ -38,7 +38,7 @@ def show_wiki_errors():
             # else:
             #     print(obj['body'])
             err = ErrorLog.objects.get(uid=obj['uid'])
-            print err.msg
+            print(err.msg)
             counter[obj['wiki_content_error']] += 1
         pprint(counter)
 
