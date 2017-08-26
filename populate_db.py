@@ -12,6 +12,8 @@ QUERY_TEMPLATE = """
     FROM {table} ORDER BY rand LIMIT {limit};
     """
 
+SAMPLE_NUM = 1
+
 def give_truncator(lim):
     """
     Gives a truncator function
@@ -67,6 +69,7 @@ def process_prepared_lines(lines, model):
     for line in lines:
         count['posts_attempted'] += 1
         try:
+            line['sample_num'] = SAMPLE_NUM
             _, created = model.objects.get_or_create(**line)
             if created:
                 count['rows_added'] += 1

@@ -79,8 +79,8 @@ class Post(models.Model):
     timestamp = models.DateTimeField()
 
     wiki_links = models.ManyToManyField('WikiLink')
-    has_wiki_link = models.BooleanField(default=False)
-    has_good_wiki_link = models.BooleanField(default=False)
+    has_wiki_link = models.BooleanField(default=False, db_index=True)
+    has_good_wiki_link = models.BooleanField(default=False, db_index=True)
     num_wiki_links = models.IntegerField(default=0)
 
     # poor naming choices... the following refer to ORES score...
@@ -124,17 +124,22 @@ class Post(models.Model):
     num_wiki_pageviews = models.IntegerField(blank=True, null=True)
     num_wiki_pageviews_prev_week = models.IntegerField(blank=True, null=True)
 
+    sample_num = models.IntegerField(default=0)
+
     def reset_edit_metrics(self):
         for metric in [
             'num_edits',
+            'num_edits_prev_week',
+
             'num_new_editors', 'num_new_editors_retained',
             'num_new_editors_prev_week', 'num_new_editors_retained_prev_week',
+            
             'num_new_edits', 'num_old_edits', 
             'num_new_edits_prev_week', 'num_old_edits_prev_week', 
-            'num_inactive_edits',
-            'num_active_edits', 'num_minor_edits', 'num_major_edits',
-            'num_edits_prev_week', 'num_inactive_edits_prev_week',
-            'num_active_edits_prev_week', 'num_minor_edits_prev_week',
+
+            'num_inactive_edits', 'num_active_edits', 'num_minor_edits', 
+            'num_inactive_edits_prev_week', 'num_active_edits_prev_week', 'num_minor_edits_prev_week',
+            'num_major_edits',
             'num_major_edits_prev_week', 'num_edits_preceding_post',
         ]:
             setattr(self, metric, 0)
@@ -164,11 +169,6 @@ class Post(models.Model):
             return self.num_inactive_edits / self.num_edits * 100.0
         else:
             return None
-    def change_in_quality(self):
-        if self.week_after_avg_score is None or self.day_of_avg_score is None:
-            return None
-        else:
-            return self.week_after_avg_score - self.day_of_avg_score
 
     class Meta:
         abstract = True
@@ -341,11 +341,6 @@ class SampledRedditThread(Post):
     user_is_suspended = models.BooleanField(default=False)
     user_is_deleted = models.BooleanField(default=False)
     url = models.CharField(max_length=2083)
-
-    def save(self, *args, **kwargs):
-        """overload save method"""
-        
-        super(SampledRedditThread, self).save(*args, **kwargs)
 
 
 class SampledStackOverflowPost(Post):

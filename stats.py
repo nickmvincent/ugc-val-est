@@ -406,12 +406,14 @@ def main(platform='r', rq=1, calculate_frequency=False):
         subsample_kwargs = {
             'has_wiki_link': True,
             'day_of_avg_score__isnull': False,
+            'week_after_avg_score__isnull': False,
         }
         treatment_kwargs = {'has_good_wiki_link': True, }
     if rq == 3:
         subsample_kwargs = {
             'has_wiki_link': True,
             'day_of_avg_score__isnull': False,
+            'week_after_avg_score__isnull': False,
         }
         treatment_kwargs = None
 
@@ -428,7 +430,19 @@ def main(platform='r', rq=1, calculate_frequency=False):
                 'qs': SampledRedditThread.objects.filter(context__in=TOP_TEN),
                 'name': 'Top_Ten'
             }]
-        variables += list_reddit_specific_features()
+        if rq == 3:
+            datasets += [{
+                'qs': SampledRedditThread.objects.filter(**subsample_kwargs).filter(
+                    has_good_wiki_link=True
+                )
+                'name': 'Good'
+            }, {
+                'qs': SampledRedditThread.objects.filter(**subsample_kwargs).exclude(
+                    has_good_wiki_link=True
+                )
+                'name': 'Bad'
+            }]
+        # variables += list_reddit_specific_features()
         extractor = get_links_from_url
         extract_from = 'url'
     elif platform == 's':
@@ -436,8 +450,19 @@ def main(platform='r', rq=1, calculate_frequency=False):
             'qs': SampledStackOverflowPost.objects.filter(**subsample_kwargs),
             'name': 'All SO'
         }]
-        variables += ['num_pageviews']
-        variables += list_stack_specific_features()
+        if rq == 3:
+            datasets += [{
+                'qs': SampledStackOverflowPost.objects.filter(**subsample_kwargs).filter(
+                    has_good_wiki_link=True
+                )
+                'name': 'Good'
+            }, {
+                'qs': SampledStackOverflowPost.objects.filter(**subsample_kwargs).exclude(
+                    has_good_wiki_link=True
+                )
+                'name': 'Bad'
+            }]
+        # variables += ['num_pageviews']
         extractor = get_links_from_body
         extract_from = 'body'
     if rq == 3:

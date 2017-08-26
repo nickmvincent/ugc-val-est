@@ -65,7 +65,8 @@ def list_reddit_specific_features():
     textual = list_textual_metrics('title')
     return textual + [
         'user_comment_karma', 'user_link_karma', 
-        'user_is_mod', 'user_is_suspended', 'user_is_deleted'
+        'user_is_mod', 'user_is_suspended', 'user_is_deleted',
+        'body_length',
     ]
 
 def list_stack_specific_features():
@@ -76,5 +77,5 @@ def list_stack_specific_features():
         'body_num_links',
         'num_tags',
         # commented out until this is implemente fully
-        # 'response_time',
+        'response_time', 'question_score', 'num_other_answers',
     ]
