@@ -188,8 +188,8 @@ if __name__ == "__main__":
     )
     from queryset_helpers import batch_qs
     if len(sys.argv) > 1:
-        if sys.argv[1] == 'delete':
-            delete_old_errors()
+        if sys.argv[1] == 'clear_fixed_errors':
+            clear_fixed_errors()
         elif sys.argv[1] == 'reset_revision_info':
             reset_revision_info()
         elif sys.argv[1] == 'show_samples':
