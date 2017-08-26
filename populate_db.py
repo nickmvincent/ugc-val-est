@@ -325,7 +325,7 @@ def parse():
     parser.add_argument(
         '--links_only', 
         action='store_true',
-        type=bool, default=False,
+        default=False,
         help="to only sample links"
     )
     args = parser.parse_args()
