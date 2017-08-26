@@ -434,12 +434,12 @@ def main(platform='r', rq=1, calculate_frequency=False):
             datasets += [{
                 'qs': SampledRedditThread.objects.filter(**subsample_kwargs).filter(
                     has_good_wiki_link=True
-                )
+                ),
                 'name': 'Good'
             }, {
                 'qs': SampledRedditThread.objects.filter(**subsample_kwargs).exclude(
                     has_good_wiki_link=True
-                )
+                ),
                 'name': 'Bad'
             }]
         # variables += list_reddit_specific_features()
@@ -454,12 +454,12 @@ def main(platform='r', rq=1, calculate_frequency=False):
             datasets += [{
                 'qs': SampledStackOverflowPost.objects.filter(**subsample_kwargs).filter(
                     has_good_wiki_link=True
-                )
+                ),
                 'name': 'Good'
             }, {
                 'qs': SampledStackOverflowPost.objects.filter(**subsample_kwargs).exclude(
                     has_good_wiki_link=True
-                )
+                ),
                 'name': 'Bad'
             }]
         variables += ['num_pageviews']
