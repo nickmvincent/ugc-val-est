@@ -124,7 +124,7 @@ class Post(models.Model):
     num_wiki_pageviews = models.IntegerField(blank=True, null=True)
     num_wiki_pageviews_prev_week = models.IntegerField(blank=True, null=True)
 
-    sample_num = models.IntegerField(default=0)
+    sample_num = models.IntegerField(default=0, db_index=True)
 
     def reset_edit_metrics(self):
         for metric in [

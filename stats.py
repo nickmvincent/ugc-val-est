@@ -462,7 +462,7 @@ def main(platform='r', rq=1, calculate_frequency=False):
                 )
                 'name': 'Bad'
             }]
-        # variables += ['num_pageviews']
+        variables += ['num_pageviews']
         extractor = get_links_from_body
         extract_from = 'body'
     if rq == 3:

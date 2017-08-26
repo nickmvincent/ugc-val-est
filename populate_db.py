@@ -9,10 +9,9 @@ from queryset_helpers import utcstamp_to_utcdatetime
 
 QUERY_TEMPLATE = """
     SELECT {columns}, random() as rand
-    FROM {table} ORDER BY rand LIMIT {limit};
+    FROM {table}{where}ORDER BY rand LIMIT {limit};
     """
 
-SAMPLE_NUM = 1
 
 def give_truncator(lim):
     """
@@ -56,7 +55,7 @@ def init_count():
     return count
 
 
-def process_prepared_lines(lines, model):
+def process_prepared_lines(lines, model, sample_num):
     """
     Args:
         lines - a list of of dicts, each corresponds to a row of data
@@ -69,7 +68,7 @@ def process_prepared_lines(lines, model):
     for line in lines:
         count['posts_attempted'] += 1
         try:
-            line['sample_num'] = SAMPLE_NUM
+            line['sample_num'] = sample_num
             _, created = model.objects.get_or_create(**line)
             if created:
                 count['rows_added'] += 1
@@ -92,7 +91,8 @@ def process_prepared_lines(lines, model):
 
 
 def sample_from_data_source(
-        data_source, col_objects, queries, model, rows_to_sample, rows_per_query):
+        data_source, col_objects, queries, model, rows_to_sample,
+        rows_per_query, sample_num):
     """
     Populate DB with random samples of SO answers from BigQuery
     """
@@ -130,14 +130,14 @@ def sample_from_data_source(
                 if row_dict.get('user_created_utc') is None:
                     row_dict['user_created_utc'] = row_dict['timestamp']
                 lines.append(row_dict)
-            process_prepared_lines(lines, model)
+            process_prepared_lines(lines, model, sample_num)
             # print('Runtime for query {} was {}'.format(query, time.time() - t_start_query))
         print('Runtime for iteration {} was {}'.format(
             iteration, time.time() - t_start_iteration))
     print('Total runtime was {}'.format(time.time() - t_init))
 
 
-def sample_so(data_source, rows_to_sample, rows_per_query):
+def sample_so(data_source, rows_to_sample, rows_per_query, sample_num, links_only):
     """
     Sample Stack Overflow Answers
     Args:
@@ -232,14 +232,19 @@ def sample_so(data_source, rows_to_sample, rows_per_query):
             'table': table,
             'limit': rows_per_query,
         }
+        if links_only:
+            query_kwargs['where'] = ' body like %wikipedia.org/wiki/% '
+        else:
+            query_kwargs['where'] = ''
         query = QUERY_TEMPLATE.format(**query_kwargs)
         queries.append(query)
     sample_from_data_source(
-        data_source, col_objects, queries, SampledStackOverflowPost, rows_to_sample, rows_per_query)
+        data_source, col_objects, queries, SampledStackOverflowPost,
+        rows_to_sample, rows_per_query, sample_num)
 
 
 
-def sample_reddit(data_source, rows_to_sample, rows_per_query):
+def sample_reddit(data_source, rows_to_sample, rows_per_query, sample_num, links_only):
     """Sample Reddit Threads"""
     col_objects = [
         {
@@ -292,10 +297,15 @@ def sample_reddit(data_source, rows_to_sample, rows_per_query):
             'table': table,
             'limit': rows_per_query,
         }
+        if links_only:
+            query_kwargs['where'] = ' url like %wikipedia.org/wiki/% '
+        else:
+            query_kwargs['where'] = ''
         query = QUERY_TEMPLATE.format(**query_kwargs)
         queries.append(query)
     sample_from_data_source(
-        data_source, col_objects, queries, SampledRedditThread, rows_to_sample, rows_per_query)
+        data_source, col_objects, queries, SampledRedditThread,
+        rows_to_sample, rows_per_query, sample_num)
 
 
 def parse():
@@ -310,8 +320,18 @@ def parse():
         '--rows_to_sample', type=int, help="the total number of rows to sample")
     parser.add_argument(
         '--rows_per_query', type=int, help="the number of rows to sample in each query")
+    parser.add_argument(
+        '--sample_num', type=int, help="the iteration number of this sample")
+    parser.add_argument(
+        '--links_only', 
+        action='store_true',
+        type=bool, default=False,
+        help="to only sample links"
+    )
     args = parser.parse_args()
-    oargs = args.data_source, args.rows_to_sample, args.rows_per_query
+    oargs = (
+        args.data_source, args.rows_to_sample, args.rows_per_query,
+        args.sample_num, args.links_only)
     sample_so(*oargs)
     sample_reddit(*oargs)
 
