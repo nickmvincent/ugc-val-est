@@ -37,7 +37,10 @@ def show_wiki_errors():
             #     print(obj['url'])
             # else:
             #     print(obj['body'])
-            err = ErrorLog.objects.get(uid=obj['uid'])
+            try:
+                err = ErrorLog.objects.get(uid=obj['uid'])
+            except Exception:
+                passs
             print(err.msg)
             counter[obj['wiki_content_error']] += 1
         pprint(counter)
