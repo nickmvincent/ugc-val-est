@@ -215,6 +215,7 @@ def get_scores_for_posts(posts, session):
             'revids': '|'.join(revbatch)
         })
         ores_resp = session.get(ores_ep)
+        print(ores_resp.content)
         ores_resp = ores_resp.json()
         scores = ores_resp['scores'][ores_context]['wp10']['scores']
         for revid in revbatch:
