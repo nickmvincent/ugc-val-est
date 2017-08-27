@@ -256,8 +256,12 @@ def get_userinfo_for_all_revs(revs, session):
             revs = user_to_revs[user['name']]
             for rev in revs:
                 rev.editcount = user.get('editcount', 0)
-                rev.registration = user.get('registration')
-                rev.lastrev_date = lastrev_date
+                rev.registration = .strptime(
+                    user.get('registration'),
+                    '%Y-%m-%dT%H:%M:%SZ').astimezone(pytz.UTC)
+                rev.lastrev_date = .strptime(
+                    lastrev_date,
+                    '%Y-%m-%dT%H:%M:%SZ').astimezone(pytz.UTC)
                 rev.save()
 
 
