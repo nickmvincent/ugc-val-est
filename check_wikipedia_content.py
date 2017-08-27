@@ -418,8 +418,8 @@ def retrieve_links_info(posts_needing_revs, model):
             print('{} occurred so this result will NOT be saved'.format(err))
 
     revs_needing_userinfo = Revision.objects.filter(editcount=None, err_code=0)
+    print('About to get users for {} revs'.format(len(revs_needing_userinfo)))    
     get_userinfo_for_all_revs(revs_needing_userinfo, session)
-    print('About to get users for {} revs'.format(len(revs_needing_userinfo)))
     posts_needing_score = model.objects.filter(
         day_of_avg_score=None, wiki_content_error=0
     )
