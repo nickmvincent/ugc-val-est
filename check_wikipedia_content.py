@@ -208,6 +208,7 @@ def get_scores_for_posts(posts, session):
                 closest_rev = get_closest_to(dja_revs, timestamp)
                 revid_to_rev[closest_rev.revid] = closest_rev
         ores_context = 'en' + 'wiki'
+    counter, start = 0, time.time()
     for revbatch in grouper(revid_to_rev.keys(), 50):
         ores_ep = ores_ep_template.format(**{
             'context': ores_context,
@@ -224,6 +225,10 @@ def get_scores_for_posts(posts, session):
             except KeyError:
                 rev.err_code = 4  # missingOresResponse
             rev.save()
+        counter += len(revbatch)
+        print('Finished {} revs, time: {}'.format(
+            counter, time.time() - start
+        ))
     for post in posts:
         post.save()
 
@@ -238,6 +243,11 @@ def get_userinfo_for_all_revs(revs, session):
             user_to_revs[rev.user] = [rev]
         else:
             user_to_revs[rev.user].append(rev)
+    print('{} users were pulled'.format(
+        len(user_to_revs.keys())
+    ))
+    counter = 0
+    start = time.time()    
     for userbatch in grouper(user_to_revs.keys(), 50):
         userbatch = [user for user in userbatch if user]
         users = []
@@ -266,6 +276,10 @@ def get_userinfo_for_all_revs(revs, session):
                         lastrev_date,
                         '%Y-%m-%dT%H:%M:%SZ').astimezone(pytz.UTC)
                 rev.save()
+        counter += len(userbatch)
+        if counter % 1000 == 0:
+            print('Finished {} users, time: {}'.format(
+                counter, time.time() - start))
 
 
 def get_revs_for_single_post(post, session):
