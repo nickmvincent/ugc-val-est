@@ -149,7 +149,6 @@ def causal_inference(
     varname_to_field = {"X{}".format(i):field for i, field in enumerate(successful_fields)}
     outname_to_field = {"Y{}".format(i):field for i, field in enumerate(outcomes)}
     out = []
-    
     for dic in [varname_to_field, outname_to_field]:
         for key, val in dic.items():
             out.append("{}:{}".format(key, val))
@@ -192,6 +191,7 @@ def causal_inference(
     if paired_psm:
         psm_est, psm_rows = causal.est_via_psm()
         print(str(psm_est))
+        out.append('PSM PAIR REGRESSION')
         out.append(str(psm_est))
 
         with open('PSM_PAIRS' + filename, 'w') as outfile:
@@ -212,12 +212,12 @@ def causal_inference(
         except np.linalg.linalg.LinAlgError as err:
             msg = 'LinAlgError with est_via_blocking: {}'.format(err)
             err_handle(msg, out)
-    try:
-        causal.est_via_matching()
-        times.append(mark_time('est_via_matching'))
-    except np.linalg.linalg.LinAlgError as err:
-        msg = 'LinAlgError with est_via_weighting: {}'.format(err)
-        err_handle(msg, out)
+    # try:
+    #     causal.est_via_matching()
+    #     times.append(mark_time('est_via_matching'))
+    # except np.linalg.linalg.LinAlgError as err:
+    #     msg = 'LinAlgError with est_via_matching: {}'.format(err)
+    #     err_handle(msg, out)
     out.append(str(causal.estimates))
     timing_info = {}
     prev = times[0][0]
