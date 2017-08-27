@@ -216,11 +216,11 @@ def get_scores_for_posts(posts, session):
         })
         ores_resp = session.get(ores_ep)
         ores_resp = ores_resp.json()
-        scores = ores_resp['scores'][ores_context]['wp10']['scores']
+        scores = ores_resp[ores_context]['scores']
         for revid in revbatch:
             rev = revid_to_rev[revid]
             try:
-                predicted_code = scores[str(revid)]['prediction']
+                predicted_code = scores[str(revid)]['wp10']['score']['prediction']
                 rev.score = map_ores_code_to_int(predicted_code)
             except KeyError:
                 rev.err_code = 4  # missingOresResponse
