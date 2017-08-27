@@ -351,7 +351,8 @@ def get_revs_for_single_post(post, session):
                 Revision.objects.create(**rev_kwargs)
                 revs_made += 1
             except IntegrityError as err:
-                print(err)
+                if 'duplicate key' not in str(err):
+                    print(err)
 
 
 def identify_links(filtered, field):
