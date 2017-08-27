@@ -249,6 +249,7 @@ def get_userinfo_for_all_revs(revs, session):
             lastrev_pages = make_lastrev_request(
                 session, 'en',
                 user['name'])
+            lastrev_date = None
             for result_page in lastrev_pages:
                 contribs = result_page['usercontribs']
                 lastrev = contribs[0]
@@ -256,12 +257,14 @@ def get_userinfo_for_all_revs(revs, session):
             revs = user_to_revs[user['name']]
             for rev in revs:
                 rev.editcount = user.get('editcount', 0)
-                rev.registration = datetime.datetime.strptime(
-                    user.get('registration'),
-                    '%Y-%m-%dT%H:%M:%SZ').astimezone(pytz.UTC)
-                rev.lastrev_date = datetime.datetime.strptime(
-                    lastrev_date,
-                    '%Y-%m-%dT%H:%M:%SZ').astimezone(pytz.UTC)
+                if user.get('registration'):
+                    rev.registration = datetime.datetime.strptime(
+                        user.get('registration'),
+                        '%Y-%m-%dT%H:%M:%SZ').astimezone(pytz.UTC)
+                if lastrev_date:
+                    rev.lastrev_date = datetime.datetime.strptime(
+                        lastrev_date,
+                        '%Y-%m-%dT%H:%M:%SZ').astimezone(pytz.UTC)
                 rev.save()
 
 
