@@ -228,7 +228,6 @@ def simple_linear(platform, quality_mode=False):
     if quality_mode:
         qs, features, outcomes = get_qs_features_and_outcomes(platform, filter_kwargs={
             'has_wiki_link': True,
-            'wiki_content_analyzed': True,
             'wiki_content_error': 0,
             'day_of_avg_score__isnull': False,
         })

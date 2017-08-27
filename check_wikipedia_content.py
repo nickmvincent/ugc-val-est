@@ -57,15 +57,6 @@ class ContextNotSupported(Exception):
         handle_err(post, 3)
         super(ContextNotSupported, self).__init__(self)
 
-class BrokenLinkError(Exception):
-    """Used to catch Broken Links"""
-    def __init__(self, post, url):
-        err_log, _ = ErrorLog.objects.get_or_create(uid=post.uid)
-        err_log.msg = '#1: BrokenLinkError: {}'.format(url)[:500]
-        err_log.save()
-        handle_err(post, 1)
-        super(BrokenLinkError, self).__init__(self)
-
 
 class PostMissingValidLink(Exception):
     """Used to catch missing article, improperly formatted links, etc"""
@@ -80,7 +71,7 @@ class PostMissingValidLink(Exception):
 
 class MissingOresResponse(Exception):
     """Used to catch missing ores response"""
-    def __init(self, post, url):
+    def __init(self, uid, url):
         err_log, _ = ErrorLog.objects.get_or_create(uid=post.uid)
         err_log.msg = '#4: MissingOresResponse: {}'.format(url)[:500]
         err_log.save()
@@ -198,7 +189,69 @@ def make_user_request(session, prefix, users):
     return make_mediawiki_request(session, base, params)
 
 
-def check_single_post(post, ores_ep_template, session):
+def get_scores_for_all_links(links):
+    revid_to_rev = {}
+    for dja_link in links:
+        if dja_link.language_code != 'en':
+            print('skipping non english version')
+            continue
+        dja_revs = Revision.objects.filter(wiki_link=dja_link)
+        for timestamp in [post.timestamp, week_after_post, ]:
+            closest_rev = get_closest_to(dja_revs, timestamp)
+            revid_to_rev[closest_rev.revid] = closest_rev
+    ores_context = 'en' + 'wiki'
+    for revbatch in grouper(revid_to_rev.keys(), 50):
+        ores_ep = ores_ep_template.format(**{
+            'context': ores_context,
+            'revids': '|'.join(revbatch)
+        })
+        ores_resp = session.get(ores_ep)
+        ores_resp = ores_resp.json()
+        scores = ores_resp['scores'][ores_context]['wp10']['scores']
+        for revid in revbatch:
+            rev = revid_to_rev[revid]
+            try:
+                predicted_code = scores[str(revid)]['prediction']
+            except KeyError:
+                rev.err_code = 4 # missingOresResponse
+            rev.score = map_ores_code_to_int(predicted_code)
+            rev.save()
+
+
+def get_user_for_all_revs(revs):
+    """
+    Gets the user information for revisions that still need it
+    """
+    user_to_revs = {}
+    for rev in revs:
+        if rev.user not in user_to_revs:
+            user_to_revs[rev.user] = [rev]
+        else:
+            user_to_revs[rev.user].append(rev)
+    for userbatch in grouper(user_to_revs.keys(), 50):
+        userbatch = [user for user in userbatch if user]
+        users = []
+        user_result_pages = make_user_request(
+            session, dja_link.language_code, userbatch)
+        for page in user_result_pages:
+            users += page.get('users', [])
+        for user in users:
+            lastrev_pages = make_lastrev_request(
+                session, dja_link.language_code,
+                user['name'])
+            for result_page in lastrev_pages:
+                contribs = result_page['usercontribs']
+                lastrev = contribs[0]
+                lastrev_date = lastrev['timestamp']
+            revs = user_to_revs[user['name']]
+            for rev in revs:
+                rev.editcount = user.get('editcount', 0)
+                rev.registration = user.get('registration')
+                rev.lastrev_date = lastrev_date
+                rev.save()
+            
+
+def get_revs_for_single_post(post, ores_ep_template, session):
     """check a single post"""
     dja_links = post.wiki_links.all()
     username_cache = {}
@@ -233,6 +286,8 @@ def check_single_post(post, ores_ep_template, session):
         if pageviews_prev_week and pageviews:
             post.num_wiki_pageviews_prev_week = sum([entry['views'] for entry in pageviews_prev_week])    
             post.num_wiki_pageviews = sum([entry['views'] for entry in pageviews])
+        
+        # now get revids for the time window
         revisions = []
         revid_result_pages = make_revid_request(
             session, dja_link.language_code, dja_link.title, week_before_post_str,
@@ -244,6 +299,8 @@ def check_single_post(post, ores_ep_template, session):
                     raise PostMissingValidLink(post, dja_link)
                 if 'revisions' in page:
                     revisions += page['revisions']
+        
+        # if no revs were found in the two week block, look backwards
         if not revisions:
             revid_result_pages = make_revid_request(
                 session, dja_link.language_code,
@@ -259,7 +316,6 @@ def check_single_post(post, ores_ep_template, session):
             )
             print('No revisions for {}'.format(info))
             raise MissingRevisionId(post, info)
-        username_to_user_kwargs = {}
         rev_kwargs_lst = []
         revids = []
         for rev_obj in revisions:
@@ -268,37 +324,12 @@ def check_single_post(post, ores_ep_template, session):
                 if rev_obj.get(rev_field.name):
                     rev_kwargs[rev_field.name] = rev_obj[rev_field.name]
             rev_kwargs['wiki_link'] = dja_link
-            if 'user' in rev_kwargs:
-                username_to_user_kwargs[rev_kwargs['user']] = username_cache.get('user', {})
             rev_kwargs_lst.append(rev_kwargs)
             revids.append(rev_kwargs['revid'])
 
-        for userbatch in grouper(username_to_user_kwargs.keys(), 50):
-            userbatch = [user for user in userbatch if user and not username_to_user_kwargs[user]]
-            users = []
-            user_result_pages = make_user_request(
-                session, dja_link.language_code, userbatch)
-            for page in user_result_pages:
-                users += page.get('users', [])
-            for user in users:
-                user_kwargs = username_to_user_kwargs[user['name']]
-                user_kwargs['editcount'] = user.get('editcount', 0)
-                if user.get('registration'):
-                    user_kwargs['registration'] = user.get('registration')
-                lastrev_pages = make_lastrev_request(
-                    session, dja_link.language_code,
-                    user['name'])
-                for result_page in lastrev_pages:
-                    contribs = result_page['usercontribs']
-                    lastrev = contribs[0]
-                    user_kwargs['lastrev_date'] = lastrev['timestamp']
-                username_cache[user['name']] = user_kwargs
+        
         revs_made = 0
-        for rev_kwargs in rev_kwargs_lst:
-            if 'user' in rev_kwargs:
-                for key, val in username_to_user_kwargs.get(rev_kwargs['user'], {}).items():
-                    rev_kwargs[key] = val
-            
+        for rev_kwargs in rev_kwargs_lst:            
             if 'lastrev_date' not in rev_kwargs:
                 rev_kwargs['lastrev_date'] = rev_kwargs['timestamp']
             for field in ['lastrev_date', 'timestamp']:
@@ -310,29 +341,6 @@ def check_single_post(post, ores_ep_template, session):
                 revs_made += 1
             except IntegrityError as err:
                 pass
-        dja_revs = Revision.objects.filter(revid__in=revids)
-        if not dja_revs.exists():
-            print('no revs found, so returning!!!')
-            return
-        for timestamp in [post.timestamp, week_after_post, ]:
-            closest_rev = get_closest_to(dja_revs, timestamp)
-            ores_context = dja_link.language_code + 'wiki'
-            ores_ep = ores_ep_template.format(**{
-                'context': ores_context,
-                'revid': closest_rev.revid
-            })
-            ores_resp = session.get(ores_ep)
-            ores_resp = ores_resp.json()
-            try:
-                scores = ores_resp['scores'][ores_context]['wp10']['scores']
-            except KeyError:
-                raise ContextNotSupported(post, ores_context)
-            try:
-                predicted_code = scores[str(closest_rev.revid)]['prediction']
-            except KeyError:
-                raise MissingOresResponse(post, closest_rev.revid)
-            closest_rev.score = map_ores_code_to_int(predicted_code)
-            closest_rev.save()
 
 
 
@@ -377,19 +385,23 @@ def retrieve_links_info(filtered):
             print('Finished: {}, Errors: {}, Time: {}'.format(count, err_count, time.time() - process_start))
         count += 1
         try:
-            check_single_post(post, ores_ep_template, session)
-            post.wiki_content_analyzed = True
+            get_revs_for_single_post(post, ores_ep_template, session)
+            post.all_revisions_pulled = True
             post.save()
         except (
-                MissingRevisionId, ContextNotSupported, BrokenLinkError,
-                MissingOresResponse, PostMissingValidLink
+                MissingRevisionId, MissingOresResponse, PostMissingValidLink
         ):
             err_count += 1
-            post.wiki_content_analyzed = True
+            post.all_revisions_pulled = True
             post.save()
         except (ConnectionError, JSONDecodeError) as err:
             err_count += 1
             print('{} occurred so this result will NOT be saved'.format(err))
+    
+    revs_needing_user = Revision.objects.filter(user=None, err_code=0)
+    get_user_for_all_revs(revs_needing_user)
+    links_needing_score = WikiLink.objects.filter(day_of_avg_score=None, err_code=0)
+        
 
 
 def parse():
@@ -419,25 +431,25 @@ def parse():
             field = 'body'
             model = SampledStackOverflowPost
         if args.clear_first:
-            for obj in model.objects.filter(wiki_content_analyzed=True):
+            for obj in model.objects.filter(all_revisions_pulled=True):
                 for wiki_link in obj.wiki_links.all():
                     Revision.objects.filter(wiki_link=wiki_link).delete()
                 obj.wiki_links.all().delete()
                 ErrorLog.objects.filter(uid=obj.uid).delete()
-            model.objects.filter(wiki_content_analyzed=True).update(
+            model.objects.filter(all_revisions_pulled=True).update(
                 has_wiki_link=False,
                 day_of_avg_score=None,
                 week_after_avg_score=None,
                 wiki_content_error=0,
                 num_wiki_links=0,
-                wiki_content_analyzed=False,
+                all_revisions_pulled=False,
             )
         if args.mode == 'identify' or args.mode == 'full':
             filtered = model.objects.filter(**{field + '__contains': WIK})
             print('Going to IDENTIFY {} items'.format(len(filtered)))
             identify_links(filtered, field)
         if args.mode == 'retrieve' or args.mode == 'full':
-            filtered = model.objects.filter(has_wiki_link=True, wiki_content_analyzed=False)
+            filtered = model.objects.filter(has_wiki_link=True, all_revisions_pulled=False)
             print('Going to RETRIEVE INFO for {} items'.format(len(filtered)))
             retrieve_links_info(filtered)
     

@@ -87,7 +87,7 @@ class Post(models.Model):
     day_of_avg_score = models.IntegerField(blank=True, null=True)
     week_after_avg_score = models.IntegerField(blank=True, null=True)
 
-    wiki_content_analyzed = models.BooleanField(default=False)
+    all_revisions_pulled = models.BooleanField(default=False)
     wiki_content_error = models.IntegerField(default=False)
 
     # this field is nullable because it will be set in the overloaded save method
@@ -251,7 +251,7 @@ class Post(models.Model):
                 except TypeError:
                     self.title_coleman_liau_index = 0
 
-        if self.has_wiki_link and self.wiki_content_analyzed and self.wiki_content_error == 0:
+        if self.has_wiki_link and self.wiki_content_error == 0:
             self.reset_edit_metrics()
             field_to_dt = {
                 'day_of': self.timestamp,
@@ -384,6 +384,7 @@ class WikiLink(models.Model):
     url = models.CharField(max_length=300)
     language_code = models.CharField(max_length=10, blank=True, null=True)
     title = models.CharField(max_length=300, blank=True, null=True)
+    err_code = models.IntegerField(default=0)
 
     def save(self, *args, **kwargs):
         """overload save method"""
@@ -422,14 +423,19 @@ class Revision(models.Model):
     timestamp = models.DateTimeField(default=timezone.now)
     wiki_link = models.ForeignKey(WikiLink)
     revid = models.CharField(max_length=50, primary_key=True)
-    lastrev_date = models.DateTimeField()
-    user_retained = models.BooleanField(default=False)
-    score = models.IntegerField(default=-1)
+    lastrev_date = models.DateTimeField(blank=True, null=True)
+    user_retained = models.BooleanField(blank=True, null=True)
+    score = models.IntegerField(blank=True, null=True)
     user = models.CharField(max_length=100)
+<<<<<<< Updated upstream
     editcount = models.IntegerField(default=0)
+=======
+    editcount = models.IntegerField(blank=True, null=True)
+>>>>>>> Stashed changes
     registration = models.DateTimeField(blank=True, null=True)
     # whether the edit was minor edit
     flags = models.BooleanField(default=True)
+    err_code = models.IntegerField(default=0)
     
     def save(self, *args, **kwargs):
         """overload save method"""

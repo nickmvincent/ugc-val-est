@@ -63,13 +63,13 @@ def clear_json2db():
 def reset_revision_info():
     """Reset"""
     for model in [SampledRedditThread, SampledStackOverflowPost]:
-        model.objects.filter(wiki_content_analyzed=True).update(
+        model.objects.filter(all_revisions_pulled=True).update(
             has_wiki_link=False,
             wiki_content_error=0,
             num_wiki_links=0,
             day_of_avg_score=None,
             week_after_avg_score=None,
-            wiki_content_analyzed=False,
+            all_revisions_pulled=False,
         )
     WikiLink.objects.all().delete()
     Revision.objects.all().delete()
