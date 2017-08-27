@@ -424,7 +424,7 @@ class Revision(models.Model):
     wiki_link = models.ForeignKey(WikiLink)
     revid = models.CharField(max_length=50, primary_key=True)
     lastrev_date = models.DateTimeField(blank=True, null=True)
-    user_retained = models.BooleanField(blank=True, null=True)
+    user_retained = models.BooleanField(default=False)
     score = models.IntegerField(blank=True, null=True)
     user = models.CharField(max_length=100)
     editcount = models.IntegerField(blank=True, null=True)
