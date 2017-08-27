@@ -211,6 +211,7 @@ def get_scores_for_posts(posts, session):
     counter, start = 0, time.time()
     num_revs = len(revid_to_rev.keys())
     for revbatch in grouper(revid_to_rev.keys(), 50):
+        revbatch = [rev for rev in revbatch if rev]
         ores_ep = ores_ep_template.format(**{
             'context': ores_context,
             'revids': '|'.join(revbatch)
