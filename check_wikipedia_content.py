@@ -16,7 +16,7 @@ from scoring_helpers import map_ores_code_to_int
 from url_helpers import extract_urls
 import pytz
 from json.decoder import JSONDecodeError
-
+from requests.exceptions import ConnectionError
 
 WIK = 'wikipedia.org/wiki/'
 
@@ -389,7 +389,9 @@ def retrieve_links_info(filtered):
             err_count += 1
             post.wiki_content_analyzed = True
             post.save()
-
+        except ConnectionError:
+            err_count += 1
+            print('ConnectionError occurred so this result will NOT be saved')
 
 
 def parse():
