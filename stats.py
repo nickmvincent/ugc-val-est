@@ -615,7 +615,7 @@ def parse():
         help='custom helper. Check code not docs.')
     parser.add_argument(
         '--bootstrap',
-        type=int, nargs='?', default=None
+        type=int, nargs='?', default=None,
         help='use stats bootstrapping')
     args = parser.parse_args()
     if args.tags:
