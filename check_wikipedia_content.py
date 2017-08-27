@@ -10,12 +10,13 @@ import argparse
 
 from urllib.parse import unquote
 from itertools import zip_longest
+from json.decoder import JSONDecodeError
+
 import requests
 
 from scoring_helpers import map_ores_code_to_int
 from url_helpers import extract_urls
 import pytz
-from json.decoder import JSONDecodeError
 from requests.exceptions import ConnectionError
 
 WIK = 'wikipedia.org/wiki/'
@@ -69,14 +70,14 @@ class PostMissingValidLink(Exception):
         super(PostMissingValidLink, self).__init__(self)
 
 
-class MissingOresResponse(Exception):
-    """Used to catch missing ores response"""
-    def __init(self, uid, url):
-        err_log, _ = ErrorLog.objects.get_or_create(uid=post.uid)
-        err_log.msg = '#4: MissingOresResponse: {}'.format(url)[:500]
-        err_log.save()
-        handle_err(post, 4)
-        super(MissingOresResponse, self).__init__(self)
+# class MissingOresResponse(Exception):
+#     """Used to catch missing ores response"""
+#     def __init(self, uid, url):
+#         err_log, _ = ErrorLog.objects.get_or_create(uid=post.uid)
+#         err_log.msg = '#4: MissingOresResponse: {}'.format(url)[:500]
+#         err_log.save()
+#         handle_err(post, 4)
+#         super(MissingOresResponse, self).__init__(self)
 
 # 5 is mystery
 
@@ -218,7 +219,7 @@ def get_scores_for_all_links(links):
             rev.save()
 
 
-def get_user_for_all_revs(revs):
+def get_userinfo_for_all_revs(revs):
     """
     Gets the user information for revisions that still need it
     """
@@ -367,12 +368,11 @@ def identify_links(filtered, field):
             post.num_wiki_links += 1
             post.save()
 
-def retrieve_links_info(filtered):
+def retrieve_links_info(posts_needing_revs):
     """
     Run through sampled threads and get corresponding Wiki data
     """
     ores_ep_template = 'https://ores.wikimedia.org/v2/scores/{context}/wp10?revids={revid}'
-    print('About to run through {} threads'.format(len(filtered)))
     session = requests.Session()
     session.headers.update(
         {'User-Agent': 'ugc-val-est; nickvincent@u.northwestern.edu; research tool'})
@@ -380,7 +380,8 @@ def retrieve_links_info(filtered):
     count = 0
     err_count = 0
     process_start = time.time()
-    for post in filtered:
+    print('About to get revisions for {} posts'.format(len(filtered))
+    for post in posts_needing_revs:
         if count % 100 == 0:
             print('Finished: {}, Errors: {}, Time: {}'.format(count, err_count, time.time() - process_start))
         count += 1
@@ -389,7 +390,7 @@ def retrieve_links_info(filtered):
             post.all_revisions_pulled = True
             post.save()
         except (
-                MissingRevisionId, MissingOresResponse, PostMissingValidLink
+                MissingRevisionId, PostMissingValidLink
         ):
             err_count += 1
             post.all_revisions_pulled = True
@@ -398,10 +399,12 @@ def retrieve_links_info(filtered):
             err_count += 1
             print('{} occurred so this result will NOT be saved'.format(err))
     
-    revs_needing_user = Revision.objects.filter(user=None, err_code=0)
-    get_user_for_all_revs(revs_needing_user)
+    revs_needing_userinfo = Revision.objects.filter(user=None, err_code=0)
+    get_userinfo_for_all_revs(revs_needing_userinfo)
+    print('About to get users for {} revs'.format(len(revs_needing_userinfo)))    
     links_needing_score = WikiLink.objects.filter(day_of_avg_score=None, err_code=0)
-        
+    print('About to get scores for {} links'.format(len(links_needing_score)))
+    get_scores_for_all_links(links_needing_score)
 
 
 def parse():
