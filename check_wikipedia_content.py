@@ -195,7 +195,7 @@ def make_user_request(session, prefix, users):
 
 def get_scores_for_posts(posts, session):
     """Gets two scores for posts passed in"""
-    ores_ep_template = 'https://ores.wikimedia.org/v3/scores/{context}/wp10?revids={revids}'
+    ores_ep_template = 'https://ores.wikimedia.org/v3/scores/{context}/models=wp10?revids={revids}'
     revid_to_rev = {}
     for post in posts:
         dja_links = post.wiki_links.all()
