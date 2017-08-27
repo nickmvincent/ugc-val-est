@@ -121,6 +121,11 @@ def causal_inference(
     for feature in features:
         print(feature)
         feature_row = getattr(records, feature)
+        try:
+            has_any_nans = any(np.isnan(feature_row))
+        except Exception:
+            print('Feature {} failed isnan check...'.format(feature))
+            continue
         if feature == treatment_feature:
             D = feature_row
         elif feature == 'uid':
@@ -128,7 +133,7 @@ def causal_inference(
         elif all(x == 0 for x in feature_row):
             print(
                 'Feature {} is all zeros - will lead to singular matrix'.format(feature))
-        elif any(np.isnan(feature_row)):
+        elif has_any_nans:
             print('Feature {} has a nan value...'.format(feature))
         else:
             successful_fields.append(feature)

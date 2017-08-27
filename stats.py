@@ -390,7 +390,7 @@ def make_method_getter(method_name):
     return get_method_outputs
 
 
-def main(platform='r', rq=1, calculate_frequency=False):
+def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
     """Driver"""
     csv_dir = 'csv_files'
     png_dir = 'png_files'
@@ -486,87 +486,94 @@ def main(platform='r', rq=1, calculate_frequency=False):
             ('num_wiki_pageviews', 'num_wiki_pageviews_prev_week')
         ]
     output_filename = "{}_{}_stats.csv".format(platform, rq)
-    descriptive_stats = {}
-    inferential_stats = {}
-    for dataset in datasets:
-        name = dataset['name']
-        qs = dataset['qs']
-        if calculate_frequency:
-            # extracts LINK BASES from URL
-            frequency_distribution(
-                qs, extract_from, name, extractor)
-        if treatment_kwargs:
-            treatment = {
-                'name': 'Treatment',
-                'qs': qs.filter(**treatment_kwargs)
-            }
-            control = {
-                'name': 'Control',
-                'qs': qs.exclude(**treatment_kwargs)
-            }
-        else:
-            treatment = {
-                'name': 'Treatment',
-                'qs': qs
-            }
-            control = {
-                'name': 'Control',
-                'qs': qs
-            }
-        groups = [treatment, control]
-
-        descriptive_stats[name] = {}
-        inferential_stats[name] = {}
-        for variable in variables:
-            variable_name = variable
-            treatment_var, control_var, method = None, None, None
-            if isinstance(variable, tuple):
-                if callable(variable[1]):
-                    variable_name, method = variable
-                else:
-                    treatment_var, control_var = variable
-                    variable_name = '{} vs {}'.format(treatment_var, control_var)
-            print('processing variable {}'.format(variable_name))
-            try:
+    stats = {}
+    iterations = bootstrap if bootstrap else 1
+    outputs = []
+    for index in range(iterations):
+        descriptive_stats = {}
+        inferential_stats = {}
+        for dataset in datasets:
+            name = dataset['name']
+            qs = dataset['qs']
+            if calculate_frequency:
+                # extracts LINK BASES from URL
+                frequency_distribution(
+                    qs, extract_from, name, extractor)
+            if treatment_kwargs:
+                treatment = {
+                    'name': 'Treatment',
+                    'qs': qs.filter(**treatment_kwargs)
+                }
+                control = {
+                    'name': 'Control',
+                    'qs': qs.exclude(**treatment_kwargs)
+                }
+            else:
+                treatment = {
+                    'name': 'Treatment',
+                    'qs': qs
+                }
+                control = {
+                    'name': 'Control',
+                    'qs': qs
+                }
+            groups = [treatment, control]
+            if bootstrap:
                 for group in groups:
-                    if method:
-                        group['vals'] = method(group['qs'])
-                    elif treatment_var and control_var:
-                        if group['name'] == 'Treatment':
-                            group['vals'] = group['qs'].values_list(treatment_var, flat=True)
-                        elif group['name'] == 'Control':
-                            group['vals'] = group['qs'].values_list(control_var, flat=True)
-                    else:
-                        group['vals'] = group['qs'].values_list(variable, flat=True)
-                    group['vals'] = [x for x in group['vals'] if x is not None]
-                    group['vals'] = np.array(group['vals'])
-                    if calculate_frequency:
-                        if platform == 'r':
-                            frequency_distribution(
-                                group['qs'], 'context', name + '_' + group['name'])
+                    group_size = group['qs'].count()
+                    end = int(group_size / 10)
+                    group['qs'] = group['qs'].order_by('?')[:end]
 
-                len1, len2 = len(treatment['vals']), len(control['vals'])
-                if len1 == 0 or len2 == 0:
-                    print('Skipping variable {} because {}, {}.'.format(
-                        variable_name, len1, len2))
+            descriptive_stats[name] = {}
+            inferential_stats[name] = {}
+            for variable in variables:
+                variable_name = variable
+                treatment_var, control_var, method = None, None, None
+                if isinstance(variable, tuple):
+                    if callable(variable[1]):
+                        variable_name, method = variable
+                    else:
+                        treatment_var, control_var = variable
+                        variable_name = '{} vs {}'.format(treatment_var, control_var)
+                print('processing variable {}'.format(variable_name))
                 try:
-                    inferential_stats[name][variable_name] = inferential_analysis(
-                        treatment['vals'], control['vals'], treatment_kwargs is None)
-                    # groups = [group for group in groups if group['vals']]
-                    descriptive_stats[name][variable_name] = univariate_analysis(groups)
-                except TypeError as err:
-                    print('analysis of variable {} failed because {}'.format(
-                        variable_name, err
+                    for group in groups:
+                        if method:
+                            group['vals'] = method(group['qs'])
+                        elif treatment_var and control_var:
+                            if group['name'] == 'Treatment':
+                                group['vals'] = group['qs'].values_list(treatment_var, flat=True)
+                            elif group['name'] == 'Control':
+                                group['vals'] = group['qs'].values_list(control_var, flat=True)
+                        else:
+                            group['vals'] = group['qs'].values_list(variable, flat=True)
+                        group['vals'] = [x for x in group['vals'] if x is not None]
+                        group['vals'] = np.array(group['vals'])
+                        if calculate_frequency:
+                            if platform == 'r':
+                                frequency_distribution(
+                                    group['qs'], 'context', name + '_' + group['name'])
+
+                    len1, len2 = len(treatment['vals']), len(control['vals'])
+                    if len1 == 0 or len2 == 0:
+                        print('Skipping variable {} because {}, {}.'.format(
+                            variable_name, len1, len2))
+                    try:
+                        inferential_stats[name][variable_name] = inferential_analysis(
+                            treatment['vals'], control['vals'], treatment_kwargs is None)
+                        # groups = [group for group in groups if group['vals']]
+                        descriptive_stats[name][variable_name] = univariate_analysis(groups)
+                    except TypeError as err:
+                        print('analysis of variable {} failed because {}'.format(
+                            variable_name, err
+                        ))
+                except ZeroDivisionError:
+                    print('Skipping variable {} bc zero division'.format(
+                        variable_name
                     ))
-            except ZeroDivisionError:
-                print('Skipping variable {} bc zero division'.format(
-                    variable_name
-                ))
-    pprint(descriptive_stats)
-    output = output_stats(
-        output_filename, descriptive_stats, inferential_stats)
-    print(output)
-    # plt.show()
+        output = output_stats(
+            output_filename, descriptive_stats, inferential_stats)
+        outputs.append(output)
 
 
 def explain():
@@ -606,6 +613,10 @@ def parse():
         '--explain',
         action='store_true',
         help='custom helper. Check code not docs.')
+    parser.add_argument(
+        '--bootstrap',
+        type=int, nargs='?', default=None
+        help='use stats bootstrapping')
     args = parser.parse_args()
     if args.tags:
         tags_frequency_distribution(
@@ -625,7 +636,7 @@ def parse():
             rqs = [args.rq]
         for platform in platforms:
             for rq in rqs:
-                main(platform, rq, args.frequency)
+                main(platform, rq, args.frequency, args.bootstrap)
 
 
 if __name__ == "__main__":
