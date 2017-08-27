@@ -435,6 +435,7 @@ def retrieve_links_info(posts_needing_revs, model):
     print('About to get users for {} revs'.format(len(revs_needing_userinfo)))    
     get_userinfo_for_all_revs(revs_needing_userinfo, session)
     posts_needing_score = model.objects.filter(
+        has_wiki_link=True,
         day_of_avg_score=None, wiki_content_error=0
     )
     print('About to get scores for {} posts'.format(len(posts_needing_score)))
