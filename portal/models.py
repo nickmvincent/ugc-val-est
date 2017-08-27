@@ -427,11 +427,7 @@ class Revision(models.Model):
     user_retained = models.BooleanField(blank=True, null=True)
     score = models.IntegerField(blank=True, null=True)
     user = models.CharField(max_length=100)
-<<<<<<< Updated upstream
-    editcount = models.IntegerField(default=0)
-=======
     editcount = models.IntegerField(blank=True, null=True)
->>>>>>> Stashed changes
     registration = models.DateTimeField(blank=True, null=True)
     # whether the edit was minor edit
     flags = models.BooleanField(default=True)
