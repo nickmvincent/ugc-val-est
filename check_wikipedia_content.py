@@ -132,11 +132,8 @@ def make_pageview_request(session, **kwargs):
     """
     base = 'http://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/all-agents/{title}/daily/{start}/{end}'
     endpoint = base.format(**kwargs)
-    try:
-        result = session.get(endpoint)
-        result = result.json()
-    except JSONDecodeError:
-        return []
+    result = session.get(endpoint)
+    result = result.json()
     try:
         result = result['items']
     except KeyError:
@@ -301,13 +298,14 @@ def check_single_post(post, ores_ep_template, session):
             if 'user' in rev_kwargs:
                 for key, val in username_to_user_kwargs.get(rev_kwargs['user'], {}).items():
                     rev_kwargs[key] = val
+            
+            if 'lastrev_date' not in rev_kwargs:
+                rev_kwargs['lastrev_date'] = rev_kwargs['timestamp']
+            for field in ['lastrev_date', 'timestamp']:
+                rev_kwargs[field] = datetime.datetime.strptime(
+                    rev_kwargs[field],
+                    '%Y-%m-%dT%H:%M:%SZ').astimezone(pytz.UTC)
             try:
-                if 'lastrev_date' not in rev_kwargs:
-                    rev_kwargs['lastrev_date'] = rev_kwargs['timestamp']
-                for field in ['lastrev_date', 'timestamp']:
-                    rev_kwargs[field] = datetime.datetime.strptime(
-                        rev_kwargs[field],
-                        '%Y-%m-%dT%H:%M:%SZ').astimezone(pytz.UTC)
                 Revision.objects.create(**rev_kwargs)
                 revs_made += 1
             except IntegrityError as err:
@@ -389,9 +387,9 @@ def retrieve_links_info(filtered):
             err_count += 1
             post.wiki_content_analyzed = True
             post.save()
-        except ConnectionError:
+        except (ConnectionError, JSONDecodeError) as err:
             err_count += 1
-            print('ConnectionError occurred so this result will NOT be saved')
+            print('{} occurred so this result will NOT be saved'.format(err))
 
 
 def parse():
@@ -401,41 +399,47 @@ def parse():
     parser = argparse.ArgumentParser(
         description='Identify wikipedia links and get info about them')
     parser.add_argument(
-        '--platform', help='the platform to use. "r" for reddit and "s" for stack overflow')
+        '--platform', nargs='?',
+        default=None, help='the platform to use. "r" for reddit and "s" for stack overflow')
     parser.add_argument(
         '--mode', help='identify, retrieve, full (performs both in sequence)')
     parser.add_argument(
         '--clear_first', action='store_true', default=False,
         help='identify, retrieve, full (performs both in sequence)')
     args = parser.parse_args()
-    if args.platform == 'r':
-        field = 'url'
-        model = SampledRedditThread
+    if args.platform is None:
+        platforms = ['r', 's']
     else:
-        field = 'body'
-        model = SampledStackOverflowPost
-    if args.clear_first:
-        for obj in model.objects.filter(wiki_content_analyzed=True):
-            for wiki_link in obj.wiki_links.all():
-                Revision.objects.filter(wiki_link=wiki_link).delete()
-            obj.wiki_links.all().delete()
-            ErrorLog.objects.filter(uid=obj.uid).delete()
-        model.objects.filter(wiki_content_analyzed=True).update(
-            has_wiki_link=False,
-            day_of_avg_score=None,
-            week_after_avg_score=None,
-            wiki_content_error=0,
-            num_wiki_links=0,
-            wiki_content_analyzed=False,
-        )
-    if args.mode == 'identify' or args.mode == 'full':
-        filtered = model.objects.filter(**{field + '__contains': WIK})
-        print('Going to IDENTIFY {} items'.format(len(filtered)))
-        identify_links(filtered, field)
-    if args.mode == 'retrieve' or args.mode == 'full':
-        filtered = model.objects.filter(has_wiki_link=True, wiki_content_analyzed=False)
-        print('Going to RETRIEVE INFO for {} items'.format(len(filtered)))
-        retrieve_links_info(filtered)
+        platforms = [args.platform]
+    for platform in platforms:
+        if platform == 'r':
+            field = 'url'
+            model = SampledRedditThread
+        else:
+            field = 'body'
+            model = SampledStackOverflowPost
+        if args.clear_first:
+            for obj in model.objects.filter(wiki_content_analyzed=True):
+                for wiki_link in obj.wiki_links.all():
+                    Revision.objects.filter(wiki_link=wiki_link).delete()
+                obj.wiki_links.all().delete()
+                ErrorLog.objects.filter(uid=obj.uid).delete()
+            model.objects.filter(wiki_content_analyzed=True).update(
+                has_wiki_link=False,
+                day_of_avg_score=None,
+                week_after_avg_score=None,
+                wiki_content_error=0,
+                num_wiki_links=0,
+                wiki_content_analyzed=False,
+            )
+        if args.mode == 'identify' or args.mode == 'full':
+            filtered = model.objects.filter(**{field + '__contains': WIK})
+            print('Going to IDENTIFY {} items'.format(len(filtered)))
+            identify_links(filtered, field)
+        if args.mode == 'retrieve' or args.mode == 'full':
+            filtered = model.objects.filter(has_wiki_link=True, wiki_content_analyzed=False)
+            print('Going to RETRIEVE INFO for {} items'.format(len(filtered)))
+            retrieve_links_info(filtered)
     
 
 if __name__ == "__main__":
