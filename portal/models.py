@@ -267,7 +267,7 @@ class Post(models.Model):
                     for field, dt in field_to_dt.items():
                         ores_score = get_closest_to(
                             revisions, dt).score
-                        if ores_score == -1:
+                        if ores_score is None:
                             missing_necessary_ores = True
                         else:
                             field_to_score[field] += ores_score
@@ -285,7 +285,7 @@ class Post(models.Model):
                                         self.num_new_editors_retained += 1
                             else:
                                 self.num_old_edits += 1
-                            if revision.editcount <= 5:
+                            if revision.editcount and revision.editcount <= 5:
                                 self.num_inactive_edits += 1
                             else:
                                 self.num_active_edits += 1
@@ -307,7 +307,7 @@ class Post(models.Model):
 
                             if self.timestamp - revision.timestamp < datetime.timedelta(hours=3):
                                 self.num_edits_preceding_post += 1
-                            if revision.editcount <= 5:
+                            if revision.editcount and revision.editcount <= 5:
                                 self.num_inactive_edits_prev_week += 1
                             else:
                                 self.num_active_edits_prev_week += 1

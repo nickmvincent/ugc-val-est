@@ -380,7 +380,7 @@ def retrieve_links_info(posts_needing_revs):
     count = 0
     err_count = 0
     process_start = time.time()
-    print('About to get revisions for {} posts'.format(len(filtered))
+    print('About to get revisions for {} posts'.format(len(posts_needing_revs)))
     for post in posts_needing_revs:
         if count % 100 == 0:
             print('Finished: {}, Errors: {}, Time: {}'.format(count, err_count, time.time() - process_start))
