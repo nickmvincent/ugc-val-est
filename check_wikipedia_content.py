@@ -244,7 +244,7 @@ def get_userinfo_for_all_revs(revs, session):
             user_to_revs[rev.user] = [rev]
         else:
             user_to_revs[rev.user].append(rev)
-    num_users = len(user_to_revs.keys()
+    num_users = len(user_to_revs.keys())
     counter = 0
     start = time.time()    
     for userbatch in grouper(user_to_revs.keys(), 50):
