@@ -12,16 +12,14 @@ from urllib.parse import unquote
 from itertools import zip_longest
 from json.decoder import JSONDecodeError
 
-import requests
 
 from scoring_helpers import map_ores_code_to_int
 from url_helpers import extract_urls
 import pytz
 from requests.exceptions import ConnectionError
+import requests
 
 WIK = 'wikipedia.org/wiki/'
-
-
 
 
 def grouper(iterable, groupsize, fillvalue=None):
@@ -41,6 +39,7 @@ class MissingRevisionId(Exception):
     Used to catch MissingRevision Media Wiki
     Get a list of all such errors by querying for wiki_error_content=2
     """
+
     def __init__(self, post, info):
         err_log, _ = ErrorLog.objects.get_or_create(uid=post.uid)
         err_log.msg = '#2: MissingRevisionId: {}'.format(info)[:500]
@@ -51,6 +50,7 @@ class MissingRevisionId(Exception):
 
 class ContextNotSupported(Exception):
     """Used to catch MissingRevision Media Wiki"""
+
     def __init__(self, post, ores_context):
         err_log, _ = ErrorLog.objects.get_or_create(uid=post.uid)
         err_log.msg = '#3: ContextNotSupported: {}'.format(ores_context)[:500]
@@ -61,6 +61,7 @@ class ContextNotSupported(Exception):
 
 class PostMissingValidLink(Exception):
     """Used to catch missing article, improperly formatted links, etc"""
+
     def __init__(self, post, link):
         post.wiki_links.remove(link)
         post.num_wiki_links -= 1
@@ -120,7 +121,8 @@ def make_mediawiki_request(session, base, params, verbose=False):
 
 def make_pageview_request(session, **kwargs):
     """
-    example:  http://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/all-agents/Albert_Einstein/daily/2015100100/2015103100
+    example:  http://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/
+    all-access/all-agents/Albert_Einstein/daily/2015100100/2015103100
     """
     base = 'http://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/all-agents/{title}/daily/{start}/{end}'
     endpoint = base.format(**kwargs)
@@ -131,6 +133,7 @@ def make_pageview_request(session, **kwargs):
     except KeyError:
         result = None
     return result
+
 
 def make_lastrev_request(session, prefix, user):
     """
@@ -190,17 +193,21 @@ def make_user_request(session, prefix, users):
     return make_mediawiki_request(session, base, params)
 
 
-def get_scores_for_all_links(links):
+def get_scores_for_posts(posts, session):
+    """Gets two scores for posts passed in"""
+    ores_ep_template = 'https://ores.wikimedia.org/v3/scores/{context}/wp10?revids={revids}'
     revid_to_rev = {}
-    for dja_link in links:
-        if dja_link.language_code != 'en':
-            print('skipping non english version')
-            continue
-        dja_revs = Revision.objects.filter(wiki_link=dja_link)
-        for timestamp in [post.timestamp, week_after_post, ]:
-            closest_rev = get_closest_to(dja_revs, timestamp)
-            revid_to_rev[closest_rev.revid] = closest_rev
-    ores_context = 'en' + 'wiki'
+    for post in posts:
+        dja_links = post.wiki_links.all()
+        for dja_link in dja_links:
+            if dja_link.language_code != 'en':
+                print('skipping non english version')
+                continue
+            dja_revs = Revision.objects.filter(wiki_link=dja_link)
+            for timestamp in [post.timestamp, post.timestamp + datetime.timedelta(days=7)]:
+                closest_rev = get_closest_to(dja_revs, timestamp)
+                revid_to_rev[closest_rev.revid] = closest_rev
+        ores_context = 'en' + 'wiki'
     for revbatch in grouper(revid_to_rev.keys(), 50):
         ores_ep = ores_ep_template.format(**{
             'context': ores_context,
@@ -213,13 +220,15 @@ def get_scores_for_all_links(links):
             rev = revid_to_rev[revid]
             try:
                 predicted_code = scores[str(revid)]['prediction']
+                rev.score = map_ores_code_to_int(predicted_code)
             except KeyError:
-                rev.err_code = 4 # missingOresResponse
-            rev.score = map_ores_code_to_int(predicted_code)
+                rev.err_code = 4  # missingOresResponse
             rev.save()
+    for post in posts:
+        post.save()
 
 
-def get_userinfo_for_all_revs(revs):
+def get_userinfo_for_all_revs(revs, session):
     """
     Gets the user information for revisions that still need it
     """
@@ -233,12 +242,12 @@ def get_userinfo_for_all_revs(revs):
         userbatch = [user for user in userbatch if user]
         users = []
         user_result_pages = make_user_request(
-            session, dja_link.language_code, userbatch)
+            session, 'en', userbatch)
         for page in user_result_pages:
             users += page.get('users', [])
         for user in users:
             lastrev_pages = make_lastrev_request(
-                session, dja_link.language_code,
+                session, 'en',
                 user['name'])
             for result_page in lastrev_pages:
                 contribs = result_page['usercontribs']
@@ -250,12 +259,11 @@ def get_userinfo_for_all_revs(revs):
                 rev.registration = user.get('registration')
                 rev.lastrev_date = lastrev_date
                 rev.save()
-            
 
-def get_revs_for_single_post(post, ores_ep_template, session):
+
+def get_revs_for_single_post(post, session):
     """check a single post"""
     dja_links = post.wiki_links.all()
-    username_cache = {}
     for dja_link in dja_links:
         if dja_link.language_code != 'en':
             continue
@@ -278,16 +286,19 @@ def get_revs_for_single_post(post, ores_ep_template, session):
         norm_title = norm_title.replace('/', '%2F')
         pageviews_prev_week = make_pageview_request(
             session,
-            title=norm_title, start=week_before_post.strftime(pageview_api_str_fmt),
+            title=norm_title, start=week_before_post.strftime(
+                pageview_api_str_fmt),
             end=day_of_post_short_str)
         pageviews = make_pageview_request(
             session,
             title=norm_title, start=day_of_post_short_str,
             end=week_after_post.strftime(pageview_api_str_fmt))
         if pageviews_prev_week and pageviews:
-            post.num_wiki_pageviews_prev_week = sum([entry['views'] for entry in pageviews_prev_week])    
-            post.num_wiki_pageviews = sum([entry['views'] for entry in pageviews])
-        
+            post.num_wiki_pageviews_prev_week = sum(
+                [entry['views'] for entry in pageviews_prev_week])
+            post.num_wiki_pageviews = sum(
+                [entry['views'] for entry in pageviews])
+
         # now get revids for the time window
         revisions = []
         revid_result_pages = make_revid_request(
@@ -300,7 +311,7 @@ def get_revs_for_single_post(post, ores_ep_template, session):
                     raise PostMissingValidLink(post, dja_link)
                 if 'revisions' in page:
                     revisions += page['revisions']
-        
+
         # if no revs were found in the two week block, look backwards
         if not revisions:
             revid_result_pages = make_revid_request(
@@ -328,9 +339,8 @@ def get_revs_for_single_post(post, ores_ep_template, session):
             rev_kwargs_lst.append(rev_kwargs)
             revids.append(rev_kwargs['revid'])
 
-        
         revs_made = 0
-        for rev_kwargs in rev_kwargs_lst:            
+        for rev_kwargs in rev_kwargs_lst:
             if 'lastrev_date' not in rev_kwargs:
                 rev_kwargs['lastrev_date'] = rev_kwargs['timestamp']
             for field in ['lastrev_date', 'timestamp']:
@@ -341,8 +351,7 @@ def get_revs_for_single_post(post, ores_ep_template, session):
                 Revision.objects.create(**rev_kwargs)
                 revs_made += 1
             except IntegrityError as err:
-                pass
-
+                print(err)
 
 
 def identify_links(filtered, field):
@@ -368,11 +377,11 @@ def identify_links(filtered, field):
             post.num_wiki_links += 1
             post.save()
 
-def retrieve_links_info(posts_needing_revs):
+
+def retrieve_links_info(posts_needing_revs, model):
     """
     Run through sampled threads and get corresponding Wiki data
     """
-    ores_ep_template = 'https://ores.wikimedia.org/v2/scores/{context}/wp10?revids={revid}'
     session = requests.Session()
     session.headers.update(
         {'User-Agent': 'ugc-val-est; nickvincent@u.northwestern.edu; research tool'})
@@ -383,10 +392,11 @@ def retrieve_links_info(posts_needing_revs):
     print('About to get revisions for {} posts'.format(len(posts_needing_revs)))
     for post in posts_needing_revs:
         if count % 100 == 0:
-            print('Finished: {}, Errors: {}, Time: {}'.format(count, err_count, time.time() - process_start))
+            print('Finished: {}, Errors: {}, Time: {}'.format(
+                count, err_count, time.time() - process_start))
         count += 1
         try:
-            get_revs_for_single_post(post, ores_ep_template, session)
+            get_revs_for_single_post(post, session)
             post.all_revisions_pulled = True
             post.save()
         except (
@@ -398,13 +408,15 @@ def retrieve_links_info(posts_needing_revs):
         except (ConnectionError, JSONDecodeError) as err:
             err_count += 1
             print('{} occurred so this result will NOT be saved'.format(err))
-    
-    revs_needing_userinfo = Revision.objects.filter(user=None, err_code=0)
-    get_userinfo_for_all_revs(revs_needing_userinfo)
-    print('About to get users for {} revs'.format(len(revs_needing_userinfo)))    
-    links_needing_score = WikiLink.objects.filter(day_of_avg_score=None, err_code=0)
-    print('About to get scores for {} links'.format(len(links_needing_score)))
-    get_scores_for_all_links(links_needing_score)
+
+    revs_needing_userinfo = Revision.objects.filter(editcount=None, err_code=0)
+    get_userinfo_for_all_revs(revs_needing_userinfo, session)
+    print('About to get users for {} revs'.format(len(revs_needing_userinfo)))
+    posts_needing_score = model.objects.filter(
+        day_of_avg_score=None, wiki_content_error=0
+    )
+    print('About to get scores for {} posts'.format(len(posts_needing_score)))
+    get_scores_for_posts(posts_needing_score, session)
 
 
 def parse():
@@ -452,10 +464,11 @@ def parse():
             print('Going to IDENTIFY {} items'.format(len(filtered)))
             identify_links(filtered, field)
         if args.mode == 'retrieve' or args.mode == 'full':
-            filtered = model.objects.filter(has_wiki_link=True, all_revisions_pulled=False)
+            filtered = model.objects.filter(
+                has_wiki_link=True, all_revisions_pulled=False)
             print('Going to RETRIEVE INFO for {} items'.format(len(filtered)))
-            retrieve_links_info(filtered)
-    
+            retrieve_links_info(filtered, model)
+
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dja.settings")
