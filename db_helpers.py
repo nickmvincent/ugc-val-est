@@ -11,6 +11,7 @@ from queryset_helpers import (
     list_stack_specific_features,
     list_reddit_specific_features
 )
+import pytz
 
 
 def clear_fixed_errors():
@@ -73,6 +74,13 @@ def reset_revision_info():
     WikiLink.objects.all().delete()
     Revision.objects.all().delete()
     ErrorLog.objects.all().delete()
+
+
+def fix_bad_registration_time():
+    fixed_time = datetime.datetime(year=2017, month=5, day=1).astimezone(pytz.UTC)
+    Revision.objects.filter(registration__gte=fixed_time).update(
+        registration=None
+    )
 
 
 def show_samples():

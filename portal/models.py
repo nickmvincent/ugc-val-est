@@ -276,7 +276,7 @@ class Post(models.Model):
                         starttime = self.timestamp - datetime.timedelta(days=7)
                         if revision.timestamp > self.timestamp:
                             self.num_edits += 1
-                            if revision.registration > self.timestamp:
+                            if revision.registration and revision.registration > self.timestamp:
                                 self.num_new_edits += 1
                                 if users_seen.get(revision.user) is None:
                                     self.num_new_editors += 1
@@ -295,7 +295,7 @@ class Post(models.Model):
                                 self.num_major_edits += 1
                         elif revision.timestamp > starttime:
                             self.num_edits_prev_week += 1
-                            if revision.registration > starttime:
+                            if revision.registration and revision.registration > starttime:
                                 self.num_new_edits_prev_week += 1
                                 if users_seen.get(revision.user) is None:
                                     self.num_new_editors_prev_week += 1
@@ -427,7 +427,7 @@ class Revision(models.Model):
     score = models.IntegerField(default=-1)
     user = models.CharField(max_length=100)
     editcount = models.IntegerField(default=0)
-    registration = models.DateTimeField(default=timezone.now)
+    registration = models.DateTimeField(blank=True, null=True)
     # whether the edit was minor edit
     flags = models.BooleanField(default=True)
     

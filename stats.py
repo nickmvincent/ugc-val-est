@@ -416,6 +416,7 @@ def main(platform='r', rq=1, calculate_frequency=False):
             'week_after_avg_score__isnull': False,
         }
         treatment_kwargs = None
+    subsample_kwargs['sample_num'] = 0
 
     if platform == 'r':
         datasets = [{
