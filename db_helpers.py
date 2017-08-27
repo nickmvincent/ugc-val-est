@@ -218,3 +218,5 @@ if __name__ == "__main__":
             sample_articles()
         elif sys.argv[1] == 'extract_pairs':
             extract_pairs(sys.argv[2], sys.argv[3])
+        elif sys.argv[1] == 'fix_bad_registration_time':
+            fix_bad_registration_time()
