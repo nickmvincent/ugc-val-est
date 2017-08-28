@@ -14,6 +14,8 @@ import os
 import argparse
 import time
 import traceback
+import csv
+from collections import defaultdict
 
 # ==== END NATIVE IMPORTS
 # ==== START LOCAL IMPORTS
@@ -87,7 +89,7 @@ def extract_vals_and_method_results(qs, field_names):
 def causal_inference(
         platform, treatment_feature,
         num_rows=None, simple_psm=False, simple_bin=None, trim_val=None,
-        paired_psm=None):
+        paired_psm=None, iterations=1):
     """
     Use causalinference module to perform causal inference analysis
     """
@@ -95,139 +97,162 @@ def causal_inference(
         """return a tuple of time, description of time"""
         return (time.time(), desc)
 
-    times = []
-    times.append(mark_time('function_start'))
-    
-    if treatment_feature == 'has_good_wiki_link':
-        filter_kwargs = {'has_wiki_link': True, 'day_of_avg_score__isnull': False}
-    else:
-        filter_kwargs = None
-    qs, features, outcomes = get_qs_features_and_outcomes(
-        platform, num_rows=num_rows, filter_kwargs=filter_kwargs)
-    features.append(treatment_feature)
-    features.append('uid')
-
-    filename = 'causal_treatment_{}_platform_{}_subset_{}.txt'.format(
-        treatment_feature, platform,
-        num_rows if num_rows else 'All')
-    print('==={}==='.format(outcomes))
-    field_names = features + outcomes
-    rows = qs.values_list(*field_names)
-    records = values_list_to_records(rows, field_names)
-    times.append(mark_time('records_loaded'))
-
-    feature_rows = []
-    successful_fields = []
-    for feature in features:
-        print(feature)
-        feature_row = getattr(records, feature)
-        if feature == treatment_feature:
-            D = feature_row
-            continue
-        elif feature == 'uid':
-            ids = feature_row
-            continue
-        try:
-            has_any_nans = any(np.isnan(feature_row))
-        except Exception:
-            print('Feature {} failed isnan check...'.format(feature))
-            continue
-        if all(x == 0 for x in feature_row):
-            print(
-                'Feature {} is all zeros - will lead to singular matrix'.format(feature))
-        elif has_any_nans:
-            print('Feature {} has a nan value...'.format(feature))
-        else:
-            successful_fields.append(feature)
-            feature_rows.append(feature_row)
-    outcome_rows = []
-    for outcome in outcomes:
-        outcome_row = getattr(records, outcome)
-        outcome_rows.append(outcome_row)
-
-    times.append(mark_time('rows_loaded'))
-    varname_to_field = {"X{}".format(i):field for i, field in enumerate(successful_fields)}
-    outname_to_field = {"Y{}".format(i):field for i, field in enumerate(outcomes)}
-    out = []
-    for dic in [varname_to_field, outname_to_field]:
-        for key, val in dic.items():
-            out.append("{}:{}".format(key, val))
-
+    treatment_effects = defaultdict(list)
+    for iteration in range(iterations):
+        times = []
+        times.append(mark_time('function_start'))
         
-    X = np.transpose(np.array(feature_rows))
-    Y = np.transpose(np.array(outcome_rows))
-
-    causal = CausalModel(Y, D, X, ids=ids)
-    times.append(mark_time('CausalModel'))
-    out.append(str(causal.summary_stats))
-    print(causal.summary_stats)
-    causal.est_via_ols()
-    times.append(mark_time('est_via_ols'))
-    print(causal.estimates)
-    if simple_psm:
-        causal.est_propensity()
-        times.append(mark_time('propensity'))
-    else:
-        causal.est_propensity_s()
-        times.append(mark_time('propensity_s'))
-    out.append(str(causal.propensity))
-    print(causal.propensity)
-    if trim_val:
-        if trim_val == 'auto':
-            causal.trim_s()
-            times.append(mark_time('trim_s'))
-            out.append('TRIM PERFORMED')
-            out.append(str(causal.summary_stats))
+        if treatment_feature == 'has_good_wiki_link':
+            filter_kwargs = {'has_wiki_link': True, 'day_of_avg_score__isnull': False}
         else:
+            filter_kwargs = None
+        qs, features, outcomes = get_qs_features_and_outcomes(
+            platform, num_rows=num_rows, filter_kwargs=filter_kwargs)
+        features.append(treatment_feature)
+        features.append('uid')
+
+        filename = 'causal_treatment_{}_platform_{}_subset_{}.txt'.format(
+            treatment_feature, platform,
+            num_rows if num_rows else 'All')
+        print('==={}==='.format(outcomes))
+        field_names = features + outcomes
+        rows = qs.values_list(*field_names)
+        records = values_list_to_records(rows, field_names)
+        times.append(mark_time('records_loaded'))
+
+        feature_rows = []
+        successful_fields = []
+        for feature in features:
+            print(feature)
+            feature_row = getattr(records, feature)
+            if feature == treatment_feature:
+                D = feature_row
+                continue
+            elif feature == 'uid':
+                ids = feature_row
+                continue
             try:
-                causal.cutoff = float(trim_val)
-                causal.trim()
-                times.append(mark_time('trim_{}'.format(trim_val)))
-                out.append(str(causal.summary_stats))
-            except:
-                pass
-    else:
-        print('Skipping trim value as per request')
-    if paired_psm:
-        psm_est, psm_rows = causal.est_via_psm()
-        print(str(psm_est))
-        out.append('PSM PAIR REGRESSION')
-        out.append(str(psm_est))
+                has_any_nans = any(np.isnan(feature_row))
+            except Exception:
+                print('Feature {} failed isnan check...'.format(feature))
+                continue
+            if all(x == 0 for x in feature_row):
+                print(
+                    'Feature {} is all zeros - will lead to singular matrix'.format(feature))
+            elif has_any_nans:
+                print('Feature {} has a nan value...'.format(feature))
+            else:
+                successful_fields.append(feature)
+                feature_rows.append(feature_row)
+        outcome_rows = []
+        for outcome in outcomes:
+            outcome_row = getattr(records, outcome)
+            outcome_rows.append(outcome_row)
 
-        with open('PSM_PAIRS' + filename, 'w') as outfile:
-            outfile.write('\n'.join(psm_rows))
-    else:
-        if simple_bin:
-            causal.blocks = int(simple_bin)
-            causal.stratify()
-            times.append(mark_time('stratify_{}'.format(simple_bin)))
+        times.append(mark_time('rows_loaded'))
+        varname_to_field = {"X{}".format(i):field for i, field in enumerate(successful_fields)}
+        outname_to_field = {"Y{}".format(i):field for i, field in enumerate(outcomes)}
+        out = []
+        for dic in [varname_to_field, outname_to_field]:
+            for key, val in dic.items():
+                out.append("{}:{}".format(key, val))
+
+            
+        X = np.transpose(np.array(feature_rows))
+        Y = np.transpose(np.array(outcome_rows))
+
+        causal = CausalModel(Y, D, X, ids=ids)
+        times.append(mark_time('CausalModel'))
+        out.append(str(causal.summary_stats))
+        print(causal.summary_stats)
+        causal.est_via_ols()
+        times.append(mark_time('est_via_ols'))
+        print(causal.estimates)
+        if simple_psm:
+            causal.est_propensity()
+            times.append(mark_time('propensity'))
         else:
-            causal.stratify_s()
-            times.append(mark_time('stratify_s'))
-        out.append(str(causal.strata))
-        print(causal.strata)
-        try:
-            causal.est_via_blocking()
-            times.append(mark_time('est_via_blocking'))
-        except np.linalg.linalg.LinAlgError as err:
-            msg = 'LinAlgError with est_via_blocking: {}'.format(err)
-            err_handle(msg, out)
-    # try:
-    #     causal.est_via_matching()
-    #     times.append(mark_time('est_via_matching'))
-    # except np.linalg.linalg.LinAlgError as err:
-    #     msg = 'LinAlgError with est_via_matching: {}'.format(err)
-    #     err_handle(msg, out)
-    out.append(str(causal.estimates))
-    timing_info = {}
-    prev = times[0][0]
-    for cur_time, desc in times[1:]:
-        timing_info[desc] = cur_time - prev
-        prev = cur_time
-    for key, val in timing_info.items():
-        out.append("{}:{}".format(key, val))
-    with open(filename, 'w') as outfile:
-        outfile.write('\n'.join(out))
+            causal.est_propensity_s()
+            times.append(mark_time('propensity_s'))
+        out.append(str(causal.propensity))
+        print(causal.propensity)
+        if trim_val:
+            if trim_val == 'auto':
+                causal.trim_s()
+                times.append(mark_time('trim_s'))
+                out.append('TRIM PERFORMED')
+                out.append(str(causal.summary_stats))
+            else:
+                try:
+                    causal.cutoff = float(trim_val)
+                    causal.trim()
+                    times.append(mark_time('trim_{}'.format(trim_val)))
+                    out.append(str(causal.summary_stats))
+                except:
+                    pass
+        else:
+            print('Skipping trim value as per request')
+        if paired_psm:
+            psm_est, psm_rows = causal.est_via_psm()
+            print(str(psm_est))
+            out.append('PSM PAIR REGRESSION')
+            out.append(str(psm_est))
+
+            with open('PSM_PAIRS' + filename, 'w') as outfile:
+                outfile.write('\n'.join(psm_rows))
+            ates = psm_est['ate']
+        else:
+            if simple_bin:
+                causal.blocks = int(simple_bin)
+                causal.stratify()
+                times.append(mark_time('stratify_{}'.format(simple_bin)))
+            else:
+                causal.stratify_s()
+                times.append(mark_time('stratify_s'))
+            out.append(str(causal.strata))
+            print(causal.strata)
+            try:
+                causal.est_via_blocking()
+                times.append(mark_time('est_via_blocking'))
+            except np.linalg.linalg.LinAlgError as err:
+                msg = 'LinAlgError with est_via_blocking: {}'.format(err)
+                err_handle(msg, out)
+        # try:
+        #     causal.est_via_matching()
+        #     times.append(mark_time('est_via_matching'))
+        # except np.linalg.linalg.LinAlgError as err:
+        #     msg = 'LinAlgError with est_via_matching: {}'.format(err)
+        #     err_handle(msg, out)
+        timing_info = {}
+        prev = times[0][0]
+        for cur_time, desc in times[1:]:
+            timing_info[desc] = cur_time - prev
+            prev = cur_time
+        for key, val in timing_info.items():
+            out.append("{}:{}".format(key, val))
+        with open(filename, 'w') as outfile:
+            outfile.write('\n'.join(out))
+        for ate_num, ate in enumerate(ates):
+            treatment_effects[outcomes[ate_num]].append(ate)
+    boot_rows = [
+        ['Bootstrap results for {} iterations of full resampling'.format(
+        iterations), str(5), str(50), str(95)]
+    ]
+    for outcome, ate_lst in treatment_effects.items():
+        print(outcome, ate_lst)
+        sor = sorted(ate_lst)
+        n = len(ate_lst)
+        bot = 0.05 * n
+        mid = 0.5 * n
+        top = 0.95 * n
+        boot_rows.append([
+            outcome, sor[bot], sor[mid], sor[top]
+        ])
+    with open('csv_files/' + 'BOOT_' + filename, 'w', newline='') as outfile:
+        writer = csv.writer(outfile)
+        writer.writerows(boot_rows)
+
+            
 
 
 def simple_linear(platform, quality_mode=False):
@@ -329,10 +354,18 @@ def parse():
         '--trim_val',
         action='store_true',
         help='to perform PSM trimming')
+    parser.add_argument(
+        '--bootstrap',
+        type=int, nargs='?', default=None,
+        help='use stats bootstrapping')
     args = parser.parse_args()
     if args.simple:
         simple_linear(args.platform)
     if args.causal:
+        if args.bootstrap is None:
+            iterations = 1
+        else:
+            iterations = args.bootstrap
         if args.treatment is None:
             treatments = ['has_wiki_link', 'has_good_wiki_link']
         else:
@@ -347,7 +380,8 @@ def parse():
                     platform, treatment,
                     args.num_rows, args.simple_psm,
                     args.simple_bin, args.trim_val,
-                    args.paired_psm)
+                    args.paired_psm, iterations)
+
 
     if args.quality:
         simple_linear(args.platform, True)

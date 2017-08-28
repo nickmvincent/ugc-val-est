@@ -258,14 +258,13 @@ def inferential_analysis(x_arr, y_arr, samples_related):
     Performs t-test, cohen's d calculation, and mean difference calculations
     """
     delta = np.mean(x_arr) - np.mean(y_arr)
+
     if samples_related:
         _, pval = stats.ttest_rel(
             x_arr, y_arr)
     else:
         _, pval = stats.ttest_ind(
             x_arr, y_arr, equal_var=False)  # _ = tstat
-    # cles_score_flipped = cles(x_arr, y_arr)
-    # cles_score = cles(y_arr, x_arr)
     return {
         'Hypothesis Testing': {
             'Treatment vs Control': {
@@ -273,8 +272,6 @@ def inferential_analysis(x_arr, y_arr, samples_related):
                 'p_value': pval,
                 # 'percent_bias': percent_bias(x_arr, y_arr),
                 'cohen\'s d effect size': cohen_d(x_arr, y_arr),
-                # 'CLES': cles_score,
-                # 'CLES flipped (treatment=lesser)': cles_score_flipped,
                 # 'Wilcoxon rank-sum statistic': stats.ranksums(x_arr, y_arr),
             }
         }
@@ -503,7 +500,6 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
             if bootstrap:
                 samples = []
                 if dataset.get('ordered_vals') is None:
-                    print('setting ordered vals')
                     dataset['ordered_vals'] = list(dataset['qs'].order_by('uid').values())
                 len_vals = len(dataset['ordered_vals'])
                 for _ in range(len_vals):
@@ -650,24 +646,32 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                                     stat_names[stat_name].append(val)
     boot_rows = [
         ['Bootstrap results for {} iterations of full resampling'.format(
-        iterations), 'n', str(5), str(50), str(95)]
+        iterations), str(5), str(50), str(95)]
     ]
     for subset_name, computed_vars in outputs.items():
         for computed_var, stat_categories in computed_vars.items():
             for stat_category, subgroups in stat_categories.items():
-                if stat_category not in ['central_tendencies', 'Hypothesis Testing',]:
+                if stat_category not in [
+                    # 'central_tendencies', 
+                    'Hypothesis Testing',
+                ]:
                     continue
                 for subgroup, stat_names in subgroups.items():
                     for stat_name, stat_values in stat_names.items():
-                        sor = sorted(stat_values)
+                        if 'stat_name' in [
+                            "cohen's d effect size",
+                            'p_value',
+                        ]:
+                            continue
                         n = len(stat_values)
+                        sor = sorted(stat_values)
                         bot = int(0.05 * n)
                         mid = int(0.5 * n)
                         top = int(0.95 * n)
                         desc = "{}|{}|{}|{}|{}".format(
                             subset_name, computed_var, stat_category, subgroup, stat_name
                         )
-                        boot_rows.append([desc, n, sor[bot], sor[mid], sor[top]])
+                        boot_rows.append([desc, sor[bot], sor[mid], sor[top]])
     with open('csv_files/' + 'BOOT_' + output_filename, 'w', newline='') as outfile:
         writer = csv.writer(outfile)
         writer.writerows(boot_rows)
