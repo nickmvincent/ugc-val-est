@@ -512,15 +512,20 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                 control_var_to_vec = defaultdict(list)
                 for sample in samples:
                     treatment = True
-                    for key, val in treatment_kwargs.items():
-                        if sample[key] != val:
-                            treatment = False
-                            break
-                    for key, val in sample.items():
-                        if treatment:
+                    if treatment_kwargs is None:
+                        for key, val in sample.items():
                             treatment_var_to_vec[key].append(val)
-                        else:
                             control_var_to_vec[key].append(val)
+                    else:
+                        for key, val in treatment_kwargs.items():
+                            if sample[key] != val:
+                                treatment = False
+                                break
+                        for key, val in sample.items():
+                            if treatment:
+                                treatment_var_to_vec[key].append(val)
+                            else:
+                                control_var_to_vec[key].append(val)
                 treatment = {
                     'name': 'Treatment',
                     'var_to_vec': treatment_var_to_vec,
@@ -640,8 +645,7 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                                 )
     boot_rows = [
         ['Bootstrap results for {} iterations of full resampling'.format(
-        iterations)],
-        str(5), str(50), str(95)
+        iterations), str(5), str(50), str(95)]
     ]
     for subset_name, variables in outputs.items():
         for variable, stat_categories in variables.items():
