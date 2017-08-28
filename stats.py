@@ -513,7 +513,7 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                     samples.append(dataset['ordered_vals'][rand_index])
                 treatment_var_to_vec = defaultdict(list)
                 control_var_to_vec = defaultdict(list)
-                print[samples[0]]
+                print(samples[0])
                 for sample in samples:
                     if treatment_kwargs is None:
                         for key, val in sample.items():
