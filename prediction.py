@@ -99,6 +99,7 @@ def causal_inference(
 
     treatment_effects = defaultdict(list)
     goal = 0.1
+    fails = 0
     for iteration in range(iterations):
         if float(iteration) / iterations > goal:
             print('{}/{}|'.format(iteration, iterations), end='')
@@ -144,7 +145,7 @@ def causal_inference(
             try:
                 has_any_nans = any(np.isnan(feature_row))
             except Exception:
-                print('Feature {} failed isnan check...'.format(feature))
+                # print('Feature {} failed isnan check...'.format(feature))
                 continue
             if all(x == 0 for x in feature_row):
                 # print(
@@ -224,13 +225,17 @@ def causal_inference(
                 causal.stratify()
                 times.append(mark_time('stratify_{}'.format(simple_bin)))
             else:
-                causal.stratify_s()
+                try:
+                    causal.stratify_s()
+                except ValueError:
+                    fails += 1
+                    continue
                 times.append(mark_time('stratify_s'))
             out.append(str(causal.strata))
-            print(causal.strata)
             try:
                 causal.est_via_blocking()
                 times.append(mark_time('est_via_blocking'))
+                ates = causal.estimates['blocking']['ate']
             except np.linalg.linalg.LinAlgError as err:
                 msg = 'LinAlgError with est_via_blocking: {}'.format(err)
                 err_handle(msg, out)
