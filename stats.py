@@ -494,35 +494,58 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
         inferential_stats = {}
         for dataset in datasets:
             name = dataset['name']
-            qs = dataset['qs']
             if calculate_frequency:
                 # extracts LINK BASES from URL
                 frequency_distribution(
-                    qs, extract_from, name, extractor)
-            if treatment_kwargs:
+                    dataset['qs'], extract_from, name, extractor)
+            if bootstrap:
+                samples = []
+                qs = dataset['qs'].order_by('uid').values()
+                for _ in range(qs):
+                    rand_index = np.random.randint(0, len(qs) - 1)
+                    samples.append(qs[rand_index])
+                treatment_var_to_vec = defaultdict(list)
+                control_var_to_vec = defaultdict(list)
+                for sample in samples:
+                    treatment = True
+                    for key, val in treatment_kwargs.items():
+                        if sample[key] != val:
+                            treatment = False
+                            break
+                    for key, val in sample.items():
+                        if treatment:
+                            treatment_var_to_vec[key].append(val)
+                        else:
+                            control_var_to_vec[key].append(val)
                 treatment = {
-                    'name': 'Treatment',
-                    'qs': qs.filter(**treatment_kwargs)
+                    'name': 'Treatment'
+                    'var_to_vec': treatment_vals
                 }
                 control = {
                     'name': 'Control',
-                    'qs': qs.exclude(**treatment_kwargs)
+                    'var_to_vec': control_vals
                 }
             else:
-                treatment = {
-                    'name': 'Treatment',
-                    'qs': qs
-                }
-                control = {
-                    'name': 'Control',
-                    'qs': qs
-                }
+                qs = dataset['qs']            
+                if treatment_kwargs:
+                    treatment = {
+                        'name': 'Treatment',
+                        'qs': qs.filter(**treatment_kwargs)
+                    }
+                    control = {
+                        'name': 'Control',
+                        'qs': qs.exclude(**treatment_kwargs)
+                    }
+                else:
+                    treatment = {
+                        'name': 'Treatment',
+                        'qs': qs
+                    }
+                    control = {
+                        'name': 'Control',
+                        'qs': qs
+                    }
             groups = [treatment, control]
-            if bootstrap:
-                for group in groups:
-                    group_size = group['qs'].count()
-                    end = int(group_size / 10)
-                    group['qs'] = group['qs'].order_by('?')[:end]
 
             descriptive_stats[name] = {}
             inferential_stats[name] = {}
@@ -539,14 +562,26 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                 try:
                     for group in groups:
                         if method:
-                            group['vals'] = method(group['qs'])
+                            if group.get('var_to_vec'):
+                                continue
+                            else:
+                                group['vals'] = method(group['qs'])
                         elif treatment_var and control_var:
                             if group['name'] == 'Treatment':
-                                group['vals'] = group['qs'].values_list(treatment_var, flat=True)
+                                if group.get('var_to_vec'):
+                                    group['vals'] = group['var_to_vec'][treatment_var]
+                                else:
+                                    group['vals'] = group['qs'].values_list(treatment_var, flat=True)
                             elif group['name'] == 'Control':
-                                group['vals'] = group['qs'].values_list(control_var, flat=True)
+                                if group.get('var_to_vec'):
+                                    group['vals'] = group['var_to_vec'][control_var]
+                                else:
+                                    group['vals'] = group['qs'].values_list(control_var, flat=True)
                         else:
-                            group['vals'] = group['qs'].values_list(variable, flat=True)
+                            if group.get('var_to_vec'):
+                                group['vals'] = group['var_to_vec'][variable]
+                            else:
+                                group['vals'] = group['qs'].values_list(variable, flat=True)
                         group['vals'] = [x for x in group['vals'] if x is not None]
                         group['vals'] = np.array(group['vals'])
                         if calculate_frequency:
@@ -574,6 +609,9 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
         output = output_stats(
             output_filename, descriptive_stats, inferential_stats)
         outputs.append(output)
+        print('finished bootstrap iteration {}'.format(index))
+    for output in outputs:
+        print(output)
 
 
 def explain():
