@@ -10,8 +10,17 @@
   </body>
 
   <script>
+    var globalCounter = 0
+
     function goNext() {
-        console.log('gonext')
+        var base = 'file:///C:\\Users\\Nick\\OneDrive\\research_results\\html\\'
+        if(mode === 'reddit') {
+            base += 'SampledRedditThread';
+        } else {
+
+        }
+        base += _sample{$globalCounter}of100.html`
+        readTextFile("file:///C:/your/path/to/file.txt");
     }
     function readTextFile(file)
     {
@@ -24,12 +33,12 @@
                 if(rawFile.status === 200 || rawFile.status == 0)
                 {
                     var allText = rawFile.responseText;
-                    alert(allText);
+                    document.getElementById('viewer').innerHTML = allText;
                 }
             }
         }
         rawFile.send(null);
     }
-    readTextFile("file:///C:/your/path/to/file.txt");
+    
 </script>
 </html>

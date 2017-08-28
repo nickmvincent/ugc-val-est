@@ -133,14 +133,16 @@ def sample_articles():
     """Prints out a sample of URLs to text file"""
     num_samples = 100
     models = [SampledRedditThread, SampledStackOverflowPost]
-    for i, model in enumerate(models):
-        outfilename = 'html/{}_sample{}of{}.html'.format(
-            model.__name__, i, num_samples
-        )
+    for model in enumeratemodels:
         with open(outfilename, 'w') as outfile:
             qs = model.objects.filter(has_wiki_link=True).order_by('?')[:num_samples]
+            counter = 0
             for obj in qs:
                 for wiki_link in obj.wiki_links.all():
+                    outfilename = 'html/{}_sample{}of{}.html'.format(
+                        model.__name__, counter, num_samples
+                    )
+                    counter += 1
                     if model == SampledRedditThread:
                         fields = [
                             obj.title, obj.context, str(obj.timestamp), wiki_link.title
