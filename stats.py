@@ -582,12 +582,15 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                             if group['name'] == 'Treatment':
                                 if group.get('var_to_vec'):
                                     group['vals'] = group['var_to_vec'][treatment_var]
+                                    print('len of tr {}'.format(len(group['vals'])))
                                 else:
                                     group['vals'] = group['qs'].values_list(
                                         treatment_var, flat=True)
                             elif group['name'] == 'Control':
                                 if group.get('var_to_vec'):
                                     group['vals'] = group['var_to_vec'][control_var]
+                                    print('len of co {}'.format(len(group['vals'])))
+                                    
                                 else:
                                     group['vals'] = group['qs'].values_list(
                                         control_var, flat=True)
@@ -599,6 +602,7 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                                     variable, flat=True)
                         group['vals'] = [
                             x for x in group['vals'] if x is not None]
+                        print('after filter {}'.format(len(group['vals'])))
                         group['vals'] = np.array(group['vals'])
                         if calculate_frequency:
                             if platform == 'r':
