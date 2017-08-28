@@ -123,7 +123,6 @@ def causal_inference(
         feature_rows = []
         successful_fields = []
         for feature in features:
-            print(feature)
             feature_row = getattr(records, feature)
             if feature == treatment_feature:
                 D = feature_row
@@ -164,10 +163,9 @@ def causal_inference(
         causal = CausalModel(Y, D, X, ids=ids)
         times.append(mark_time('CausalModel'))
         out.append(str(causal.summary_stats))
-        print(causal.summary_stats)
+        # print(causal.summary_stats)
         causal.est_via_ols()
         times.append(mark_time('est_via_ols'))
-        print(causal.estimates)
         if not quad_psm:
             causal.est_propensity()
             times.append(mark_time('propensity'))
@@ -175,7 +173,7 @@ def causal_inference(
             causal.est_propensity_s()
             times.append(mark_time('propensity_s'))
         out.append(str(causal.propensity))
-        print(causal.propensity)
+        # print(causal.propensity)
         if trim_val:
             if trim_val == 'auto':
                 causal.trim_s()
@@ -190,11 +188,9 @@ def causal_inference(
                     out.append(str(causal.summary_stats))
                 except:
                     pass
-        else:
-            print('Skipping trim value as per request')
         if paired_psm:
             psm_est, psm_rows = causal.est_via_psm()
-            print(str(psm_est))
+            # print(str(psm_est))
             out.append('PSM PAIR REGRESSION')
             out.append(str(psm_est))
 
@@ -232,6 +228,7 @@ def causal_inference(
             out.append("{}:{}".format(key, val))
         with open(filename, 'w') as outfile:
             outfile.write('\n'.join(out))
+        print(ates)
         for ate_num, ate in enumerate(ates):
             treatment_effects[outcomes[ate_num]].append(ate)
     boot_rows = [
