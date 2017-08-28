@@ -625,6 +625,7 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
         goal = 0.1
         if index / iterations > goal:
             print('{}/{}|'.format(index, iterations), end='')
+            goal += 0.1
         if index == 0:  # is first iteration
             outputs = output.copy()
             for subset_name, variables in outputs.items():
