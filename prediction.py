@@ -100,8 +100,7 @@ def causal_inference(
     treatment_effects = defaultdict(list)
     for iteration in range(iterations):
         times = []
-        times.append(mark_time('function_start'))
-        
+        times.append(mark_time('function_start')) 
         if treatment_feature == 'has_good_wiki_link':
             filter_kwargs = {'has_wiki_link': True, 'day_of_avg_score__isnull': False}
         else:
@@ -117,7 +116,15 @@ def causal_inference(
         print('==={}==='.format(outcomes))
         field_names = features + outcomes
         rows = qs.values_list(*field_names)
-        records = values_list_to_records(rows, field_names)
+
+        if iterations > 1:
+            samples = []
+            for _ in rows:
+                rand_index = np.random.randint(0, len(rows) - 1)
+                samples.append(rows[rand_index])
+            records = values_list_to_records(samples, field_names)
+        else:
+            records = values_list_to_records(rows, field_names)
         times.append(mark_time('records_loaded'))
 
         feature_rows = []
