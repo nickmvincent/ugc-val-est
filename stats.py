@@ -490,6 +490,7 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
     output_filename = "{}_{}_stats_{}.csv".format(platform, rq, db_name)
     iterations = bootstrap if bootstrap else 1
     outputs = {}
+    goal = 0.1    
     for index in range(iterations):
         descriptive_stats = {}
         inferential_stats = {}
@@ -622,7 +623,6 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                     ))
         output = output_stats(
             None if bootstrap else output_filename, descriptive_stats, inferential_stats)
-        goal = 0.1
         if float(index) / iterations > goal:
             print('{}/{}|'.format(index, iterations), end='')
             goal += 0.1
