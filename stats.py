@@ -359,9 +359,10 @@ def output_stats(output_filename, descriptive_stats, inferential_stats):
     rows = [first_row, second_row, ] + rows
     arr = np.array(rows, dtype=object)
     # arr = np.transpose(arr)
-    with open('csv_files/' + output_filename, 'w', newline='') as outfile:
-        writer = csv.writer(outfile)
-        writer.writerows(arr)
+    if output_filename:  # make sure not to write over file when doing bootstrapping!
+        with open('csv_files/' + output_filename, 'w', newline='') as outfile:
+            writer = csv.writer(outfile)
+            writer.writerows(arr)
     return output
 
 
@@ -486,7 +487,6 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
             ('num_wiki_pageviews', 'num_wiki_pageviews_prev_week')
         ]
     output_filename = "{}_{}_stats.csv".format(platform, rq)
-    stats = {}
     iterations = bootstrap if bootstrap else 1
     outputs = {}
     for index in range(iterations):
@@ -606,6 +606,7 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                     print('Skipping variable {} bc zero division'.format(
                         variable_name
                     ))
+        output_filename = None if bootstrap else output_filename
         output = output_stats(
             output_filename, descriptive_stats, inferential_stats)
         print('finished bootstrap iteration {}'.format(index))        
@@ -639,8 +640,8 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                         desc = "{}|{}|{}|{}|{}".format(
                             subset_name, variable, stat_category, subgroup, stat_name
                         )
-                        boot_rows.append(desc, sor[bot], sort[top])
-    with open('csv_files/' + 'BOOT_' + filename, 'w', newline='') as outfile:
+                        boot_rows.append(desc, sor[bot], sor[top])
+    with open('csv_files/' + 'BOOT_' + output_filename, 'w', newline='') as outfile:
         writer = csv.writer(outfile)
         writer.writerows(boot_rows)
     
