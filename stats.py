@@ -580,18 +580,14 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                                 group['vals'] = method(group['qs'])
                         elif treatment_var and control_var:
                             if group['name'] == 'Treatment':
-                                print('here...')
                                 if group.get('var_to_vec'):
                                     group['vals'] = group['var_to_vec'][treatment_var]
-                                    print('len of tr {}'.format(len(group['vals'])))
                                 else:
                                     group['vals'] = group['qs'].values_list(
                                         treatment_var, flat=True)
                             elif group['name'] == 'Control':
                                 if group.get('var_to_vec'):
                                     group['vals'] = group['var_to_vec'][control_var]
-                                    print('len of co {}'.format(len(group['vals'])))
-                                    
                                 else:
                                     group['vals'] = group['qs'].values_list(
                                         control_var, flat=True)
@@ -603,7 +599,6 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                                     variable, flat=True)
                         group['vals'] = [
                             x for x in group['vals'] if x is not None]
-                        print('after filter {}'.format(len(group['vals'])))
                         group['vals'] = np.array(group['vals'])
                         if calculate_frequency:
                             if platform == 'r':
@@ -611,7 +606,6 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                                     group['qs'], 'context', name + '_' + group['name'])
 
                     len1, len2 = len(treatment['vals']), len(control['vals'])
-                    print(variable_name, len1, len2)
                     if len1 == 0 or len2 == 0 and not bootstrap:
                         # print('Skipping variable {} because {}, {}.'.format(
                         #    variable_name, len1, len2))
