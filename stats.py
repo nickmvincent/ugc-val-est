@@ -604,6 +604,7 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                                     group['qs'], 'context', name + '_' + group['name'])
 
                     len1, len2 = len(treatment['vals']), len(control['vals'])
+                    print(len1, len2)
                     if len1 == 0 or len2 == 0 and not bootstrap:
                         print('Skipping variable {} because {}, {}.'.format(
                             variable_name, len1, len2))
@@ -637,6 +638,8 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
         else:
             for subset_name, variables in outputs.items():
                 for variable, stat_categories in variables.items():
+                    if variable not in output[subset_name]:
+                        continue
                     for stat_category, subgroups in stat_categories.items():
                         for subgroup, stat_names in subgroups.items():
                             for stat_name in stat_names.keys():
