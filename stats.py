@@ -500,8 +500,8 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                     dataset['qs'], extract_from, name, extractor)
             if bootstrap:
                 samples = []
-                qs = dataset['qs'].order_by('uid').values()
-                for _ in range(qs):
+                qs = list(dataset['qs'].order_by('uid').values())
+                for _ in range(len(qs)):
                     rand_index = np.random.randint(0, len(qs) - 1)
                     samples.append(qs[rand_index])
                 treatment_var_to_vec = defaultdict(list)
@@ -518,12 +518,12 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                         else:
                             control_var_to_vec[key].append(val)
                 treatment = {
-                    'name': 'Treatment'
-                    'var_to_vec': treatment_vals
+                    'name': 'Treatment',
+                    'var_to_vec': treatment_var_to_vec,
                 }
                 control = {
                     'name': 'Control',
-                    'var_to_vec': control_vals
+                    'var_to_vec': control_var_to_vec,
                 }
             else:
                 qs = dataset['qs']            
