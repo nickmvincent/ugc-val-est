@@ -103,7 +103,7 @@ def causal_inference(
         if float(iteration) / iterations > goal:
             print('{}/{}|'.format(iteration, iterations), end='')
             goal += 0.1
-        times = []
+        times = [], ates = []
         times.append(mark_time('function_start')) 
         if treatment_feature == 'has_good_wiki_link':
             filter_kwargs = {'has_wiki_link': True, 'day_of_avg_score__isnull': False, 'sample_num': 0}
@@ -248,7 +248,6 @@ def causal_inference(
             out.append("{}:{}".format(key, val))
         with open(filename, 'w') as outfile:
             outfile.write('\n'.join(out))
-        print(ates)
         for ate_num, ate in enumerate(ates):
             treatment_effects[outcomes[ate_num]].append(ate)
     if iterations > 1:
