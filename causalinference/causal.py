@@ -374,7 +374,7 @@ class CausalModel(object):
                 )
                 control_indices_used.append(ids[match])
         matched_model = CausalModel(np.array(new_Y), np.array(new_D), np.array(new_X))
-        matched_model.est_via_ols(0)
+        matched_model.est_via_ols(1)
         return matched_model.estimates, matched_model.summary_stats, psm_rows
 
     def est_via_matching(self, weights='inv', matches=1, bias_adj=False):
