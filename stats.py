@@ -623,7 +623,7 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
         output = output_stats(
             None if bootstrap else output_filename, descriptive_stats, inferential_stats)
         goal = 0.1
-        if index / iterations > goal:
+        if float(index) / iterations > goal:
             print('{}/{}|'.format(index, iterations), end='')
             goal += 0.1
         if index == 0:  # is first iteration
