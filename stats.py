@@ -573,7 +573,9 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                             treatment_var, control_var)
                 try:
                     for group in groups:
-                        print(group.get('var_to_vec'))
+                        if group.get('var_to_vec')
+                        print('yes...')
+                        print(treatment_var and control_var)
                         print(group['name'])
                         if method:
                             if group.get('var_to_vec'):
