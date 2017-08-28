@@ -496,15 +496,14 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
         inferential_stats = {}
         for dataset in datasets:
             name = dataset['name']
-            if 'ordered_vals' not in dataset:
-                dataset['ordered_vals'] = None
             if calculate_frequency:
                 # extracts LINK BASES from URL
                 frequency_distribution(
                     dataset['qs'], extract_from, name, extractor)
             if bootstrap:
                 samples = []
-                if dataset['ordered_vals'] is None:
+                if dataset.get('ordered_vals') is None:
+                    print('setting ordered vals')
                     dataset['ordered_vals'] = list(dataset['qs'].order_by('uid').values())
                 for _ in range(len(dataset['ordered_vals'])):
                     rand_index = np.random.randint(0, len(dataset['ordered_vals']) - 1)
@@ -604,10 +603,11 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                                     group['qs'], 'context', name + '_' + group['name'])
 
                     len1, len2 = len(treatment['vals']), len(control['vals'])
-                    print(len1, len2)
+                    print(variable_name, len1, len2)
                     if len1 == 0 or len2 == 0 and not bootstrap:
                         # print('Skipping variable {} because {}, {}.'.format(
                         #    variable_name, len1, len2))
+                        input()
                         continue
                     try:
                         inferential_stats[name][variable_name] = inferential_analysis(
