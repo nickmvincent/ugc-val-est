@@ -103,7 +103,7 @@ def causal_inference(
         if float(iteration) / iterations > goal:
             print('{}/{}|'.format(iteration, iterations), end='')
             goal += 0.1
-        times = [], ates = []
+        times, ates = [], []
         times.append(mark_time('function_start')) 
         if treatment_feature == 'has_good_wiki_link':
             filter_kwargs = {'has_wiki_link': True, 'day_of_avg_score__isnull': False, 'sample_num': 0}
