@@ -658,7 +658,7 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                     continue
                 for subgroup, stat_names in subgroups.items():
                     for stat_name, stat_values in stat_names.items():
-                        if 'stat_name' in [
+                        if stat_name in [
                             "cohen's d effect size",
                             'p_value',
                         ]:

@@ -49,16 +49,13 @@ def main(do_all=False):
     qs = qs.order_by('uid')
     start_time = time.time()
     for start, end, total, batch in batch_qs(qs):
-        batch_start_time = time.time()
-        print(start, end, total)
+        print(start, end, total, time.time()-start_time)
         for thread in batch:
             author_dict = processor(thread.author)
             for key, val in author_dict.items():
                 setattr(thread, key, val)
             thread.user_info_processed = True
             thread.save()
-        print('batch time was {}'.format(time.time() - batch_start_time))
-        print('running time is {}'.format(time.time() - start_time))
 
 
 
