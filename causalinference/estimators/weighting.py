@@ -31,7 +31,6 @@ class Weighting(Estimator):
 			u_w = y_w - Z_w.dot(wlscoef)
 			cov = calc_cov(Z_w, u_w)
 
-			self._dict = dict()
 			self._dict['ate'].append(calc_ate(wlscoef))
 			self._dict['ate_se'].append(calc_ate_se(cov))
 
