@@ -473,14 +473,14 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
             ('num_new_editors', 'num_new_editors_prev_week'),
             ('num_new_editors_retained', 'num_new_editors_retained_prev_week'),
             ('percent_new_editors', make_method_getter('percent_new_editors')),
-            ('percent_active_editors', make_method_getter('percent_active_editors')),
-            ('percent_active_editors', make_method_getter('percent_active_editors')),
-            ('percent_inactive_editors', make_method_getter(
-                'percent_inactive_editors')),
-            ('num_active_edits', 'num_active_edits_prev_week'),
-            ('num_inactive_edits', 'num_inactive_edits_prev_week'),
-            ('num_major_edits', 'num_major_edits_prev_week'),
-            ('num_minor_edits', 'num_minor_edits_prev_week'),
+            # ('percent_active_editors', make_method_getter('percent_active_editors')),
+            # ('percent_active_editors', make_method_getter('percent_active_editors')),
+            # ('percent_inactive_editors', make_method_getter(
+            #     'percent_inactive_editors')),
+            # ('num_active_edits', 'num_active_edits_prev_week'),
+            # ('num_inactive_edits', 'num_inactive_edits_prev_week'),
+            # ('num_major_edits', 'num_major_edits_prev_week'),
+            # ('num_minor_edits', 'num_minor_edits_prev_week'),
             ('percent_of_revs_preceding_post',
                 make_method_getter('percent_of_revs_preceding_post')),
             ('week_after_avg_score', 'day_of_avg_score'),
@@ -505,8 +505,10 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                 if dataset.get('ordered_vals') is None:
                     print('setting ordered vals')
                     dataset['ordered_vals'] = list(dataset['qs'].order_by('uid').values())
-                for _ in range(len(dataset['ordered_vals'])):
-                    rand_index = np.random.randint(0, len(dataset['ordered_vals']) - 1)
+                len_vals = len(dataset['ordered_vals'])
+                print('choosing from {}'.format(len_vals))
+                for _ in range(len_vals:
+                    rand_index = np.random.randint(0, len_vals - 1)
                     samples.append(dataset['ordered_vals'][rand_index])
                 treatment_var_to_vec = defaultdict(list)
                 control_var_to_vec = defaultdict(list)
