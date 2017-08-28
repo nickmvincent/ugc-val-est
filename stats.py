@@ -638,6 +638,8 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
     for subset_name, variables in outputs.items():
         for variable, stat_categories in variables.items():
             for stat_category, subgroups in stat_categories.items():
+                if stat_category not in ['central_tendencies', 'Hypothesis Testing',]:
+                    continue
                 for subgroup, stat_names in subgroups.items():
                     for stat_name, stat_values in stat_names.items():
                         sor = sorted(stat_values)
