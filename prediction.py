@@ -171,8 +171,8 @@ def causal_inference(
         times.append(mark_time('CausalModel'))
         out.append(str(causal.summary_stats))
         print(causal.summary_stats)
-        # causal.est_via_ols()
-        # times.append(mark_time('est_via_ols'))
+        causal.est_via_ols()
+        times.append(mark_time('est_via_ols'))
         if not quad_psm:
             causal.est_propensity()
             times.append(mark_time('propensity'))
@@ -248,23 +248,24 @@ def causal_inference(
         print(ates)
         for ate_num, ate in enumerate(ates):
             treatment_effects[outcomes[ate_num]].append(ate)
-    boot_rows = [
-        ['Bootstrap results for {} iterations of full resampling'.format(
-        iterations), str(5), str(50), str(95)]
-    ]
-    for outcome, ate_lst in treatment_effects.items():
-        print(outcome, ate_lst)
-        sor = sorted(ate_lst)
-        n = len(ate_lst)
-        bot = int(0.05 * n)
-        mid = int(0.5 * n)
-        top = int(0.95 * n)
-        boot_rows.append([
-            outcome, sor[bot], sor[mid], sor[top]
-        ])
-    with open('csv_files/' + 'BOOT_' + filename, 'w', newline='') as outfile:
-        writer = csv.writer(outfile)
-        writer.writerows(boot_rows)
+    if iterations > 1:
+        boot_rows = [
+            ['Bootstrap results for {} iterations of full resampling'.format(
+            iterations), str(5), str(50), str(95)]
+        ]
+        for outcome, ate_lst in treatment_effects.items():
+            print(outcome, ate_lst)
+            sor = sorted(ate_lst)
+            n = len(ate_lst)
+            bot = int(0.05 * n)
+            mid = int(0.5 * n)
+            top = int(0.95 * n)
+            boot_rows.append([
+                outcome, sor[bot], sor[mid], sor[top]
+            ])
+        with open('csv_files/' + 'BOOT_' + filename, 'w', newline='') as outfile:
+            writer = csv.writer(outfile)
+            writer.writerows(boot_rows)
 
             
 
