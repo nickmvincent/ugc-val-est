@@ -512,12 +512,12 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                 treatment_var_to_vec = defaultdict(list)
                 control_var_to_vec = defaultdict(list)
                 for sample in samples:
-                    treatment = True
                     if treatment_kwargs is None:
                         for key, val in sample.items():
                             treatment_var_to_vec[key].append(val)
                             control_var_to_vec[key].append(val)
                     else:
+                        treatment = True
                         for key, val in treatment_kwargs.items():
                             if sample[key] != val:
                                 treatment = False
@@ -573,7 +573,6 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                     for group in groups:
                         if method:
                             if group.get('var_to_vec'):
-                                print('method analysis not implemented for bootstrapping yet')
                                 continue
                             else:
                                 group['vals'] = method(group['qs'])
@@ -641,13 +640,13 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                     for stat_category, subgroups in stat_categories.items():
                         for subgroup, stat_names in subgroups.items():
                             for stat_name in stat_names.keys():
-                                stat_names[stat_name].append(
-                                    output[
-                                        subset_name][variable][stat_category][subgroup][stat_name]
-                                )
+                                val = output[
+                                        subset_name][variable][stat_category][subgroup].get(stat_name)
+                                if val:
+                                stat_names[stat_name].append(val)
     boot_rows = [
         ['Bootstrap results for {} iterations of full resampling'.format(
-        iterations), str(5), str(50), str(95)]
+        iterations), 'n', str(5), str(50), str(95)]
     ]
     for subset_name, variables in outputs.items():
         for variable, stat_categories in variables.items():
@@ -664,7 +663,7 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                         desc = "{}|{}|{}|{}|{}".format(
                             subset_name, variable, stat_category, subgroup, stat_name
                         )
-                        boot_rows.append([desc, sor[bot], sor[mid], sor[top]])
+                        boot_rows.append([desc, n, sor[bot], sor[mid], sor[top]])
     with open('csv_files/' + 'BOOT_' + output_filename, 'w', newline='') as outfile:
         writer = csv.writer(outfile)
         writer.writerows(boot_rows)
