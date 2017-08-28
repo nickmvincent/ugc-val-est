@@ -507,11 +507,13 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                     dataset['ordered_vals'] = list(dataset['qs'].order_by('uid').values())
                 len_vals = len(dataset['ordered_vals'])
                 print('choosing from {}'.format(len_vals))
+                print(dataset['ordered_vals'][0])
                 for _ in range(len_vals):
                     rand_index = np.random.randint(0, len_vals - 1)
                     samples.append(dataset['ordered_vals'][rand_index])
                 treatment_var_to_vec = defaultdict(list)
                 control_var_to_vec = defaultdict(list)
+                print[samples[0]]
                 for sample in samples:
                     if treatment_kwargs is None:
                         for key, val in sample.items():
