@@ -171,8 +171,8 @@ def causal_inference(
         times.append(mark_time('CausalModel'))
         out.append(str(causal.summary_stats))
         print(causal.summary_stats)
-        causal.est_via_ols()
-        times.append(mark_time('est_via_ols'))
+        # causal.est_via_ols()
+        # times.append(mark_time('est_via_ols'))
         if not quad_psm:
             causal.est_propensity()
             times.append(mark_time('propensity'))
