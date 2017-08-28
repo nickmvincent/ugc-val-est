@@ -200,9 +200,7 @@ def causal_inference(
 
             with open('PSM_PAIRS' + filename, 'w') as outfile:
                 outfile.write('\n'.join(psm_rows))
-            for key, val in psm_est.items():
-                print(key)
-            ates = psm_est['ate']
+            ates = psm_est['ols']['ate']
         else:
             if simple_bin:
                 causal.blocks = int(simple_bin)
