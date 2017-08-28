@@ -573,6 +573,7 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                     for group in groups:
                         if method:
                             if group.get('var_to_vec'):
+                                print('method analysis not implemented for bootstrapping yet')
                                 continue
                             else:
                                 group['vals'] = method(group['qs'])
@@ -613,7 +614,7 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                         # groups = [group for group in groups if group['vals']]
                         descriptive_stats[name][variable_name] = univariate_analysis(
                             groups)
-                    except TypeError as err:
+                    except (TypeError, ValueError) as err:
                         print('analysis of variable {} failed because {}'.format(
                             variable_name, err
                         ))
