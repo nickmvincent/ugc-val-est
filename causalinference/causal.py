@@ -369,7 +369,7 @@ class CausalModel(object):
                 )
         
         matched_model = CausalModel(np.array(new_Y), np.array(new_D), np.array(new_X))
-        matched_model.est_via_ols()
+        matched_model.est_via_ols(0)
         return matched_model.estimates, psm_rows
 
     def est_via_matching(self, weights='inv', matches=1, bias_adj=False):
