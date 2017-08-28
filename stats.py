@@ -12,8 +12,8 @@ import time
 from queryset_helpers import (
     batch_qs,
     list_common_features,
-    list_stack_specific_features,
-    list_reddit_specific_features
+    # list_stack_specific_features,
+    # list_reddit_specific_features
 )
 from url_helpers import extract_urls
 
@@ -261,7 +261,7 @@ def inferential_analysis(x_arr, y_arr, samples_related):
     if samples_related:
         _, pval = stats.ttest_rel(
             x_arr, y_arr)
-    else:    
+    else:
         _, pval = stats.ttest_ind(
             x_arr, y_arr, equal_var=False)  # _ = tstat
     cles_score_flipped = cles(x_arr, y_arr)
@@ -472,11 +472,12 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
             ('num_edits', 'num_edits_prev_week'),
             ('norm_change_edits', make_method_getter('norm_change_edits')),
             ('num_new_editors', 'num_new_editors_prev_week'),
-            ('num_new_editors_retained', 'num_new_editors_retained_prev_week'),            
+            ('num_new_editors_retained', 'num_new_editors_retained_prev_week'),
             ('percent_new_editors', make_method_getter('percent_new_editors')),
             ('percent_active_editors', make_method_getter('percent_active_editors')),
             ('percent_active_editors', make_method_getter('percent_active_editors')),
-            ('percent_inactive_editors', make_method_getter('percent_inactive_editors')),
+            ('percent_inactive_editors', make_method_getter(
+                'percent_inactive_editors')),
             ('num_active_edits', 'num_active_edits_prev_week'),
             ('num_inactive_edits', 'num_inactive_edits_prev_week'),
             ('num_major_edits', 'num_major_edits_prev_week'),
@@ -526,7 +527,7 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                     'var_to_vec': control_var_to_vec,
                 }
             else:
-                qs = dataset['qs']            
+                qs = dataset['qs']
                 if treatment_kwargs:
                     treatment = {
                         'name': 'Treatment',
@@ -557,7 +558,8 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                         variable_name, method = variable
                     else:
                         treatment_var, control_var = variable
-                        variable_name = '{} vs {}'.format(treatment_var, control_var)
+                        variable_name = '{} vs {}'.format(
+                            treatment_var, control_var)
                 print('processing variable {}'.format(variable_name))
                 try:
                     for group in groups:
@@ -571,18 +573,22 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                                 if group.get('var_to_vec'):
                                     group['vals'] = group['var_to_vec'][treatment_var]
                                 else:
-                                    group['vals'] = group['qs'].values_list(treatment_var, flat=True)
+                                    group['vals'] = group['qs'].values_list(
+                                        treatment_var, flat=True)
                             elif group['name'] == 'Control':
                                 if group.get('var_to_vec'):
                                     group['vals'] = group['var_to_vec'][control_var]
                                 else:
-                                    group['vals'] = group['qs'].values_list(control_var, flat=True)
+                                    group['vals'] = group['qs'].values_list(
+                                        control_var, flat=True)
                         else:
                             if group.get('var_to_vec'):
                                 group['vals'] = group['var_to_vec'][variable]
                             else:
-                                group['vals'] = group['qs'].values_list(variable, flat=True)
-                        group['vals'] = [x for x in group['vals'] if x is not None]
+                                group['vals'] = group['qs'].values_list(
+                                    variable, flat=True)
+                        group['vals'] = [
+                            x for x in group['vals'] if x is not None]
                         group['vals'] = np.array(group['vals'])
                         if calculate_frequency:
                             if platform == 'r':
@@ -597,7 +603,8 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                         inferential_stats[name][variable_name] = inferential_analysis(
                             treatment['vals'], control['vals'], treatment_kwargs is None)
                         # groups = [group for group in groups if group['vals']]
-                        descriptive_stats[name][variable_name] = univariate_analysis(groups)
+                        descriptive_stats[name][variable_name] = univariate_analysis(
+                            groups)
                     except TypeError as err:
                         print('analysis of variable {} failed because {}'.format(
                             variable_name, err
@@ -609,12 +616,12 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
         output_filename = None if bootstrap else output_filename
         output = output_stats(
             output_filename, descriptive_stats, inferential_stats)
-        print('finished bootstrap iteration {}'.format(index))        
+        print('finished bootstrap iteration {}'.format(index))
         if index == 0:  # is first iteration
             outputs = output.copy()
             for subset_name, variables in outputs.items():
                 for variable, stat_categories in variables.items():
-                    for stat_categories, subgroups in stat_categories.items():
+                    for stat_category, subgroups in stat_categories.items():
                         for subgroup, stat_names in subgroups.items():
                             for stat_name, stat_value in stat_names.items():
                                 stat_names[stat_name] = [stat_value]
@@ -625,12 +632,13 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                         for subgroup, stat_names in subgroups.items():
                             for stat_name in stat_names.keys():
                                 stat_names[stat_name].append(
-                                    output[subset_name][variable][stat_category][subgroup][stat_name]
+                                    output[
+                                        subset_name][variable][stat_category][subgroup][stat_name]
                                 )
     boot_rows = []
     for subset_name, variables in outputs.items():
         for variable, stat_categories in variables.items():
-            for stat_categoriy, subgroups in stat_categories.items():
+            for stat_category, subgroups in stat_categories.items():
                 for subgroup, stat_names in subgroups.items():
                     for stat_name, stat_values in stat_names.items():
                         sor = sorted(stat_values)
@@ -640,18 +648,18 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                         desc = "{}|{}|{}|{}|{}".format(
                             subset_name, variable, stat_category, subgroup, stat_name
                         )
-                        boot_rows.append(desc, sor[bot], sor[top])
+                        boot_rows.append([desc, sor[bot], sor[top]])
     with open('csv_files/' + 'BOOT_' + output_filename, 'w', newline='') as outfile:
         writer = csv.writer(outfile)
         writer.writerows(boot_rows)
-    
 
 
 def explain():
     """explain distribution"""
     for platform in [SampledRedditThread, SampledStackOverflowPost]:
         print('==={}==='.format(platform.__name__))
-        qs = platform.objects.filter(has_wiki_link=True, day_of_avg_score__isnull=False)
+        qs = platform.objects.filter(
+            has_wiki_link=True, day_of_avg_score__isnull=False)
         counter = defaultdict(int)
         for obj in qs:
             counter[obj.day_of_avg_score] += 1
