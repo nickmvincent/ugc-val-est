@@ -363,14 +363,11 @@ class CausalModel(object):
                 new_Y.append(Y[match])
                 new_D.append(D[match])
                 psm_rows.append(
-                    'Treated item {} with pscore {} paired to control item {} with pscore {}'.format(
-                        ids[i], pscore[i], ids[match], pscore[match]
-                    )
+                    [ids[i], pscore[i], ids[match], pscore[match]]
                 )
-        
         matched_model = CausalModel(np.array(new_Y), np.array(new_D), np.array(new_X))
         matched_model.est_via_ols(0)
-        return matched_model.estimates, psm_rows
+        return matched_model.estimates, matched_model.summary_stats, psm_rows
 
     def est_via_matching(self, weights='inv', matches=1, bias_adj=False):
         """

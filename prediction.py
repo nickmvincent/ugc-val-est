@@ -170,7 +170,7 @@ def causal_inference(
         causal = CausalModel(Y, D, X, ids=ids)
         times.append(mark_time('CausalModel'))
         out.append(str(causal.summary_stats))
-        # print(causal.summary_stats)
+        print(causal.summary_stats)
         causal.est_via_ols()
         times.append(mark_time('est_via_ols'))
         if not quad_psm:
@@ -196,10 +196,17 @@ def causal_inference(
                 except:
                     pass
         if paired_psm:
-            psm_est, psm_rows = causal.est_via_psm()
+            psm_est, psm_summary, psm_rows = causal.est_via_psm()
             # print(str(psm_est))
             out.append('PSM PAIR REGRESSION')
+            out.append(str(psm_summary))
             out.append(str(psm_est))
+            print(psm_summary)
+            diff_avg = 0
+            for row in psm_rows:
+                diff_avg += abs(row[1] - row[3])
+            diff_avg /= len(psm_rows)
+            out.append('Pscore diff average: {}'.format(diff_avg))
 
             with open('PSM_PAIRS' + filename, 'w') as outfile:
                 outfile.write('\n'.join(psm_rows))
