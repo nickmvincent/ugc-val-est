@@ -495,16 +495,19 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
         inferential_stats = {}
         for dataset in datasets:
             name = dataset['name']
+            if 'ordered_vals' not in dataset:
+                dataset['ordered_vals'] = None
             if calculate_frequency:
                 # extracts LINK BASES from URL
                 frequency_distribution(
                     dataset['qs'], extract_from, name, extractor)
             if bootstrap:
                 samples = []
-                qs = list(dataset['qs'].order_by('uid').values())
-                for _ in range(len(qs)):
-                    rand_index = np.random.randint(0, len(qs) - 1)
-                    samples.append(qs[rand_index])
+                if dataset['ordered_vals'] is None:
+                    dataset['ordered_vals'] = list(dataset['qs'].order_by('uid').values())
+                for _ in range(len(dataset['ordered_vals'])):
+                    rand_index = np.random.randint(0, len(dataset['ordered_vals']) - 1)
+                    samples.append(dataset['ordered_vals'][rand_index])
                 treatment_var_to_vec = defaultdict(list)
                 control_var_to_vec = defaultdict(list)
                 for sample in samples:
