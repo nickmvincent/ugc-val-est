@@ -337,7 +337,7 @@ def output_stats(output_filename, descriptive_stats, inferential_stats):
     for subset_name, variables in output.items():
         for variable, stat_categories in variables.items():
             # one row per subset/variable combo
-            row_description = "Variable `{}` in subset `{}`".format(
+            row_description = "`{}` in `{}`".format(
                 variable, subset_name)
             row = []
             row.append(row_description)
@@ -488,7 +488,7 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
     output_filename = "{}_{}_stats.csv".format(platform, rq)
     stats = {}
     iterations = bootstrap if bootstrap else 1
-    outputs = []
+    outputs = {}
     for index in range(iterations):
         descriptive_stats = {}
         inferential_stats = {}
@@ -608,10 +608,42 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                     ))
         output = output_stats(
             output_filename, descriptive_stats, inferential_stats)
-        outputs.append(output)
-        print('finished bootstrap iteration {}'.format(index))
-    for output in outputs:
-        print(output)
+        print('finished bootstrap iteration {}'.format(index))        
+        if index == 0:  # is first iteration
+            outputs = output.copy()
+            for subset_name, variables in outputs.items():
+                for variable, stat_categories in variables.items():
+                    for stat_categories, subgroups in stat_categories.items():
+                        for subgroup, stat_names in subgroups.items():
+                            for stat_name, stat_value in stat_names.items():
+                                stat_names[stat_name] = [stat_value]
+        else:
+            for subset_name, variables in outputs.items():
+                for variable, stat_categories in variables.items():
+                    for stat_category, subgroups in stat_categories.items():
+                        for subgroup, stat_names in subgroups.items():
+                            for stat_name in stat_names.keys():
+                                stat_names[stat_name].append(
+                                    output[subset_name][variable][stat_category][subgroup][stat_name]
+                                )
+    boot_rows = []
+    for subset_name, variables in outputs.items():
+        for variable, stat_categories in variables.items():
+            for stat_categoriy, subgroups in stat_categories.items():
+                for subgroup, stat_names in subgroups.items():
+                    for stat_name, stat_values in stat_names.items():
+                        sor = sorted(stat_values)
+                        n = len(stat_values)
+                        bot = int(0.05 * n)
+                        top = int(0.95 * n)
+                        desc = "{}|{}|{}|{}|{}".format(
+                            subset_name, variable, stat_category, subgroup, stat_name
+                        )
+                        boot_rows.append(desc, sor[bot], sort[top])
+    with open('csv_files/' + 'BOOT_' + filename, 'w', newline='') as outfile:
+        writer = csv.writer(outfile)
+        writer.writerows(boot_rows)
+    
 
 
 def explain():
