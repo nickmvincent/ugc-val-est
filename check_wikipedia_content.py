@@ -204,11 +204,15 @@ def get_scores_for_posts(posts, session):
                 print('skipping non english version')
                 continue
             dja_revs = Revision.objects.filter(wiki_link=dja_link)
-            for timestamp in [post.timestamp, post.timestamp + datetime.timedelta(days=7)]:
-                closest_rev = get_closest_to(dja_revs, timestamp)
-                revid_to_rev[closest_rev.revid] = closest_rev
+            try:
+                for timestamp in [post.timestamp, post.timestamp + datetime.timedelta(days=7)]:
+                    closest_rev = get_closest_to(dja_revs, timestamp)
+                    revid_to_rev[closest_rev.revid] = closest_rev
+            except IndexError:
+                continue
         ores_context = 'en' + 'wiki'
     counter, start = 0, time.time()
+    completed = 0
     num_revs = len(revid_to_rev.keys())
     for revbatch in grouper(revid_to_rev.keys(), 50):
         revbatch = [rev for rev in revbatch if rev]
@@ -227,10 +231,14 @@ def get_scores_for_posts(posts, session):
             except KeyError:
                 rev.err_code = 4  # missingOresResponse
             rev.save()
-        counter += len(revbatch)
-        print('Finished {}/{} revs, time: {}'.format(
-            counter, num_revs, time.time() - start
-        ))
+        completed += len(revbatch)
+        counter += 1
+
+        if counter == 10:
+            counter = 0
+            print('Finished {}/{} revs, time: {}'.format(
+                completed, num_revs, time.time() - start
+            ))
     for post in posts:
         post.save()
 
@@ -247,6 +255,7 @@ def get_userinfo_for_all_revs(revs, session):
             user_to_revs[rev.user].append(rev)
     num_users = len(user_to_revs.keys())
     counter = 0
+    completed = 0
     start = time.time()    
     for userbatch in grouper(user_to_revs.keys(), 50):
         userbatch = [user for user in userbatch if user]
@@ -276,10 +285,12 @@ def get_userinfo_for_all_revs(revs, session):
                         lastrev_date,
                         '%Y-%m-%dT%H:%M:%SZ').astimezone(pytz.UTC)
                 rev.save()
-        counter += len(userbatch)
-        if counter % 1000 == 0:
+        completed += len(userbatch)
+        counter += 1
+        if counter == 2:
+            counter = 0
             print('Finished {}/{} users, time: {}'.format(
-                counter, num_users, time.time() - start))
+                completed, num_users, time.time() - start))
 
 
 def get_revs_for_single_post(post, session):
