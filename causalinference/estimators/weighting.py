@@ -24,7 +24,7 @@ class Weighting(Estimator):
 		self._dict['ate'] = []
 		self._dict['ate_se'] = []
 		
-		for y in Y:
+		for y in Y.T:
 			y_w, Z_w = weigh_data(y, D, X, weights)
 
 			wlscoef = np.linalg.lstsq(Z_w, y_w)[0]
