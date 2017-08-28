@@ -43,7 +43,7 @@ def main(do_all=False):
         print('Reprocessing all reddit authors')
         qs = SampledRedditThread.objects.all()
     else:
-        print('will only processed new samples')
+        print('will only process new samples')
         qs = SampledRedditThread.objects.filter(user_info_processed=False)
 
     qs = qs.order_by('uid')

@@ -118,7 +118,6 @@ def causal_inference(
         filename = 'causal_treatment_{}_platform_{}_subset_{}_{}.txt'.format(
             treatment_feature, platform,
             num_rows if num_rows else 'All', db_name)
-        # print('==={}==='.format(outcomes))
         field_names = features + outcomes
         rows = qs.values_list(*field_names)
 
@@ -186,7 +185,6 @@ def causal_inference(
             causal.est_propensity_s()
             times.append(mark_time('propensity_s'))
         out.append(str(causal.propensity))
-        # print(causal.propensity)
         if trim_val:
             if trim_val == 'auto':
                 causal.trim_s()
@@ -204,7 +202,6 @@ def causal_inference(
                     pass
         if paired_psm:
             psm_est, psm_summary, psm_rows = causal.est_via_psm()
-            # print(str(psm_est))
             out.append('PSM PAIR REGRESSION')
             out.append(str(psm_summary))
             out.append(str(psm_est))
@@ -269,7 +266,6 @@ def causal_inference(
             iterations), str(5), str(50), str(95)]
         ]
         for outcome, ate_lst in treatment_effects.items():
-            print(outcome, ate_lst)
             sor = sorted(ate_lst)
             n = len(ate_lst)
             bot = int(0.05 * n)

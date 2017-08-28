@@ -131,14 +131,14 @@ def link_save():
 
 def sample_articles():
     """Prints out a sample of URLs to text file"""
-    num_samples = 50
+    num_samples = 100
     models = [SampledRedditThread, SampledStackOverflowPost]
-    for model in models:
-        outfilename = '{}_{}_articles.txt'.format(
-            model.__name__, num_samples
+    for i, model in enumerate(models):
+        outfilename = 'html/{}_sample{}of{}.html'.format(
+            model.__name__, i, num_samples
         )
         with open(outfilename, 'w') as outfile:
-            qs = model.objects.filter(has_wiki_link=True).exclude(context='todayilearned').exclude(context__icontains='borntoday').order_by('?')[:num_samples]
+            qs = model.objects.filter(has_wiki_link=True).order_by('?')[:num_samples]
             for obj in qs:
                 for wiki_link in obj.wiki_links.all():
                     if model == SampledRedditThread:
@@ -146,7 +146,7 @@ def sample_articles():
                             obj.title, obj.context, str(obj.timestamp), wiki_link.title
                         ]
                     else:
-                        fields = [wiki_link.title, str(obj.timestamp)]
+                        fields = [obj.body]
                     line = ', '.join(fields)
                     print(line)
                     outfile.write(line + '\n')
