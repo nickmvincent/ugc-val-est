@@ -88,7 +88,7 @@ def extract_vals_and_method_results(qs, field_names):
 
 def causal_inference(
         platform, treatment_feature,
-        num_rows=None, simple_psm=False, simple_bin=None, trim_val=None,
+        num_rows=None, quad_psm=False, simple_bin=None, trim_val=None,
         paired_psm=None, iterations=1):
     """
     Use causalinference module to perform causal inference analysis
@@ -168,7 +168,7 @@ def causal_inference(
         causal.est_via_ols()
         times.append(mark_time('est_via_ols'))
         print(causal.estimates)
-        if simple_psm:
+        if not quad_psm:
             causal.est_propensity()
             times.append(mark_time('propensity'))
         else:
@@ -200,6 +200,8 @@ def causal_inference(
 
             with open('PSM_PAIRS' + filename, 'w') as outfile:
                 outfile.write('\n'.join(psm_rows))
+            for key, val in psm_est.items():
+                print(key)
             ates = psm_est['ate']
         else:
             if simple_bin:
@@ -332,11 +334,7 @@ def parse():
         action='store_true',
         help='performs simple linear regression will all covariates')
     parser.add_argument(
-        '--causal',
-        action='store_true',
-        help='performs causal analysis')
-    parser.add_argument(
-        '--simple_psm',
+        '--quad_psm',
         action='store_true',
         help='to use simple PSM')
     parser.add_argument(
@@ -361,7 +359,7 @@ def parse():
     args = parser.parse_args()
     if args.simple:
         simple_linear(args.platform)
-    if args.causal:
+    else:
         if args.bootstrap is None:
             iterations = 1
         else:
@@ -378,7 +376,7 @@ def parse():
             for treatment in treatments:
                 causal_inference(
                     platform, treatment,
-                    args.num_rows, args.simple_psm,
+                    args.num_rows, args.quad_psm,
                     args.simple_bin, args.trim_val,
                     args.paired_psm, iterations)
 
