@@ -431,7 +431,7 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                 'qs': SampledRedditThread.objects.filter(context__in=TOP_TEN),
                 'name': 'Top_Ten'
             }]
-        if rq == 3:
+        if rq == 3 and not bootstrap:
             datasets += [{
                 'qs': SampledRedditThread.objects.filter(**subsample_kwargs).filter(
                     has_good_wiki_link=True
