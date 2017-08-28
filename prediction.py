@@ -239,6 +239,7 @@ def causal_inference(
         # except np.linalg.linalg.LinAlgError as err:
         #     msg = 'LinAlgError with est_via_matching: {}'.format(err)
         #     err_handle(msg, out)
+        out.append(str(causal.estimates))
         timing_info = {}
         prev = times[0][0]
         for cur_time, desc in times[1:]:
