@@ -18,16 +18,22 @@ class Weighting(Estimator):
 		Y, D, X = data['Y'], data['D'], data['X']
 		pscore = data['pscore']
 
+
 		weights = calc_weights(pscore, D)
-		Y_w, Z_w = weigh_data(Y, D, X, weights)
-
-		wlscoef = np.linalg.lstsq(Z_w, Y_w)[0]
-		u_w = Y_w - Z_w.dot(wlscoef)
-		cov = calc_cov(Z_w, u_w)
-
 		self._dict = dict()
-		self._dict['ate'] = calc_ate(wlscoef)
-		self._dict['ate_se'] = calc_ate_se(cov)
+		self._dict['ate'] = []
+		self._dict['ate_se'] = []
+		
+		for y in Y:
+			y_w, Z_w = weigh_data(y, D, X, weights)
+
+			wlscoef = np.linalg.lstsq(Z_w, y_w)[0]
+			u_w = y_w - Z_w.dot(wlscoef)
+			cov = calc_cov(Z_w, u_w)
+
+			self._dict = dict()
+			self._dict['ate'].append(calc_ate(wlscoef))
+			self._dict['ate_se'].append(calc_ate_se(cov))
 
 
 def calc_weights(pscore, D):

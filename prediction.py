@@ -244,7 +244,7 @@ def causal_inference(
             causal.est_via_weighting()
             times.append(mark_time('est_via_matching'))
         except Exception as err:
-            msg = 'LinAlgError with est_via_weighting: {}'.format(err)
+            msg = 'Error with est_via_weighting: {}'.format(err)
             err_handle(msg, out)
         out.append(str(causal.estimates))
         timing_info = {}
