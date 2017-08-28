@@ -24,7 +24,6 @@ class OLS(Estimator):
 			self._dict[name] = []
 		for y in Y.T:
 			olscoef = np.linalg.lstsq(Z, y)[0]
-			print(olscoef)
 			u = y - Z.dot(olscoef)
 			cov = calc_cov(Z, u)
 

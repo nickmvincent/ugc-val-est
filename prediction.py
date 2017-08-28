@@ -98,7 +98,11 @@ def causal_inference(
         return (time.time(), desc)
 
     treatment_effects = defaultdict(list)
+    goal = 0.1
     for iteration in range(iterations):
+        if float(iteration) / iterations > goal:
+            print('{}/{}|'.format(iteration, iterations), end='')
+            goal += 0.1
         times = []
         times.append(mark_time('function_start')) 
         if treatment_feature == 'has_good_wiki_link':
@@ -113,7 +117,7 @@ def causal_inference(
         filename = 'causal_treatment_{}_platform_{}_subset_{}_{}.txt'.format(
             treatment_feature, platform,
             num_rows if num_rows else 'All', db_name)
-        print('==={}==='.format(outcomes))
+        # print('==={}==='.format(outcomes))
         field_names = features + outcomes
         rows = qs.values_list(*field_names)
 
@@ -143,10 +147,12 @@ def causal_inference(
                 print('Feature {} failed isnan check...'.format(feature))
                 continue
             if all(x == 0 for x in feature_row):
-                print(
-                    'Feature {} is all zeros - will lead to singular matrix'.format(feature))
+                # print(
+                #     'Feature {} is all zeros - will lead to singular matrix'.format(feature))
+                continue
             elif has_any_nans:
-                print('Feature {} has a nan value...'.format(feature))
+                # print('Feature {} has a nan value...'.format(feature))
+                continue
             else:
                 successful_fields.append(feature)
                 feature_rows.append(feature_row)
@@ -170,7 +176,6 @@ def causal_inference(
         causal = CausalModel(Y, D, X, ids=ids)
         times.append(mark_time('CausalModel'))
         out.append(str(causal.summary_stats))
-        print(causal.summary_stats)
         causal.est_via_ols()
         times.append(mark_time('est_via_ols'))
         if not quad_psm:
@@ -201,12 +206,10 @@ def causal_inference(
             out.append('PSM PAIR REGRESSION')
             out.append(str(psm_summary))
             out.append(str(psm_est))
-            print(psm_summary)
             diff_avg = 0
             for row in psm_rows:
                 diff_avg += abs(row[1] - row[3])
             diff_avg /= len(psm_rows)
-            print(diff_avg)
             out.append('Pscore diff average: {}'.format(diff_avg))
 
             with open('PSM_PAIRS' + filename, 'w') as outfile:
