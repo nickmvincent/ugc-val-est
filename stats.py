@@ -506,8 +506,6 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                     print('setting ordered vals')
                     dataset['ordered_vals'] = list(dataset['qs'].order_by('uid').values())
                 len_vals = len(dataset['ordered_vals'])
-                print('choosing from {}'.format(len_vals))
-                print(dataset['ordered_vals'][0])
                 for _ in range(len_vals):
                     rand_index = np.random.randint(0, len_vals - 1)
                     samples.append(dataset['ordered_vals'][rand_index])
@@ -575,6 +573,7 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                             treatment_var, control_var)
                 try:
                     for group in groups:
+                        print(group)
                         if method:
                             if group.get('var_to_vec'):
                                 continue
