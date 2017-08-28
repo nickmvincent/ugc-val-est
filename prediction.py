@@ -211,6 +211,7 @@ def causal_inference(
 
             with open('PSM_PAIRS' + filename, 'w') as outfile:
                 for psm_row in psm_rows:
+                    psm_row = [str(entry) for entry in psm_row]
                     outfile.write(','.join(psm_row))
             ates = psm_est['ols']['ate']
         else:
