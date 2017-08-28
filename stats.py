@@ -399,7 +399,6 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
         if not os.path.exists(directory):
             os.makedirs(directory)
     variables = ['score', 'num_comments', ]
-    variables += list_common_features()
     if rq == 1:
         subsample_kwargs = {}
         treatment_kwargs = {'has_wiki_link': True, }
@@ -487,7 +486,8 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
             ('week_after_avg_score', 'day_of_avg_score'),
             ('num_wiki_pageviews', 'num_wiki_pageviews_prev_week')
         ]
-    output_filename = "{}_{}_stats.csv".format(platform, rq)
+    db_name = connection.settings_dict['NAME']
+    output_filename = "{}_{}_stats_{}.csv".format(platform, rq, db_name)
     iterations = bootstrap if bootstrap else 1
     outputs = {}
     for index in range(iterations):
@@ -634,7 +634,9 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                                     output[
                                         subset_name][variable][stat_category][subgroup][stat_name]
                                 )
-    boot_rows = []
+    boot_rows = ['Bootstrap results for {} iterations of full resampling'.format(
+        iterations
+    )]
     for subset_name, variables in outputs.items():
         for variable, stat_categories in variables.items():
             for stat_category, subgroups in stat_categories.items():
@@ -722,6 +724,7 @@ def parse():
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dja.settings")
     import django
+    from django.db import connection
     django.setup()
     from portal.models import (
         SampledRedditThread, SampledStackOverflowPost,
