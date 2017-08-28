@@ -317,7 +317,6 @@ class CausalModel(object):
         """
         Match each control to one treatment
         """
-        subsets = []
         pscore_order = self.raw_data['pscore'].argsort()
         pscore = self.raw_data['pscore'][pscore_order]
         D = self.raw_data['D'][pscore_order]
