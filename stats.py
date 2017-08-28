@@ -563,7 +563,6 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                         treatment_var, control_var = variable
                         variable_name = '{} vs {}'.format(
                             treatment_var, control_var)
-                print('processing variable {}'.format(variable_name))
                 try:
                     for group in groups:
                         if method:
@@ -618,7 +617,9 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                     ))
         output = output_stats(
             None if bootstrap else output_filename, descriptive_stats, inferential_stats)
-        print('finished bootstrap iteration {}'.format(index))
+        goal = 0.1
+        if index / iterations > goal:
+            print('{}/{}|'.format(index, iterations), end='')
         if index == 0:  # is first iteration
             outputs = output.copy()
             for subset_name, variables in outputs.items():
