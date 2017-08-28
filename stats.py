@@ -604,7 +604,7 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                                     group['qs'], 'context', name + '_' + group['name'])
 
                     len1, len2 = len(treatment['vals']), len(control['vals'])
-                    if len1 == 0 or len2 == 0:
+                    if len1 == 0 or len2 == 0 and not bootstrap:
                         print('Skipping variable {} because {}, {}.'.format(
                             variable_name, len1, len2))
                     try:
@@ -643,7 +643,7 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                                 val = output[
                                         subset_name][variable][stat_category][subgroup].get(stat_name)
                                 if val:
-                                stat_names[stat_name].append(val)
+                                    stat_names[stat_name].append(val)
     boot_rows = [
         ['Bootstrap results for {} iterations of full resampling'.format(
         iterations), 'n', str(5), str(50), str(95)]
