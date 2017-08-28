@@ -366,7 +366,6 @@ def parse():
         help='to do paired psm?')
     parser.add_argument(
         '--trim_val',
-        action='store_true',
         help='to perform PSM trimming')
     parser.add_argument(
         '--bootstrap',

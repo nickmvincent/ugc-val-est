@@ -65,15 +65,15 @@ class Summary(Dict):
 		output = '\n'
 		output += 'Summary Statistics\n\n'
 
-		entries1 = ['', 'Controls (N_c='+str(N_c)+')',
-		            'Treated (N_t='+str(N_t)+')', '']
+		entries1 = ['', 'C (N_c='+str(N_c)+')',
+		            'T (N_t='+str(N_t)+')', '']
 		entry_types1 = ['string']*4
 		col_spans1 = [1, 2, 2, 1]
 		output += tools.add_row(entries1, entry_types1,
 		                        col_spans1, table_width)
 
 		entries2 = ['Variable', 'Mean', 'S.d.',
-		            'Mean', 'S.d.', 'Raw-diff']
+		            'Mean', 'S.d.', 'rdif']
 		entry_types2 = ['string']*6
 		col_spans2 = [1]*6
 		output += tools.add_row(entries2, entry_types2,
@@ -93,7 +93,7 @@ class Summary(Dict):
 		                        col_spans1, table_width)
 
 		entries4 = ['Variable', 'Mean', 'S.d.',
-		            'Mean', 'S.d.', 'Nor-diff']
+		            'Mean', 'S.d.', 'Ndif']
 		output += tools.add_row(entries4, entry_types2,
 		                        col_spans2, table_width)
 		output += tools.add_line(table_width)
