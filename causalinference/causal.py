@@ -330,7 +330,7 @@ class CausalModel(object):
         new_D = []
         psm_rows = []
         control_indices_used = []
-        indices_to_hit = range(D.shape[0])
+        indices_to_hit = list(range(D.shape[0]))
         indices_to_hit = np.random.shuffle(indices_to_hit) 
         for i in indices_to_hit:
             if D[i] == 1:  # we've found a treatment!
