@@ -329,7 +329,10 @@ class CausalModel(object):
         new_Y = []
         new_D = []
         psm_rows = []
-        for i in range(D.shape[0]):
+        control_indices_used = []
+        indices_to_hit = range(D.shape[0])
+        indices_to_hit = np.random.shuffle(indices_to_hit) 
+        for i in indices_to_hit:
             if D[i] == 1:  # we've found a treatment!
                 new_X.append(X[i])
                 new_Y.append(Y[i])
@@ -337,14 +340,18 @@ class CausalModel(object):
                 search_above, search_below = i, i
                 while True:
                     search_above += 1
-                    if search_above == D.shape[0]:
+                    if search_above in control_indices_used:
+                        continue
+                    if search_above >= D.shape[0]:
                         search_above = None
                         break
                     if D[search_above] == 1:
                         break
                 while True:
                     search_below -= 1
-                    if search_below == 0:
+                    if search_below in control_indices_used:
+                        continue
+                    if search_below <= 0:
                         search_below = None
                         break
                     if D[search_below] == 0:
@@ -365,6 +372,7 @@ class CausalModel(object):
                 psm_rows.append(
                     [ids[i], pscore[i], ids[match], pscore[match]]
                 )
+                control_indices_used.append(ids[match])
         matched_model = CausalModel(np.array(new_Y), np.array(new_D), np.array(new_X))
         matched_model.est_via_ols(0)
         return matched_model.estimates, matched_model.summary_stats, psm_rows

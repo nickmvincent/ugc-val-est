@@ -206,10 +206,12 @@ def causal_inference(
             for row in psm_rows:
                 diff_avg += abs(row[1] - row[3])
             diff_avg /= len(psm_rows)
+            print(diff_avg)
             out.append('Pscore diff average: {}'.format(diff_avg))
 
             with open('PSM_PAIRS' + filename, 'w') as outfile:
-                outfile.write('\n'.join(psm_rows))
+                for psm_row in psm_rows:
+                outfile.write(','.join(psm_row))
             ates = psm_est['ols']['ate']
         else:
             if simple_bin:
