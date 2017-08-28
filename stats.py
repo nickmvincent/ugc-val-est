@@ -243,9 +243,9 @@ def univariate_analysis(groups):
         }
     for group in groups_to_analyze:
         basic[group['name']]['percent_of_total_items'] = basic[group['name']
-                                                              ]['num_items'] / len(all_vals) * 100
+                                                               ]['num_items'] / len(all_vals) * 100
         basic[group['name']]['percent_of_total_sum'] = basic[group['name']
-                                                            ]['sum'] / sum(all_vals) * 100
+                                                             ]['sum'] / sum(all_vals) * 100
     return {
         'basic': basic,
         'central_tendencies': central_tendencies,
@@ -613,9 +613,8 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                     print('Skipping variable {} bc zero division'.format(
                         variable_name
                     ))
-        output_filename = None if bootstrap else output_filename
         output = output_stats(
-            output_filename, descriptive_stats, inferential_stats)
+            None if bootstrap else output_filename, descriptive_stats, inferential_stats)
         print('finished bootstrap iteration {}'.format(index))
         if index == 0:  # is first iteration
             outputs = output.copy()
