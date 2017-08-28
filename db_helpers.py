@@ -133,24 +133,23 @@ def sample_articles():
     """Prints out a sample of URLs to text file"""
     num_samples = 100
     models = [SampledRedditThread, SampledStackOverflowPost]
-    for model in enumeratemodels:
-        with open(outfilename, 'w') as outfile:
-            qs = model.objects.filter(has_wiki_link=True).order_by('?')[:num_samples]
-            counter = 0
-            for obj in qs:
-                for wiki_link in obj.wiki_links.all():
-                    outfilename = 'html/{}_sample{}of{}.html'.format(
-                        model.__name__, counter, num_samples
-                    )
-                    counter += 1
-                    if model == SampledRedditThread:
-                        fields = [
-                            obj.title, obj.context, str(obj.timestamp), wiki_link.title
-                        ]
-                    else:
-                        fields = [obj.body]
-                    line = ', '.join(fields)
-                    print(line)
+    for model in models:
+        qs = model.objects.filter(has_wiki_link=True).order_by('?')[:num_samples]
+        counter = 0
+        for obj in qs:
+            for wiki_link in obj.wiki_links.all():
+                outfilename = 'html/{}_sample{}of{}.html'.format(
+                    model.__name__, counter, num_samples
+                )
+                counter += 1
+                if model == SampledRedditThread:
+                    fields = [
+                        obj.title, obj.context, str(obj.timestamp), wiki_link.title
+                    ]
+                else:
+                    fields = [obj.body]
+                line = ', '.join(fields)
+                with open(outfilename, 'w') as outfile:
                     outfile.write(line + '\n')
 
 def extract_pairs(first, second):
