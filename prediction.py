@@ -242,9 +242,9 @@ def causal_inference(
         print(outcome, ate_lst)
         sor = sorted(ate_lst)
         n = len(ate_lst)
-        bot = 0.05 * n
-        mid = 0.5 * n
-        top = 0.95 * n
+        bot = int(0.05 * n)
+        mid = int(0.5 * n)
+        top = int(0.95 * n)
         boot_rows.append([
             outcome, sor[bot], sor[mid], sor[top]
         ])
