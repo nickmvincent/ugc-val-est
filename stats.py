@@ -528,6 +528,7 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                                 treatment_var_to_vec[key].append(val)
                             else:
                                 control_var_to_vec[key].append(val)
+                print('{} {}'.format(len(treatment_var_to_vec), len(control_var_to_vec)))
                 treatment = {
                     'name': 'Treatment',
                     'var_to_vec': treatment_var_to_vec,
