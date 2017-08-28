@@ -642,30 +642,30 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
             goal += 0.1
         if index == 0:  # is first iteration
             outputs = output.copy()
-            for subset_name, variables in outputs.items():
-                for variable, stat_categories in variables.items():
+            for subset_name, computed_vars in outputs.items():
+                for computed_var, stat_categories in computed_vars.items():
                     for stat_category, subgroups in stat_categories.items():
                         for subgroup, stat_names in subgroups.items():
                             for stat_name, stat_value in stat_names.items():
                                 stat_names[stat_name] = [stat_value]
         else:
-            for subset_name, variables in outputs.items():
-                for variable, stat_categories in variables.items():
-                    if variable not in output[subset_name]:
+            for subset_name, computed_vars in outputs.items():
+                for computed_var, stat_categories in computed_vars.items():
+                    if computed_var not in output[subset_name]:
                         continue
                     for stat_category, subgroups in stat_categories.items():
                         for subgroup, stat_names in subgroups.items():
                             for stat_name in stat_names.keys():
                                 val = output[
-                                        subset_name][variable][stat_category][subgroup].get(stat_name)
+                                        subset_name][computed_var][stat_category][subgroup].get(stat_name)
                                 if val:
                                     stat_names[stat_name].append(val)
     boot_rows = [
         ['Bootstrap results for {} iterations of full resampling'.format(
         iterations), 'n', str(5), str(50), str(95)]
     ]
-    for subset_name, variables in outputs.items():
-        for variable, stat_categories in variables.items():
+    for subset_name, computed_vars in outputs.items():
+        for computed_var, stat_categories in computed_vars.items():
             for stat_category, subgroups in stat_categories.items():
                 if stat_category not in ['central_tendencies', 'Hypothesis Testing',]:
                     continue
@@ -677,7 +677,7 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                         mid = int(0.5 * n)
                         top = int(0.95 * n)
                         desc = "{}|{}|{}|{}|{}".format(
-                            subset_name, variable, stat_category, subgroup, stat_name
+                            subset_name, computed_var, stat_category, subgroup, stat_name
                         )
                         boot_rows.append([desc, n, sor[bot], sor[mid], sor[top]])
     with open('csv_files/' + 'BOOT_' + output_filename, 'w', newline='') as outfile:
