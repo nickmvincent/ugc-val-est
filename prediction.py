@@ -102,17 +102,17 @@ def causal_inference(
         times = []
         times.append(mark_time('function_start')) 
         if treatment_feature == 'has_good_wiki_link':
-            filter_kwargs = {'has_wiki_link': True, 'day_of_avg_score__isnull': False}
+            filter_kwargs = {'has_wiki_link': True, 'day_of_avg_score__isnull': False, 'sample_num': 0}
         else:
-            filter_kwargs = None
+            filter_kwargs = {'sample_num': 0}
         qs, features, outcomes = get_qs_features_and_outcomes(
             platform, num_rows=num_rows, filter_kwargs=filter_kwargs)
         features.append(treatment_feature)
         features.append('uid')
-
-        filename = 'causal_treatment_{}_platform_{}_subset_{}.txt'.format(
+        db_name = connection.settings_dict['NAME']
+        filename = 'causal_treatment_{}_platform_{}_subset_{}_{}.txt'.format(
             treatment_feature, platform,
-            num_rows if num_rows else 'All')
+            num_rows if num_rows else 'All', db_name)
         print('==={}==='.format(outcomes))
         field_names = features + outcomes
         rows = qs.values_list(*field_names)
@@ -391,6 +391,7 @@ if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dja.settings")
     import django
     django.setup()
+    from django.db import connection
     from portal.models import (
         SampledRedditThread, SampledStackOverflowPost,
     )
