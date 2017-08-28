@@ -573,7 +573,7 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                             treatment_var, control_var)
                 try:
                     for group in groups:
-                        print('var_to_vec' in group)
+                        print(group.get('var_to_vec'))
                         print(group['name'])
                         if method:
                             if group.get('var_to_vec'):
@@ -582,6 +582,7 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                                 group['vals'] = method(group['qs'])
                         elif treatment_var and control_var:
                             if group['name'] == 'Treatment':
+                                print('here...')
                                 if group.get('var_to_vec'):
                                     group['vals'] = group['var_to_vec'][treatment_var]
                                     print('len of tr {}'.format(len(group['vals'])))
