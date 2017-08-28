@@ -264,18 +264,18 @@ def inferential_analysis(x_arr, y_arr, samples_related):
     else:
         _, pval = stats.ttest_ind(
             x_arr, y_arr, equal_var=False)  # _ = tstat
-    cles_score_flipped = cles(x_arr, y_arr)
-    cles_score = cles(y_arr, x_arr)
+    # cles_score_flipped = cles(x_arr, y_arr)
+    # cles_score = cles(y_arr, x_arr)
     return {
         'Hypothesis Testing': {
             'Treatment vs Control': {
                 'Difference': delta,
                 'p_value': pval,
-                'percent_bias': percent_bias(x_arr, y_arr),
+                # 'percent_bias': percent_bias(x_arr, y_arr),
                 'cohen\'s d effect size': cohen_d(x_arr, y_arr),
-                'CLES': cles_score,
-                'CLES flipped (treatment=lesser)': cles_score_flipped,
-                'Wilcoxon rank-sum statistic': stats.ranksums(x_arr, y_arr),
+                # 'CLES': cles_score,
+                # 'CLES flipped (treatment=lesser)': cles_score_flipped,
+                # 'Wilcoxon rank-sum statistic': stats.ranksums(x_arr, y_arr),
             }
         }
     }
@@ -637,9 +637,9 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                                     output[
                                         subset_name][variable][stat_category][subgroup][stat_name]
                                 )
-    boot_rows = ['Bootstrap results for {} iterations of full resampling'.format(
+    boot_rows = [['Bootstrap results for {} iterations of full resampling'.format(
         iterations
-    )]
+    )]]
     for subset_name, variables in outputs.items():
         for variable, stat_categories in variables.items():
             for stat_category, subgroups in stat_categories.items():
