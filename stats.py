@@ -507,7 +507,7 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                     dataset['ordered_vals'] = list(dataset['qs'].order_by('uid').values())
                 len_vals = len(dataset['ordered_vals'])
                 print('choosing from {}'.format(len_vals))
-                for _ in range(len_vals:
+                for _ in range(len_vals):
                     rand_index = np.random.randint(0, len_vals - 1)
                     samples.append(dataset['ordered_vals'][rand_index])
                 treatment_var_to_vec = defaultdict(list)
