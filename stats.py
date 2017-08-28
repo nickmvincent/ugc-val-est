@@ -637,9 +637,11 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                                     output[
                                         subset_name][variable][stat_category][subgroup][stat_name]
                                 )
-    boot_rows = [['Bootstrap results for {} iterations of full resampling'.format(
-        iterations
-    )]]
+    boot_rows = [
+        ['Bootstrap results for {} iterations of full resampling'.format(
+        iterations)],
+        str(5), str(50), str(95)
+    ]
     for subset_name, variables in outputs.items():
         for variable, stat_categories in variables.items():
             for stat_category, subgroups in stat_categories.items():
@@ -650,11 +652,12 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                         sor = sorted(stat_values)
                         n = len(stat_values)
                         bot = int(0.05 * n)
+                        mid = int(0.5 * n)
                         top = int(0.95 * n)
                         desc = "{}|{}|{}|{}|{}".format(
                             subset_name, variable, stat_category, subgroup, stat_name
                         )
-                        boot_rows.append([desc, sor[bot], sor[top]])
+                        boot_rows.append([desc, sor[bot], sor[mid], sor[top]])
     with open('csv_files/' + 'BOOT_' + output_filename, 'w', newline='') as outfile:
         writer = csv.writer(outfile)
         writer.writerows(boot_rows)
