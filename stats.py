@@ -425,7 +425,7 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
             'qs': SampledRedditThread.objects.filter(**subsample_kwargs),
             'name': 'All',
         }]
-        if rq == 1 or rq == 2 and not bootstrap:
+        if not bootstrap:
             datasets += [{
                 'qs': SampledRedditThread.objects.filter(context='todayilearned'),
                 'name': 'TIL'
