@@ -106,8 +106,8 @@ def causal_inference(
             goal += 0.1
         times, ates = [], []
         times.append(mark_time('function_start')) 
-        if treatment_feature == 'has_good_wiki_link':
-            filter_kwargs = {'has_wiki_link': True, 'day_of_avg_score__isnull': False, 'sample_num': 0}
+        if treatment_feature != 'has_wiki_link':
+            filter_kwargs = {'has_wiki_link': True, 'day_of_avg_score__isnull': False}
         else:
             filter_kwargs = {}
         if sample_num is None:
@@ -398,7 +398,7 @@ def parse():
         if args.trim_val is None:
             args.trim_val = [0.000, 0.001, 0.002, 0.003, 0.004, 0.005, 0.006, 0.007]
         if args.treatment is None:
-            treatments = ['has_wiki_link', 'has_good_wiki_link']
+            treatments = ['has_wiki_link', 'has_good_wiki_link', 'has_b_wiki_link', 'has_c_wiki_link',]
         else:
             treatments = [args.treatment]
         if args.platform is None:
