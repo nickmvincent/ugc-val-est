@@ -323,8 +323,8 @@ class Post(models.Model):
                         setattr(self, output_field, None)
                     else:
                         setattr(self, output_field, val)
-                if self.day_of_avg_score and self.day_of_avg_score >= 4:
-                    self.has_good_wiki_link = True
+        if self.day_of_avg_score and self.day_of_avg_score >= 4:
+            self.has_good_wiki_link = True
         super(Post, self).save(*args, **kwargs)
 
 

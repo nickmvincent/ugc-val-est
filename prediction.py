@@ -5,7 +5,7 @@ Not for prod use
 Should be run from Anaconda environment with scipy installed
 (Anconda Prompt -> activate sci_basic)
 
-python prediction.py --platform r --treatment has_wiki_link --causal --simple_psm --paired_psm
+python prediction.py --platform r --treatment has_wiki_link --paired_psm
 
 """
 # pylint: disable=C0103
@@ -88,8 +88,8 @@ def extract_vals_and_method_results(qs, field_names):
 
 def causal_inference(
         platform, treatment_feature,
-        num_rows=None, quad_psm=False, simple_bin=None, trim_val=None,
-        paired_psm=None, iterations=1):
+        num_rows=None, quad_psm=False, simple_bin=None, trim_val=0,
+        paired_psm=None, iterations=1, sample_num=None):
     """
     Use causalinference module to perform causal inference analysis
     """
@@ -109,15 +109,23 @@ def causal_inference(
         if treatment_feature == 'has_good_wiki_link':
             filter_kwargs = {'has_wiki_link': True, 'day_of_avg_score__isnull': False, 'sample_num': 0}
         else:
-            filter_kwargs = {'sample_num': 0}
+            filter_kwargs = {}
+        if sample_num is None:
+            filter_kwargs['sample_num'] = 0
+        else:
+            filter_kwargs['sample_num__in'] = sample_num.split(',')
         qs, features, outcomes = get_qs_features_and_outcomes(
             platform, num_rows=num_rows, filter_kwargs=filter_kwargs)
         features.append(treatment_feature)
         features.append('uid')
         db_name = connection.settings_dict['NAME']
-        filename = 'causal_treatment_{}_platform_{}_subset_{}_{}.txt'.format(
-            treatment_feature, platform,
-            num_rows if num_rows else 'All', db_name)
+        filename = 'CI_Tr_{treatment}_on_{platform}_{subset}_{db}_trim{trim_val}.txt'.format(**{
+            'treatment': treatment_feature,
+            'plat': platform,
+            'subset': num_rows if num_rows else 'All',
+            'db': db_name,
+            'trim_val': trim_val
+        })
         field_names = features + outcomes
         rows = qs.values_list(*field_names)
 
@@ -185,21 +193,12 @@ def causal_inference(
             causal.est_propensity_s()
             times.append(mark_time('propensity_s'))
         out.append(str(causal.propensity))
-        if trim_val:
-            if trim_val == 'auto':
-                causal.trim_s()
-                times.append(mark_time('trim_s'))
-                out.append('TRIM PERFORMED')
-                out.append(str(causal.summary_stats))
-            else:
-                try:
-                    causal.cutoff = float(trim_val)
-                    causal.trim()
-                    times.append(mark_time('trim_{}'.format(trim_val)))
-                    out.append('TRIM PERFORMED')
-                    out.append(str(causal.summary_stats))
-                except:
-                    pass
+        # TODO: show my manually chosen is stable/justifiable for paper
+        causal.cutoff = float(trim_val)
+        causal.trim()
+        times.append(mark_time('trim_{}'.format(trim_val)))
+        out.append('TRIM PERFORMED: {}'.format(str(trim_val)))
+        out.append(str(causal.summary_stats))
         if paired_psm:
             psm_est, psm_summary, psm_rows = causal.est_via_psm()
             out.append('PSM PAIR REGRESSION')
@@ -256,10 +255,12 @@ def causal_inference(
             prev = cur_time
         for key, val in timing_info.items():
             out.append("{}:{}".format(key, val))
-        with open(filename, 'w') as outfile:
-            outfile.write('\n'.join(out))
-        for ate_num, ate in enumerate(ates):
-            treatment_effects[outcomes[ate_num]].append(ate)
+        if iterations == 1:
+            with open(filename, 'w') as outfile:
+                outfile.write('\n'.join(out))
+        else:
+            for ate_num, ate in enumerate(ates):
+                treatment_effects[outcomes[ate_num]].append(ate)
     if iterations > 1:
         boot_rows = [
             ['Bootstrap results for {} iterations of full resampling'.format(
@@ -268,15 +269,18 @@ def causal_inference(
         for outcome, ate_lst in treatment_effects.items():
             sor = sorted(ate_lst)
             n = len(ate_lst)
-            bot = int(0.05 * n)
-            mid = int(0.5 * n)
-            top = int(0.95 * n)
+            bot = int(0.025 * n)
+            top = int(0.975 * n)
             boot_rows.append([
-                outcome, sor[bot], sor[mid], sor[top]
+                outcome, sor[bot], sor[top]
             ])
         with open('csv_files/' + 'BOOT_' + filename, 'w', newline='') as outfile:
             writer = csv.writer(outfile)
             writer.writerows(boot_rows)
+        causal_inference(
+            platform, treatment_feature,
+            num_rows, quad_psm, simple_bin, trim_val,
+            paired_psm, iterations=1, sample_num):
 
             
 
@@ -360,7 +364,7 @@ def parse():
     parser.add_argument(
         '--quad_psm',
         action='store_true',
-        help='to use simple PSM')
+        help='to use quad PSM')
     parser.add_argument(
         '--simple_bin', nargs='?', default=None,
         help='add this argument if you want to just simple manual binning (i.e. 2 bins)')
@@ -373,12 +377,16 @@ def parse():
         action='store_true',
         help='to do paired psm?')
     parser.add_argument(
-        '--trim_val',
+        '--trim_val', default=None
         help='to perform PSM trimming')
     parser.add_argument(
         '--bootstrap',
         type=int, nargs='?', default=None,
         help='use stats bootstrapping')
+    parser.add_argument(
+        '--sample_num',
+        nargs='?', default=None,
+        help='select a sample number')
     args = parser.parse_args()
     if args.simple:
         simple_linear(args.platform)
@@ -387,6 +395,8 @@ def parse():
             iterations = 1
         else:
             iterations = args.bootstrap
+        if args.trim_val is None:
+            args.trim_val = [0.000, 0.001, 0.002, 0.003, 0.004, 0.005, 0.006, 0.007]
         if args.treatment is None:
             treatments = ['has_wiki_link', 'has_good_wiki_link']
         else:
@@ -401,7 +411,7 @@ def parse():
                     platform, treatment,
                     args.num_rows, args.quad_psm,
                     args.simple_bin, args.trim_val,
-                    args.paired_psm, iterations)
+                    args.paired_psm, iterations, sample_num)
 
 
     if args.quality:

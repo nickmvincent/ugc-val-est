@@ -375,7 +375,9 @@ def make_ln_func(variable):
 
 
 def make_method_getter(method_name):
-    """todo"""
+    """This uses closures to return a function that gets
+    method outputs for a queryset. The method called
+    is determined by the input argument."""
     def get_method_outputs(qs):
         """Call the model method and return list of results"""
         vals = []
@@ -388,7 +390,7 @@ def make_method_getter(method_name):
     return get_method_outputs
 
 
-def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
+def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_num=None):
     """Driver"""
     csv_dir = 'csv_files'
     png_dir = 'png_files'
@@ -413,7 +415,10 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
             'week_after_avg_score__isnull': False,
         }
         treatment_kwargs = None
-    subsample_kwargs['sample_num'] = 0
+    if sample_num is None:
+        subsample_kwargs['sample_num'] = 0
+    else:
+        subsample_kwargs['sample_num__in'] = sample_num.split(',')
 
     if platform == 'r':
         datasets = [{
@@ -484,7 +489,9 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
             ('num_wiki_pageviews', 'num_wiki_pageviews_prev_week')
         ]
     db_name = connection.settings_dict['NAME']
-    output_filename = "{}_{}_stats_{}.csv".format(platform, rq, db_name)
+    output_filename = "STATS_on_{}_rq_{}_{}_sample_{}.csv".format(
+        platform, rq, db_name, 
+        sample_num if sample_num else 0)
     iterations = bootstrap if bootstrap else 1
     outputs = {}
     goal = 0.1    
@@ -665,13 +672,12 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None):
                             continue
                         n = len(stat_values)
                         sor = sorted(stat_values)
-                        bot = int(0.05 * n)
-                        mid = int(0.5 * n)
-                        top = int(0.95 * n)
+                        bot = int(0.025 * n)
+                        top = int(0.975 * n)
                         desc = "{}|{}|{}|{}|{}".format(
                             subset_name, computed_var, stat_category, subgroup, stat_name
                         )
-                        boot_rows.append([desc, sor[bot], sor[mid], sor[top]])
+                        boot_rows.append([desc, sor[bot], sor[top]])
     with open('csv_files/' + 'BOOT_' + output_filename, 'w', newline='') as outfile:
         writer = csv.writer(outfile)
         writer.writerows(boot_rows)
@@ -719,6 +725,10 @@ def parse():
         '--bootstrap',
         type=int, nargs='?', default=None,
         help='use stats bootstrapping')
+    parser.add_argument(
+        '--sample_num',
+        nargs='?', default=None,
+        help='select a sample number')
     args = parser.parse_args()
     if args.tags:
         tags_frequency_distribution(
