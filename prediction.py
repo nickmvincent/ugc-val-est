@@ -104,7 +104,8 @@ def causal_inference(
         if float(iteration) / iterations > goal:
             print('{}/{}|'.format(iteration, iterations), end='')
             goal += 0.1
-        times, ates, ndifs = [], [], []
+        times, ates = [], []
+        ndifs, big_ndifs_counts = [], []
         times.append(mark_time('function_start')) 
         if treatment_feature != 'has_wiki_link':
             filter_kwargs = {'has_wiki_link': True, 'day_of_avg_score__isnull': False}
@@ -186,6 +187,7 @@ def causal_inference(
         times.append(mark_time('CausalModel'))
         out.append(str(causal.summary_stats))
         ndifs.append(causal.summary_stats['sum_of_abs_ndiffs'])
+        big_ndifs_counts.append(causal.summary_stats['num_large_ndiffs'])
         # causal.est_via_ols()
         times.append(mark_time('est_via_ols'))
         if not quad_psm:
@@ -202,6 +204,7 @@ def causal_inference(
         out.append('TRIM PERFORMED: {}'.format(str(trim_val)))
         out.append(str(causal.summary_stats))
         ndifs.append(causal.summary_stats['sum_of_abs_ndiffs'])
+        big_ndifs_counts.append(causal.summary_stats['num_large_ndiffs'])
         if paired_psm:
             psm_est, psm_summary, psm_rows = causal.est_via_psm()
             out.append('PSM PAIR REGRESSION')
@@ -235,16 +238,20 @@ def causal_inference(
                 causal.est_via_blocking()
                 times.append(mark_time('est_via_blocking'))
                 ates = causal.estimates['blocking']['ate']
-                w_avg_ndif = 0
+                w_avg_ndiff = 0
+                w_num_large_ndiffs = 0
                 for stratum in causal.strata:
                     val = stratum.summary_stats['sum_of_abs_ndiffs']
                     count = stratum.raw_data['N']
                     fraction = count / causal.raw_data['N']
-                    w_avg_ndif += fraction * val
+                    w_avg_ndiff += fraction * val
+                    w_num_large_ndiffs += fraction * stratum.summary_stats['num_large_ndiffs']
                 out.append('WEIGHTED AVERAGE OF SUM OF ABSOLUTE VALUE OF ALL NDIFs')
-                ndifs.append(w_avg_ndif)
+                ndifs.append(w_avg_ndiff)
+                big_ndifs_counts.append(w_num_large_ndiffs)
                 out.append('NDIF info')
                 out.append(','.join([str(ndif) for ndif in ndifs]))
+                out.append(','.join([str(count) for count in big_ndifs_counts]))
                 print(iteration)
                 print(ndifs)
             except np.linalg.linalg.LinAlgError as err:

@@ -38,6 +38,9 @@ class Summary(Dict):
 		self._dict['sum_of_abs_ndiffs'] = sum([
 			abs(ndiff) for ndiff in self._dict['ndiff'].T
 		])
+		self._dict['num_large_ndiffs'] = len([
+			ndiff for ndiff in self._dict['ndiff'] if ndiff >= 0.25
+		])
 
 
 	def _summarize_pscore(self, pscore_c, pscore_t):
