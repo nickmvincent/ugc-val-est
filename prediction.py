@@ -280,7 +280,7 @@ def causal_inference(
         causal_inference(
             platform, treatment_feature,
             num_rows, quad_psm, simple_bin, trim_val,
-            paired_psm, iterations=1, sample_num):
+            paired_psm, iterations=1, sample_num)
 
             
 

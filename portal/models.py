@@ -81,6 +81,8 @@ class Post(models.Model):
     wiki_links = models.ManyToManyField('WikiLink')
     has_wiki_link = models.BooleanField(default=False, db_index=True)
     has_good_wiki_link = models.BooleanField(default=False, db_index=True)
+    has_b_wiki_link = models.BooleanField(default=False, db_index=True)
+    has_c_wiki_link = models.BooleanField(default=False, db_index=True)
     num_wiki_links = models.IntegerField(default=0)
 
     # poor naming choices... the following refer to ORES score...
@@ -271,6 +273,12 @@ class Post(models.Model):
                             missing_necessary_ores = True
                         else:
                             field_to_score[field] += ores_score
+                            if ores_score >= 4:
+                                self.has_good_wiki_link = True
+                            if ores_score >= 3:
+                                self.has_b_wiki_link = True
+                            if ores_score >= 2:
+                                self.has_c_wiki_link = True
                     for revision in revisions:
                         users_seen = {}
                         starttime = self.timestamp - datetime.timedelta(days=7)
@@ -323,8 +331,6 @@ class Post(models.Model):
                         setattr(self, output_field, None)
                     else:
                         setattr(self, output_field, val)
-        if self.day_of_avg_score and self.day_of_avg_score >= 4:
-            self.has_good_wiki_link = True
         super(Post, self).save(*args, **kwargs)
 
 
