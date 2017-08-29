@@ -11,7 +11,7 @@ from pprint import pprint
 import time
 from queryset_helpers import (
     batch_qs,
-    list_common_features,
+    # list_common_features,
     # list_stack_specific_features,
     # list_reddit_specific_features
 )
@@ -484,17 +484,17 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
             # ('num_major_edits', 'num_major_edits_prev_week'),
             # ('num_minor_edits', 'num_minor_edits_prev_week'),
             ('percent_of_revs_preceding_post',
-                make_method_getter('percent_of_revs_preceding_post')),
+             make_method_getter('percent_of_revs_preceding_post')),
             ('week_after_avg_score', 'day_of_avg_score'),
             ('num_wiki_pageviews', 'num_wiki_pageviews_prev_week')
         ]
     db_name = connection.settings_dict['NAME']
     output_filename = "STATS_on_{}_rq_{}_{}_sample_{}.csv".format(
-        platform, rq, db_name, 
+        platform, rq, db_name,
         sample_num if sample_num else 0)
     iterations = bootstrap if bootstrap else 1
     outputs = {}
-    goal = 0.1    
+    goal = 0.1
     for index in range(iterations):
         descriptive_stats = {}
         inferential_stats = {}
@@ -507,7 +507,8 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
             if bootstrap:
                 samples = []
                 if dataset.get('ordered_vals') is None:
-                    dataset['ordered_vals'] = list(dataset['qs'].order_by('uid').values())
+                    dataset['ordered_vals'] = list(
+                        dataset['qs'].order_by('uid').values())
                 len_vals = len(dataset['ordered_vals'])
                 for _ in range(len_vals):
                     rand_index = np.random.randint(0, len_vals - 1)
@@ -648,18 +649,18 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
                         for subgroup, stat_names in subgroups.items():
                             for stat_name in stat_names.keys():
                                 val = output[
-                                        subset_name][computed_var][stat_category][subgroup].get(stat_name)
+                                    subset_name][computed_var][stat_category][subgroup].get(stat_name)
                                 if val:
                                     stat_names[stat_name].append(val)
     boot_rows = [
         ['Bootstrap results for {} iterations of full resampling'.format(
-        iterations), str(5), str(50), str(95)]
+            iterations), str(5), str(50), str(95)]
     ]
     for subset_name, computed_vars in outputs.items():
         for computed_var, stat_categories in computed_vars.items():
             for stat_category, subgroups in stat_categories.items():
                 if stat_category not in [
-                    # 'central_tendencies', 
+                    # 'central_tendencies',
                     'Hypothesis Testing',
                 ]:
                     continue

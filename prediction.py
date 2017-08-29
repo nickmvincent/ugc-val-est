@@ -280,7 +280,7 @@ def causal_inference(
         causal_inference(
             platform, treatment_feature,
             num_rows, quad_psm, simple_bin, trim_val,
-            paired_psm, iterations=1, sample_num)
+            paired_psm, iterations=1, sample_num=sample_num)
 
             
 
@@ -377,7 +377,7 @@ def parse():
         action='store_true',
         help='to do paired psm?')
     parser.add_argument(
-        '--trim_val', default=None
+        '--trim_val', default=None,
         help='to perform PSM trimming')
     parser.add_argument(
         '--bootstrap',
