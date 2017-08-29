@@ -396,7 +396,9 @@ def parse():
         else:
             iterations = args.bootstrap
         if args.trim_val is None:
-            args.trim_val = [0.000, 0.001, 0.002, 0.003, 0.004, 0.005, 0.006, 0.007]
+            trim_vals = [0.000, 0.001, 0.002, 0.003, 0.004, 0.005, 0.006, 0.007]
+        else:
+            trim_vals = [args.trim_val]
         if args.treatment is None:
             treatments = ['has_wiki_link', 'has_good_wiki_link', 'has_b_wiki_link', 'has_c_wiki_link',]
         else:
@@ -407,11 +409,12 @@ def parse():
             platforms = [args.platform]
         for platform in platforms:
             for treatment in treatments:
-                causal_inference(
-                    platform, treatment,
-                    args.num_rows, args.quad_psm,
-                    args.simple_bin, args.trim_val,
-                    args.paired_psm, iterations, args.sample_num)
+                for trim_val in trim_vals:
+                    causal_inference(
+                        platform, treatment,
+                        args.num_rows, args.quad_psm,
+                        args.simple_bin, trim_val,
+                        args.paired_psm, iterations, args.sample_num)
 
 
     if args.quality:
