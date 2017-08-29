@@ -489,7 +489,7 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
             ('num_wiki_pageviews', 'num_wiki_pageviews_prev_week')
         ]
     db_name = connection.settings_dict['NAME']
-    output_filename = "STATS_on_{}_rq_{}_{}_sample_{}.csv".format(
+    output_filename = "STATS_on_{}_rq_{}_{}_samples{}.csv".format(
         platform, rq, db_name,
         sample_num if sample_num else 0)
     iterations = bootstrap if bootstrap else 1
