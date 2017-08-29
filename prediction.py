@@ -121,7 +121,7 @@ def causal_inference(
         db_name = connection.settings_dict['NAME']
         filename = 'CI_Tr_{treatment}_on_{platform}_{subset}_{db}_trim{trim_val}.txt'.format(**{
             'treatment': treatment_feature,
-            'plat': platform,
+            'platform': platform,
             'subset': num_rows if num_rows else 'All',
             'db': db_name,
             'trim_val': trim_val
