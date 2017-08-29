@@ -437,12 +437,12 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
             datasets += [{
                 'qs': SampledRedditThread.objects.filter(**subsample_kwargs).filter(
                     has_good_wiki_link=True
-                ),
+                ).exclude(has_b_wiki_link=True),
                 'name': 'GA'
             }, {
                 'qs': SampledRedditThread.objects.filter(**subsample_kwargs).filter(
                     has_b_wiki_link=True
-                ),
+                ).exclude(has_c_wiki_link=True),
                 'name': 'B'
             }, {
                 'qs': SampledRedditThread.objects.filter(**subsample_kwargs).filter(
@@ -467,13 +467,23 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
             datasets += [{
                 'qs': SampledStackOverflowPost.objects.filter(**subsample_kwargs).filter(
                     has_good_wiki_link=True
-                ),
-                'name': 'Good'
+                ).exclude(has_b_wiki_link=True),
+                'name': 'GA'
             }, {
-                'qs': SampledStackOverflowPost.objects.filter(**subsample_kwargs).exclude(
-                    has_good_wiki_link=True
+                'qs': SampledStackOverflowPost.objects.filter(**subsample_kwargs).filter(
+                    has_b_wiki_link=True
+                ).exclude(has_c_wiki_link=True),
+                'name': 'B'
+            }, {
+                'qs': SampledStackOverflowPost.objects.filter(**subsample_kwargs).filter(
+                    has_c_wiki_link=True
                 ),
-                'name': 'Bad'
+                'name': 'C'
+            },{
+                'qs': SampledStackOverflowPost.objects.filter(**subsample_kwargs).exclude(
+                    has_c_wiki_link=True
+                ),
+                'name': 'other'
             }]
         variables += ['num_pageviews']
         extractor = get_links_from_body
