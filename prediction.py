@@ -241,8 +241,11 @@ def causal_inference(
                     fraction = count / causal.raw_data['N']
                     w_avg_ndif += fraction * val
                 out.append('WEIGHTED AVERAGE OF SUM OF ABSOLUTE VALUE OF ALL NDIFs')
-                out.append(str(w_avg_ndif))
-                print(iteration, w_avg_ndif)
+                ndifs.append(w_avg_ndif)
+                out.append('NDIF info')
+                out.append(','.join([str(ndif) for ndif in ndifs]))
+                print(iteration)
+                print(ndifs)
             except np.linalg.linalg.LinAlgError as err:
                 msg = 'LinAlgError with est_via_blocking: {}'.format(err)
                 err_handle(msg, out)
