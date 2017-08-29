@@ -104,7 +104,7 @@ def causal_inference(
         if float(iteration) / iterations > goal:
             print('{}/{}|'.format(iteration, iterations), end='')
             goal += 0.1
-        times, ates = [], []
+        times, ates, ndifs = [], [], []
         times.append(mark_time('function_start')) 
         if treatment_feature != 'has_wiki_link':
             filter_kwargs = {'has_wiki_link': True, 'day_of_avg_score__isnull': False}
@@ -184,9 +184,8 @@ def causal_inference(
         causal = CausalModel(Y, D, X, ids=ids)
         times.append(mark_time('CausalModel'))
         out.append(str(causal.summary_stats))
-        out.append('SUM OF ABSOLUTE VALUE OF ALL NDIFs')
-        out.append(str(causal.summary_stats['sum_of_abs_ndiffs']))
-        causal.est_via_ols()
+        ndifs.append(causal.summary_stats['sum_of_abs_ndiffs'])
+        # causal.est_via_ols()
         times.append(mark_time('est_via_ols'))
         if not quad_psm:
             causal.est_propensity()
@@ -201,8 +200,7 @@ def causal_inference(
         times.append(mark_time('trim_{}'.format(trim_val)))
         out.append('TRIM PERFORMED: {}'.format(str(trim_val)))
         out.append(str(causal.summary_stats))
-        out.append('SUM OF ABSOLUTE VALUE OF ALL NDIFs')
-        out.append(str(causal.summary_stats['sum_of_abs_ndiffs']))
+        ndifs.append(causal.summary_stats['sum_of_abs_ndiffs'])
         if paired_psm:
             psm_est, psm_summary, psm_rows = causal.est_via_psm()
             out.append('PSM PAIR REGRESSION')
@@ -241,10 +239,10 @@ def causal_inference(
                     val = stratum.summary_stats['sum_of_abs_ndiffs']
                     count = stratum.raw_data['N']
                     fraction = count / causal.raw_data['N']
-                    print(val, count, fraction)
                     w_avg_ndif += fraction * val
                 out.append('WEIGHTED AVERAGE OF SUM OF ABSOLUTE VALUE OF ALL NDIFs')
                 out.append(str(w_avg_ndif))
+                print(iteration, w_avg_ndif)
             except np.linalg.linalg.LinAlgError as err:
                 msg = 'LinAlgError with est_via_blocking: {}'.format(err)
                 err_handle(msg, out)
