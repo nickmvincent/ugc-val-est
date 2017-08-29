@@ -411,7 +411,7 @@ def parse():
                     platform, treatment,
                     args.num_rows, args.quad_psm,
                     args.simple_bin, args.trim_val,
-                    args.paired_psm, iterations, sample_num)
+                    args.paired_psm, iterations, args.sample_num)
 
 
     if args.quality:
