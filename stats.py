@@ -405,7 +405,6 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
         subsample_kwargs = {
             'has_wiki_link': True,
             'day_of_avg_score__isnull': False,
-            'week_after_avg_score__isnull': False,
         }
         treatment_kwargs = {'has_good_wiki_link': True, }
     if rq == 3:
@@ -419,6 +418,7 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
         subsample_kwargs['sample_num'] = 0
     else:
         subsample_kwargs['sample_num__in'] = sample_num.split(',')
+    print(subsample_kwargs)
 
     if platform == 'r':
         datasets = [{
@@ -724,11 +724,11 @@ def parse():
         help='custom helper. Check code not docs.')
     parser.add_argument(
         '--bootstrap',
-        type=int, nargs='?', default=None,
+        type=int,default=None,
         help='use stats bootstrapping')
     parser.add_argument(
         '--sample_num',
-        nargs='?', default=None,
+        default=None,
         help='select a sample number')
     args = parser.parse_args()
     if args.tags:
@@ -749,7 +749,7 @@ def parse():
             rqs = [args.rq]
         for platform in platforms:
             for rq in rqs:
-                main(platform, rq, args.frequency, args.bootstrap)
+                main(platform, rq, args.frequency, args.bootstrap, args.sample_num)
 
 
 if __name__ == "__main__":
