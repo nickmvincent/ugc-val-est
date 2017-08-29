@@ -438,12 +438,22 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
                 'qs': SampledRedditThread.objects.filter(**subsample_kwargs).filter(
                     has_good_wiki_link=True
                 ),
-                'name': 'Good'
+                'name': 'GA'
             }, {
-                'qs': SampledRedditThread.objects.filter(**subsample_kwargs).exclude(
-                    has_good_wiki_link=True
+                'qs': SampledRedditThread.objects.filter(**subsample_kwargs).filter(
+                    has_b_wiki_link=True
                 ),
-                'name': 'Bad'
+                'name': 'B'
+            }, {
+                'qs': SampledRedditThread.objects.filter(**subsample_kwargs).filter(
+                    has_c_wiki_link=True
+                ),
+                'name': 'C'
+            },{
+                'qs': SampledRedditThread.objects.filter(**subsample_kwargs).exclude(
+                    has_c_wiki_link=True
+                ),
+                'name': 'other'
             }]
         # variables += list_reddit_specific_features()
         extractor = get_links_from_url

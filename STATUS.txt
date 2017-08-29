@@ -1,4 +1,8 @@
 sample_num 0 is default
 sample_num 1 is an extra 20,000 wiki liki containing posts from each platform
 sample_num 2 is an extra 20,000 wiki liki containing posts from each platform
-samplie_num 3 is an extra 1,000,000 million rows, no criteria
+sample_num 3 is an extra 1,000,000 million rows, no criteria
+
+
+
+for reddit, sample 0, 0.004 is the optimal trim value
