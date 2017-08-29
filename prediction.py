@@ -232,18 +232,19 @@ def causal_inference(
                     continue
                 times.append(mark_time('stratify_s'))
             out.append(str(causal.strata))
-            w_avg_ndif = 0
-            for stratum in causal.strata:
-                val = stratum.summary_stats['sum_of_abs_ndiffs']
-                count = stratum.raw_data['N']
-                fraction = count / causal.raw_data['N']
-                w_avg_ndif += fraction * val
-            out.append('WEIGHTED AVERAGE OF SUM OF ABSOLUTE VALUE OF ALL NDIFs')
-            out.append(str(w_avg_ndif))
             try:
                 causal.est_via_blocking()
                 times.append(mark_time('est_via_blocking'))
                 ates = causal.estimates['blocking']['ate']
+                 w_avg_ndif = 0
+                for stratum in causal.strata:
+                    val = stratum.summary_stats['sum_of_abs_ndiffs']
+                    count = stratum.raw_data['N']
+                    fraction = count / causal.raw_data['N']
+                    print(val, count, fraction)
+                    w_avg_ndif += fraction * val
+                out.append('WEIGHTED AVERAGE OF SUM OF ABSOLUTE VALUE OF ALL NDIFs')
+                out.append(str(w_avg_ndif))
             except np.linalg.linalg.LinAlgError as err:
                 msg = 'LinAlgError with est_via_blocking: {}'.format(err)
                 err_handle(msg, out)
