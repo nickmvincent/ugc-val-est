@@ -1,44 +1,46 @@
 <!DOCTYPE html>
-<html>
+<html style="height:100%">
   <head>
     <meta charset="UTF-8">
     <title>title</title>
   </head>
-  <body>
-    <div id="viewer"> </div>
-    <div onclick="goNext"> </div>
+  <body style="position:relative; width:100%; height:100%;">
+    <iframe id="viewer" src="" style="width:100%; height:80%;"> </iframe>
+    <div id="name"> </div>
+    <button onclick="goNext()">Next</button>
+    <button onclick="reset()">Reset</button>
+    <input id="mode" type="text"> </input>
+    <button onclick="updateMode()">Submit</button>
+    <div id="currentMode"> </div>
   </body>
 
   <script>
-    var globalCounter = 0
-
+    console.log('loaded...')
+    var globalCounter = 0;
+    var mode = 'reddit';
     function goNext() {
-        var base = 'file:///C:\\Users\\Nick\\OneDrive\\research_results\\html\\'
+        var filename = ''
         if(mode === 'reddit') {
-            base += 'SampledRedditThread';
+            filename += 'SampledRedditThread';
         } else {
+            filename += 'SampledStackOverflowPost';
+        }
+        filename += `_sample${globalCounter}of100.html`;
+        document.getElementById('name').innerHTML = filename;
+        document.getElementById('viewer').src = filename;
+        globalCounter += 1;
+    }
+    function reset() {
+        globalCounter = 0;
+    }
+    function updateMode() {
+        mode = document.getElementById("mode").value;
+        if(mode === 'reddit') {
+            document.getElementById("currentMode").innerHTML = 'reddit';
+        } else {
+            document.getElementById("currentMode").innerHTML = 'StackOverflow';
+        }
+    }
 
-        }
-        base += _sample{$globalCounter}of100.html`
-        readTextFile("file:///C:/your/path/to/file.txt");
-    }
-    function readTextFile(file)
-    {
-        var rawFile = new XMLHttpRequest();
-        rawFile.open("GET", file, false);
-        rawFile.onreadystatechange = function ()
-        {
-            if(rawFile.readyState === 4)
-            {
-                if(rawFile.status === 200 || rawFile.status == 0)
-                {
-                    var allText = rawFile.responseText;
-                    document.getElementById('viewer').innerHTML = allText;
-                }
-            }
-        }
-        rawFile.send(null);
-    }
-    
 </script>
 </html>

@@ -9,7 +9,7 @@ from queryset_helpers import utcstamp_to_utcdatetime
 
 QUERY_TEMPLATE = """
     SELECT {columns}, random() as rand
-    FROM {table}{where}ORDER BY rand LIMIT {limit};
+    FROM {table} {where}ORDER BY rand LIMIT {limit};
     """
 
 
@@ -336,7 +336,7 @@ def parse():
     oargs = (
         args.data_source, args.rows_to_sample, args.rows_per_query,
         args.sample_num, args.links_only)
-    sample_so(*oargs)
+    # sample_so(*oargs)
     sample_reddit(*oargs)
 
 if __name__ == "__main__":
