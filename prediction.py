@@ -236,7 +236,7 @@ def causal_inference(
                 causal.est_via_blocking()
                 times.append(mark_time('est_via_blocking'))
                 ates = causal.estimates['blocking']['ate']
-                 w_avg_ndif = 0
+                w_avg_ndif = 0
                 for stratum in causal.strata:
                     val = stratum.summary_stats['sum_of_abs_ndiffs']
                     count = stratum.raw_data['N']
