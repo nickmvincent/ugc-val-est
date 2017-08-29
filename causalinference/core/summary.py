@@ -35,6 +35,9 @@ class Summary(Dict):
 		self._dict['ndiff'] = calc_ndiff(
 			self['X_c_mean'], self['X_t_mean'],
 			self['X_c_sd'], self['X_t_sd'])
+		self._dict['sum_of_abs_ndiffs'] = sum([
+			ndiff for ndiff in self._dict['ndiff'].T
+		])
 
 
 	def _summarize_pscore(self, pscore_c, pscore_t):
