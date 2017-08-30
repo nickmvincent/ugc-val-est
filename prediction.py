@@ -96,7 +96,7 @@ def causal_inference(
     def mark_time(desc):
         """return a tuple of time, description of time"""
         return (time.time(), desc)
-
+    start = time.time()
     treatment_effects = defaultdict(list)
     goal = 0.1
     fails = 0
@@ -296,6 +296,7 @@ def causal_inference(
             boot_rows.append([
                 outcome, sor[bot], sor[top]
             ])
+        boot_rows.append([time.time() - start])
         with open('csv_files/' + 'BOOT_' + filename, 'w', newline='') as outfile:
             writer = csv.writer(outfile)
             writer.writerows(boot_rows)
