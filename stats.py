@@ -629,9 +629,8 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
 
                     len1, len2 = len(treatment['vals']), len(control['vals'])
                     if len1 == 0 or len2 == 0 and not bootstrap:
-                        # print('Skipping variable {} because {}, {}.'.format(
-                        #    variable_name, len1, len2))
-                        input()
+                        print('Skipping variable {} because {}, {}.'.format(
+                           variable_name, len1, len2))
                         continue
                     try:
                         inferential_stats[name][variable_name] = inferential_analysis(
