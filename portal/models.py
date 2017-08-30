@@ -430,7 +430,7 @@ class SampledRedditThread(Post):
     def save(self, *args, **kwargs):
         """save method"""
         if self.context in likely_subreddits:
-            attr = 'in_' + likely_subreddits[self.context]
+            attr = 'in_' + self.context
             setattr(self, attr, True)
         else:
             setattr(self, 'in_other', True)
