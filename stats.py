@@ -461,7 +461,7 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
     elif platform == 's':
         datasets = [{
             'qs': SampledStackOverflowPost.objects.filter(**subsample_kwargs),
-            'name': 'All SO'
+            'name': 'All'
         }]
         if rq == 3:
             datasets += [{
@@ -479,7 +479,7 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
                     has_c_wiki_link=True
                 ),
                 'name': 'C'
-            },{
+            }, {
                 'qs': SampledStackOverflowPost.objects.filter(**subsample_kwargs).exclude(
                     has_c_wiki_link=True
                 ),
