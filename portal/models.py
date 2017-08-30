@@ -124,8 +124,6 @@ class Post(models.Model):
     wiki_content_error = models.IntegerField(default=False)
 
     # this field is nullable because it will be set in the overloaded save method
-    month = models.IntegerField(blank=True, null=True)
-    year =  models.IntegerField(blank=True, null=True)
     mon = models.BooleanField(default=False)
     tues = models.BooleanField(default=False)
     wed = models.BooleanField(default=False)
@@ -435,6 +433,8 @@ class SampledRedditThread(Post):
         if self.context in likely_subreddits:
             attr = 'in_' + likely_subreddits[self.context]
             setattr(self, attr, True)
+        else:
+            steattr(self, 'in_other', True)
         super(SampledRedditThread, self).save(*args, **kwargs)
 
 class SampledStackOverflowPost(Post):
