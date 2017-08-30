@@ -433,7 +433,7 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
                 'qs': SampledRedditThread.objects.filter(**subsample_kwargs).filter(context__in=TOP_TEN),
                 'name': 'Top_Ten'
             }]
-        if rq == 3 and not bootstrap:
+        if rq == 3:
             datasets += [{
                 'qs': SampledRedditThread.objects.filter(**subsample_kwargs).filter(
                     day_of_avg_score__gte=4),
@@ -666,7 +666,7 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
     if iterations > 1:
         boot_rows = [
             ['Bootstrap results for {} iterations of full resampling'.format(
-                iterations), str(5), str(50), str(95)]
+                iterations), str(0.025), str(0.975)]
         ]
         for subset_name, computed_vars in outputs.items():
             for computed_var, stat_categories in computed_vars.items():
