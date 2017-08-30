@@ -188,6 +188,19 @@ def clear_pre2016_so_pageviews():
     qs = SampledStackOverflowPost.objects.filter(timestamp__lt=cutoff)
     qs.update(num_wiki_pageviews=None, num_wiki_pageviews_prev_week=None)
 
+def so_percent_of_pageviews():
+    """helper"""
+    qs = SampledStackOverflowPost.objects.filter(sample_num=0).order_by('uid')
+    question_ids = []
+    x = 0
+    for start, end, batch in batch_qs(qs):
+        for obj in qs:
+            ans = StackOverflowAnswer.objects.get(id=obj.uid)
+            question_id = ans.parent_id
+            if question_id not in question_ids:
+                x += obj.num_wiki_pageviews
+    print(x)
+
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dja.settings")
@@ -221,3 +234,5 @@ if __name__ == "__main__":
             extract_pairs(sys.argv[2], sys.argv[3])
         elif sys.argv[1] == 'fix_bad_registration_time':
             fix_bad_registration_time()
+        elif sys.argv[1] == 'so_percent_of_pageviews':
+            so_percent_of_pageviews()
