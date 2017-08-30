@@ -226,10 +226,10 @@ def univariate_analysis(groups):
     for group in groups:
         all_vals = np.concatenate((all_vals, group['vals']), axis=0)
         groups_to_analyze.append(group)
-    groups_to_analyze.append({
-        'name': 'All groups',
-        'vals': all_vals
-    })
+    # groups_to_analyze.append({
+    #     'name': 'All groups',
+    #     'vals': all_vals
+    # })
     for group in groups_to_analyze:
         basic[group['name']] = {
             'num_items': len(group['vals']),
@@ -249,7 +249,7 @@ def univariate_analysis(groups):
     return {
         'basic': basic,
         'central_tendencies': central_tendencies,
-        'dispersion': dispersion
+        # 'dispersion': dispersion
     }
 
 
@@ -271,7 +271,7 @@ def inferential_analysis(x_arr, y_arr, samples_related):
                 'Difference': delta,
                 'p_value': pval,
                 # 'percent_bias': percent_bias(x_arr, y_arr),
-                'cohen\'s d effect size': cohen_d(x_arr, y_arr),
+                # 'cohen\'s d effect size': cohen_d(x_arr, y_arr),
                 # 'Wilcoxon rank-sum statistic': stats.ranksums(x_arr, y_arr),
             }
         }
@@ -483,10 +483,10 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
     if rq == 3:
         variables = [
             ('num_edits', 'num_edits_prev_week'),
-            ('norm_change_edits', make_method_getter('norm_change_edits')),
+            # ('norm_change_edits', make_method_getter('norm_change_edits')),
             ('num_new_editors', 'num_new_editors_prev_week'),
             ('num_new_editors_retained', 'num_new_editors_retained_prev_week'),
-            ('percent_new_editors', make_method_getter('percent_new_editors')),
+            # ('percent_new_editors', make_method_getter('percent_new_editors')),
             # ('percent_active_editors', make_method_getter('percent_active_editors')),
             # ('percent_active_editors', make_method_getter('percent_active_editors')),
             # ('percent_inactive_editors', make_method_getter(
@@ -671,7 +671,6 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
         for computed_var, stat_categories in computed_vars.items():
             for stat_category, subgroups in stat_categories.items():
                 if stat_category not in [
-                    # 'central_tendencies',
                     'Hypothesis Testing',
                 ]:
                     continue
