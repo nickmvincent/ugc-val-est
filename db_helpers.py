@@ -193,7 +193,8 @@ def so_percent_of_pageviews():
     qs = SampledStackOverflowPost.objects.filter(sample_num=0).order_by('uid')
     question_ids = []
     x = 0
-    for start, end, batch in batch_qs(qs):
+    for start, end, total, batch in batch_qs(qs):
+        print(start, end, total)
         for obj in qs:
             ans = StackOverflowAnswer.objects.get(id=obj.uid)
             question_id = ans.parent_id
