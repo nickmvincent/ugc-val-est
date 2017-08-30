@@ -11,9 +11,9 @@ from pprint import pprint
 import time
 from queryset_helpers import (
     batch_qs,
-    # list_common_features,
-    # list_stack_specific_features,
-    # list_reddit_specific_features
+    list_common_features,
+    list_stack_specific_features,
+    list_reddit_specific_features
 )
 from url_helpers import extract_urls
 
@@ -398,6 +398,7 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
         if not os.path.exists(directory):
             os.makedirs(directory)
     variables = ['score', 'num_comments', ]
+    variables += list_common_features()
     if rq == 1:
         subsample_kwargs = {}
         treatment_kwargs = {'has_wiki_link': True, }
@@ -451,7 +452,7 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
                     day_of_avg_score__lt=2),
                 'name': 'other'
             }]
-        # variables += list_reddit_specific_features()
+        variables += list_reddit_specific_features()
         extractor = get_links_from_url
         extract_from = 'url'
     elif platform == 's':
@@ -477,6 +478,7 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
                     day_of_avg_score__lt=2),
                 'name': 'other'
             }]
+        variables += list_stack_specific_features()
         variables += ['num_pageviews']
         extractor = get_links_from_body
         extract_from = 'body'

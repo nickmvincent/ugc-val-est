@@ -435,12 +435,12 @@ def parse():
             for treatment in treatments:
                 trim_rows = []
                 for trim_val in trim_vals:
-                    results = causal_inference(
+                    causal_inference(
                         platform, treatment,
                         args.num_rows, args.quad_psm,
                         args.simple_bin, trim_val,
                         args.paired_psm, iterations, args.sample_num)
-                    trim_rows.append(results['trim'])
+                    # trim_rows.append(results['trim'])
                 with open('TRIM_SUMMARY_' + args.platform, 'w', newline='') as outfile:
                     writer = csv.writer(outfile)
                     writer.writerows(trim_rows)
