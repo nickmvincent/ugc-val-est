@@ -249,7 +249,7 @@ def univariate_analysis(groups):
     return {
         'basic': basic,
         'central_tendencies': central_tendencies,
-        # 'dispersion': dispersion
+        'dispersion': dispersion
     }
 
 

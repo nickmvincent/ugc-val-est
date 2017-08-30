@@ -87,7 +87,7 @@ def extract_vals_and_method_results(qs, field_names):
 
 
 def causal_inference(
-        platform, treatment_feature,
+        platform, treatment_feature, filter_kwargs,
         num_rows=None, quad_psm=False, simple_bin=None, trim_val=0,
         paired_psm=None, iterations=1, sample_num=None):
     """
@@ -107,14 +107,7 @@ def causal_inference(
         times, ates = [], []
         ndifs, big_ndifs_counts = [], []
         times.append(mark_time('function_start')) 
-        if treatment_feature != 'has_wiki_link':
-            filter_kwargs = {'has_wiki_link': True, 'day_of_avg_score__isnull': False}
-        else:
-            filter_kwargs = {}
-        if sample_num is None:
-            filter_kwargs['sample_num'] = 0
-        else:
-            filter_kwargs['sample_num__in'] = sample_num.split(',')
+        
         qs, features, outcomes = get_qs_features_and_outcomes(
             platform, num_rows=num_rows, filter_kwargs=filter_kwargs)
         features.append(treatment_feature)
@@ -302,7 +295,7 @@ def causal_inference(
             writer = csv.writer(outfile)
             writer.writerows(boot_rows)
         causal_inference(
-            platform, treatment_feature,
+            platform, treatment_feature, filter_kwargs
             num_rows, quad_psm, simple_bin, trim_val,
             paired_psm, iterations=1, sample_num=sample_num)
 
@@ -378,7 +371,7 @@ def parse():
         '--platform', nargs='?', default=None,
         help='the platform to use. "r" for reddit and "s" for stack overflow')
     parser.add_argument(
-        '--treatment', nargs='?', default=None, help='the treatment feature to use')
+        '--rq', nargs='?', default=None, help='the rq to answer')
     parser.add_argument(
         '--num_rows', nargs='?', default=None, help='the number of rows to use.', type=int)
     parser.add_argument(
@@ -415,31 +408,44 @@ def parse():
     if args.simple:
         simple_linear(args.platform)
     else:
+        if args.rq is None:
+            rqs = [1, 2]
+        else:
+            rqs = [int(args.rq)]
         if args.bootstrap is None:
             iterations = 1
         else:
             iterations = args.bootstrap
         if args.trim_val is None:
-            trim_vals = [0.000, 0.001, 0.002, 0.003, 0.004, 0.005, 0.006, 0.007]
+            # trim_vals = [0.000, 0.001, 0.002, 0.003, 0.004, 0.005, 0.006, 0.007]
+            trim_vals = [0]
         else:
             trim_vals = [args.trim_val]
-        if args.treatment is None:
-            treatments = ['has_wiki_link', 'has_good_wiki_link', 'has_b_wiki_link', 'has_c_wiki_link',]
-        else:
-            treatments = [args.treatment]
         if args.platform is None:
             platforms = ['r', 's', ]
         else:
             platforms = [args.platform]
+        fiter_kwargs = {}
         for platform in platforms:
-            for treatment in treatments:
+            for rq in rqs:
                 trim_rows = []
+                if rq == 1:
+                    treatments = ['has_any_link', 'has_wiki_link', ]
+                    filter_kwargs = {}
+                elif rq == 2:
+                    treatment_feature = ['has_c_wiki_link']
+                    filter_kwargs = {'has_wiki_link': True, 'day_of_avg_score__isnull': False}
+                if args.sample_num is None:
+                    filter_kwargs['sample_num'] = 0
+                else:
+                    filter_kwargs['sample_num__in'] = sample_num.split(',')
                 for trim_val in trim_vals:
-                    causal_inference(
-                        platform, treatment,
-                        args.num_rows, args.quad_psm,
-                        args.simple_bin, trim_val,
-                        args.paired_psm, iterations, args.sample_num)
+                    for treatment in treatments:
+                        causal_inference(
+                            platform, treatment, filter_kwargs
+                            args.num_rows, args.quad_psm,
+                            args.simple_bin, trim_val,
+                            args.paired_psm, iterations, args.sample_num)
                     # trim_rows.append(results['trim'])
                 with open('TRIM_SUMMARY_' + args.platform, 'w', newline='') as outfile:
                     writer = csv.writer(outfile)

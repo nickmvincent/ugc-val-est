@@ -11,6 +11,38 @@ from url_helpers import extract_urls
 
 from textstat.textstat import textstat
 
+day_to_abbrev = {
+    0: 'mon',
+    1: 'tues',
+    2: 'wed',
+    3: 'thurs',
+    4: 'fri',
+    5: 'sat',
+    6: 'sun',
+}
+
+month_to_abbrev = {
+    1: 'jan',
+    2: 'feb',
+    3: 'mar',
+    4: 'apr',
+    5: 'may',
+    6: 'jun',
+    7: 'jul',
+    8: 'aug',
+    9: 'sep',
+    10: 'octo',
+    11: 'nov',
+    12: 'dec', 
+}
+
+likely_subreddits = [
+    'todayilearned',
+    'borntoday',
+    'wikipedia',
+    'CelebrityBornToday',
+    'The_Donald',
+]
 
 def trimmed(val, floor, ceil):
     """floors and ceils a val"""
@@ -73,7 +105,6 @@ class Post(models.Model):
     score = models.IntegerField()
     num_comments = models.IntegerField(default=0)
 
-    is_root = models.BooleanField(default=False)
     context = models.CharField(max_length=115, null=True, blank=True)
     author = models.CharField(max_length=36)
     timestamp = models.DateTimeField()
@@ -93,9 +124,43 @@ class Post(models.Model):
     wiki_content_error = models.IntegerField(default=False)
 
     # this field is nullable because it will be set in the overloaded save method
-    day_of_week = models.IntegerField(blank=True, null=True)
-    day_of_month = models.IntegerField(blank=True, null=True)
-    hour = models.IntegerField(blank=True, null=True)
+    month = models.IntegerField(blank=True, null=True)
+    year =  models.IntegerField(blank=True, null=True)
+    mon = models.BooleanField(default=False)
+    tues = models.BooleanField(default=False)
+    wed = models.BooleanField(default=False)
+    thurs = models.BooleanField(default=False)
+    fri = models.BooleanField(default=False)
+    sat = models.BooleanField(default=False)
+    sun = models.BooleanField(default=False)
+
+    jan = models.BooleanField(default=False)
+    feb = models.BooleanField(default=False)
+    mar = models.BooleanField(default=False)
+    apr = models.BooleanField(default=False)
+    may = models.BooleanField(default=False)
+    jun = models.BooleanField(default=False)
+    jul = models.BooleanField(default=False)
+    aug = models.BooleanField(default=False)
+    sep = models.BooleanField(default=False)
+    octo = models.BooleanField(default=False)
+    nov = models.BooleanField(default=False)
+    dec = models.BooleanField(default=False)
+    # hour bins
+    zero_to_six = models.BooleanField(default=False)
+    six_to_twelve = models.BooleanField(default=False)
+    twelve_to_eighteen = models.BooleanField(default=False)
+    eighteen_to_twentyfour = models.BooleanField(default=False)
+    # year bins
+    year2008 = models.BooleanField(default=False)
+    year2009 = models.BooleanField(default=False)
+    year2010 = models.BooleanField(default=False)
+    year2011 = models.BooleanField(default=False)
+    year2012 = models.BooleanField(default=False)
+    year2013 = models.BooleanField(default=False)
+    year2014 = models.BooleanField(default=False)
+    year2015 = models.BooleanField(default=False)
+    year2016 = models.BooleanField(default=False)
 
     # this field is nullable because it will be set when retrieving reddit author info
     user_created_utc = models.DateTimeField(null=True, blank=True)
@@ -129,6 +194,7 @@ class Post(models.Model):
     sample_num = models.IntegerField(default=0, db_index=True)
 
     def reset_edit_metrics(self):
+        """resets all the edit metrics..."""
         for metric in [
             'num_edits',
             'num_edits_prev_week',
@@ -177,12 +243,22 @@ class Post(models.Model):
 
     def save(self, *args, **kwargs):
         """overload save method"""
-        if self.day_of_week is None:
-            self.day_of_week = self.timestamp.weekday()
-        if self.day_of_month is None:
-            self.day_of_month = self.timestamp.day
-        if self.hour is None:
-            self.hour = self.timestamp.hour
+        day_attr = day_to_abbrev[self.timestamp.weekday()]
+        setattr(self, day_attr, True)
+        month_attr = month_to_abbrev[self.timestamp.month]
+        setattr(self, month_attr, True)
+        hour = self.timestamp.hour
+        if hour <= 6:
+            self.zero_to_six = True
+        elif hour <= 12:
+            self.six_to_twelve = True
+        elif hour <= 18:
+            self.twelve_to_eighteen = True
+        else:
+            self.eighteen_to_twentyfour = True
+        year = self.timestamp.year
+        year_attr = 'year' + str(year)
+        setattr(self, year_attr, True)
         if self.body_length == 0:
             self.body_length = len(self.body)
         if self.body_num_links == 0:
@@ -347,7 +423,19 @@ class SampledRedditThread(Post):
     user_is_suspended = models.BooleanField(default=False)
     user_is_deleted = models.BooleanField(default=False)
     url = models.CharField(max_length=2083)
+    in_todayilearned = models.BooleanField(default=False)
+    in_borntoday = models.BooleanField(default=False)
+    in_wikipedia = models.BooleanField(default=False)
+    in_CelebrityBornToday = models.BooleanField(default=False)
+    in_The_Donald = models.BooleanField(default=False)
+    in_other = models.BooleanField(default=False)
 
+    def save(self, *args, **kwargs):
+        """save method"""
+        if self.context in likely_subreddits:
+            attr = 'in_' + likely_subreddits[self.context]
+            setattr(self, attr, True)
+        super(SampledRedditThread, self).save(*args, **kwargs)
 
 class SampledStackOverflowPost(Post):
     """
