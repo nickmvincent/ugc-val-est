@@ -666,7 +666,7 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
     if iterations > 1:
         boot_rows = [
             ['Bootstrap results for {} iterations of full resampling'.format(
-                iterations), str(0.025), str(0.975)]
+                iterations), str(0.005), str(0.995)]
         ]
         for subset_name, computed_vars in outputs.items():
             for computed_var, stat_categories in computed_vars.items():
@@ -684,8 +684,8 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
                                 continue
                             n = len(stat_values)
                             sor = sorted(stat_values)
-                            bot = int(0.025 * n)
-                            top = int(0.975 * n)
+                            bot = int(0.005 * n)
+                            top = int(0.995 * n)
                             desc = "{}|{}|{}|{}|{}".format(
                                 subset_name, computed_var, stat_category, subgroup, stat_name
                             )

@@ -164,7 +164,8 @@ def causal_inference(
                 # print('Feature {} has a nan value...'.format(feature))
                 continue
             else:
-                successful_fields.append(feature)
+                adjusted_feature = (feature - np.mean(feature)) / np.std(feature)
+                successful_fields.append(adjusted_feature)
                 feature_rows.append(feature_row)
         outcome_rows = []
         for outcome in outcomes:
@@ -286,13 +287,13 @@ def causal_inference(
     if iterations > 1:
         boot_rows = [
             ['Bootstrap results for {} iterations of full resampling'.format(
-            iterations), str(5), str(50), str(95)]
+            iterations), str(0.005), str(0.995)]
         ]
         for outcome, ate_lst in treatment_effects.items():
             sor = sorted(ate_lst)
             n = len(ate_lst)
-            bot = int(0.025 * n)
-            top = int(0.975 * n)
+            bot = int(0.005 * n)
+            top = int(0.995 * n)
             boot_rows.append([
                 outcome, sor[bot], sor[top]
             ])
@@ -432,12 +433,17 @@ def parse():
             platforms = [args.platform]
         for platform in platforms:
             for treatment in treatments:
+                trim_rows = []
                 for trim_val in trim_vals:
-                    causal_inference(
+                    results = causal_inference(
                         platform, treatment,
                         args.num_rows, args.quad_psm,
                         args.simple_bin, trim_val,
                         args.paired_psm, iterations, args.sample_num)
+                    trim_rows.append(results['trim'])
+                with open('TRIM_SUMMARY_' + args.platform, 'w', newline='') as outfile:
+                    writer = csv.writer(outfile)
+                    writer.writerows(trim_rows)
 
 
     if args.quality:
