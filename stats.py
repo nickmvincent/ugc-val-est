@@ -663,35 +663,36 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
                                     subset_name][computed_var][stat_category][subgroup].get(stat_name)
                                 if val:
                                     stat_names[stat_name].append(val)
-    boot_rows = [
-        ['Bootstrap results for {} iterations of full resampling'.format(
-            iterations), str(5), str(50), str(95)]
-    ]
-    for subset_name, computed_vars in outputs.items():
-        for computed_var, stat_categories in computed_vars.items():
-            for stat_category, subgroups in stat_categories.items():
-                if stat_category not in [
-                    'Hypothesis Testing',
-                ]:
-                    continue
-                for subgroup, stat_names in subgroups.items():
-                    for stat_name, stat_values in stat_names.items():
-                        if stat_name in [
-                            "cohen's d effect size",
-                            'p_value',
-                        ]:
-                            continue
-                        n = len(stat_values)
-                        sor = sorted(stat_values)
-                        bot = int(0.025 * n)
-                        top = int(0.975 * n)
-                        desc = "{}|{}|{}|{}|{}".format(
-                            subset_name, computed_var, stat_category, subgroup, stat_name
-                        )
-                        boot_rows.append([desc, sor[bot], sor[top]])
-    with open('csv_files/' + 'BOOT_' + output_filename, 'w', newline='') as outfile:
-        writer = csv.writer(outfile)
-        writer.writerows(boot_rows)
+    if iterations > 1:
+        boot_rows = [
+            ['Bootstrap results for {} iterations of full resampling'.format(
+                iterations), str(5), str(50), str(95)]
+        ]
+        for subset_name, computed_vars in outputs.items():
+            for computed_var, stat_categories in computed_vars.items():
+                for stat_category, subgroups in stat_categories.items():
+                    if stat_category not in [
+                        'Hypothesis Testing',
+                    ]:
+                        continue
+                    for subgroup, stat_names in subgroups.items():
+                        for stat_name, stat_values in stat_names.items():
+                            if stat_name in [
+                                "cohen's d effect size",
+                                'p_value',
+                            ]:
+                                continue
+                            n = len(stat_values)
+                            sor = sorted(stat_values)
+                            bot = int(0.025 * n)
+                            top = int(0.975 * n)
+                            desc = "{}|{}|{}|{}|{}".format(
+                                subset_name, computed_var, stat_category, subgroup, stat_name
+                            )
+                            boot_rows.append([desc, sor[bot], sor[top]])
+        with open('csv_files/' + 'BOOT_' + output_filename, 'w', newline='') as outfile:
+            writer = csv.writer(outfile)
+            writer.writerows(boot_rows)
 
 
 def explain():
