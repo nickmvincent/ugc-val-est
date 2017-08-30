@@ -83,7 +83,6 @@ class Post(models.Model):
     has_good_wiki_link = models.BooleanField(default=False, db_index=True)
     has_b_wiki_link = models.BooleanField(default=False, db_index=True)
     has_c_wiki_link = models.BooleanField(default=False, db_index=True)
-    min_wiki_link_score = models.IntegerField(blank=True, null=True)
     num_wiki_links = models.IntegerField(default=0)
 
     # poor naming choices... the following refer to ORES score...
@@ -280,8 +279,6 @@ class Post(models.Model):
                                 self.has_b_wiki_link = True
                             if ores_score >= 2:
                                 self.has_c_wiki_link = True
-                            if self.min_wiki_link_score is None or ores_score < self.min_wiki_link_score:
-                                self.min_wiki_link_score = ores_score
                     for revision in revisions:
                         users_seen = {}
                         starttime = self.timestamp - datetime.timedelta(days=7)

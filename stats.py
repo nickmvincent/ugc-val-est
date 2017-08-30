@@ -436,23 +436,19 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
         if rq == 3 and not bootstrap:
             datasets += [{
                 'qs': SampledRedditThread.objects.filter(**subsample_kwargs).filter(
-                    has_good_wiki_link=True
-                ).exclude(has_b_wiki_link=True),
+                    day_of_avg_score__gte=4),
                 'name': 'GA'
             }, {
                 'qs': SampledRedditThread.objects.filter(**subsample_kwargs).filter(
-                    has_b_wiki_link=True
-                ).exclude(has_c_wiki_link=True),
+                    day_of_avg_score__gte=3, day_of_avg_score__lt=4),
                 'name': 'B'
             }, {
                 'qs': SampledRedditThread.objects.filter(**subsample_kwargs).filter(
-                    has_c_wiki_link=True
-                ),
+                    day_of_avg_score__gte=2, day_of_avg_score__lt=3),
                 'name': 'C'
             },{
-                'qs': SampledRedditThread.objects.filter(**subsample_kwargs).exclude(
-                    has_c_wiki_link=True
-                ),
+                'qs': SampledRedditThread.objects.filter(**subsample_kwargs).filter(
+                    day_of_avg_score__lt=2),
                 'name': 'other'
             }]
         # variables += list_reddit_specific_features()
@@ -466,23 +462,19 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
         if rq == 3:
             datasets += [{
                 'qs': SampledStackOverflowPost.objects.filter(**subsample_kwargs).filter(
-                    has_good_wiki_link=True
-                ).exclude(has_b_wiki_link=True),
+                    day_of_avg_score__gte=4),
                 'name': 'GA'
             }, {
                 'qs': SampledStackOverflowPost.objects.filter(**subsample_kwargs).filter(
-                    has_b_wiki_link=True
-                ).exclude(has_c_wiki_link=True),
+                    day_of_avg_score__gte=3, day_of_avg_score__lt=4),
                 'name': 'B'
             }, {
                 'qs': SampledStackOverflowPost.objects.filter(**subsample_kwargs).filter(
-                    has_c_wiki_link=True
-                ),
+                    day_of_avg_score__gte=2, day_of_avg_score__lt=3),
                 'name': 'C'
             }, {
-                'qs': SampledStackOverflowPost.objects.filter(**subsample_kwargs).exclude(
-                    has_c_wiki_link=True
-                ),
+                'qs': SampledStackOverflowPost.objects.filter(**subsample_kwargs).filter(
+                    day_of_avg_score__lt=2),
                 'name': 'other'
             }]
         variables += ['num_pageviews']
