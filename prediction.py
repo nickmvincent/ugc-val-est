@@ -165,8 +165,8 @@ def causal_inference(
                 continue
             else:
                 adjusted_feature = (feature_row - np.mean(feature_row)) / np.std(feature_row)
-                successful_fields.append(adjusted_feature)
-                feature_rows.append(feature_row)
+                successful_fields.append(feature)
+                feature_rows.append(adjusted_feature)
         outcome_rows = []
         for outcome in outcomes:
             outcome_row = getattr(records, outcome)
