@@ -164,7 +164,7 @@ def causal_inference(
                 # print('Feature {} has a nan value...'.format(feature))
                 continue
             else:
-                adjusted_feature = (feature - np.mean(feature)) / np.std(feature)
+                adjusted_feature = (feature_row - np.mean(feature_row)) / np.std(feature_row)
                 successful_fields.append(adjusted_feature)
                 feature_rows.append(feature_row)
         outcome_rows = []
