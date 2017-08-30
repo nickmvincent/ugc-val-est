@@ -226,10 +226,10 @@ def univariate_analysis(groups):
     for group in groups:
         all_vals = np.concatenate((all_vals, group['vals']), axis=0)
         groups_to_analyze.append(group)
-    # groups_to_analyze.append({
-    #     'name': 'All groups',
-    #     'vals': all_vals
-    # })
+    groups_to_analyze.append({
+        'name': 'All groups',
+        'vals': all_vals
+    })
     for group in groups_to_analyze:
         basic[group['name']] = {
             'num_items': len(group['vals']),
