@@ -406,7 +406,7 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
             'has_wiki_link': True,
             'day_of_avg_score__isnull': False,
         }
-        treatment_kwargs = {'has_good_wiki_link': True, }
+        treatment_kwargs = {'has_c_wiki_link': True, }
     if rq == 3:
         subsample_kwargs = {
             'has_wiki_link': True,
