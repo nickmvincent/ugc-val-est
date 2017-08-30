@@ -111,6 +111,7 @@ class Post(models.Model):
 
     wiki_links = models.ManyToManyField('WikiLink')
     has_wiki_link = models.BooleanField(default=False, db_index=True)
+    has_no_link = models.BooleanField(default=False, db_index=True)
     has_good_wiki_link = models.BooleanField(default=False, db_index=True)
     has_b_wiki_link = models.BooleanField(default=False, db_index=True)
     has_c_wiki_link = models.BooleanField(default=False, db_index=True)
@@ -259,8 +260,6 @@ class Post(models.Model):
         setattr(self, year_attr, True)
         if self.body_length == 0:
             self.body_length = len(self.body)
-        if self.body_num_links == 0:
-            self.body_num_links = len(extract_urls(self.body))
         if self.user_created_utc:
             delta = self.timestamp - self.user_created_utc
             self.seconds_since_user_creation = delta.total_seconds()
@@ -434,7 +433,11 @@ class SampledRedditThread(Post):
             attr = 'in_' + likely_subreddits[self.context]
             setattr(self, attr, True)
         else:
-            steattr(self, 'in_other', True)
+            setattr(self, 'in_other', True)
+        if len(self.body) == 0:
+            self.has_no_link = True
+        if self.body_num_links == 0:
+            self.body_num_links = len(extract_urls(self.body))
         super(SampledRedditThread, self).save(*args, **kwargs)
 
 class SampledStackOverflowPost(Post):
@@ -460,6 +463,10 @@ class SampledStackOverflowPost(Post):
             self.num_tags = 0
         elif self.num_tags == 0:
             self.num_tags = len(self.tags_string.split('|'))
+        if self.body_num_links == 0:
+            self.body_num_links = len(extract_urls(self.body))
+        if self.body_num_links == 0:
+            self.has_no_link = True
         super(SampledStackOverflowPost, self).save(*args, **kwargs)
 
 
