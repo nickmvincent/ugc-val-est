@@ -199,7 +199,7 @@ def so_percent_of_pageviews():
             ans = StackOverflowAnswer.objects.get(id=obj.uid)
             question_id = ans.parent_id
             if question_id not in question_ids:
-                x += obj.num_wiki_pageviews
+                x += obj.num_pageviews
     print(x)
 
 
