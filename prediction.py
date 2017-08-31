@@ -274,7 +274,9 @@ def causal_inference(
             prev = cur_time
         for key, val in timing_info.items():
             out.append("{}:{}".format(key, val))
+        print(filename)
         if iterations == 1:
+            print('Since iterations==1, writing to filename')
             with open(filename, 'w') as outfile:
                 outfile.write('\n'.join(out))
         else:
