@@ -15,7 +15,9 @@ class Blocking(Estimator):
     """
 
     def __init__(self, strata, adj, feature_names):
-
+        # hacky
+        # don't want to modify the feature_names array outside the scope
+        feature_names = feature_names[:]
         self._method = 'Blocking'
 
         for i, s in enumerate(strata):
