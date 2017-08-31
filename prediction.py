@@ -276,7 +276,9 @@ def causal_inference(
         out.append(str(causal.propensity))
         print(str(causal.propensity))
         # TODO: show my manually chosen is stable/justifiable for paper
-        if trim_val is None:
+        if trim_val == 's':
+            causal.trim_s()
+        elif trim_val is None:
             causal.trim(True)
         else:
             causal.cutoff = float(trim_val)
