@@ -25,7 +25,7 @@ class Blocking(Estimator):
             except np.linalg.linalg.LinAlgError as err:
                 print('Error in strata {}'.format(i))
                 X = s.raw_data['X']
-                to_delete = []
+                to_delete, cols_deleted = [], 0
                 dummies = {
                     'months':	[
                         'jan', 'feb', 'mar', 'apr',
@@ -60,11 +60,9 @@ class Blocking(Estimator):
                         for dummy, names in dummies.items():
                             if feature_names[col_num] in names:
                                 names.remove(feature_names[col_num])
-                cols_deleted = 0
                 for col_num in to_delete:
                     X = np.delete(X, col_num - cols_deleted, 1)
                     cols_deleted += 1
-                cols_deleted = 0
                 while True:
                     sums = defaultdict(int)
                     total = X.shape[0]
@@ -75,7 +73,7 @@ class Blocking(Estimator):
                                 col = X.T[col_num]
                                 sums[dummy_category] += np.sum(col)
                     can_break = True
-                    to_delete = []
+                    to_delete, cols_deleted = [], 0
 
                     for dummy_category, names in dummies.items():
                         if sums[dummy_category] == 0:

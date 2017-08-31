@@ -152,7 +152,7 @@ def causal_inference(
             except Exception:
                 print('Feature {} failed isnan check...'.format(feature))
                 continue
-            if all(x == 0 for x in feature_row):
+            if not np.any(feature_row):
                 print(
                     'Feature {} is all zeros - will lead to singular matrix'.format(feature))
                 continue
@@ -189,6 +189,19 @@ def causal_inference(
 
             
         X = np.transpose(np.array(feature_rows))
+        X_c = X[D==0]
+        X_p = X[D==1]
+        to_delete, cols_deleted = [], 0
+        for col_num, col in enumerate(X_c.T):
+            if not np.any(col):
+                to_delete.append(col_num)
+        for col_num in to_delete:
+            print('doing a deletion on {}'.format(successful_fields[col_num]))
+            X = np.delete(X, col_num - cols_deleted, 1)
+            successful_fields.remove(successful_fields[col_num])
+            cols_deleted += 1
+
+
         dummies = {
             'months':	[
                 'jan', 'feb', 'mar', 'apr',
@@ -206,13 +219,16 @@ def causal_inference(
                 'fri', 'sat',
             ],
         }
-        cols_deleted = 0
+        for col_num in to_delete:
+            print('doing a deletion...')
+            X = np.delete(X, col_num - cols_deleted, 1)
+            cols_deleted += 1
         while True:
             print(X.shape)
             can_break = True
             sums = defaultdict(int)
             total = X.shape[0]
-            to_delete = []
+            to_delete, cols_deleted = [], 0
 
             for col_num in range(X.shape[1]):
                 for dummy_category, names in dummies.items():
@@ -237,6 +253,7 @@ def causal_inference(
             for col_num in to_delete:
                 print('doing a deletion...')
                 X = np.delete(X, col_num - cols_deleted, 1)
+                successful_fields.remove(successful_fields[col_num])
                 cols_deleted += 1
             if can_break:
                 break
