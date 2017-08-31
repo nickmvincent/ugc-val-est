@@ -60,9 +60,9 @@ def list_common_features():
         'fri', 'sat', 'sun',
         'jan', 'feb', 'mar', 'apr',
         'may', 'jun', 'jul', 'aug', 'sep',
-        'octo', 'nov', 'dec',
+        'octo', 'nov',
         'zero_to_six', 'six_to_twelve',
-        'twelve_to_eighteen', 'eighteen_to_twentyfour',
+        'twelve_to_eighteen',
         'seconds_since_user_creation',
     ]
 
@@ -74,7 +74,7 @@ def list_reddit_specific_features():
         'user_is_mod', 'user_is_suspended', 'user_is_deleted',
         'in_todayilearned', 'in_borntoday',
         'in_wikipedia', 'in_CelebrityBornToday',
-        'in_The_Donald', 'in_other',
+        'in_The_Donald',
     ]
 
 def list_stack_specific_features():
@@ -88,5 +88,5 @@ def list_stack_specific_features():
         'response_time', 'question_score', 'num_other_answers',
         'year2008', 'year2009', 'year2010',
         'year2011', 'year2012', 'year2013',
-        'year2014', 'year2015', 'year2016',
+        'year2014', 'year2015',
     ]
