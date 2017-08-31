@@ -63,9 +63,6 @@ def list_common_features():
         'octo', 'nov', 'dec',
         'zero_to_six', 'six_to_twelve',
         'twelve_to_eighteen', 'eighteen_to_twentyfour',
-        'year2008', 'year2009', 'year2010',
-        'year2011', 'year2012', 'year2013',
-        'year2014', 'year2015', 'year2016',
         'seconds_since_user_creation',
     ]
 
@@ -89,4 +86,7 @@ def list_stack_specific_features():
         'num_tags',
         # commented out until this is implemente fully
         'response_time', 'question_score', 'num_other_answers',
+        'year2008', 'year2009', 'year2010',
+        'year2011', 'year2012', 'year2013',
+        'year2014', 'year2015', 'year2016',
     ]

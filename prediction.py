@@ -150,14 +150,14 @@ def causal_inference(
             try:
                 has_any_nans = any(np.isnan(feature_row))
             except Exception:
-                # print('Feature {} failed isnan check...'.format(feature))
+                print('Feature {} failed isnan check...'.format(feature))
                 continue
             if all(x == 0 for x in feature_row):
-                # print(
-                #     'Feature {} is all zeros - will lead to singular matrix'.format(feature))
+                print(
+                    'Feature {} is all zeros - will lead to singular matrix'.format(feature))
                 continue
             elif has_any_nans:
-                # print('Feature {} has a nan value...'.format(feature))
+                print('Feature {} has a nan value...'.format(feature))
                 continue
             else:
                 print(feature)
@@ -250,8 +250,6 @@ def causal_inference(
                 out.append('NDIF info')
                 out.append(','.join([str(ndif) for ndif in ndifs]))
                 out.append(','.join([str(count) for count in big_ndifs_counts]))
-                print(iteration)
-                print(ndifs)
             except np.linalg.linalg.LinAlgError as err:
                 msg = 'LinAlgError with est_via_blocking: {}'.format(err)
                 err_handle(msg, out)
