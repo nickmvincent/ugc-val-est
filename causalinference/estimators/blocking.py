@@ -18,6 +18,7 @@ class Blocking(Estimator):
         # hacky
         # don't want to modify the feature_names array outside the scope
         self._method = 'Blocking'
+        
         for i, s in enumerate(strata):
             feats = list(feature_names)
             print('start {}'.format(i))
@@ -26,6 +27,7 @@ class Blocking(Estimator):
             except np.linalg.linalg.LinAlgError as err:
                 print('Error in strata {}'.format(i))
                 X = s.raw_data['X']
+                total = X.shape[0]
                 to_delete, cols_deleted = [], 0
                 dummies = {
                     'months':	[
@@ -46,38 +48,28 @@ class Blocking(Estimator):
                 }
                 print(X.shape[1], len(feats))
                 for col_num in range(X.shape[1]):
-                    print(col_num)
-                    print(feats)
-                    means = (
-                        s.summary_stats['X_c_mean'][col_num],
-                        s.summary_stats['X_t_mean'][col_num])
                     stdevs = (
                         s.summary_stats['X_c_sd'][col_num],
                         s.summary_stats['X_t_sd'][col_num])
-                    print(means, stdevs)
+                    print(stdevs)
 
-                    if (means[0] == 0 and stdevs[0] == 0 or
-                            means[1] == 0 and stdevs[1] == 0):
+                    if (stdevs[0] == 0 or stdevs[1] == 0):
+                        print(feats[col_num])
                         print('^^^ boom deleted')
                         to_delete.append(col_num)
-                        for dummy, names in dummies.items():
-                            if feats[col_num] in names:
-                                names.remove(feats[col_num])
                 for col_num in to_delete:
                     X = np.delete(X, col_num - cols_deleted, 1)
                     feats.remove(feats[col_num - cols_deleted])
                     cols_deleted += 1
                 while True:
                     sums = defaultdict(int)
-                    total = X.shape[0]
+                    can_break = True
+                    to_delete, cols_deleted = [], 0
 
                     for col_num in range(X.shape[1]):
                         for dummy_category, names in dummies.items():
                             if feats[col_num] in names:
-                                col = X.T[col_num]
-                                sums[dummy_category] += np.sum(col)
-                    can_break = True
-                    to_delete, cols_deleted = [], 0
+                                sums[dummy_category] += np.sum(X.T[col_num])
 
                     for dummy_category, names in dummies.items():
                         if sums[dummy_category] == 0:
@@ -89,7 +81,6 @@ class Blocking(Estimator):
                                     print(feats[col_num])
                                     can_break = False
                                     to_delete.append(col_num)
-                                    names.remove(feats[col_num])
                                     break
                     for col_num in to_delete:
                         X = np.delete(X, col_num - cols_deleted, 1)
