@@ -168,7 +168,7 @@ def causal_inference(
                         'user_reputation',
                     ]:
                         print(feature)
-                        shifted = np.add(min(feature_row) + 1, feature_row)
+                        shifted = feature_row + (min(feature_row) + 1)
                         print(min(shifted))
                         adjusted_feature = np.log(shifted)
                     else:
