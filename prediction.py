@@ -459,7 +459,7 @@ def parse():
                         if args.sample_num is None:
                             filter_kwargs['sample_num'] = 0
                         else:
-                            filter_kwargs['sample_num__in'] = sample_num.split(',')
+                            filter_kwargs['sample_num__in'] = args.sample_num.split(',')
                         causal_inference(
                             platform, treatment['name'],
                             filter_kwargs, exclude_kwargs,
