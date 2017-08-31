@@ -161,14 +161,16 @@ def causal_inference(
                 continue
             else:
                 if max(feature_row) > 1 or min(feature_row) < 0:
-                    adjusted_feature = (feature_row - np.mean(feature_row)) / np.std(feature_row)
                     if feature in [
                         'user_link_karma',
                         'seconds_since_user_creation',
                         'user_comment_karma',
                         'user_reputation',
                     ]:
-                        adjusted_feature = np.log(np.add(1, adjusted_feature))
+                        adjusted_feature = np.log(np.add(1, feature_row))
+                    else:
+                        adjusted_feature = feature_row
+                    adjusted_feature = (adjusted_feature - np.mean(adjusted_feature)) / np.std(adjusted_feature)
                     feature_rows.append(adjusted_feature)
                 else:
                     feature_rows.append(feature_row)
