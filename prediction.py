@@ -49,7 +49,7 @@ def values_list_to_records(rows, names):
     return np.core.records.fromrecords(rows, names=names)
 
 
-def get_qs_features_and_outcomes(platform, num_rows=None, filter_kwargs=None):
+def get_qs_features_and_outcomes(platform, num_rows=None, filter_kwargs=None, exclude_kwargs=None):
     """Get data from DB for regression and/or causal inference"""
     common_features = list_common_features()
     outcomes = ['score', 'num_comments', ]
@@ -62,6 +62,8 @@ def get_qs_features_and_outcomes(platform, num_rows=None, filter_kwargs=None):
         outcomes += ['num_pageviews', ]
     if filter_kwargs is not None:
         qs = qs.filter(**filter_kwargs)
+    if exclude_kwargs is not None:
+        qs = qs.exclude(**exclude_kwargs)
     if num_rows is not None:
         qs = qs.order_by('?')
         qs = qs[:num_rows]
@@ -87,7 +89,7 @@ def extract_vals_and_method_results(qs, field_names):
 
 
 def causal_inference(
-        platform, treatment_feature, filter_kwargs,
+        platform, treatment_name, filter_kwargs, exclude_kwargs,
         num_rows=None, quad_psm=False, simple_bin=None, trim_val=0,
         paired_psm=None, iterations=1, sample_num=None):
     """
@@ -110,11 +112,11 @@ def causal_inference(
         
         qs, features, outcomes = get_qs_features_and_outcomes(
             platform, num_rows=num_rows, filter_kwargs=filter_kwargs)
-        features.append(treatment_feature)
+        features.append(treatment_name)
         features.append('uid')
         db_name = connection.settings_dict['NAME']
         filename = 'CI_Tr_{treatment}_on_{platform}_{subset}_{db}_trim{trim_val}_samples{samples}.txt'.format(**{
-            'treatment': treatment_feature,
+            'treatment': treatment_name,
             'platform': platform,
             'subset': num_rows if num_rows else 'All',
             'db': db_name,
@@ -138,7 +140,7 @@ def causal_inference(
         successful_fields = []
         for feature in features:
             feature_row = getattr(records, feature)
-            if feature == treatment_feature:
+            if feature == treatment_name:
                 D = feature_row
                 continue
             elif feature == 'uid':
@@ -295,7 +297,8 @@ def causal_inference(
             writer = csv.writer(outfile)
             writer.writerows(boot_rows)
         causal_inference(
-            platform, treatment_feature, filter_kwargs
+            platform, treatment_name,
+            filter_kwargs, exclude_kwargs,
             num_rows, quad_psm, simple_bin, trim_val,
             paired_psm, iterations=1, sample_num=sample_num)
 
@@ -430,19 +433,35 @@ def parse():
             for rq in rqs:
                 trim_rows = []
                 if rq == 1:
-                    treatments = ['has_any_link', 'has_wiki_link', ]
-                    filter_kwargs = {}
+                    treatments = [
+                        {
+                            'name': 'has_other_link', 
+                            'filter_kwargs': {},
+                            'exclude_kwargs': {'has_wiki_link': True}
+                        }, {
+                            'name': 'has_wiki_link',
+                            'filter_kwargs': {},
+                            'exclude_kwargs': {'has_other_link': True}
+                        },
+                    ]
                 elif rq == 2:
-                    treatment_feature = ['has_c_wiki_link']
-                    filter_kwargs = {'has_wiki_link': True, 'day_of_avg_score__isnull': False}
-                if args.sample_num is None:
-                    filter_kwargs['sample_num'] = 0
-                else:
-                    filter_kwargs['sample_num__in'] = sample_num.split(',')
+                    treatments = [
+                        {
+                            'name': 'has_c_wiki_link', 
+                            'filter_kwargs': {'has_wiki_link': True, 'day_of_avg_score__isnull': False},
+                        },
+                    ]
                 for trim_val in trim_vals:
                     for treatment in treatments:
+                        filter_kwargs = treatment['filter_kwargs']
+                        exclude_kwargs = treatment['exclude_kwargs']
+                        if args.sample_num is None:
+                            filter_kwargs['sample_num'] = 0
+                        else:
+                            filter_kwargs['sample_num__in'] = sample_num.split(',')
                         causal_inference(
-                            platform, treatment, filter_kwargs
+                            platform, treatment['name'],
+                            filter_kwargs, exclude_kwargs
                             args.num_rows, args.quad_psm,
                             args.simple_bin, trim_val,
                             args.paired_psm, iterations, args.sample_num)
