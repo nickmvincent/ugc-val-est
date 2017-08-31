@@ -81,7 +81,7 @@ class Blocking(Estimator):
                         if sums[dummy_category] == 0:
                             continue
                         if sums[dummy_category] == total:
-                            for col_num in range(len(X.T)):
+                            for col_num in range(X.shape[1]):
                                 if feature_names[col_num] in names:
                                     print('identified bad col')
                                     print(feature_names[col_num])

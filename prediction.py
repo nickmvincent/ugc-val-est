@@ -210,20 +210,22 @@ def causal_inference(
         while True:
             sums = defaultdict(int)
             total = X.shape[0]
+            can_break = True
+            to_delete = []
 
             for col_num in range(X.shape[1]):
                 for dummy_category, names in dummies.items():
                     if successful_fields[col_num] in names:
                         col = X.T[col_num]
                         sums[dummy_category] += np.sum(col)
-            can_break = True
-            to_delete = []
 
             for dummy_category, names in dummies.items():
                 if sums[dummy_category] == 0:
                     continue
                 if sums[dummy_category] == total:
-                    for col_num in range(len(X.T)):
+                    print('$')
+                    print(names)
+                    for col_num in range(X.shape[1]):
                         if successful_fields[col_num] in names:
                             print('IN HIGH LEVEL identified bad col')
                             print(successful_fields[col_num])
@@ -232,6 +234,7 @@ def causal_inference(
                             names.remove(successful_fields[col_num])
                             break
             for col_num in to_delete:
+                print('doing a deletion...')
                 X = np.delete(X, col_num - cols_deleted, 1)
                 cols_deleted += 1
             if can_break:
