@@ -79,6 +79,8 @@ class Blocking(Estimator):
                         if sums[dummy_category] == 0:
                             print('total was zero...')
                             continue
+                        print(dummy_category, sums[dummy_category])
+                        print(names)
                         if sums[dummy_category] == total:
                             print('Found a dependent dummy var')
                             print(X.shape[1])
