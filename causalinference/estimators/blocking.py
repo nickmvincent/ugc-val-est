@@ -21,11 +21,9 @@ class Blocking(Estimator):
         
         for i, s in enumerate(strata):
             feats = list(feature_names)
-            print('start {}'.format(i))
             try:
                 s.est_via_ols(adj)
             except np.linalg.linalg.LinAlgError as err:
-                print('Error in strata {}'.format(i))
                 X = s.raw_data['X']
                 total = X.shape[0]
                 to_delete, cols_deleted = [], 0
@@ -46,16 +44,12 @@ class Blocking(Estimator):
                         'fri', 'sat',
                     ],
                 }
-                print(X.shape[1], len(feats))
                 for col_num in range(X.shape[1]):
                     stdevs = (
                         s.summary_stats['X_c_sd'][col_num],
                         s.summary_stats['X_t_sd'][col_num])
-                    print(stdevs)
 
                     if (stdevs[0] == 0 or stdevs[1] == 0):
-                        print(feats[col_num])
-                        print('^^^ boom deleted')
                         to_delete.append(col_num)
                 for col_num in to_delete:
                     X = np.delete(X, col_num - cols_deleted, 1)
@@ -77,8 +71,6 @@ class Blocking(Estimator):
                         if sums[dummy_category] == total:
                             for col_num in range(X.shape[1]):
                                 if feats[col_num] in names:
-                                    print('identified bad col')
-                                    print(feats[col_num])
                                     can_break = False
                                     to_delete.append(col_num)
                                     break
