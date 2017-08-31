@@ -28,7 +28,6 @@ class OLS(Estimator):
 			cov = calc_cov(Z, u)
 
 			self._dict['ate'].append(calc_ate(olscoef))
-			print(calc_ate(olscoef))
 			self._dict['ate_se'].append(calc_ate_se(cov))
 
 			if adj == 2:

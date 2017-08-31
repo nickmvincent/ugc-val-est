@@ -214,7 +214,9 @@ def causal_inference(
         out.append(str(causal.summary_stats))
         ndifs.append(causal.summary_stats['sum_of_abs_ndiffs'])
         big_ndifs_counts.append(causal.summary_stats['num_large_ndiffs'])
+        
         if paired_psm:
+            print('doing pairing')
             psm_est, psm_summary, psm_rows = causal.est_via_psm()
             out.append('PSM PAIR REGRESSION')
             out.append(str(psm_summary))
@@ -231,6 +233,7 @@ def causal_inference(
                     outfile.write(','.join(psm_row))
             ates = psm_est['ols']['ate']
         else:
+            print('doing binning')
             if simple_bin:
                 causal.blocks = int(simple_bin)
                 causal.stratify()
@@ -365,16 +368,12 @@ def simple_linear(platform, quality_mode=False):
         regr.fit(X_train, y_train)
 
         # The coefficients
-        for index, coeff in enumerate(regr.coef_):
-            print("{}:{}, ".format(features[index], coeff), end='')
-        print('')
         # The mean squared error
         y_test_hat = regr.predict(X_test)
         lin_msg = "Linear | MSE: {}, R2: {}".format(
             np.mean((y_test_hat - y_test) ** 2),
             regr.score(X_test, y_test)
         )
-        print(lin_msg)
 
 
 def parse():
