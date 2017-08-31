@@ -84,7 +84,7 @@ class Blocking(Estimator):
                         for dummy_category, names in dummies.items():
                             if feature_names[col_num] in names:
                                 print('Found a dependent dummy var')
-                                print('it was {}'.fomrat(feature_names[col_num]))
+                                print('it was {}'.format(feature_names[col_num]))
                                 col = X.T[col_num]
                                 sums[dummy_category] += np.sum(col)
                                 totals[dummy_category] = len(col)							
