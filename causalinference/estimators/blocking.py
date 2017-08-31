@@ -50,6 +50,9 @@ class Blocking(Estimator):
                     stdevs = (
                         s.summary_stats['X_c_sd'][col_num],
                         s.summary_stats['X_t_sd'][col_num])
+                    print(means)
+                    print(stdevs)
+
                     if (means[0] == 0 and stdevs[0] == 0 or
                             means[1] == 0 and stdevs[1] == 0):
                         to_delete.append(col_num)
@@ -80,6 +83,8 @@ class Blocking(Estimator):
                         if sums[dummy_category] == total:
                             for col_num in range(len(X.T)):
                                 if feature_names[col_num] in names:
+                                    print('identified bad col')
+                                    print(feature_names[col_num])
                                     can_break = False
                                     to_delete.append(col_num)
                                     names.remove(feature_names[col_num])

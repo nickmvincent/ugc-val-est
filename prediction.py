@@ -446,13 +446,15 @@ def parse():
         for platform in platforms:
             for rq in rqs:
                 trim_rows = []
-                if rq == 1:
+                if rq == 11:
                     treatments = [
                         {
                             'name': 'has_other_link', 
                             'filter_kwargs': {},
                             'exclude_kwargs': {'has_wiki_link': True}
-                        }, {
+                        }]
+                elif rq == 12:
+                    treatments = [{
                             'name': 'has_wiki_link',
                             'filter_kwargs': {},
                             'exclude_kwargs': {'has_other_link': True}

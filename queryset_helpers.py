@@ -43,7 +43,7 @@ def list_textual_metrics(prefix):
             'length', 'percent_uppercase',
             'percent_spaces', 'percent_punctuation',
             'starts_capitalized',
-            # 'coleman_liau_index',
+            'coleman_liau_index',
     ]:
         ret.append('{}_{}'.format(prefix, metric))
     return ret
@@ -71,8 +71,8 @@ def list_reddit_specific_features():
     return textual + [
         'user_comment_karma', 'user_link_karma', 
         'user_is_mod', 'user_is_suspended', 'user_is_deleted',
-        # 'in_todayilearned', 
-        # 'in_borntoday', 'in_wikipedia', 'in_CelebrityBornToday','in_The_Donald',
+        'in_todayilearned', 
+        'in_borntoday', 'in_wikipedia', 'in_CelebrityBornToday','in_The_Donald',
     ]
 
 def list_stack_specific_features():
