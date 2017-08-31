@@ -109,7 +109,7 @@ class CausalModel(object):
 		self.raw_data._dict['pscore'] = self.propensity['fitted']
 		self._post_pscore_init()
 
-	def trim(self):
+	def trim(self, overlap=False):
 		"""
 		Trims data based on propensity score to create a subsample with
 		better covariate balance.
@@ -122,21 +122,22 @@ class CausalModel(object):
 		"""
 		pscore = self.raw_data['pscore']
 		D = self.raw_data['D']
-		pscore_c = pscore[D==0]
-		pscore_t = pscore[D==1]
-		c_range = (min(pscore_c), max(pscore_c))
-		print('pscore range for control is: {} to {}'.format(
-			c_range[0], c_range[1]
-		))
-		p_range = (min(pscore_t), max(pscore_t))
-		print('pscore range for treat is: {} to {}'.format(
-			p_range[0], p_range[1]
-		))
-		bot_cands = [c_range[0], p_range[0]]
-		top_cands = [c_range[1], p_range[1]]
-		self.overlap_range = (max(bot_cands), min(top_cands))
-		print(self.overlap_range)
-		self.cutoff = self.overlap_range[0]
+		if overlap:
+			pscore_c = pscore[D==0]
+			pscore_t = pscore[D==1]
+			c_range = (min(pscore_c), max(pscore_c))
+			print('pscore range for control is: {} to {}'.format(
+				c_range[0], c_range[1]
+			))
+			p_range = (min(pscore_t), max(pscore_t))
+			print('pscore range for treat is: {} to {}'.format(
+				p_range[0], p_range[1]
+			))
+			bot_cands = [c_range[0], p_range[0]]
+			top_cands = [c_range[1], p_range[1]]
+			self.overlap_range = (max(bot_cands), min(top_cands))
+			print(self.overlap_range)
+			self.cutoff = self.overlap_range[0]
 
 		if 0 < self.cutoff <= 0.5:
 			pscore = self.raw_data['pscore']

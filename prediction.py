@@ -276,8 +276,11 @@ def causal_inference(
         out.append(str(causal.propensity))
         print(str(causal.propensity))
         # TODO: show my manually chosen is stable/justifiable for paper
-        causal.cutoff = float(trim_val)
-        causal.trim()
+        if trim_val is None:
+            causal.trim(True)
+        else:
+            causal.cutoff = float(trim_val)
+            causal.trim()
         times.append(mark_time('trim_{}'.format(causal.cutoff)))
         out.append('TRIM PERFORMED: {}'.format(causal.cutoff))
         out.append(str(causal.summary_stats))
@@ -503,10 +506,9 @@ def parse():
         else:
             iterations = args.bootstrap
         if args.trim_val is None:
-            # trim_vals = [0.000, 0.001, 0.002, 0.003, 0.004, 0.005, 0.006, 0.007]
-            trim_vals = [0]
+            trim_vals = [None]
         else:
-            trim_vals = [args.trim_val]
+            trim_vals = args.trim_val.split(',')
         if args.platform is None:
             platforms = ['r', 's', ]
         else:
