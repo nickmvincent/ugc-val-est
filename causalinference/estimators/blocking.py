@@ -70,8 +70,7 @@ class Blocking(Estimator):
                     for col_num in range(len(X.T)):
                         for dummy_category, names in dummies.items():
                             if feature_names[col_num] in names:
-                                print('Found a dependent dummy var')
-                                print('it was {}'.format(feature_names[col_num]))
+                                
                                 col = X.T[col_num]
                                 sums[dummy_category] += np.sum(col)
                                 totals[dummy_category] = len(col)							
@@ -79,8 +78,11 @@ class Blocking(Estimator):
                     
                     for dummy_category, names in dummies.items():
                         if sums[dummy_category] == totals[dummy_category]:
+                            print('Found a dependent dummy var')
                             for col_num in range(len(X.T)):
                                 if feature_names[col_num] in names:
+                                    print('it was {}'.format(feature_names[col_num]))                                
+                                    print('so it will be deleted')
                                     can_break = False
                                     to_delete.append(col_num)
                                     names.remove(feature_names[col_num])
