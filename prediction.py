@@ -34,6 +34,7 @@ from causalinference import CausalModel
 
 def err_handle(msg, out):
     """error handling for this exploratory code"""
+    print('*** ERR OCCURRED')
     print(msg)
     out.append(msg)
     trace = traceback.format_exc()
