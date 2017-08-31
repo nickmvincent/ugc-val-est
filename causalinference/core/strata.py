@@ -16,6 +16,7 @@ class Strata(object):
 			D_sub = stratum.raw_data['D']
 			pscore_sub_c = pscore_sub[D_sub==0]
 			pscore_sub_t = pscore_sub[D_sub==1]
+			
 			stratum.summary_stats._summarize_pscore(pscore_sub_c,
 			                                        pscore_sub_t)
 			
