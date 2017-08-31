@@ -449,6 +449,7 @@ def parse():
                         {
                             'name': 'has_c_wiki_link', 
                             'filter_kwargs': {'has_wiki_link': True, 'day_of_avg_score__isnull': False},
+                            'exclude_kwargs': {},
                         },
                     ]
                 for trim_val in trim_vals:
@@ -461,7 +462,7 @@ def parse():
                             filter_kwargs['sample_num__in'] = sample_num.split(',')
                         causal_inference(
                             platform, treatment['name'],
-                            filter_kwargs, exclude_kwargs
+                            filter_kwargs, exclude_kwargs,
                             args.num_rows, args.quad_psm,
                             args.simple_bin, trim_val,
                             args.paired_psm, iterations, args.sample_num)

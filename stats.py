@@ -428,10 +428,12 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
         }]
         if not bootstrap:
             datasets += [{
-                'qs': SampledRedditThread.objects.filter(**subsample_kwargs).filter(context='todayilearned'),
+                'qs': SampledRedditThread.objects.filter(**subsample_kwargs).filter(
+                    context='todayilearned'),
                 'name': 'TIL'
             }, {
-                'qs': SampledRedditThread.objects.filter(**subsample_kwargs).filter(context__in=TOP_TEN),
+                'qs': SampledRedditThread.objects.filter(**subsample_kwargs).filter(
+                    context__in=TOP_TEN),
                 'name': 'Top_Ten'
             }]
         if rq == 3:
@@ -662,7 +664,8 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
                         for subgroup, stat_names in subgroups.items():
                             for stat_name in stat_names.keys():
                                 val = output[
-                                    subset_name][computed_var][stat_category][subgroup].get(stat_name)
+                                    subset_name][computed_var][
+                                        stat_category][subgroup].get(stat_name)
                                 if val:
                                     stat_names[stat_name].append(val)
     if iterations > 1:

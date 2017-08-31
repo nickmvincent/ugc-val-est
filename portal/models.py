@@ -33,7 +33,7 @@ month_to_abbrev = {
     9: 'sep',
     10: 'octo',
     11: 'nov',
-    12: 'dec', 
+    12: 'dec',
 }
 
 likely_subreddits = [
@@ -43,6 +43,7 @@ likely_subreddits = [
     'CelebrityBornToday',
     'The_Donald',
 ]
+
 
 def trimmed(val, floor, ceil):
     """floors and ceils a val"""
@@ -176,7 +177,7 @@ class Post(models.Model):
     num_active_edits = models.IntegerField(default=0)
     num_minor_edits = models.IntegerField(default=0)
     num_major_edits = models.IntegerField(default=0)
-    
+
     num_edits_prev_week = models.IntegerField(default=0)
     num_new_editors_prev_week = models.IntegerField(default=0)
     num_new_editors_retained_prev_week = models.IntegerField(default=0)
@@ -201,17 +202,16 @@ class Post(models.Model):
 
             'num_new_editors', 'num_new_editors_retained',
             'num_new_editors_prev_week', 'num_new_editors_retained_prev_week',
-            
-            'num_new_edits', 'num_old_edits', 
-            'num_new_edits_prev_week', 'num_old_edits_prev_week', 
 
-            'num_inactive_edits', 'num_active_edits', 'num_minor_edits', 
+            'num_new_edits', 'num_old_edits',
+            'num_new_edits_prev_week', 'num_old_edits_prev_week',
+
+            'num_inactive_edits', 'num_active_edits', 'num_minor_edits',
             'num_inactive_edits_prev_week', 'num_active_edits_prev_week', 'num_minor_edits_prev_week',
             'num_major_edits',
             'num_major_edits_prev_week', 'num_edits_preceding_post',
         ]:
             setattr(self, metric, 0)
-
 
     def norm_change_edits(self):
         total = float(self.num_edits + self.num_edits_prev_week)
@@ -227,11 +227,13 @@ class Post(models.Model):
             return self.num_new_edits / self.num_edits * 100.0
         else:
             return None
+
     def percent_active_editors(self):
         if self.num_edits:
             return self.num_active_edits / self.num_edits * 100.0
         else:
             return None
+
     def percent_inactive_editors(self):
         if self.num_edits:
             return self.num_inactive_edits / self.num_edits * 100.0
@@ -405,11 +407,10 @@ class Post(models.Model):
                         setattr(self, output_field, None)
                     else:
                         setattr(self, output_field, val)
-        
+
         if not self.has_wiki_link and not self.has_no_link:
             self.has_other_link = True
         super(Post, self).save(*args, **kwargs)
-
 
 
 class SampledRedditThread(Post):
@@ -443,6 +444,7 @@ class SampledRedditThread(Post):
         if self.body_num_links == 0:
             self.body_num_links = len(extract_urls(self.body))
         super(SampledRedditThread, self).save(*args, **kwargs)
+
 
 class SampledStackOverflowPost(Post):
     """
@@ -537,13 +539,14 @@ class Revision(models.Model):
     # whether the edit was minor edit
     flags = models.BooleanField(default=True)
     err_code = models.IntegerField(default=0)
-    
+
     def save(self, *args, **kwargs):
         """overload save method"""
         if self.lastrev_date and self.timestamp:
             if self.lastrev_date - self.timestamp > datetime.timedelta(days=30):
                 self.user_retained = True
         super(Revision, self).save(*args, **kwargs)
+
 
 class ErrorLog(models.Model):
     """Each row corresponds to a post that couldn't be loaded due to some error"""
@@ -567,7 +570,8 @@ class StackOverflowQuestion(models.Model):
     id = models.IntegerField(primary_key=True)
     title = models.CharField(max_length=192)
     body = models.CharField(max_length=58431)
-    accepted_answer_id = models.IntegerField(blank=True, null=True, db_index=True)
+    accepted_answer_id = models.IntegerField(
+        blank=True, null=True, db_index=True)
     answer_count = models.IntegerField(default=0)
     comment_count = models.IntegerField(default=0)
     community_owned_date = models.DateTimeField(blank=True, null=True)
