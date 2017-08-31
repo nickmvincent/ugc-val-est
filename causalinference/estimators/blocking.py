@@ -25,23 +25,23 @@ class Blocking(Estimator):
                 print('Error in strata {}'.format(i))
                 X = s.raw_data['X']
                 to_delete = []
-				dummies = {
-					'months':	[
-						'jan', 'feb', 'mar', 'apr',
-						'may', 'jun', 'jul', 'aug', 'sep',
-						'octo', 'nov',
-					],
-					'hours': ['zero_to_six', 'six_to_twelve', 'twelve_to_eighteen', ],
-					'contexts': ['in_todayilearned',
-								'in_borntoday', 'in_wikipedia', 'in_CelebrityBornToday', 'in_The_Donald', ],
-					'years': ['year2008', 'year2009', 'year2010',
-							'year2011', 'year2012', 'year2013',
-							'year2014', 'year2015', ],
-					'days:': [
-						'mon', 'tues', 'wed', 'thurs',
-						'fri', 'sat',
-					],
-				}
+                dummies = {
+                    'months':	[
+                        'jan', 'feb', 'mar', 'apr',
+                        'may', 'jun', 'jul', 'aug', 'sep',
+                        'octo', 'nov',
+                    ],
+                    'hours': ['zero_to_six', 'six_to_twelve', 'twelve_to_eighteen', ],
+                    'contexts': ['in_todayilearned',
+                                'in_borntoday', 'in_wikipedia', 'in_CelebrityBornToday', 'in_The_Donald', ],
+                    'years': ['year2008', 'year2009', 'year2010',
+                            'year2011', 'year2012', 'year2013',
+                            'year2014', 'year2015', ],
+                    'days:': [
+                        'mon', 'tues', 'wed', 'thurs',
+                        'fri', 'sat',
+                    ],
+                }
                 for col_num, ndiff_val in enumerate(s.summary_stats['ndiff']):
                     means = (
                         s.summary_stats['X_c_mean'][col_num],
@@ -54,53 +54,55 @@ class Blocking(Estimator):
                         print(
                             'ALL ZEROS - need to remove column number {}'.format(col_num))
                         to_delete.append(col_num)
-						# make sure to remove the corresponding column from the dummies object
-						for dummy, names in dummies.items():
-							if feature_names[col_num] in names:
-								names.remove(feature_names[col_num])
+                        # make sure to remove the corresponding column from the dummies object
+                        for dummy, names in dummies.items():
+                            if feature_names[col_num] in names:
+                                names.remove(feature_names[col_num])
                     print(means, stdevs)
-				cols_deleted = 0
+                cols_deleted = 0
                 for col_num in to_delete:
                     X = np.delete(X, col_num - cols_deleted, 1)
                     cols_deleted += 1
-				to_delete = []
+                to_delete = []
                 while True:
                     sums = {
-						'months': defaultdict(int),
-						'hours': defaultdict(int),
-						'contexts': defaultdict(int),
-						'years': defaultdict(int),
-						'days:': defaultdict(int),
-					}
-					totals = {
-						'months': defaultdict(int),
-						'hours': defaultdict(int),
-						'contexts': defaultdict(int),
-						'years': defaultdict(int),
-						'days:': defaultdict(int),
-					}
+                        'months': defaultdict(int),
+                        'hours': defaultdict(int),
+                        'contexts': defaultdict(int),
+                        'years': defaultdict(int),
+                        'days:': defaultdict(int),
+                    }
+                    totals = {
+                        'months': defaultdict(int),
+                        'hours': defaultdict(int),
+                        'contexts': defaultdict(int),
+                        'years': defaultdict(int),
+                        'days:': defaultdict(int),
+                    }
 
                     for col_num in range(len(X.T)):
                         for dummy_category, names in dummies.items():
                             if feature_names[col_num] in names:
-								col = X.T[col_num]
+                                print('Found a dependent dummy var')
+                                print('it was {}'.fomrat(feature_names[col_num]))
+                                col = X.T[col_num]
                                 sums[dummy_category] += np.sum(col)
-								totals[dummy_category] = len(col)							
-					can_break = True
-					
-					for dummy_category, names in dummies.items():
-						if sums[dummy_category] == totals[dummy_category]:
-							for col_num in range(len(X.T)):
-								if feature_names[col_num] in names:
-									can_break = False
-									to_delete.append(col_num)
-									names.remove(feature_names[col_num])
-									break
-					for col_num in to_delete:
-						X = np.delete(X, col_num - cols_deleted, 1)
-						cols_deleted += 1
-					if can_break:
-						break
+                                totals[dummy_category] = len(col)							
+                    can_break = True
+                    
+                    for dummy_category, names in dummies.items():
+                        if sums[dummy_category] == totals[dummy_category]:
+                            for col_num in range(len(X.T)):
+                                if feature_names[col_num] in names:
+                                    can_break = False
+                                    to_delete.append(col_num)
+                                    names.remove(feature_names[col_num])
+                                    break
+                    for col_num in to_delete:
+                        X = np.delete(X, col_num - cols_deleted, 1)
+                        cols_deleted += 1
+                    if can_break:
+                        break
                 
                 strata[i] = causal.CausalModel(
                     s.raw_data['Y'], s.raw_data['D'], X)
