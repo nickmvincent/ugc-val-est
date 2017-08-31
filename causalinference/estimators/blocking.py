@@ -58,27 +58,14 @@ class Blocking(Estimator):
                         for dummy, names in dummies.items():
                             if feature_names[col_num] in names:
                                 names.remove(feature_names[col_num])
-                    print(means, stdevs)
                 cols_deleted = 0
                 for col_num in to_delete:
                     X = np.delete(X, col_num - cols_deleted, 1)
                     cols_deleted += 1
                 to_delete = []
                 while True:
-                    sums = {
-                        'months': defaultdict(int),
-                        'hours': defaultdict(int),
-                        'contexts': defaultdict(int),
-                        'years': defaultdict(int),
-                        'days:': defaultdict(int),
-                    }
-                    totals = {
-                        'months': defaultdict(int),
-                        'hours': defaultdict(int),
-                        'contexts': defaultdict(int),
-                        'years': defaultdict(int),
-                        'days:': defaultdict(int),
-                    }
+                    sums = defaultdict(int)
+                    totals = defaultdict(int)
 
                     for col_num in range(len(X.T)):
                         for dummy_category, names in dummies.items():
