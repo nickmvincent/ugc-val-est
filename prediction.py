@@ -189,6 +189,9 @@ def causal_inference(
         for col_num, col in enumerate(X_c.T):
             if not np.any(col):
                 to_delete.append(col_num)
+        for col_num, col in enumerate(X_p.T):
+            if not np.any(col):
+                to_delete.append(col_num)
         for col_num in to_delete:
             print('doing a deletion on {}'.format(successful_fields[col_num]))
             X = np.delete(X, col_num - cols_deleted, 1)
