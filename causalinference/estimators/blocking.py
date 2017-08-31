@@ -17,7 +17,7 @@ class Blocking(Estimator):
     def __init__(self, strata, adj, feature_names):
         # hacky
         # don't want to modify the feature_names array outside the scope
-        feature_names = feature_names[:]
+        feature_names = list(feature_names)
         self._method = 'Blocking'
 
         for i, s in enumerate(strata):
@@ -45,7 +45,8 @@ class Blocking(Estimator):
                         'fri', 'sat',
                     ],
                 }
-                for col_num, _ in enumerate(s.summary_stats['ndiff']):
+                for col_num in range(X.shape[1]):
+                    print(col_num)
                     means = (
                         s.summary_stats['X_c_mean'][col_num],
                         s.summary_stats['X_t_mean'][col_num])
