@@ -112,7 +112,7 @@ def causal_inference(
         times.append(mark_time('function_start')) 
         
         qs, features, outcomes = get_qs_features_and_outcomes(
-            platform, num_rows=num_rows, filter_kwargs=filter_kwargs)
+            platform, num_rows=num_rows, filter_kwargs=filter_kwargs, exclude_kwargs=exclude_kwargs)
         features.append(treatment_name)
         features.append('uid')
         db_name = connection.settings_dict['NAME']
@@ -198,6 +198,7 @@ def causal_inference(
             causal.est_propensity_s()
             times.append(mark_time('propensity_s'))
         out.append(str(causal.propensity))
+        print(str(causal.propensity))
         # TODO: show my manually chosen is stable/justifiable for paper
         causal.cutoff = float(trim_val)
         causal.trim()
