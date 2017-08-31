@@ -19,6 +19,7 @@ class Blocking(Estimator):
         self._method = 'Blocking'
 
         for i, s in enumerate(strata):
+            print('start {}'.format(i))
             try:
                 s.est_via_ols(adj)
             except np.linalg.linalg.LinAlgError as err:
@@ -42,7 +43,7 @@ class Blocking(Estimator):
                         'fri', 'sat',
                     ],
                 }
-                for col_num, ndiff_val in enumerate(s.summary_stats['ndiff']):
+                for col_num, _ in enumerate(s.summary_stats['ndiff']):
                     means = (
                         s.summary_stats['X_c_mean'][col_num],
                         s.summary_stats['X_t_mean'][col_num])
@@ -51,8 +52,6 @@ class Blocking(Estimator):
                         s.summary_stats['X_t_sd'][col_num])
                     if (means[0] == 0 and stdevs[0] == 0 or
                             means[1] == 0 and stdevs[1] == 0):
-                        print(
-                            'ALL ZEROS - need to remove column number {}'.format(col_num))
                         to_delete.append(col_num)
                         # make sure to remove the corresponding column from the dummies object
                         for dummy, names in dummies.items():
@@ -79,11 +78,8 @@ class Blocking(Estimator):
                         if sums[dummy_category] == 0:
                             continue
                         if sums[dummy_category] == total:
-                            print('Found a dependent dummy var')
                             for col_num in range(len(X.T)):
                                 if feature_names[col_num] in names:
-                                    print('it was {}'.format(feature_names[col_num]))                                
-                                    print('so it will be deleted')
                                     can_break = False
                                     to_delete.append(col_num)
                                     names.remove(feature_names[col_num])
@@ -105,6 +101,7 @@ class Blocking(Estimator):
 
         ates = np.array([s.estimates['ols']['ate'] for s in strata]).T
         ate_ses = np.array([s.estimates['ols']['ate_se'] for s in strata]).T
+        print(ates)
         if adj <= 1:
             atcs, atts = ates, ates
             atc_ses, att_ses = ate_ses, ate_ses
