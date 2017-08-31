@@ -26,13 +26,13 @@ class Blocking(Estimator):
 					if np.isnan(ndiff_val):
 						to_delete.append(col_num)
 					else:
-						mean_tup = (s.summary_stats['X_c_mean'][col_num],
-						s.summary_stats['X_t_mean'])
+						mean_tup = (
+							s.summary_stats['X_c_mean'][col_num],
+							s.summary_stats['X_t_mean'])
 						if mean_tup[0] == 0 or mean_tup[1] == 0:
 							stdev_tup = (
-								s.summary_stats['X_c_sd'],
-								s.summary_stats['X_t_sd']
-							)
+								s.summary_stats['X_c_sd'][col_num],
+								s.summary_stats['X_t_sd'][col_num])
 							if (mean_tup[0] == 0 and stdev_tup[0] == 0 or
 								mean_tup[1] == 0 and stdev_tup[1] == 0):
 								print('Ran into a problem column in strata {}'.format(i))
