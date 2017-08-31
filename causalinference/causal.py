@@ -121,7 +121,7 @@ class CausalModel(object):
 		has been estimated.
 		"""
 		pscore = self.raw_data['pscore']
-		D = self.raw_data['pscore']
+		D = self.raw_data['D']
 		pscore_c = pscore[D==0]
 		pscore_t = pscore[D==1]
 		c_range = (min(pscore_c), max(pscore_c))
