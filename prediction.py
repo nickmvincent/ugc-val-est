@@ -208,9 +208,10 @@ def causal_inference(
         }
         cols_deleted = 0
         while True:
+            print(X.shape)
+            can_break = True
             sums = defaultdict(int)
             total = X.shape[0]
-            can_break = True
             to_delete = []
 
             for col_num in range(X.shape[1]):
@@ -246,6 +247,7 @@ def causal_inference(
         causal = CausalModel(Y, D, X, ids=ids)
         times.append(mark_time('CausalModel'))
         out.append(str(causal.summary_stats))
+        print(causal.summary_stats)
         ndifs.append(causal.summary_stats['sum_of_abs_ndiffs'])
         big_ndifs_counts.append(causal.summary_stats['num_large_ndiffs'])
         # causal.est_via_ols()
