@@ -247,11 +247,6 @@ def causal_inference(
                     print('fails: {}'.format(fails))
                     continue
                 times.append(mark_time('stratify_s'))
-            print(causal.strata.overlap_range)
-            print('here is the overlap range')
-            causal.cutoff = causal.strata.overlap_range[0]
-            causal.trim()
-            print('we trimmed again, wow')
             out.append(str(causal.strata))
             try:
                 causal.est_via_blocking(successful_fields)
