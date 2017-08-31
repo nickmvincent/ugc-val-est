@@ -61,7 +61,7 @@ class Blocking(Estimator):
                                 names.remove(feature_names[col_num])
                 for col_num in to_delete:
                     X = np.delete(X, col_num - cols_deleted, 1)
-                    feature_names.remove(feature_names[col_num])
+                    feature_names.remove(feature_names[col_num - cols_deleted])
                     cols_deleted += 1
                 while True:
                     sums = defaultdict(int)
@@ -89,7 +89,7 @@ class Blocking(Estimator):
                                     break
                     for col_num in to_delete:
                         X = np.delete(X, col_num - cols_deleted, 1)
-                        feature_names.remove(feature_names[col_num])
+                        feature_names.remove(feature_names[col_num - cols_deleted])
                         cols_deleted += 1
                     if can_break:
                         break
