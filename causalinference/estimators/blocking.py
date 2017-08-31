@@ -30,14 +30,14 @@ class Blocking(Estimator):
 						means = (
 							s.summary_stats['X_c_mean'][col_num],
 							s.summary_stats['X_t_mean'][col_num])
-						if means[0] == 0 or means[1] == 0:
-							stdevs = (
+						stdevs = (
 								s.summary_stats['X_c_sd'][col_num],
 								s.summary_stats['X_t_sd'][col_num])
-							if (means[0] == 0 and stdevs[0] == 0 or
-								means[1] == 0 and stdevs[1] == 0):
-								print('Need to remove column number {}'.format(col_num))
-								to_delete.append(col_num)
+						
+						if (means[0] == 0 and stdevs[0] == 0 or
+							means[1] == 0 and stdevs[1] == 0):
+							print('Need to remove column number {}'.format(col_num))
+							to_delete.append(col_num)
 						print(means, stdevs)
 				cols_deleted = 0
 				for col_num in to_delete:
