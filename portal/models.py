@@ -112,6 +112,7 @@ class Post(models.Model):
     wiki_links = models.ManyToManyField('WikiLink')
     has_wiki_link = models.BooleanField(default=False, db_index=True)
     has_no_link = models.BooleanField(default=False, db_index=True)
+    has_other_link = models.BooleanField(default=False, db_index=True)
     has_good_wiki_link = models.BooleanField(default=False, db_index=True)
     has_b_wiki_link = models.BooleanField(default=False, db_index=True)
     has_c_wiki_link = models.BooleanField(default=False, db_index=True)
@@ -404,6 +405,9 @@ class Post(models.Model):
                         setattr(self, output_field, None)
                     else:
                         setattr(self, output_field, val)
+        
+        if not has_wiki_link and not has_no_link:
+            self.has_other_link = True
         super(Post, self).save(*args, **kwargs)
 
 
