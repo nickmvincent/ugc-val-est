@@ -219,10 +219,6 @@ def causal_inference(
                 'fri', 'sat',
             ],
         }
-        for col_num in to_delete:
-            print('doing a deletion...')
-            X = np.delete(X, col_num - cols_deleted, 1)
-            cols_deleted += 1
         while True:
             print(X.shape)
             can_break = True

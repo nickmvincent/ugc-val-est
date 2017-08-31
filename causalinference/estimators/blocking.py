@@ -50,11 +50,11 @@ class Blocking(Estimator):
                     stdevs = (
                         s.summary_stats['X_c_sd'][col_num],
                         s.summary_stats['X_t_sd'][col_num])
-                    print(means)
-                    print(stdevs)
+                    print(means, stdevs)
 
                     if (means[0] == 0 and stdevs[0] == 0 or
                             means[1] == 0 and stdevs[1] == 0):
+                        print('^^^ boom deleted')
                         to_delete.append(col_num)
                         # make sure to remove the corresponding column from the dummies object
                         for dummy, names in dummies.items():
