@@ -282,7 +282,7 @@ class CausalModel(object):
 
         self.estimates['ols'] = OLS(self.raw_data, adj)
 
-    def est_via_blocking(self, adj=1):
+    def est_via_blocking(self, feature_names, adj=1):
         """
         Estimates average treatment effects using regression within
         blocks.
@@ -302,7 +302,7 @@ class CausalModel(object):
             D and X. Defaults to 1.
         """
 
-        self.estimates['blocking'] = Blocking(self.strata, adj)
+        self.estimates['blocking'] = Blocking(self.strata, adj, feature_names)
 
     def est_via_weighting(self):
         """

@@ -61,7 +61,7 @@ def list_common_features():
         'jan', 'feb', 'mar', 'apr',
         'may', 'jun', 'jul', 'aug', 'sep',
         'octo', 'nov',
-        # 'zero_to_six', 'six_to_twelve', 'twelve_to_eighteen',
+        'zero_to_six', 'six_to_twelve', 'twelve_to_eighteen',
         'seconds_since_user_creation',
     ]
 

@@ -233,7 +233,7 @@ def causal_inference(
                 times.append(mark_time('stratify_s'))
             out.append(str(causal.strata))
             try:
-                causal.est_via_blocking()
+                causal.est_via_blocking(successful_fields)
                 times.append(mark_time('est_via_blocking'))
                 ates = causal.estimates['blocking']['ate']
                 w_avg_ndiff = 0
