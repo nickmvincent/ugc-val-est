@@ -79,6 +79,9 @@ class Blocking(Estimator):
                     for dummy_category, names in dummies.items():
                         if sums[dummy_category] == totals[dummy_category]:
                             print('Found a dependent dummy var')
+                            print(len(X.T))
+                            print(len(feature_names))
+                            print(names)
                             for col_num in range(len(X.T)):
                                 if feature_names[col_num] in names:
                                     print('it was {}'.format(feature_names[col_num]))                                
