@@ -77,18 +77,10 @@ class Blocking(Estimator):
 
                     for dummy_category, names in dummies.items():
                         if sums[dummy_category] == 0:
-                            print('total was zero...')
                             continue
-                        print(dummy_category, sums[dummy_category])
-                        print(names)
                         if sums[dummy_category] == total:
                             print('Found a dependent dummy var')
-                            print(X.shape[1])
-                            print(len(feature_names))
-                            print(feature_names)
-                            print(names)
                             for col_num in range(len(X.T)):
-                                print(feature_names[col_num])
                                 if feature_names[col_num] in names:
                                     print('it was {}'.format(feature_names[col_num]))                                
                                     print('so it will be deleted')
@@ -109,6 +101,7 @@ class Blocking(Estimator):
         Ns = [s.raw_data['N'] for s in strata]
         N_cs = [s.raw_data['N_c'] for s in strata]
         N_ts = [s.raw_data['N_t'] for s in strata]
+
 
         ates = np.array([s.estimates['ols']['ate'] for s in strata]).T
         ate_ses = np.array([s.estimates['ols']['ate_se'] for s in strata]).T
