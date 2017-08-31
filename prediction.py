@@ -189,6 +189,55 @@ def causal_inference(
 
             
         X = np.transpose(np.array(feature_rows))
+        dummies = {
+            'months':	[
+                'jan', 'feb', 'mar', 'apr',
+                'may', 'jun', 'jul', 'aug', 'sep',
+                'octo', 'nov',
+            ],
+            'hours': ['zero_to_six', 'six_to_twelve', 'twelve_to_eighteen', ],
+            'contexts': ['in_todayilearned',
+                        'in_borntoday', 'in_wikipedia', 'in_CelebrityBornToday', 'in_The_Donald', ],
+            'years': ['year2008', 'year2009', 'year2010',
+                    'year2011', 'year2012', 'year2013',
+                    'year2014', 'year2015', ],
+            'days:': [
+                'mon', 'tues', 'wed', 'thurs',
+                'fri', 'sat',
+            ],
+        }
+        cols_deleted = 0
+        while True:
+            sums = defaultdict(int)
+            total = X.shape[0]
+
+            for col_num in range(X.shape[1]):
+                for dummy_category, names in dummies.items():
+                    if successful_fields[col_num] in names:
+                        col = X.T[col_num]
+                        sums[dummy_category] += np.sum(col)
+            can_break = True
+            to_delete = []
+
+            for dummy_category, names in dummies.items():
+                if sums[dummy_category] == 0:
+                    continue
+                if sums[dummy_category] == total:
+                    for col_num in range(len(X.T)):
+                        if successful_fields[col_num] in names:
+                            print('IN HIGH LEVEL identified bad col')
+                            print(successful_fields[col_num])
+                            can_break = False
+                            to_delete.append(col_num)
+                            names.remove(successful_fields[col_num])
+                            break
+            for col_num in to_delete:
+                X = np.delete(X, col_num - cols_deleted, 1)
+                cols_deleted += 1
+            if can_break:
+                break
+
+
         Y = np.transpose(np.array(outcome_rows))
 
         causal = CausalModel(Y, D, X, ids=ids)
@@ -209,8 +258,8 @@ def causal_inference(
         # TODO: show my manually chosen is stable/justifiable for paper
         causal.cutoff = float(trim_val)
         causal.trim()
-        times.append(mark_time('trim_{}'.format(trim_val)))
-        out.append('TRIM PERFORMED: {}'.format(str(trim_val)))
+        times.append(mark_time('trim_{}'.format(causal.cutoff)))
+        out.append('TRIM PERFORMED: {}'.format(causal.cutoff))
         out.append(str(causal.summary_stats))
         ndifs.append(causal.summary_stats['sum_of_abs_ndiffs'])
         big_ndifs_counts.append(causal.summary_stats['num_large_ndiffs'])

@@ -64,7 +64,7 @@ class Blocking(Estimator):
                 for col_num in to_delete:
                     X = np.delete(X, col_num - cols_deleted, 1)
                     cols_deleted += 1
-                
+                cols_deleted = 0
                 while True:
                     sums = defaultdict(int)
                     total = X.shape[0]
