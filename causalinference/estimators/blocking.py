@@ -77,10 +77,13 @@ class Blocking(Estimator):
                     can_break = True
                     
                     for dummy_category, names in dummies.items():
+                        if totals[dummy_category] == 0:
+                            continue
                         if sums[dummy_category] == totals[dummy_category]:
                             print('Found a dependent dummy var')
                             print(len(X.T))
                             print(len(feature_names))
+                            print(feature_names)
                             print(names)
                             for col_num in range(len(X.T)):
                                 print(feature_names[col_num])
