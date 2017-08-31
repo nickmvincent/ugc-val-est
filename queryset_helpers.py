@@ -57,7 +57,7 @@ def list_common_features():
     """
     return [
         'mon', 'tues', 'wed', 'thurs',
-        'fri', 'sat', 'sun',
+        'fri', 'sat',
         'jan', 'feb', 'mar', 'apr',
         'may', 'jun', 'jul', 'aug', 'sep',
         'octo', 'nov',
