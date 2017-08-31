@@ -56,12 +56,12 @@ class Blocking(Estimator):
                             means[1] == 0 and stdevs[1] == 0):
                         print('^^^ boom deleted')
                         to_delete.append(col_num)
-                        # make sure to remove the corresponding column from the dummies object
                         for dummy, names in dummies.items():
                             if feature_names[col_num] in names:
                                 names.remove(feature_names[col_num])
                 for col_num in to_delete:
                     X = np.delete(X, col_num - cols_deleted, 1)
+                    feature_names.remove(feature_names[col_num])
                     cols_deleted += 1
                 while True:
                     sums = defaultdict(int)
@@ -89,6 +89,7 @@ class Blocking(Estimator):
                                     break
                     for col_num in to_delete:
                         X = np.delete(X, col_num - cols_deleted, 1)
+                        feature_names.remove(feature_names[col_num])
                         cols_deleted += 1
                     if can_break:
                         break
