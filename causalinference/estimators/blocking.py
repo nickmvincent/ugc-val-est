@@ -83,6 +83,7 @@ class Blocking(Estimator):
                             print(len(feature_names))
                             print(names)
                             for col_num in range(len(X.T)):
+                                print(feature_names[col_num])
                                 if feature_names[col_num] in names:
                                     print('it was {}'.format(feature_names[col_num]))                                
                                     print('so it will be deleted')
