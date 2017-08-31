@@ -136,7 +136,7 @@ class CausalModel(object):
 		top_cands = [c_range[1], p_range[1]]
 		self.overlap_range = (max(bot_cands), min(top_cands))
 		print(self.overlap_range)
-		self.cutoff = overlap_range[0]
+		self.cutoff = self.overlap_range[0]
 
 		if 0 < self.cutoff <= 0.5:
 			pscore = self.raw_data['pscore']
