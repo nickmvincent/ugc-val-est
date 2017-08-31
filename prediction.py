@@ -568,9 +568,9 @@ def parse():
                             args.simple_bin, trim_val,
                             args.paired_psm, iterations, args.sample_num)
                     # trim_rows.append(results['trim'])
-                with open('TRIM_SUMMARY_' + args.platform, 'w', newline='') as outfile:
-                    writer = csv.writer(outfile)
-                    writer.writerows(trim_rows)
+                # with open('TRIM_SUMMARY_' + args.platform, 'w', newline='') as outfile:
+                #     writer = csv.writer(outfile)
+                #     writer.writerows(trim_rows)
 
     if args.quality:
         simple_linear(args.platform, True)
