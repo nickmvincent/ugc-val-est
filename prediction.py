@@ -168,7 +168,7 @@ def causal_inference(
                     'seconds_since_user_creation',
                     'user_comment_karma',
                     'user_reputation',
-                ]
+                ]:
                     adjusted_feature = np.log(np.add(1, feature_row))
                     feature_rows.append(adjusted_feature)
                 else:
