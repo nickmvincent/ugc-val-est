@@ -167,7 +167,10 @@ def causal_inference(
                         'user_comment_karma',
                         'user_reputation',
                     ]:
-                        adjusted_feature = np.log(np.add(min(feature_row)+1, feature_row))
+                        print(feature)
+                        shifted = np.add(min(feature_row) + 1, feature_row)
+                        print(min(shifted))
+                        adjusted_feature = np.log(shifted)
                     else:
                         adjusted_feature = feature_row
                     adjusted_feature = (adjusted_feature - np.mean(adjusted_feature)) / np.std(adjusted_feature)
