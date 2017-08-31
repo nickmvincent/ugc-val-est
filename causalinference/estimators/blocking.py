@@ -62,26 +62,26 @@ class Blocking(Estimator):
                 for col_num in to_delete:
                     X = np.delete(X, col_num - cols_deleted, 1)
                     cols_deleted += 1
-                to_delete = []
+                
                 while True:
                     sums = defaultdict(int)
-                    totals = defaultdict(int)
+                    total = X.shape[0]
 
-                    for col_num in range(len(X.T)):
+                    for col_num in range(X.shape[1]):
                         for dummy_category, names in dummies.items():
                             if feature_names[col_num] in names:
-                                
                                 col = X.T[col_num]
                                 sums[dummy_category] += np.sum(col)
-                                totals[dummy_category] = len(col)							
                     can_break = True
-                    
+                    to_delete = []
+
                     for dummy_category, names in dummies.items():
-                        if totals[dummy_category] == 0:
+                        if sum[dummy_category] == 0:
+                            print('total was zero...')
                             continue
-                        if sums[dummy_category] == totals[dummy_category]:
+                        if sums[dummy_category] == total:
                             print('Found a dependent dummy var')
-                            print(len(X.T))
+                            print(X.shape[1])
                             print(len(feature_names))
                             print(feature_names)
                             print(names)
