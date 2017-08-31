@@ -164,7 +164,7 @@ def causal_inference(
                     adjusted_feature = (feature_row - np.mean(feature_row)) / np.std(feature_row)
                     feature_rows.append(adjusted_feature)
                 else:
-                    feature_rows.append(feature)
+                    feature_rows.append(feature_row)
 
                 successful_fields.append(feature)
         outcome_rows = []
