@@ -169,8 +169,11 @@ def causal_inference(
                     ]:
                         print(feature)
                         minval = min(feature_row)
-                        shifted = [x + minval + 1 for x in feature_row]
-                        print(min(shifted))
+                        print(minval)
+                        if minval < 0:
+                            shifted = np.add(-1 * minval + 1, feature_row)
+                        else:
+                            shifted = feature_row
                         adjusted_feature = np.log(shifted)
                     else:
                         adjusted_feature = feature_row
