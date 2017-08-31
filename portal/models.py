@@ -439,8 +439,9 @@ class SampledRedditThread(Post):
             setattr(self, attr, True)
         else:
             setattr(self, 'in_other', True)
-        if len(self.body) == 0:
+        if 'www.reddit.com' in self.url:
             self.has_no_link = True
+            self.has_other_link = False
         if self.body_num_links == 0:
             self.body_num_links = len(extract_urls(self.body))
         super(SampledRedditThread, self).save(*args, **kwargs)
@@ -473,6 +474,7 @@ class SampledStackOverflowPost(Post):
             self.body_num_links = len(extract_urls(self.body))
         if self.body_num_links == 0:
             self.has_no_link = True
+            self.has_no_link = False
         super(SampledStackOverflowPost, self).save(*args, **kwargs)
 
 

@@ -71,7 +71,7 @@ def list_reddit_specific_features():
     return textual + [
         'user_comment_karma', 'user_link_karma', 
         'user_is_mod', 'user_is_suspended', 'user_is_deleted',
-        'in_todayilearned', 
+        # 'in_todayilearned', 
         # 'in_borntoday', 'in_wikipedia', 'in_CelebrityBornToday','in_The_Donald',
     ]
 
