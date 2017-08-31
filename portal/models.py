@@ -406,7 +406,7 @@ class Post(models.Model):
                     else:
                         setattr(self, output_field, val)
         
-        if not has_wiki_link and not has_no_link:
+        if not self.has_wiki_link and not self.has_no_link:
             self.has_other_link = True
         super(Post, self).save(*args, **kwargs)
 
