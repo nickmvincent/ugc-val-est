@@ -76,7 +76,7 @@ class Blocking(Estimator):
                     to_delete = []
 
                     for dummy_category, names in dummies.items():
-                        if sum[dummy_category] == 0:
+                        if sums[dummy_category] == 0:
                             print('total was zero...')
                             continue
                         if sums[dummy_category] == total:
