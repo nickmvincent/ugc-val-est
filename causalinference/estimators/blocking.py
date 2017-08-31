@@ -28,7 +28,7 @@ class Blocking(Estimator):
 					else:
 						mean_tup = (
 							s.summary_stats['X_c_mean'][col_num],
-							s.summary_stats['X_t_mean'])
+							s.summary_stats['X_t_mean'][col_num])
 						if mean_tup[0] == 0 or mean_tup[1] == 0:
 							stdev_tup = (
 								s.summary_stats['X_c_sd'][col_num],
