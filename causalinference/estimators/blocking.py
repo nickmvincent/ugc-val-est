@@ -17,7 +17,7 @@ class Blocking(Estimator):
     def __init__(self, strata, adj, feature_names):
         # hacky
         # don't want to modify the feature_names array outside the scope
-        feature_names = list(feature_names)
+        feats = list(feature_names)
         self._method = 'Blocking'
 
         for i, s in enumerate(strata):
@@ -45,8 +45,10 @@ class Blocking(Estimator):
                         'fri', 'sat',
                     ],
                 }
+                print(X.shape[1], len(feats))
                 for col_num in range(X.shape[1]):
                     print(col_num)
+                    print(feats)
                     means = (
                         s.summary_stats['X_c_mean'][col_num],
                         s.summary_stats['X_t_mean'][col_num])
@@ -60,11 +62,11 @@ class Blocking(Estimator):
                         print('^^^ boom deleted')
                         to_delete.append(col_num)
                         for dummy, names in dummies.items():
-                            if feature_names[col_num] in names:
-                                names.remove(feature_names[col_num])
+                            if feats[col_num] in names:
+                                names.remove(feats[col_num])
                 for col_num in to_delete:
                     X = np.delete(X, col_num - cols_deleted, 1)
-                    feature_names.remove(feature_names[col_num - cols_deleted])
+                    feats.remove(feats[col_num - cols_deleted])
                     cols_deleted += 1
                 while True:
                     sums = defaultdict(int)
@@ -72,7 +74,7 @@ class Blocking(Estimator):
 
                     for col_num in range(X.shape[1]):
                         for dummy_category, names in dummies.items():
-                            if feature_names[col_num] in names:
+                            if feats[col_num] in names:
                                 col = X.T[col_num]
                                 sums[dummy_category] += np.sum(col)
                     can_break = True
@@ -83,16 +85,16 @@ class Blocking(Estimator):
                             continue
                         if sums[dummy_category] == total:
                             for col_num in range(X.shape[1]):
-                                if feature_names[col_num] in names:
+                                if feats[col_num] in names:
                                     print('identified bad col')
-                                    print(feature_names[col_num])
+                                    print(feats[col_num])
                                     can_break = False
                                     to_delete.append(col_num)
-                                    names.remove(feature_names[col_num])
+                                    names.remove(feats[col_num])
                                     break
                     for col_num in to_delete:
                         X = np.delete(X, col_num - cols_deleted, 1)
-                        feature_names.remove(feature_names[col_num - cols_deleted])
+                        feats.remove(feats[col_num - cols_deleted])
                         cols_deleted += 1
                     if can_break:
                         break

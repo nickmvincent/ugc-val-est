@@ -319,7 +319,7 @@ class CausalModel(object):
 			D and X. Defaults to 1.
 		"""
 
-		self.estimates['blocking'] = Blocking(self.strata, adj, feature_names)
+		self.estimates['blocking'] = Blocking(self.strata, adj, list(feature_names))
 
 	def est_via_weighting(self):
 		"""

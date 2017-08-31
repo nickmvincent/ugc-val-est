@@ -180,13 +180,7 @@ def causal_inference(
             outcome_rows.append(outcome_row)
 
         times.append(mark_time('rows_loaded'))
-        varname_to_field = {"X{}".format(i):field for i, field in enumerate(successful_fields)}
-        outname_to_field = {"Y{}".format(i):field for i, field in enumerate(outcomes)}
-        out = []
-        for dic in [varname_to_field, outname_to_field]:
-            for key, val in dic.items():
-                out.append("{}:{}".format(key, val))
-
+        
             
         X = np.transpose(np.array(feature_rows))
         X_c = X[D==0]
@@ -256,6 +250,14 @@ def causal_inference(
 
 
         Y = np.transpose(np.array(outcome_rows))
+
+        varname_to_field = {"X{}".format(i):field for i, field in enumerate(successful_fields)}
+        outname_to_field = {"Y{}".format(i):field for i, field in enumerate(outcomes)}
+        out = []
+        for dic in [varname_to_field, outname_to_field]:
+            for key, val in dic.items():
+                out.append("{}:{}".format(key, val))
+
 
         causal = CausalModel(Y, D, X, ids=ids)
         times.append(mark_time('CausalModel'))
