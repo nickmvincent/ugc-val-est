@@ -241,8 +241,10 @@ def causal_inference(
             else:
                 try:
                     causal.stratify_s()
-                except ValueError:
+                except ValueError as err:
+                    print('stratify_s err: {}'.format(err))
                     fails += 1
+                    print('fails: {}'.format(fails))
                     continue
                 times.append(mark_time('stratify_s'))
             out.append(str(causal.strata))
