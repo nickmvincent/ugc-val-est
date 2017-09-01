@@ -60,21 +60,10 @@ class CausalModel(object):
 		feats = list(feature_names)
 		lin_terms = list(parse_lin_terms(self.raw_data['K'], lin))
 		qua_terms = parse_qua_terms(self.raw_data['K'], qua)
-		#X_cut = self.raw_data['X']
-		#cols_deleted = 0
-		for feature_name in exclude:
-			print('trying to remove...')
-			try:
-				col_num = feats.index(feature_name)
-			except ValueError as err:
-				print(err)
-				continue
-			lin_terms.remove(col_num)
-			#col_to_kill = col_num - cols_deleted
-			#X_cut = np.delete(X_cut, col_to_kill, 1)
-			#feats.remove(feature_name)
-			#cols_deleted += 1
-		#modded_data = Data(self.raw_data['Y'], self.raw_data['D'], X_cut)
+		cols_to_exclude = [i for i, name in enumerate(exclude) if name in exclude]
+		print(cols_to_exclude)
+		print(lin_terms)
+		lin_terms = [term for i, term in enumerate(lin_terms) if i not in cols_to_exclude]
 		print(lin_terms)
 		self.propensity = Propensity(self.raw_data, lin_terms, qua_terms)
 		self.raw_data._dict['pscore'] = self.propensity['fitted']
