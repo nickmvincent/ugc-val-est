@@ -300,6 +300,10 @@ def causal_inference(
             'year2008', 'year2009', 'year2010',
             'year2011', 'year2012', 'year2013',
             'year2014', 'year2015',
+            'jan', 'feb', 'mar', 'apr',
+            'may', 'jun', 'jul', 'aug', 'sep',
+            'octo', 'nov',
+            'body_coleman_liau_index',
         ]
         
         if paired_psm:
