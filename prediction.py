@@ -193,12 +193,12 @@ def causal_inference(
             
         X = np.transpose(np.array(feature_rows))
         X_c = X[D==0]
-        X_p = X[D==1]
+        X_t = X[D==1]
         to_delete, cols_deleted = [], 0
         for col_num, col in enumerate(X_c.T):
             if not np.any(col):
                 to_delete.append(col_num)
-        for col_num, col in enumerate(X_p.T):
+        for col_num, col in enumerate(X_t.T):
             if not np.any(col):
                 to_delete.append(col_num)
         for col_num in to_delete:
