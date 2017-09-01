@@ -16,7 +16,6 @@ class Blocking(Estimator):
 
     def __init__(self, strata, adj, feature_names, skip_features):
         # hacky
-        # don't want to modify the feature_names array outside the scope
         self._method = 'Blocking'
         
         for i, s in enumerate(strata):
@@ -29,11 +28,10 @@ class Blocking(Estimator):
                     continue
                 X = np.delete(X, col_num, 1)
                 feats.remove(feature_name)
-                print('remove {} at the strata level'.format(feature_name))
                 
 
             try:
-                s.est_via_ols(adj, feature_names)
+                s.est_via_ols(adj, feats)
             except np.linalg.linalg.LinAlgError as err:
                 total = X.shape[0]
                 to_delete, cols_deleted = [], 0
@@ -92,7 +90,7 @@ class Blocking(Estimator):
                 
                 strata[i] = causal.CausalModel(
                     s.raw_data['Y'], s.raw_data['D'], X)
-                strata[i].est_via_ols(adj, feature_names)
+                strata[i].est_via_ols(adj, feats)
 
         Ns = [s.raw_data['N'] for s in strata]
         N_cs = [s.raw_data['N_c'] for s in strata]
