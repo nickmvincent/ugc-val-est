@@ -283,7 +283,7 @@ class CausalModel(object):
 		strata = [CausalModel(Y[s], D[s], X[s], True) for s in subsets if np.any(subsets)]
 		self.strata = Strata(strata, subsets, self.raw_data['pscore'])
 
-	def est_via_ols(self, adj=2):
+	def est_via_ols(self, adj=2, feature_names):
 		"""
 		Estimates average treatment effects using least squares.
 
@@ -298,7 +298,7 @@ class CausalModel(object):
 			terms between D and X. Defaults to 2.
 		"""
 
-		self.estimates['ols'] = OLS(self.raw_data, adj)
+		self.estimates['ols'] = OLS(self.raw_data, adj, feature_names)
 
 	def est_via_blocking(self, feature_names, adj=1):
 		"""

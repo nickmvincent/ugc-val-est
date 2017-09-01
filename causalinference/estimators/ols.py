@@ -11,7 +11,7 @@ class OLS(Estimator):
 	Dictionary-like class containing treatment effect estimates.
 	"""
 
-	def __init__(self, data, adj):
+	def __init__(self, data, adj, feature_names):
 
 		self._method = 'OLS'
 		Y, D, X = data['Y'], data['D'], data['X']
@@ -24,7 +24,9 @@ class OLS(Estimator):
 			self._dict[name] = []
 		for y in Y.T:
 			olscoef = np.linalg.lstsq(Z, y)[0]
-			print(olscoef)
+			coefstr = ""
+			for name, coef in zip(feature_names, olsceof):
+				coefstr += "{}:{}|".format(name, coef)
 			u = y - Z.dot(olscoef)
 			cov = calc_cov(Z, u)
 
