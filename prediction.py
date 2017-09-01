@@ -265,12 +265,7 @@ def causal_inference(
             if can_break:
                 break
         Y = np.transpose(np.array(outcome_rows))
-        varname_to_field = {"X{}".format(i):field for i, field in enumerate(successful_fields)}
-        outname_to_field = {"Y{}".format(i):field for i, field in enumerate(outcomes)}
-        out = []
-        for dic in [varname_to_field, outname_to_field]:
-            for key, val in dic.items():
-                out.append("{}:{}".format(key, val))
+        
 
         causal = CausalModel(Y, D, X, ids=ids)
         times.append(mark_time('CausalModel'))
@@ -278,7 +273,6 @@ def causal_inference(
         print(causal.summary_stats)
         ndifs.append(causal.summary_stats['sum_of_abs_ndiffs'])
         big_ndifs_counts.append(causal.summary_stats['num_large_ndiffs'])
-        causal.est_via_ols()
         times.append(mark_time('est_via_ols'))
         if not quad_psm:
             causal.est_propensity(successful_fields, exclude_from_ps)
@@ -286,6 +280,14 @@ def causal_inference(
         else:
             causal.est_propensity_s()
             times.append(mark_time('propensity_s'))
+        varname_to_field = {
+            "X{}".format(i):field for i, field in enumerate(successful_fields) if field not in exclude_from_ps
+        }
+        outname_to_field = {"Y{}".format(i):field for i, field in enumerate(outcomes)}
+        out = []
+        for dic in [varname_to_field, outname_to_field]:
+            for key, val in dic.items():
+                out.append("{}:{}".format(key, val))
         out.append(str(causal.propensity))
         print(str(causal.propensity))
         # TODO: show my manually chosen is stable/justifiable for paper
@@ -355,6 +357,14 @@ def causal_inference(
                 out.append('NDIF info')
                 out.append(','.join([str(ndif) for ndif in ndifs]))
                 out.append(','.join([str(count) for count in big_ndifs_counts]))
+
+                varname_to_field = {
+                    "X{}".format(i):field for i, field in enumerate(successful_fields) if field not in skip_fields
+                }
+                out = []
+                for dic in [varname_to_field]:
+                    for key, val in dic.items():
+                        out.append("{}:{}".format(key, val))
             except np.linalg.linalg.LinAlgError as err:
                 msg = 'LinAlgError with est_via_blocking: {}'.format(err)
                 err_handle(msg, out)
