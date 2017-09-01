@@ -1,6 +1,7 @@
 from __future__ import division
 import numpy as np
 import scipy.linalg
+from collections import defaultdict
 
 from .base import Estimator, estimation_names, standard_err_names
 
@@ -22,12 +23,12 @@ class OLS(Estimator):
 		self._dict = dict()
 		for name in estimation_names() + standard_err_names():
 			self._dict[name] = []
+			self._dict['name_to_coef'] = defaultdict(list)
 		for y in Y.T:
 			olscoef = np.linalg.lstsq(Z, y)[0]
-			if feature_names:
-				coefstr = ""
+			if feature_names:				
 				for name, coef in zip(feature_names, olscoef):
-					coefstr += "{}:{}|".format(name, coef)
+					self._dict['name_to_coef'][name].append(coef)
 				print(coefstr)
 			u = y - Z.dot(olscoef)
 			cov = calc_cov(Z, u)

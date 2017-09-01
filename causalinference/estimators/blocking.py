@@ -92,6 +92,12 @@ class Blocking(Estimator):
 
         ates = np.array([s.estimates['ols']['ate'] for s in strata]).T
         ate_ses = np.array([s.estimates['ols']['ate_se'] for s in strata]).T
+        name_to_coef_lst = [s.estimates['ols']['name_to_coef'] for s in strata]
+        for name_to_coef in name_to_coef_lst:
+            for name, coefs in name_to_coef.items():
+                print(name)
+                print(calc_atx(coefs, N_ts))
+
         if adj <= 1:
             atcs, atts = ates, ates
             atc_ses, att_ses = ate_ses, ate_ses
