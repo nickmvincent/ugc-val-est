@@ -111,10 +111,9 @@ class Blocking(Estimator):
             for output_num, vals in enumerate(mat):
                 try:
                     row = ','.join([str(name), str(output_num), str(calc_atx(vals, N_ts))])
-                    print(row)
                     ret.append(row)
-                except Exception as err:
-                    print(err)
+                except Exception as:
+                    pass
 
         if adj <= 1:
             atcs, atts = ates, ates

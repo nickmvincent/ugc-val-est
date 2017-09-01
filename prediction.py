@@ -195,6 +195,11 @@ def causal_inference(
             'in_todayilearned', 
             'in_borntoday', 'in_wikipedia', 'in_CelebrityBornToday','in_The_Donald',
         ]
+        skip_fields = [
+            'question_score', 'num_other_answers',
+            'in_todayilearned', 
+            'in_borntoday', 'in_wikipedia', 'in_CelebrityBornToday','in_The_Donald',
+        ]
             
         X = np.transpose(np.array(feature_rows))
         X_c = X[D==0]
@@ -297,10 +302,7 @@ def causal_inference(
         ndifs.append(causal.summary_stats['sum_of_abs_ndiffs'])
         big_ndifs_counts.append(causal.summary_stats['num_large_ndiffs'])
 
-        skip_fields = [
-            # 'in_todayilearned', 
-            # 'in_borntoday', 'in_wikipedia', 'in_CelebrityBornToday','in_The_Donald',
-        ]
+        
         
         if paired_psm:
             print('doing pairing')
