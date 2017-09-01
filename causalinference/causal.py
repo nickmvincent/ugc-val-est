@@ -57,16 +57,19 @@ class CausalModel(object):
 			columns. Default is to not include any
 			quadratic terms.
 		"""
-
+		feats = list(feature_names)
 		lin_terms = parse_lin_terms(self.raw_data['K'], lin)
 		qua_terms = parse_qua_terms(self.raw_data['K'], qua)
 		X_cut = self.raw_data['X'][:]
+		cols_deleted = 0
 		for feature_name in exclude:
 			try:
-				col_num = feature_names.index(feature_name)
+				col_num = feats.index(feature_name)
 			except ValueError:
 				continue
-			X_cut = np.delete(X_cut, col_num, 1)
+			X_cut = np.delete(X_cut, col_num - cols_deleted, 1)
+			feats.remove(feature_name)
+			cols_deleted += 1
 		modded_data = Data(self.raw_data['Y'], self.raw_data['D'], X_cut)
 
 		self.propensity = Propensity(self.raw_data, lin_terms, qua_terms)
