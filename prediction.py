@@ -163,10 +163,10 @@ def causal_inference(
             else:
                 if max(feature_row) > 1 or min(feature_row) < 0:
                     if feature in [
-                        # 'user_link_karma',
-                        # 'seconds_since_user_creation',
-                        # 'user_comment_karma',
-                        # 'user_reputation',
+                        'user_link_karma',
+                        'seconds_since_user_creation',
+                        'user_comment_karma',
+                        'user_reputation',
                     ]:
                         print(feature)
                         minval = min(feature_row)
