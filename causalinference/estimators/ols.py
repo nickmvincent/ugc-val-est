@@ -24,9 +24,11 @@ class OLS(Estimator):
 			self._dict[name] = []
 		for y in Y.T:
 			olscoef = np.linalg.lstsq(Z, y)[0]
-			coefstr = ""
-			for name, coef in zip(feature_names, olsceof):
-				coefstr += "{}:{}|".format(name, coef)
+			if feature_names:
+				coefstr = ""
+				for name, coef in zip(feature_names, olscoef):
+					coefstr += "{}:{}|".format(name, coef)
+				print(coefstr)
 			u = y - Z.dot(olscoef)
 			cov = calc_cov(Z, u)
 

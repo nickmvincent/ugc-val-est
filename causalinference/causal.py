@@ -283,7 +283,7 @@ class CausalModel(object):
 		strata = [CausalModel(Y[s], D[s], X[s], True) for s in subsets if np.any(subsets)]
 		self.strata = Strata(strata, subsets, self.raw_data['pscore'])
 
-	def est_via_ols(self, adj=2, feature_names):
+	def est_via_ols(self, adj=2, feature_names=None):
 		"""
 		Estimates average treatment effects using least squares.
 
