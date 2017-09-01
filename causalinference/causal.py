@@ -70,7 +70,7 @@ class CausalModel(object):
 			X_cut = np.delete(X_cut, col_to_kill, 1)
 			feats.remove(feature_name)
 			cols_deleted += 1
-		lin_terms = range(feats)
+		lin_terms = range(len(feats))
 		modded_data = Data(self.raw_data['Y'], self.raw_data['D'], X_cut)
 
 		self.propensity = Propensity(modded_data, lin_terms, qua_terms)
