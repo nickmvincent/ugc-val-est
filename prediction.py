@@ -293,17 +293,8 @@ def causal_inference(
         big_ndifs_counts.append(causal.summary_stats['num_large_ndiffs'])
 
         skip_fields = [
-#            'in_todayilearned', 
-#            'in_borntoday', 'in_wikipedia', 'in_CelebrityBornToday','in_The_Donald',
-            'question_score',
-            'num_other_answers',
-            'year2008', 'year2009', 'year2010',
-            'year2011', 'year2012', 'year2013',
-            'year2014', 'year2015',
-            'jan', 'feb', 'mar', 'apr',
-            'may', 'jun', 'jul', 'aug', 'sep',
-            'octo', 'nov',
-            'body_coleman_liau_index',
+            'in_todayilearned', 
+            'in_borntoday', 'in_wikipedia', 'in_CelebrityBornToday','in_The_Donald',
         ]
         
         if paired_psm:

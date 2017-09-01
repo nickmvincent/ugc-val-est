@@ -17,7 +17,7 @@ class Estimator(Dict):
 
 	def __str__(self):
 
-		table_width = 80
+		table_width = 100
 		names = estimation_names()
 		coefs = [self[name] for name in names if name in self.keys()]
 		ses = [self[name] for name in standard_err_names() if name in self.keys()]
