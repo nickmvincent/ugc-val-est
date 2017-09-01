@@ -29,7 +29,7 @@ class Blocking(Estimator):
                     continue
                 X = np.delete(X, col_num, 1)
                 feats.remove(feature_name)
-            s.raw_data = Data(self.raw_data['Y'], self.raw_data['D'], X)
+            s.raw_data = Data(s.raw_data['Y'], s.raw_data['D'], X)
             try:
                 s.est_via_ols(adj, feats)
             except np.linalg.linalg.LinAlgError as err:
