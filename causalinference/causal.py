@@ -62,6 +62,8 @@ class CausalModel(object):
 		qua_terms = list(parse_qua_terms(self.raw_data['K'], qua))
 		X_cut = self.raw_data['X'][:]
 		cols_deleted = 0
+		print('starting lengths')
+		print(len(lin_terms), len(feats), X_cut.shape[1])
 		for feature_name in exclude:
 			try:
 				col_num = feats.index(feature_name)
@@ -69,9 +71,11 @@ class CausalModel(object):
 				continue
 			col_to_kill = col_num - cols_deleted
 			X_cut = np.delete(X_cut, col_to_kill, 1)
-			del lin_terms[col_to_kill]
+			lin_terms.pop(col_to_kill)
 			feats.remove(feature_name)
 			cols_deleted += 1
+		print('ending lengths')
+		print(len(lin_terms), len(feats), X_cut.shape[1])
 		modded_data = Data(self.raw_data['Y'], self.raw_data['D'], X_cut)
 
 		self.propensity = Propensity(modded_data, lin_terms, qua_terms)
