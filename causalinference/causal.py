@@ -72,7 +72,7 @@ class CausalModel(object):
 			cols_deleted += 1
 		modded_data = Data(self.raw_data['Y'], self.raw_data['D'], X_cut)
 
-		self.propensity = Propensity(self.raw_data, lin_terms, qua_terms)
+		self.propensity = Propensity(modded_data, lin_terms, qua_terms)
 		self.raw_data._dict['pscore'] = self.propensity['fitted']
 		self._post_pscore_init()
 
