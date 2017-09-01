@@ -182,7 +182,6 @@ def causal_inference(
                     feature_rows.append(adjusted_feature)
                 else:
                     feature_rows.append(feature_row)
-
                 successful_fields.append(feature)
         outcome_rows = []
         for outcome in outcomes:
@@ -190,7 +189,6 @@ def causal_inference(
             outcome_rows.append(outcome_row)
 
         times.append(mark_time('rows_loaded'))
-        
         exclude_from_ps = [
             'question_score', 'num_other_answers',
             'in_todayilearned', 
@@ -266,8 +264,6 @@ def causal_inference(
             if can_break:
                 break
         Y = np.transpose(np.array(outcome_rows))
-        
-
         causal = CausalModel(Y, D, X, ids=ids)
         times.append(mark_time('CausalModel'))
         out.append(str(causal.summary_stats))
@@ -361,7 +357,6 @@ def causal_inference(
                 varname_to_field = {
                     "X{}".format(i):field for i, field in enumerate(successful_fields) if field not in skip_fields
                 }
-                out = []
                 for dic in [varname_to_field]:
                     for key, val in dic.items():
                         out.append("{}:{}".format(key, val))

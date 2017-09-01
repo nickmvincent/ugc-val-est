@@ -58,22 +58,25 @@ class CausalModel(object):
 			quadratic terms.
 		"""
 		feats = list(feature_names)
+		lin_terms = list(parse_lin_terms(self.raw_data['K'], lin))
 		qua_terms = parse_qua_terms(self.raw_data['K'], qua)
-		X_cut = self.raw_data['X']
-		cols_deleted = 0
+		#X_cut = self.raw_data['X']
+		#cols_deleted = 0
 		for feature_name in exclude:
+			print('trying to remove...')
 			try:
 				col_num = feats.index(feature_name)
-			except ValueError:
+			except ValueError as err:
+				print(err)
 				continue
-			col_to_kill = col_num - cols_deleted
-			X_cut = np.delete(X_cut, col_to_kill, 1)
-			feats.remove(feature_name)
-			cols_deleted += 1
-		modded_data = Data(self.raw_data['Y'], self.raw_data['D'], X_cut)
-
-		lin_terms = range(len(feats))
-		self.propensity = Propensity(modded_data, lin_terms, qua_terms)
+			lin_terms.remove(col_num)
+			#col_to_kill = col_num - cols_deleted
+			#X_cut = np.delete(X_cut, col_to_kill, 1)
+			#feats.remove(feature_name)
+			#cols_deleted += 1
+		#modded_data = Data(self.raw_data['Y'], self.raw_data['D'], X_cut)
+		print(lin_terms)
+		self.propensity = Propensity(self.raw_data, lin_terms, qua_terms)
 		self.raw_data._dict['pscore'] = self.propensity['fitted']
 		self._post_pscore_init()
 
