@@ -202,7 +202,7 @@ def causal_inference(
             if not np.any(col):
                 to_delete.append(col_num)
         for col_num in to_delete:
-            print('doing a deletion on {}'.format(successful_fields[col_num]))
+            print('doing a deletion on {}'.format(successful_fields[col_num - cols_deleted]))
             X = np.delete(X, col_num - cols_deleted, 1)
             successful_fields.remove(successful_fields[col_num - cols_deleted])
             cols_deleted += 1
@@ -226,7 +226,6 @@ def causal_inference(
             ],
         }
         while True:
-            print(X.shape)
             can_break = True
             sums = defaultdict(int)
             total = X.shape[0]
@@ -242,34 +241,26 @@ def causal_inference(
                 if sums[dummy_category] == 0:
                     continue
                 if sums[dummy_category] == total:
-                    print('$')
-                    print(names)
                     for col_num in range(X.shape[1]):
                         if successful_fields[col_num] in names:
-                            print('IN HIGH LEVEL identified bad col')
-                            print(successful_fields[col_num])
                             can_break = False
                             to_delete.append(col_num)
                             names.remove(successful_fields[col_num])
                             break
             for col_num in to_delete:
-                print('doing a deletion...')
+                print('doing a deletion on {}'.formatsuccessful_fields[col_num - cols_deleted]())
                 X = np.delete(X, col_num - cols_deleted, 1)
                 successful_fields.remove(successful_fields[col_num - cols_deleted])
                 cols_deleted += 1
             if can_break:
                 break
-
-
         Y = np.transpose(np.array(outcome_rows))
-
         varname_to_field = {"X{}".format(i):field for i, field in enumerate(successful_fields)}
         outname_to_field = {"Y{}".format(i):field for i, field in enumerate(outcomes)}
         out = []
         for dic in [varname_to_field, outname_to_field]:
             for key, val in dic.items():
                 out.append("{}:{}".format(key, val))
-
 
         causal = CausalModel(Y, D, X, ids=ids)
         times.append(mark_time('CausalModel'))
@@ -302,11 +293,15 @@ def causal_inference(
         big_ndifs_counts.append(causal.summary_stats['num_large_ndiffs'])
 
         print('Now will remove non-predictive variables')
+        print(successful_fields)
         for variable_name in [
             'in_todayilearned', 
             'in_borntoday', 'in_wikipedia', 'in_CelebrityBornToday','in_The_Donald',
             'question_score',
             'num_other_answers',
+            'year2008', 'year2009', 'year2010',
+            'year2011', 'year2012', 'year2013',
+            'year2014', 'year2015',
         ]:
             if variable_name in successful_fields:
                 print('doing a deletion on {}'.format(variable_name))
