@@ -300,6 +300,19 @@ def causal_inference(
         out.append(str(causal.summary_stats))
         ndifs.append(causal.summary_stats['sum_of_abs_ndiffs'])
         big_ndifs_counts.append(causal.summary_stats['num_large_ndiffs'])
+
+        print('Now will remove non-predictive variables')
+        for variable_name in [
+            'in_todayilearned', 
+            'in_borntoday', 'in_wikipedia', 'in_CelebrityBornToday','in_The_Donald',
+            'question_score',
+            'num_other_answers',
+        ]:
+            print('doing a deletion on {}'.format(variable_name)
+            col_num = successful_fields.find(variable_name)
+            X = np.delete(X, col_num, 1)
+            successful_fields.remove(variable_name)
+
         
         if paired_psm:
             print('doing pairing')
