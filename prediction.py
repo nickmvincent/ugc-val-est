@@ -163,12 +163,10 @@ def causal_inference(
             else:
                 if max(feature_row) > 1 or min(feature_row) < 0:
                     if feature in [
-                        'user_link_karma',
-                        'seconds_since_user_creation',
-                        'user_comment_karma',
-                        'user_reputation',
-                        'num_other_answers',
-                        'question_score',
+                        # 'user_link_karma',
+                        # 'seconds_since_user_creation',
+                        # 'user_comment_karma',
+                        # 'user_reputation',
                     ]:
                         print(feature)
                         minval = min(feature_row)
@@ -198,8 +196,8 @@ def causal_inference(
         ]
         skip_fields = [
             # 'question_score', 'num_other_answers',
-            # 'in_todayilearned', 
-            #'in_borntoday', 'in_wikipedia', 'in_CelebrityBornToday','in_The_Donald',
+            'in_todayilearned', 
+            'in_borntoday', 'in_wikipedia', 'in_CelebrityBornToday','in_The_Donald',
         ]
             
         X = np.transpose(np.array(feature_rows))
