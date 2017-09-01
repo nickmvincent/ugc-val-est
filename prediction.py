@@ -273,6 +273,7 @@ def causal_inference(
         print(causal.summary_stats)
         ndifs.append(causal.summary_stats['sum_of_abs_ndiffs'])
         big_ndifs_counts.append(causal.summary_stats['num_large_ndiffs'])
+        causal.est_via_ols()
         times.append(mark_time('est_via_ols'))
         if not quad_psm:
             causal.est_propensity(successful_fields, exclude_from_ps)
