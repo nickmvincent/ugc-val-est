@@ -96,15 +96,12 @@ class Blocking(Estimator):
         name_to_coef_lst = [s.estimates['ols']['name_to_coef'] for s in strata]
         for name_to_coef in name_to_coef_lst:
             for name, coefs in name_to_coef.items():
-                print(name)
                 name_to_coef_mat[name].append(coefs)
                 
         for name, coef_mat in name_to_coef_mat.items():
-            print(name)
             mat = np.array(coef_mat).T
             for output_num, vals in enumerate(mat):
-                print(output_num)
-                print(calc_atx(vals, N_ts))
+                print(name, output_num, calc_atx(vals, N_ts))
 
         if adj <= 1:
             atcs, atts = ates, ates
