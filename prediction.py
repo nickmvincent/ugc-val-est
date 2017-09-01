@@ -116,7 +116,7 @@ def causal_inference(
         features.append(treatment_name)
         features.append('uid')
         db_name = connection.settings_dict['NAME']
-        filename = 'CI2_Tr_{treatment}_on_{platform}_{subset}_{db}_trim{trim_val}_samples{samples}.txt'.format(**{
+        filename = 'CI3_Tr_{treatment}_on_{platform}_{subset}_{db}_trim{trim_val}_samples{samples}.txt'.format(**{
             'treatment': treatment_name,
             'platform': platform,
             'subset': num_rows if num_rows else 'All',
