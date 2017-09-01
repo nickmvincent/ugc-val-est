@@ -248,7 +248,7 @@ def causal_inference(
                             names.remove(successful_fields[col_num])
                             break
             for col_num in to_delete:
-                print('doing a deletion on {}'.formatsuccessful_fields[col_num - cols_deleted]())
+                print('doing a deletion on {}'.format(successful_fields[col_num - cols_deleted]))
                 X = np.delete(X, col_num - cols_deleted, 1)
                 successful_fields.remove(successful_fields[col_num - cols_deleted])
                 cols_deleted += 1
