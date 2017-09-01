@@ -110,11 +110,11 @@ class Blocking(Estimator):
             mat = np.array(coef_mat).T
             for output_num, vals in enumerate(mat):
                 try:
-                    row = ','.join([name, output_num, calc_atx(vals, N_ts)])
+                    row = ','.join([str(name), str(output_num), str(calc_atx(vals, N_ts))])
                     print(row)
                     ret.append(row)
-                except:
-                    pass
+                except Exception as err:
+                    print(err)
 
         if adj <= 1:
             atcs, atts = ates, ates
