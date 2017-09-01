@@ -107,6 +107,7 @@ def causal_inference(
         if float(iteration) / iterations > goal:
             print('{}/{}|'.format(iteration, iterations), end='')
             goal += 0.1
+        out = []
         times, atts = [], []
         ndifs, big_ndifs_counts = [], []
         times.append(mark_time('function_start')) 
@@ -284,7 +285,6 @@ def causal_inference(
             "X{}".format(i):field for i, field in enumerate(successful_fields) if field not in exclude_from_ps
         }
         outname_to_field = {"Y{}".format(i):field for i, field in enumerate(outcomes)}
-        out = []
         for dic in [varname_to_field, outname_to_field]:
             for key, val in dic.items():
                 out.append("{}:{}".format(key, val))
