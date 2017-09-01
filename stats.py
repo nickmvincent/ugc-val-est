@@ -270,7 +270,7 @@ def inferential_analysis(x_arr, y_arr, samples_related):
             'Treatment vs Control': {
                 'Difference': delta,
                 'p_value': pval,
-                # 'percent_bias': percent_bias(x_arr, y_arr),
+                'percent_bias': percent_bias(x_arr, y_arr),
                 # 'cohen\'s d effect size': cohen_d(x_arr, y_arr),
                 # 'Wilcoxon rank-sum statistic': stats.ranksums(x_arr, y_arr),
             }
