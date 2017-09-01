@@ -294,7 +294,7 @@ def causal_inference(
 
         print('Now will remove non-predictive variables')
         print(successful_fields)
-        for variable_name in [
+        skip_fields = [
             'in_todayilearned', 
             'in_borntoday', 'in_wikipedia', 'in_CelebrityBornToday','in_The_Donald',
             'question_score',
@@ -302,13 +302,7 @@ def causal_inference(
             'year2008', 'year2009', 'year2010',
             'year2011', 'year2012', 'year2013',
             'year2014', 'year2015',
-        ]:
-            if variable_name in successful_fields:
-                print('doing a deletion on {}'.format(variable_name))
-                col_num = successful_fields.index(variable_name)
-                causal.raw_data['X'] = np.delete(X, col_num, 1)
-                successful_fields.remove(variable_name)
-
+        ]
         
         if paired_psm:
             print('doing pairing')
@@ -344,7 +338,7 @@ def causal_inference(
                 times.append(mark_time('stratify_s'))
             out.append(str(causal.strata))
             try:
-                causal.est_via_blocking(successful_fields)
+                causal.est_via_blocking(successful_fields, skip_fields)
                 times.append(mark_time('est_via_blocking'))
                 ates = causal.estimates['blocking']['ate']
                 w_avg_ndiff = 0

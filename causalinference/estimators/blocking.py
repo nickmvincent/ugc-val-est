@@ -14,17 +14,25 @@ class Blocking(Estimator):
     Dictionary-like class containing treatment effect estimates.
     """
 
-    def __init__(self, strata, adj, feature_names):
+    def __init__(self, strata, adj, feature_names, skip_features):
         # hacky
         # don't want to modify the feature_names array outside the scope
         self._method = 'Blocking'
         
         for i, s in enumerate(strata):
             feats = list(feature_names)
+            X = s.raw_data['X']
+            for feature_name in skip_features:
+                try:
+                    col_num = feats.index(feature_name)
+                    X = np.delete(X, col_num, 1)
+                    feats.remove(feature_name)
+                except ValueError:
+                    pass
+
             try:
                 s.est_via_ols(adj, feature_names)
             except np.linalg.linalg.LinAlgError as err:
-                X = s.raw_data['X']
                 total = X.shape[0]
                 to_delete, cols_deleted = [], 0
                 dummies = {
@@ -48,7 +56,6 @@ class Blocking(Estimator):
                     stdevs = (
                         s.summary_stats['X_c_sd'][col_num],
                         s.summary_stats['X_t_sd'][col_num])
-
                     if (stdevs[0] == 0 or stdevs[1] == 0):
                         to_delete.append(col_num)
                 for col_num in to_delete:
