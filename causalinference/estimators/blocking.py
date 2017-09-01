@@ -112,7 +112,7 @@ class Blocking(Estimator):
                 try:
                     row = ','.join([str(name), str(output_num), str(calc_atx(vals, N_ts))])
                     ret.append(row)
-                except Exception as:
+                except Exception:
                     pass
 
         if adj <= 1:
