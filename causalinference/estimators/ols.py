@@ -29,7 +29,6 @@ class OLS(Estimator):
 			if feature_names:				
 				for name, coef in zip(feature_names, olscoef):
 					self._dict['name_to_coef'][name].append(coef)
-				print(coefstr)
 			u = y - Z.dot(olscoef)
 			cov = calc_cov(Z, u)
 
