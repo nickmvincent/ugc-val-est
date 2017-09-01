@@ -167,6 +167,8 @@ def causal_inference(
                         'seconds_since_user_creation',
                         'user_comment_karma',
                         'user_reputation',
+                        'num_other_answers',
+                        'question_score',
                     ]:
                         print(feature)
                         minval = min(feature_row)
@@ -195,9 +197,9 @@ def causal_inference(
             'in_borntoday', 'in_wikipedia', 'in_CelebrityBornToday','in_The_Donald',
         ]
         skip_fields = [
-            'question_score', 'num_other_answers',
-            'in_todayilearned', 
-            'in_borntoday', 'in_wikipedia', 'in_CelebrityBornToday','in_The_Donald',
+            # 'question_score', 'num_other_answers',
+            # 'in_todayilearned', 
+            #'in_borntoday', 'in_wikipedia', 'in_CelebrityBornToday','in_The_Donald',
         ]
             
         X = np.transpose(np.array(feature_rows))
