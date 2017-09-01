@@ -107,7 +107,7 @@ def causal_inference(
         if float(iteration) / iterations > goal:
             print('{}/{}|'.format(iteration, iterations), end='')
             goal += 0.1
-        times, ates = [], []
+        times, atts = [], []
         ndifs, big_ndifs_counts = [], []
         times.append(mark_time('function_start')) 
         
@@ -318,9 +318,8 @@ def causal_inference(
                 for psm_row in psm_rows:
                     psm_row = [str(entry) for entry in psm_row]
                     outfile.write(','.join(psm_row))
-            ates = psm_est['ols']['ate']
+            atts = psm_est['ols']['att']
         else:
-            print('doing binning')
             if simple_bin:
                 causal.blocks = int(simple_bin)
                 causal.stratify()
@@ -336,9 +335,10 @@ def causal_inference(
                 times.append(mark_time('stratify_s'))
             out.append(str(causal.strata))
             try:
-                causal.est_via_blocking(successful_fields, skip_fields)
+                coef_rows = causal.est_via_blocking(successful_fields, skip_fields)
+                out += coef_rows
                 times.append(mark_time('est_via_blocking'))
-                ates = causal.estimates['blocking']['ate']
+                atts = causal.estimates['blocking']['att']
                 w_avg_ndiff = 0
                 w_num_large_ndiffs = 0
                 for stratum in causal.strata:
@@ -382,16 +382,16 @@ def causal_inference(
             with open(filename, 'w') as outfile:
                 outfile.write('\n'.join(out))
         else:
-            for ate_num, ate in enumerate(ates):
-                treatment_effects[outcomes[ate_num]].append(ate)
+            for att_num, att in enumerate(atts):
+                treatment_effects[outcomes[att_num]].append(att)
     if iterations > 1:
         boot_rows = [
             ['Bootstrap results for {} iterations of full resampling'.format(
             iterations), str(0.005), str(0.995)]
         ]
         for outcome, ate_lst in treatment_effects.items():
-            sor = sorted(ate_lst)
-            n = len(ate_lst)
+            sor = sorted(att_lst)
+            n = len(att_lst)
             bot = int(0.005 * n)
             top = int(0.995 * n)
             boot_rows.append([

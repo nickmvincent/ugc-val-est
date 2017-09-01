@@ -104,12 +104,14 @@ class Blocking(Estimator):
         for name_to_coef in name_to_coef_lst:
             for name, coefs in name_to_coef.items():
                 name_to_coef_mat[name].append(coefs)
-                
+
+        ret = []
         for name, coef_mat in name_to_coef_mat.items():
             mat = np.array(coef_mat).T
             for output_num, vals in enumerate(mat):
                 try:
                     print(name, output_num, calc_atx(vals, N_ts))
+                    ret.append(','.join([name, output_num, calc_atx(vals, N_ts)]))
                 except:
                     pass
 
@@ -139,6 +141,7 @@ class Blocking(Estimator):
             self._dict['atc_se'].append(calc_atx_se(errvals, N_cs))
         for errvals in att_ses:
             self._dict['att_se'].append(calc_atx_se(errvals, N_ts))
+        return ret
 
 
 def calc_atx(atxs, Ns):
