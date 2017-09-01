@@ -27,7 +27,7 @@ class OLS(Estimator):
 		for y in Y.T:
 			olscoef = np.linalg.lstsq(Z, y)[0]
 			if feature_names:				
-				for name, coef in zip(feature_names, olscoef):
+				for name, coef in zip(feature_names, olscoef[2:]):
 					self._dict['name_to_coef'][name].append(coef)
 			u = y - Z.dot(olscoef)
 			cov = calc_cov(Z, u)
