@@ -4,6 +4,7 @@ from collections import defaultdict
 
 from .base import Estimator, estimation_names, standard_err_names
 from .. import causal
+from ..core import Data
 
 
 
@@ -28,8 +29,7 @@ class Blocking(Estimator):
                     continue
                 X = np.delete(X, col_num, 1)
                 feats.remove(feature_name)
-                
-
+            self.raw_data = Data(self.raw_data['Y'], self.raw_data['D'], X)
             try:
                 s.est_via_ols(adj, feats)
             except np.linalg.linalg.LinAlgError as err:
