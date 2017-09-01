@@ -101,7 +101,10 @@ class Blocking(Estimator):
         for name, coef_mat in name_to_coef_mat.items():
             mat = np.array(coef_mat).T
             for output_num, vals in enumerate(mat):
-                print(name, output_num, calc_atx(vals, N_ts))
+                try:
+                    print(name, output_num, calc_atx(vals, N_ts))
+                except:
+                    pass
 
         if adj <= 1:
             atcs, atts = ates, ates
