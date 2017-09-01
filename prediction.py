@@ -197,6 +197,7 @@ def causal_inference(
         ]
         skip_fields = [
             'question_score', 'num_other_answers',
+            'body_coleman_liau_index',
             'in_todayilearned', 
             'in_borntoday', 'in_wikipedia', 'in_CelebrityBornToday','in_The_Donald',
         ]
