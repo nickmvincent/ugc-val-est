@@ -58,8 +58,8 @@ class CausalModel(object):
 			quadratic terms.
 		"""
 		feats = list(feature_names)
-		lin_terms = parse_lin_terms(self.raw_data['K'], lin)
-		qua_terms = parse_qua_terms(self.raw_data['K'], qua)
+		lin_terms = list(parse_lin_terms(self.raw_data['K'], lin))
+		qua_terms = list(parse_qua_terms(self.raw_data['K'], qua))
 		X_cut = self.raw_data['X'][:]
 		cols_deleted = 0
 		for feature_name in exclude:
