@@ -309,7 +309,7 @@ def causal_inference(
             'num_other_answers',
         ]:
             print('doing a deletion on {}'.format(variable_name))
-            col_num = successful_fields.find(variable_name)
+            col_num = successful_fields.index(variable_name)
             X = np.delete(X, col_num, 1)
             successful_fields.remove(variable_name)
 
