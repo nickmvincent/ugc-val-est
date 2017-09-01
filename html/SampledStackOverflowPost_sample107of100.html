@@ -1,0 +1,19 @@
+<p>As mentioned by <a href="https://stackoverflow.com/questions/606324/open-a-file-from-another-computer-delphi/606339#606339">DR</a>, the filename requires double backslashes for a <a href="http://en.wikipedia.org/wiki/Path_(computing)#Uniform_Naming_Convention" rel="nofollow noreferrer">UNC path</a></p>
+
+<p><em>The access denied</em> message suggests the you do not have permission to access the C$ share on the ntmemo01 computer.</p>
+
+<p>C$ a is hidden <a href="http://support.microsoft.com/kb/314984" rel="nofollow noreferrer">administrative share</a> are you sure the current user account has the correct permissions?   You make have to the map a drive first, as suggested by <a href="https://stackoverflow.com/questions/606324/open-a-file-from-another-computer-delphi/606767#606767">Ken White</a></p>
+
+<p>Administrive shares are disabled by default in Windows Vista and Windows 7, unless you join a domain.  You can be enable them manually as follows.</p>
+
+<blockquote>
+  <p>Click on the start button and in the search box type ‘regedit’ and hit enter.</p>
+  
+  <p>Browse to <code>HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System</code>. </p>
+  
+  <p>Add a new <strong>DWORD</strong> called <strong>LocalAccountTokenFilterPolicy</strong> and give it a value of <strong>1</strong>. </p>
+  
+  <p>Reboot and yer done!</p>
+  
+  <p>Source: <a href="http://www.paulspoerry.com/2007/05/09/how-to-access-administrative-shares-on-vista-c/" rel="nofollow noreferrer">http://www.paulspoerry.com/2007/05/09/how-to-access-administrative-shares-on-vista-c/</a></p>
+</blockquote>

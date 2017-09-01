@@ -1,0 +1,46 @@
+<p>Hey @jamie you should definitely think of using <code>map()</code> for this operation.</p>
+
+<p>Although if want to use <code>forEach()</code>, try <a href="http://en.wikipedia.org/wiki/Immediately-invoked_function_expression" rel="nofollow">Immediately-Invoked Function Expression</a>. It is usually used for emulating private methods with closures.</p>
+
+<p>Have a look at this code</p>
+
+<pre><code>var paragraphs = ["this is a p", "%%this is an h2", "%this is an h1"];
+
+/* Using Immediately-Invoked Function Expression */
+var newData = (function () {
+    var result = []
+    paragraphs.forEach(function (x) {
+        var header = 0;
+        while (x.charAt(header) === "%")
+            header++;
+
+        if (header &gt; 0) {
+            result.push({type: "h" + header, content: x.slice(header)});
+        } else {
+            result.push({type: "p", content: x});
+        }
+    });
+    return result;
+})();
+
+console.log(newData);
+
+/* Using Map */
+
+var newestData = paragraphs.map(function (x) {
+    var header = 0;
+    while (x.charAt(header) === "%")
+        header++;
+
+    if (header &gt; 0) {
+        x = {type: "h" + header, content: x.slice(header)};
+    } else {
+        x = {type: "p", content: x};
+    }
+    return x;
+});
+
+console.log(newestData);
+</code></pre>
+
+<p>Here's the <a href="http://jsfiddle.net/Tushkiz/rzLXM/1/" rel="nofollow">jsfiddle</a> for it.</p>

@@ -1,0 +1,44 @@
+<p>I find it rather disappointing there are so many answers that assume you can't find the best parameters for the Genetic Algorithm automatically. <strong>I agree that the parameters does depend on the problem however there are methods where you can find them.</strong></p>
+
+<p>Additionally the <a href="http://en.wikipedia.org/wiki/No_free_lunch_theorem">No Free Lunch Theorem</a> by no means stops you from finding the best parameters, as there have already been discussion that disputes the fact:</p>
+
+<ul>
+<li><a href="http://www.sciencedirect.com/science/article/pii/S0304397502000944">Practically it does not hold</a></li>
+<li><a href="http://link.springer.com/chapter/10.1007/3-540-45110-2_15">Description length may dispute the theorem</a></li>
+<li><a href="http://ieeexplore.ieee.org/xpls/abs_all.jsp?arnumber=1545946">Coevolution can make the theorem irrelevant</a></li>
+</ul>
+
+<p>There are two types of parameter setting:</p>
+
+<ul>
+<li>Parameter Tuning (offline parameter search - before the GA is run)</li>
+<li>Parameter Control  (online parameter tweaking - during the GA run)
+<ul>
+<li>Adaptive</li>
+<li>Self Adaptive</li>
+<li>Deterministic</li>
+</ul></li>
+</ul>
+
+<p>There are a lot of literature out there that describe how one can find these optimal parameters, it depends whether you are wanting to do the parameter search offline or online. Popular belief is that offline is better suited for most cases because the online parameter control methods would add too much complexity over offline. </p>
+
+<p>Here are some examples to find the "best" parameters:</p>
+
+<p><strong>Parameter Tuning</strong>:</p>
+
+<ul>
+<li>Simple parameter sweep (try everything)</li>
+<li>Meta-GA ontop of a GA</li>
+<li><a href="http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.48.954">Racing strategy</a> to find best parameters</li>
+<li><a href="http://link.springer.com/chapter/10.1007/978-3-540-69432-8_6">Meta-GA and Racing together</a></li>
+</ul>
+
+<p><strong>Parameter Control</strong>:</p>
+
+<ul>
+<li><a href="http://ieeexplore.ieee.org/xpls/abs_all.jsp?arnumber=286385&amp;tag=1">Adaptive probabilities for mutation and crossover</a></li>
+<li><a href="http://link.springer.com/chapter/10.1007/978-3-540-75867-9_103">Self adaptive popuation size</a></li>
+<li><a href="http://www.sciencedirect.com/science/article/pii/S1383762102000942">Deterministic Genetic Operators</a></li>
+</ul>
+
+<p>And many more, just search for the literature using keywords used above. There are scientific methods for finding suitable parameters for any given problem!</p>

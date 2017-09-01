@@ -1,0 +1,30 @@
+<p>You wrote <code>while (user_entry == lucky[i]..)</code> which translates to <code>as long as user_entry is equal to lucky[i] keep on looping</code>. Which is clearly not what you intend to do.</p>
+
+<p>Transform your condition to <code>} while (user_entry != lucky[i] &amp;&amp; j &lt; 3);</code> and you should be fine. This will translate in plain english to <code>as long as user_entry is different of lucky[i] AND j is inferior to 3, keep looping</code>.</p>
+
+<p>But using this, you test on the value of <code>lucky[i]</code> even when <code>i</code> means nothing ( when i is equal to max, you don't want to test it, and this goes in the domain of <a href="http://en.wikipedia.org/wiki/Undefined_behavior" rel="nofollow">undefined behavior</a>). </p>
+
+<p>But if you realy dont want to use <code>break</code> keyword, one solution is to use a flag. Set it to 1 before you start to loop, and change it to 0 when the good answer is found. Your code will become</p>
+
+<pre><code>void Win_Search(int lucky[],const int MAX, int user_entry, int i)
+{
+    int j=0;
+    char flag = 1;
+
+    do {
+        j++;
+        printf("Please enter a number between 0 and 100\n");
+        scanf("%d",&amp;user_entry);
+
+        for(i = 0; i &lt; MAX; i++)
+        {
+            if(user_entry==lucky[i])
+            {
+                printf("winner\n");
+                flag = 0;
+            }
+        }
+    } while(flag&amp;&amp;j&lt;3);
+
+}
+</code></pre>

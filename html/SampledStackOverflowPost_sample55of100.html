@@ -1,0 +1,12 @@
+<p>The notepad just reads your binary data and converts it to <a href="https://en.wikipedia.org/wiki/UTF-8" rel="nofollow">UTF8</a> text.</p>
+
+<p>This code snippet would give you the same result.</p>
+
+<pre><code>byte[] randomBytes = new byte[20];
+Random rand = new Random();
+rand.NextBytes(randomBytes);
+Console.WriteLine(Encoding.UTF8.GetString(randomBytes));
+</code></pre>
+
+<p>If you want to stop people from converting your data back to a string. then you need to encrypt your data. <a href="http://www.codeproject.com/Articles/5719/Simple-encrypting-and-decrypting-data-in-C" rel="nofollow">Here</a> is a project that can help you with that.
+But they are still able to read the data in a text editor because it converts your encrypted data to UFT8. They can't Convert it back to usable data unless they have to key to decrypt your data.</p>

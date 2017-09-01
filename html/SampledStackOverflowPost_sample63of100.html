@@ -1,0 +1,5 @@
+<p>You're not going to get a true random number generator out of an FPGA / VHDL. The best you can hope for is a h/w PRNG that's readable from some register somewhere. </p>
+
+<p>You might choose to implement one of the PRNG algorithms out there. You're then going to have to trust the algorithm designer and then trust which ever VHDL implementation you go with (your own or one you acquire off someone else). You might start by looking at:</p>
+
+<p><a href="http://en.wikipedia.org/wiki/List_of_pseudorandom_number_generators#Cryptographic_algorithms" rel="nofollow">http://en.wikipedia.org/wiki/List_of_pseudorandom_number_generators#Cryptographic_algorithms</a></p>

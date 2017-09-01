@@ -1,0 +1,22 @@
+<p>First you need to ask your self what you mean by distance.</p>
+
+<p>Do you want the euclidean distance between the points? Imagine you could tunnel through the earth from one point to the other, this is the euclidean distance between the points. To calculate this distance you need to first convert each of the lat long points to ecef points. You can do this conversion with this code (<a href="https://www.mathworks.com/matlabcentral/fileexchange/7942-covert-lat--lon--alt-to-ecef-cartesian" rel="nofollow noreferrer">https://www.mathworks.com/matlabcentral/fileexchange/7942-covert-lat--lon--alt-to-ecef-cartesian</a>). After you've converted each point to an ecef point you can now calculate the euclidean norm <a href="https://en.wikipedia.org/wiki/Norm_(mathematics)" rel="nofollow noreferrer">https://en.wikipedia.org/wiki/Norm_(mathematics)</a>) between each possible pair of points.</p>
+
+<p>Or do you want to calculate the distance a traveler would traverse if they were to walk along the surface of the earth. From the looks of it, this is a much more difficult problem requiring an iterative solver. Fortunately someone has already done the work of implementing an algorithm to do this for you (<a href="https://www.mathworks.com/matlabcentral/fileexchange/5379-geodetic-distance-on-wgs84-earth-ellipsoid" rel="nofollow noreferrer">https://www.mathworks.com/matlabcentral/fileexchange/5379-geodetic-distance-on-wgs84-earth-ellipsoid</a>). Note if you read the comments of this function it appears as if mathworks has already implemented a different algorithm to perform the same calculation in the mapping toolbox. To calculate the matrix you simply need to iterate over each possible pairing of lat long points and plug them into the vdist function. </p>
+
+<p>Following should calculate the distance matrix for you using the vdist function above. Note I have not tested this code so you may to to correct errors.</p>
+
+<pre><code>points % assuming this is a matrix of your points [2 x N] formatted as follows
+%   [ lat1 , lat2, ... ]
+%   [ lon1 , lat2, ... ]
+
+dist = zeros(N,N); % the resulting distance matrix
+
+for(idx1 = 1:N)
+    for(idx2 = 1:N)
+      dist(idx1,idx2) = vdist(points(1,idx1),points(2,idx1),points(1,idx2)points(2,idx2) );
+    end
+end
+</code></pre>
+
+<p>Note because the earth surface is manifold (<a href="https://en.wikipedia.org/wiki/Manifold" rel="nofollow noreferrer">https://en.wikipedia.org/wiki/Manifold</a>) the results will be similar if the points are close to each other. If speed is  important to you and the points are closely grouped, you may want to use the first method to calculate your distance matrix. How close together the points should be to make use of this approximation will depend on how accurate you need the results to be. </p>

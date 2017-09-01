@@ -198,9 +198,10 @@ def causal_inference(
             'question_score', 'num_other_answers',
             'in_todayilearned', 
             'in_borntoday', 'in_wikipedia', 'in_CelebrityBornToday','in_The_Donald',
-            'year2008', 'year2009', 'year2010',
-            'year2011', 'year2012', 'year2013',
-            'year2014', 'year2015',
+            #'year2008', 'year2009', 'year2010',
+            #'year2011', 'year2012', 'year2013',
+            #'year2014', 'year2015',
+            'user_is_deleted', 'user_is_mod', 'user_is_suspended',
         ]
             
         X = np.transpose(np.array(feature_rows))

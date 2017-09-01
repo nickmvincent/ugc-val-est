@@ -1,0 +1,14 @@
+<p>There is no such thing as <code>ASCII</code> codes that display Chinese characters. ASCII does not represent Chinese characters.</p>
+
+<p>If you already have a Java string, it already has an internal representation of all characters (US, LATIN, CHINESE). You can then <strong>encode</strong> that Java string into Unicode using <a href="http://en.wikipedia.org/wiki/UTF-8" rel="nofollow">UTF-8</a> or <a href="http://en.wikipedia.org/wiki/UTF-16/UCS-2" rel="nofollow">UTF-16</a> representations:</p>
+
+<p><del>String s = "可以告诉我";</del> (<strong>EDIT</strong>: <em>This line won't display correctly on systems not having fonts for Chinese characters</em>)</p>
+
+<pre><code>String s = "\u53ef\u4ee5\u544a\u8bc9\u6211";
+byte utfString = s.getBytes("UTF-8");
+</code></pre>
+
+<p>Now that I look at your updated question, you might be looking for the <a href="http://commons.apache.org/lang/api-release/org/apache/commons/lang/StringEscapeUtils.html" rel="nofollow">StringEscapeUtils</a> class. It's from Apache Commons. And will <strong>unescape</strong> your HTML entities into a Java string:</p>
+
+<pre><code>String s = StringEscapeUtils.unescapeHtml("&amp; #21487;&amp; #20197;&amp; #21578;&amp; #35785;&amp; #25105;"); // without spaces
+</code></pre>

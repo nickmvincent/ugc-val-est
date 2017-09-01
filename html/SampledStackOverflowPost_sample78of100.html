@@ -1,0 +1,52 @@
+<p>Your problem is somewhat difficult as it can be really complicated to get the "current" network adapter --- windows routes packets depending on network adapter configuration and destination reachability so your "current" adapter may change at any time ... but since you already know how to retrieve IPs and MACs ("hardware address") of available adapters you could simply use your hack to retrieve a MAC for your current IP and filter/search inside of my second function for it! The field "PhysicalAddress" is what you're looking for, thats the MAC adress</p>
+
+<p>I have made the experience that the only, somewhat reliable way of doing that is via <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa365943(v=vs.85).aspx" rel="nofollow">GetIfTable</a> and <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa365945(v=vs.85).aspx" rel="nofollow">GetIfTable2</a>, the former returns somewhat <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa366836(v=vs.85).aspx" rel="nofollow">superficial adpater info</a> and the latter provides great <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa814491(v=vs.85).aspx" rel="nofollow">detail</a>.
+Heres a sample implementation, as it uses the detailed function you can also query for WLAN adapters : </p>
+
+<pre><code>vector&lt;MIB_IF_ROW2&gt;* getDevices(NDIS_PHYSICAL_MEDIUM type)
+    {       
+        vector&lt;MIB_IF_ROW2&gt; *v = new vector&lt;MIB_IF_ROW2&gt;();
+        PMIB_IF_TABLE2 table = NULL;
+        if(GetIfTable2Ex(MibIfTableRaw, &amp;table) == NOERROR &amp;&amp; table)
+        {
+            UINT32 i = 0;
+            for(; i &lt; table-&gt;NumEntries; i++)
+            {
+                MIB_IF_ROW2 row;
+
+                ZeroMemory(&amp;row, sizeof(MIB_IF_ROW2));
+                row.InterfaceIndex = i;
+                if(GetIfEntry2(&amp;row) == NOERROR)
+                {                   
+                    if(row.PhysicalMediumType == type)
+                    {
+                        v-&gt;push_back(row);
+                    }                   
+                }           
+            }
+            FreeMibTable(table);
+        }
+        return v;
+    }
+</code></pre>
+
+<p>Now all you need to do is iterate over the list and filter out disabled adapters and whatnot : </p>
+
+<pre><code>vector&lt;MIB_IF_ROW2&gt;* wlan = getDevices(NdisPhysicalMediumNative802_11); //WLAN adapters
+//see https://msdn.microsoft.com/en-us/library/windows/desktop/aa814491(v=vs.85).aspx, "PhysicalMediumType" for a full list
+for(auto &amp;row : *v)
+    {
+        //do some additional filtering, this needs to be changed for non-WLAN           
+        if( row.TunnelType == TUNNEL_TYPE_NONE &amp;&amp;
+            row.AccessType != NET_IF_ACCESS_LOOPBACK &amp;&amp;         
+            row.Type == IF_TYPE_IEEE80211 &amp;&amp;
+            row.InterfaceAndOperStatusFlags.HardwareInterface == TRUE)              
+            {
+                //HERE BE DRAGONS!                    
+            }
+    }
+</code></pre>
+
+<p>Now its quite easy to generate lists of WLAN adapters and non-WLAN adapters <em>(see comment in second function)</em>, search for your current MAC and conclude that it is wired or wireless - but be aware that these lists <strong>may</strong> overlap since <a href="https://en.wikipedia.org/wiki/IEEE_802.11" rel="nofollow">802.11</a> basically is an extended version of <a href="https://en.wikipedia.org/wiki/IEEE_802.3" rel="nofollow">802.3</a> <strong>but</strong> 802.3 does <strong>not</strong> include 802.11 <em>(since its an extension)</em> - so you will need a tiny bit of if/else logic going on in order to seperate WLAN from non-WLAN adapters.</p>
+
+<p>You could also use <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms706716(v=vs.85).aspx" rel="nofollow">WlanEnumInterfaces</a> to get all of the WLAN adapters but thats basically the same as using the above function with <code>NdisPhysicalMediumNative802_11</code> as parameter ...</p>

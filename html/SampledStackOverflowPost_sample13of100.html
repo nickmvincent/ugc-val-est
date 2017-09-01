@@ -1,0 +1,64 @@
+<p>You'll be best doing the following</p>
+
+<hr>
+
+<p><strong>Structure</strong></p>
+
+<pre><code>#config/routes.rb
+resources :links #-&gt; will provide DELETE domain.com/ajax/:id as destroy action
+</code></pre>
+
+<p>Your routes need to be structured around <code>objects</code>. Considering you're trying to create a <code>destroy</code> action, you should be able to send an ajax request to it to get it to work properly</p>
+
+<p>This will give you the ability to do the following:</p>
+
+<pre><code>#app/views/controller/your_page.html.erb
+&lt;%= link_to "Ajax", link_path(link), method: :delete, id: link.id, data: { confirm: "Really?", remote: true } %&gt; 
+</code></pre>
+
+<p>This will send an ajax (<a href="http://en.wikipedia.org/wiki/XMLHttpRequest" rel="nofollow">XHR</a>) request to your <code>links</code> controller <code>destroy</code> action, which you can populate as follows:</p>
+
+<pre><code>#app/controllers/links_controller.rb
+Class LinksController &lt; ApplicationController
+   def destroy
+       @link = Link.find parmas[:id]
+       @link.destroy
+   end
+end
+</code></pre>
+
+<p>--</p>
+
+<p><strong>Response</strong></p>
+
+<p>The response you have is directly associated with how you're managing the <a href="http://api.rubyonrails.org/classes/Mime/Type.html" rel="nofollow"><code>mime type</code></a> 
+in your controller. </p>
+
+<p>If you use the <code>format.js</code> technique, you can call the <code>@instance method</code> set in your controller to remove the element in question. If you use the standard Ajax callbacks, you'll have a different challenge:</p>
+
+<pre><code>#app/controllers/links_controller.rb
+Class LinksController &lt; ApplicationController
+   def destroy
+     ...
+     respond_to do |format|
+       format.js #-&gt; loads /links/destroy.js.erb
+       format.html { redirect_to(links_url) }
+      end
+   end
+end
+</code></pre>
+
+<p>This will give you the ability to create the following:</p>
+
+<pre><code>#app/views/links/destroy.js.erb
+var element = document.getElementById("&lt;%=j @link.id %&gt;");
+element.parentNode.parentNode.remove();
+</code></pre>
+
+<p>Alternatively, you can use the <code>ajax</code> <a href="https://github.com/rails/jquery-ujs/wiki/ajax" rel="nofollow"><code>success</code> function to facilitate the callback</a>, like so:</p>
+
+<pre><code>#app/assets/javascripts/application.js
+$(document).on("ajax:succes", "a", function(data){
+    $(data.id).remove();
+});
+</code></pre>

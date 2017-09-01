@@ -1,0 +1,82 @@
+<p>So this is implementation specific as <a href="https://en.wikipedia.org/wiki/Virtual_method_table#Implementation" rel="nofollow">Wikipedia notes</a>:</p>
+
+<blockquote>
+  <p>The C++ standards do not mandate exactly how dynamic dispatch must be implemented, but compilers generally use minor variations on the same basic model.<br>
+  <br>
+  Typically, the compiler creates a separate vtable for each class. When an object is created, a pointer to this vtable, called the virtual table pointer, vpointer or VPTR, is added as a hidden member of this object. The compiler also generates "hidden" code in the constructor of each class to initialize the vpointers of its objects to the address of the corresponding vtable.</p>
+</blockquote>
+
+<p>Even worse <a href="http://www.informit.com/guides/content.aspx?g=cplusplus&amp;seqNum=196" rel="nofollow">Danny Kalev states</a>:</p>
+
+<blockquote>
+  <p>Compilers can be divided into two categories with respect to their vptr's position. UNIX compilers typically place the vptr after the last user-declared data member, whereas Windows compilers place it as the first data member of the object, before any user-declared data members.</p>
+</blockquote>
+
+<p>I give all the preceding information to indicate the conditions in which my hack will work:</p>
+
+<ol>
+<li><a href="http://en.cppreference.com/w/cpp/types/is_standard_layout" rel="nofollow"><code>is_standard_layout</code></a> fails for your child because it has: "has virtual functions or virtual base classes"</li>
+<li>Your parent does <em>not</em> have an copy constructor or an assignment operator (otherwise you could just copy in the parent on construction of the child object)</li>
+<li>Your compiler does in fact implement a v-table</li>
+<li>Whether your v-table is at the beginning or end of the object layout</li>
+<li>The position your compiler assigns to child member variables relative to parent member variables in the object layout</li>
+</ol>
+
+<p>With understanding of the hack that you are getting into I will now proceed to extend the classes in the question to better demonstrate how we can "Cast to a Child":</p>
+
+<pre><code>class Parent{
+public:
+    Parent operator=(const Parent&amp;) = delete;
+    Parent(const Parent&amp;) = delete;
+    Parent() = default;
+    Parent(int complex) : test(complex) {}
+
+    virtual void func(){ cout &lt;&lt; test; }
+private:
+    int test = 0;
+};
+
+class Child : public Parent{
+public:
+    Child operator=(const Child&amp;) = delete;
+    Child(const Child&amp;) = delete;
+    Child() = default;
+    Child(const Parent* parent){
+        const auto vTablePtrSize = sizeof(void*);
+
+        memcpy(reinterpret_cast&lt;char*&gt;(this) + vTablePtrSize,
+               reinterpret_cast&lt;const char*&gt;(parent) + vTablePtrSize,
+               sizeof(Parent) - vTablePtrSize);
+    }
+
+    virtual void func(){ cout &lt;&lt; "Child, parent says: "; Parent::func(); }
+};
+</code></pre>
+
+<p>We are simply using <code>memcpy</code> to copying the state of the parent object, while allowing all <code>Child</code> information to persist.</p>
+
+<p>You can see that this code:</p>
+
+<pre><code>Parent foo(13);
+Child bar(&amp;foo);
+
+bar.func();
+</code></pre>
+
+<p>Will print:</p>
+
+<blockquote>
+  <p>Child, parent says: 13</p>
+</blockquote>
+
+<p><a href="http://ideone.com/f7vQsX" rel="nofollow">Live example</a> <sub> and though it's not asked for in the question here's how it could be accomplished for multiple inheritance: <a href="http://ideone.com/1QOrMz" rel="nofollow">http://ideone.com/1QOrMz</a></sub></p>
+
+<p>This is a useful solution for <code>moneypunct</code> as it's initialization will be implementation specific anyway, since C++ does not specify any locale names other than:</p>
+
+<ul>
+<li><code>""</code></li>
+<li><code>"C"</code></li>
+<li><code>"POSIX"</code></li>
+</ul>
+
+<p>I would like to close this answer by pointing out that this entire post has been about how to overcome limitations intentionally put in place by the designers of <code>moneypunct</code>. So, yes you can do this but as you do the obvious question should be asked: "Why were the copy constructor and assignment operator of <code>moneypunct</code> deleted in the first place? What aspect of that design am I intentionally subverting?"</p>

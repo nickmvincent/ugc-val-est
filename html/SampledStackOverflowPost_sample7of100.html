@@ -1,0 +1,5 @@
+<p>This is a common problem with inheritance, which is why the GoF state "Favour composition over inheritance"</p>
+
+<p>You could use the <a href="http://en.wikipedia.org/wiki/Strategy_pattern" rel="nofollow">Strategy</a> pattern. Instead of deriving different types of <code>MasterCamera</code>, instead derive different types of <code>ICameraFunctionality</code>, and store an object of that instance in your <code>MasterCamera</code> (or rather just <code>Camera</code>) class.</p>
+
+<p>That way MasterCamera just does the common work, but calls its <code>ICameraFunctionality</code> instance to perform specific work.</p>

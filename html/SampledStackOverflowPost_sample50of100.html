@@ -1,0 +1,28 @@
+<p>It's easy to see from calculus that if </p>
+
+<pre><code>lim {n -&gt; inf} a(n) / b(n) &lt; inf
+</code></pre>
+
+<p>then</p>
+
+<pre><code>a(n) = O(b(n))
+</code></pre>
+
+<p>Also note that all the functions here go to infinity, so we can use <a href="http://en.wikipedia.org/wiki/L%27H%C3%B4pital%27s_rule" rel="nofollow">L'Hôpital's rule</a>.</p>
+
+<p>Finally, note that, asymptotically, <a href="http://en.wikipedia.org/wiki/Stirling%27s_approximation" rel="nofollow">Stirling's Approximation</a> gives</p>
+
+<pre><code>lim {n -&gt; inf} n! / (sqrt(2 pi n) (n / e)^n) = 1
+</code></pre>
+
+<p>If you combine these three things you can see that:</p>
+
+<pre><code>lim {n -&gt; inf} 2^n / n! = lim {n -&gt; inf} 2^n / (sqrt(2 pi n) (n / e)^n) = 0
+</code></pre>
+
+<p>and </p>
+
+<pre><code>lim {n -&gt; inf} n^{log(n)} / 2^n = &lt; inf
+</code></pre>
+
+<p>So D is correct. </p>

@@ -1,0 +1,31 @@
+Bootstrap results for 1000 iterations of full resampling,5,50,95
+All|num_edits vs num_edits_prev_week|Hypothesis Testing|Treatment vs Control|Difference,24.968586936,26.2082189484
+All|num_new_editors vs num_new_editors_prev_week|Hypothesis Testing|Treatment vs Control|Difference,2.98262746495,3.16333116788
+All|num_new_editors_retained vs num_new_editors_retained_prev_week|Hypothesis Testing|Treatment vs Control|Difference,1.84517697353,1.9658836103
+All|percent_of_revs_preceding_post|Hypothesis Testing|Treatment vs Control|Difference,1.84517697353,1.9658836103
+All|week_after_avg_score vs day_of_avg_score|Hypothesis Testing|Treatment vs Control|Difference,-0.0011944927597,0.00113162471971
+All|num_wiki_pageviews vs num_wiki_pageviews_prev_week|Hypothesis Testing|Treatment vs Control|Difference,-34.5318903983,688.119585253
+GA|num_edits vs num_edits_prev_week|Hypothesis Testing|Treatment vs Control|Difference,26.3084693085,33.5547785548
+GA|num_new_editors vs num_new_editors_prev_week|Hypothesis Testing|Treatment vs Control|Difference,3.18337218337,4.3006993007
+GA|num_new_editors_retained vs num_new_editors_retained_prev_week|Hypothesis Testing|Treatment vs Control|Difference,1.82284382284,2.55710955711
+GA|percent_of_revs_preceding_post|Hypothesis Testing|Treatment vs Control|Difference,1.82284382284,2.55710955711
+GA|week_after_avg_score vs day_of_avg_score|Hypothesis Testing|Treatment vs Control|Difference,-0.0559440559441,-0.022533022533
+GA|num_wiki_pageviews vs num_wiki_pageviews_prev_week|Hypothesis Testing|Treatment vs Control|Difference,-944.248603352,1223.129683
+B|num_edits vs num_edits_prev_week|Hypothesis Testing|Treatment vs Control|Difference,33.4742179443,36.287985562
+B|num_new_editors vs num_new_editors_prev_week|Hypothesis Testing|Treatment vs Control|Difference,4.04743898247,4.41534891715
+B|num_new_editors_retained vs num_new_editors_retained_prev_week|Hypothesis Testing|Treatment vs Control|Difference,2.66586455827,2.93700584393
+B|percent_of_revs_preceding_post|Hypothesis Testing|Treatment vs Control|Difference,2.66586455827,2.93700584393
+B|week_after_avg_score vs day_of_avg_score|Hypothesis Testing|Treatment vs Control|Difference,-0.0182193193537,-0.012805087659
+B|num_wiki_pageviews vs num_wiki_pageviews_prev_week|Hypothesis Testing|Treatment vs Control|Difference,-113.896020539,184.126705653
+C|num_edits vs num_edits_prev_week|Hypothesis Testing|Treatment vs Control|Difference,27.555792871,29.5749679624
+C|num_new_editors vs num_new_editors_prev_week|Hypothesis Testing|Treatment vs Control|Difference,3.18458398595,3.47842802221
+C|num_new_editors_retained vs num_new_editors_retained_prev_week|Hypothesis Testing|Treatment vs Control|Difference,1.89349280934,2.08410460867
+C|percent_of_revs_preceding_post|Hypothesis Testing|Treatment vs Control|Difference,1.89349280934,2.08410460867
+C|week_after_avg_score vs day_of_avg_score|Hypothesis Testing|Treatment vs Control|Difference,0.00232569177465,0.00512601452371
+C|num_wiki_pageviews vs num_wiki_pageviews_prev_week|Hypothesis Testing|Treatment vs Control|Difference,-20.3660902573,1021.8634187
+other|num_edits vs num_edits_prev_week|Hypothesis Testing|Treatment vs Control|Difference,12.037153056,13.3262912508
+other|num_new_editors vs num_new_editors_prev_week|Hypothesis Testing|Treatment vs Control|Difference,1.53616959277,1.72310045895
+other|num_new_editors_retained vs num_new_editors_retained_prev_week|Hypothesis Testing|Treatment vs Control|Difference,0.929919137466,1.06119326874
+other|percent_of_revs_preceding_post|Hypothesis Testing|Treatment vs Control|Difference,0.929919137466,1.06119326874
+other|week_after_avg_score vs day_of_avg_score|Hypothesis Testing|Treatment vs Control|Difference,0.00896044292271,0.0134042398193
+other|num_wiki_pageviews vs num_wiki_pageviews_prev_week|Hypothesis Testing|Treatment vs Control|Difference,-89.0831643002,65.849018621

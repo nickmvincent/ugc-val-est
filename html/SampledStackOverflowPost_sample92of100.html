@@ -1,0 +1,37 @@
+<p>What you want is called a <a href="http://en.wikipedia.org/wiki/Topological_sorting">topological sort</a>. While it's possible to implement using the builtin <code>sort()</code>, it's rather awkward, and it's better to implement a topological sort directly in python. </p>
+
+<p>Why is it going to be awkward? If you study the two algorithms on the wiki page, they both rely on a running set of "marked nodes", a concept that's hard to contort into a form <code>sort()</code> can use, since <code>key=xxx</code> (or even <code>cmp=xxx</code>) works best with stateless comparison functions, particularly because timsort doesn't guarantee the order the elements will be examined in. I'm (pretty) sure any solution which <em>does</em> use <code>sort()</code> is going to end up redundantly calculating some information for each call to the key/cmp function, in order to get around the statelessness issue.</p>
+
+<p>The following is the alg I've been using (to sort some javascript library dependancies):</p>
+
+<p><strong>edit: reworked this greatly, based on Winston Ewert's solution</strong></p>
+
+<pre><code>def topological_sort(source):
+    """perform topo sort on elements.
+
+    :arg source: list of ``(name, [list of dependancies])`` pairs
+    :returns: list of names, with dependancies listed first
+    """
+    pending = [(name, set(deps)) for name, deps in source] # copy deps so we can modify set in-place       
+    emitted = []        
+    while pending:
+        next_pending = []
+        next_emitted = []
+        for entry in pending:
+            name, deps = entry
+            deps.difference_update(emitted) # remove deps we emitted last pass
+            if deps: # still has deps? recheck during next pass
+                next_pending.append(entry) 
+            else: # no more deps? time to emit
+                yield name 
+                emitted.append(name) # &lt;-- not required, but helps preserve original ordering
+                next_emitted.append(name) # remember what we emitted for difference_update() in next pass
+        if not next_emitted: # all entries have unmet deps, one of two things is wrong...
+            raise ValueError("cyclic or missing dependancy detected: %r" % (next_pending,))
+        pending = next_pending
+        emitted = next_emitted
+</code></pre>
+
+<hr>
+
+<p>Sidenote: it <em>is</em> possible to shoe-horn a <code>cmp()</code> function into <code>key=xxx</code>, as outlined in this python bug tracker <a href="http://bugs.python.org/issue1771#msg59937">message</a>.</p>

@@ -1,0 +1,88 @@
+<h1>Pass arguments</h1>
+
+<p>As the other Answers state, you likely are failing to pass an argument when running this problem. </p>
+
+<p>If using an <a href="https://en.wikipedia.org/wiki/Integrated_development_environment" rel="nofollow noreferrer">IDE</a> such as <a href="https://netbeans.org" rel="nofollow noreferrer">NetBeans</a>, <a href="https://www.jetbrains.com/idea/" rel="nofollow noreferrer">IntelliJ</a>, or Eclipse, you must dig around to find where that tool lets you specify arguments to be passed to the <code>main</code> method. </p>
+
+<p>For example, in NetBeans: </p>
+
+<ol>
+<li>Open your project properties. </li>
+<li>Select <code>Run</code>. </li>
+<li>In the <code>Arguments</code> field, type a month number such as <code>7</code>. </li>
+<li>Click <code>OK</code> to save the change.</li>
+<li>Run your project.</li>
+</ol>
+
+<p><a href="https://i.stack.imgur.com/zwF8h.png" rel="nofollow noreferrer"><img src="https://i.stack.imgur.com/zwF8h.png" alt="enter image description here"></a></p>
+
+<h1>Test arguments</h1>
+
+<p>For debugging, you should dump the array of arguments to the console to verify. And you should be testing for expected number of arguments. Here is example code doing both those tasks.</p>
+
+<pre><code>public class App {
+
+    public static String months[];
+
+    public static void main ( String[] args ) {
+
+        months = new String[ 13 ];
+        months[ 0 ] = null;
+        months[ 1 ] = "January";
+        months[ 2 ] = "February";
+        months[ 3 ] = "March";
+        months[ 4 ] = "April";
+        months[ 5 ] = "May";
+        months[ 6 ] = "June";
+        months[ 7 ] = "July";
+        months[ 8 ] = "August";
+        months[ 9 ] = "September";
+        months[ 10 ] = "October";
+        months[ 11 ] = "November";
+        months[ 12 ] = "December";
+
+        System.out.println ( "DEBUG args: " + Arrays.toString ( args ) );
+        if ( args.length == 0 ) {
+            System.out.println ( "No month specified. No arguments passed to 'main' method." );
+        } else if ( args.length == 1 ) {  // Else we have a single argument as expected.
+            int m = Integer.parseInt ( args[ 0 ] );
+            System.out.println ( months[ m ] );
+        } else if ( args.length &gt; 1 ) {  // Else we have multiple arguments, but expected only one.
+            System.out.println ( "ERROR - more than one argument passed to 'main' method." );
+        } else {  // Else impossible. Should not reach this point. Defensive programming.
+            System.out.println ( "ERROR - Unexpectedly reached IF-ELSE. Should be impossible." );
+        }
+…
+</code></pre>
+
+<blockquote>
+  <p>DEBUG args: [8, 7, 9]</p>
+  
+  <p>ERROR - more than one argument passed to 'main' method.</p>
+</blockquote>
+
+<p>You can see this <a href="http://ideone.com/q3jxsf" rel="nofollow noreferrer">code run live at IdeOne.com</a>. Unfortunately, that web app seems to have a bug: failing to pass the input arguments. So not useful at the moment for our purpose here, but I leave the link in case the bug is fixed in the future.</p>
+
+<h1>java.time</h1>
+
+<p>While I understand you are doing exercises to learn Java programming, you should be aware that you would not need to do this definition of months in real-world work. Instead you would use the <a href="http://docs.oracle.com/javase/8/docs/api/java/time/Month.html" rel="nofollow noreferrer"><code>Month</code></a> <a href="http://docs.oracle.com/javase/8/docs/api/java/lang/Enum.html" rel="nofollow noreferrer">enum</a>, part of the <a href="https://docs.oracle.com/javase/8/docs/api/java/time/package-summary.html" rel="nofollow noreferrer">java.time</a> classe. An enum is a grouping of static constants. <a href="https://docs.oracle.com/javase/tutorial/java/javaOO/enum.html" rel="nofollow noreferrer">Enums in Java</a> are vastly more powerful, flexible, and useful than <a href="https://en.wikipedia.org/wiki/Enumerated_type" rel="nofollow noreferrer">conventional enums</a>.</p>
+
+<pre><code>Month month = Month.of ( 5 ); // Months are numbered 1-12 for January-December. So 5 = May.
+String output = month.getDisplayName ( TextStyle.FULL , Locale.CANADA_FRENCH );  // Automatically localize the name of the month.
+String output2 = Month.DECEMBER.getDisplayName ( TextStyle.FULL , Locale.CANADA_FRENCH );  // Refer to a `Month` object by the name of a constant. Here: Month.DECEMBER
+</code></pre>
+
+<p>Dump to console.</p>
+
+<pre><code>System.out.println ( "month.toString(): " + month );
+System.out.println ( "output: " + output );
+System.out.println ( "output2: " + output2 );
+</code></pre>
+
+<blockquote>
+  <p>month.toString(): MAY</p>
+  
+  <p>output: mai</p>
+  
+  <p>output2: décembre</p>
+</blockquote>

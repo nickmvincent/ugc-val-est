@@ -1,0 +1,9 @@
+<p>You are right in saying that telnet is its own protocol, which is described in a couple of RFC's. You can take a look at <a href="http://en.wikipedia.org/wiki/Telnet" rel="nofollow">wikipedia</a> to see which ones exactly and some other resources that explain the protocol.</p>
+
+<p>Basically it works like this: when you use telnet to connect to a server, it will show every printable character the server sends to you. And everything you type will be sent back to the server. This is how you can retrieve web pages when connecting to a web server: you send a command that a http server accepts and get the correct result.</p>
+
+<p>Now, there are a few telnet specifics option. IIRC, you won't send them to the server unless the server sends them first. Those options are used to enable/disable local echo (think about passwords, you don't want those visible when logging in), negotiate terminal size, negotiate end of line type. Those are commands that are a few bytes long and start with byte 255 (called IAC, interpret as command). When you connect to a telnet server, your client will interpret those and reply accordingly, all automatically in the background, without showing you those commands.</p>
+
+<p>Although not specific to telnet, a telnet server can also send <a href="http://en.wikipedia.org/wiki/ANSI_escape_code" rel="nofollow">ANSI escape sequences</a>. Those are used for colors, bold, cursor positioning, ... A telnet client will also interpret those (or just pass them on to the terminal emulator you're using, like xterm).</p>
+
+<p>If you want something "lower-level" than telnet, which won't interpret telnet options and actually display what you get, you may want to take a look at <a href="http://en.wikipedia.org/wiki/Netcat" rel="nofollow">netcat</a></p>

@@ -1,0 +1,16 @@
+<p>The text inside $type is substituted directly into the insert string, therefore MySQL gets this:</p>
+
+<pre><code>... VALUES(testing, 'john', 'whatever')
+</code></pre>
+
+<p>Notice that there are no quotes around testing, you need to put these in like so:</p>
+
+<pre><code>$type = 'testing';
+mysql_query("INSERT INTO contents (type, reporter, description) VALUES('$type', 'john', 'whatever')");
+</code></pre>
+
+<p>I also recommend you read up on <a href="http://en.wikipedia.org/wiki/SQL_injection" rel="nofollow">SQL injection</a>, as this sort of parameter passing is prone to hacking attempts if you do not sanitize the data being used:</p>
+
+<ul>
+<li><em><a href="http://www.tizag.com/mysqlTutorial/mysql-php-sql-injection.php" rel="nofollow">MySQL - SQL Injection Prevention</a></em></li>
+</ul>

@@ -1,0 +1,13 @@
+<p>Not every number is a <a href="http://en.wikipedia.org/wiki/Magic_number_%28programming%29#Unnamed_numerical_constants" rel="noreferrer">magic constant</a>. The reason <code>4</code> and the four <code>0</code> are magic numbers (in any language) is that it's entirely unclear <em>why</em> that number is <code>4</code> and not any other number. </p>
+
+<p>For example in the context of a game that is played with the well known six-sided die</p>
+
+<pre><code>def roll_die():
+    return random.randint(1,6)
+</code></pre>
+
+<p>this code has no magic numbers, because it's very easy to see where the numbers came from. </p>
+
+<p>On the other hand it can be hard to guess which numbers other programmers know. For example, not everyone might know the number of cards in a deck, so it makes more sense to use a named constant there.</p>
+
+<p>It entirely depends on the context if a number is "magic" or not, it has nothing to do with the language. When in doubt, name your constants just to be on the safe side. </p>

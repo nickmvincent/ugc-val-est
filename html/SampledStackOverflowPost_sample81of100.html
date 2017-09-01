@@ -1,0 +1,10 @@
+<p>I'm not an iOs programmer, but I will try to answer from an algorithmic point of view. Essentially, you have a detection problem ("Where is the plaque?") and a classification problem ("Which one is it?"). Asking the user to keep the plaque in a pre-defined region is certainly a good idea. This solves the detection problem, which is often harder to solve with limited resources than the classification problem. </p>
+
+<p>For classification, I see two alternatives: </p>
+
+<ol>
+<li><p>The classic "Computer Vision" route would be feature extraction  and classification. <a href="http://en.wikipedia.org/wiki/Local_binary_patterns" rel="nofollow">Local Binary Patterns</a> and <a href="http://en.wikipedia.org/wiki/Histogram_of_oriented_gradients" rel="nofollow">HOG</a> are feature extractors known to be fast enough for mobile (the former more than the latter), and they are not too complicated to implement. Classifiers, however, are non-trivial, and you would probably have to search for an appropriate iOs library.</p></li>
+<li><p>Alternatively, you could try to binarize the image, i.e. classify pixels as "plate" / white or "text" / black. Then you can use an error-tolerant similarity measure for comparing your binarized image with a binarized reference image of the plaque. The <a href="http://www.gavrila.net/Research/Chamfer_System/chamfer_system.html" rel="nofollow">chamfer distance measure</a> is a good candidate. It essentially boils down to comparing the <a href="http://en.wikipedia.org/wiki/Distance_transform" rel="nofollow">distance transforms</a> of your two binarized images. This is more tolerant to misalignment than comparing binary images directly. The distance transforms of the reference images can be pre-computed and stored on the device.</p></li>
+</ol>
+
+<p>Personally, I would try the second approach. A (non-mobile) prototype of the second approach is relatively easy to code and evaluate with a good image processing library (OpenCV, Matlab + Image Processing Toolbox, Python, etc).</p>

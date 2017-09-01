@@ -1,0 +1,20 @@
+<p>No, there is no way to force a subclass to narrow a return type on an inherited method based on the generic type parameter of the <a href="https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern" rel="nofollow">Curiously Recurring Template Pattern</a>.  You cannot force <code>B</code> to have <code>get()</code> return <code>B</code>.  It's an object-oriented principle that a subclass can inherit a method without changing anything about it.</p>
+
+<p>Sometimes I've wished for this feature -- a generic "relationship to self" type.  Here's how I would have the syntax.  The keyword "this" would represent this type - <code>A</code> in <code>A</code>, <code>B</code> in <code>B</code>.</p>
+
+<pre><code>public class A {
+    public this get() {
+       return this;  // Or another instance of this type
+    }
+}
+public class B extends A {
+    // "this" on get in A forces B to override "get"
+    // to narrow the return type
+    @Override
+    public this get() {
+       return this;
+    }
+}
+</code></pre>
+
+<p>But forcing <code>B</code> to override <code>getA()</code> goes against object-oriented principles.  The subclass should be free to inherit a method from a superclass as-is.</p>

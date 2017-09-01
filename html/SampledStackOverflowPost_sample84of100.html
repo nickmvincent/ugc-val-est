@@ -1,0 +1,105 @@
+<p>The KMP Algorithm is a popular string matching algorithm.</p>
+
+<p><a href="https://en.wikipedia.org/wiki/Knuth%E2%80%93Morris%E2%80%93Pratt_algorithm" rel="nofollow">KMP Algorithm</a>
+<br>
+<br>
+Checking char by char is inefficient. If the string has 1000 characters and the keyword has 100 characters, you don't want to perform unnecessary comparisons. The KMP Algorithm handles many cases which can occur, but I imagine the interviewer was looking for the case where: When you begin (pass 1), the first 99 characters match, but the 100th character doesn't match. Now, for pass 2, instead of performing the entire comparison from character 2, you have enough information to deduce where the next possible match can begin. </p>
+
+<pre><code>// C program for implementation of KMP pattern searching 
+// algorithm
+#include&lt;stdio.h&gt;
+#include&lt;string.h&gt;
+#include&lt;stdlib.h&gt;
+
+void computeLPSArray(char *pat, int M, int *lps);
+
+void KMPSearch(char *pat, char *txt)
+{
+int M = strlen(pat);
+int N = strlen(txt);
+
+// create lps[] that will hold the longest prefix suffix
+// values for pattern
+int *lps = (int *)malloc(sizeof(int)*M);
+int j  = 0;  // index for pat[]
+
+// Preprocess the pattern (calculate lps[] array)
+computeLPSArray(pat, M, lps);
+
+int i = 0;  // index for txt[]
+while (i &lt; N)
+{
+  if (pat[j] == txt[i])
+  {
+    j++;
+    i++;
+  }
+
+  if (j == M)
+  {
+    printf("Found pattern at index %d \n", i-j);
+    j = lps[j-1];
+  }
+
+  // mismatch after j matches
+  else if (i &lt; N &amp;&amp; pat[j] != txt[i])
+  {
+    // Do not match lps[0..lps[j-1]] characters,
+    // they will match anyway
+    if (j != 0)
+     j = lps[j-1];
+    else
+     i = i+1;
+  }
+}
+free(lps); // to avoid memory leak
+}
+
+void computeLPSArray(char *pat, int M, int *lps)
+{
+int len = 0;  // length of the previous longest prefix suffix
+int i;
+
+lps[0] = 0; // lps[0] is always 0
+i = 1;
+
+// the loop calculates lps[i] for i = 1 to M-1
+while (i &lt; M)
+{
+   if (pat[i] == pat[len])
+   {
+     len++;
+     lps[i] = len;
+     i++;
+   }
+   else // (pat[i] != pat[len])
+   {
+     if (len != 0)
+     {
+       // This is tricky. Consider the example 
+       // AAACAAAA and i = 7.
+       len = lps[len-1];
+
+       // Also, note that we do not increment i here
+     }
+     else // if (len == 0)
+     {
+       lps[i] = 0;
+       i++;
+     }
+   }
+}
+}
+
+// Driver program to test above function
+int main()
+{
+char *txt = "ABABDABACDABABCABAB";
+char *pat = "ABABCABAB";
+KMPSearch(pat, txt);
+return 0;
+}
+</code></pre>
+
+<p>This code is taken from a really good site that teaches algorithms:
+<a href="http://www.geeksforgeeks.org/searching-for-patterns-set-2-kmp-algorithm/" rel="nofollow">Geeks for Geeks KMP</a></p>

@@ -1,0 +1,22 @@
+<p>The main operation that you need to isolate in order to implement some mode is the actual block cipher without a mode of operation or padding. pyDes doesn't seem to provide direct access to the block cipher directly, but you can emulate it easily with the ECB mode. ECB is a simple execution of the block cipher on all input blocks in the same way. </p>
+
+<p>The idea would be to create a counter input stream, execute ECB on the input stream to get the key stream and then XOR every byte of the plaintext with the corresponding byte in the key stream.</p>
+
+<p>Steps for <a href="https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Counter_.28CTR.29" rel="nofollow">CTR mode</a>:</p>
+
+<ol>
+<li><p>Generate a random nonce (IV) in the range of <code>0</code> to <code>1&lt;&lt;64</code> (DES block size) which is the starting counter:</p>
+
+<pre><code>import random
+r = random.SystemRandom()
+nonce = r.randrange(0, 1&lt;&lt;64)
+</code></pre></li>
+<li><p>Convert the counter for each block of the plaintext to bytes with <a href="https://docs.python.org/2/library/struct.html#struct.pack" rel="nofollow"><code>struct.pack('&gt;Q', counter)</code></a> and increase the counter by one</p></li>
+<li>Repeat until you have at least as much bytes in the counter stream as in the plaintext</li>
+<li>Encrypt the counter input stream with ECB mode and any available padding</li>
+<li>XOR the key stream and the plaintext and throw away the rest of the key stream (if any)</li>
+</ol>
+
+<p>Since CTR mode is a stream cipher, you can use the exact same operation for decrypting with the only difference that the nonce must be supplied from outside. You can prepend the nonce to the ciphertext so that it can be used for decryption. It doesn't have to be secret, but it needs to be unique if the same key is used. </p>
+
+<p>Note that the block size of DES and 3DES doesn't permit to encrypt many ciphertexts or long ciphertexts with CTR under the same key. If you do then you need to change to a block cipher with a bigger block size like AES.</p>

@@ -1,0 +1,13 @@
+<p>A programming model must have concurency and/or <strong>memory model</strong>. For instance Java has threads and this <a href="http://en.wikipedia.org/wiki/Java_Memory_Model" rel="nofollow noreferrer">memory model</a> (overview in wikipedia). This clearly belongs to the <strong><em>semantics</em></strong> of the programming language, its specification. </p>
+
+<p>Other programming language may have other concurrency abstractions (think of clojure with agents, etc.) or other memory model. The simpler the memory model is, the simpler the language is to use. Inversly, a complicated memory model makes concurrency pretty hard to do right (think of the definition of <code>volatile</code> in Java). So some people argue that programming languages should have no memory model. </p>
+
+<p>The actual <strong><em>implementation</em></strong> of the concurrency and/or memory model is up to the implementer of the language. You can use <strong>OS process/thread</strong>, or the VM can emulate threads (so-called <strong><a href="http://en.wikipedia.org/wiki/Green_thread" rel="nofollow noreferrer">green thread</a></strong>). There are even other approach to have <strong>ultra-light threads</strong>, for instance <a href="http://www.malhar.net/sriram/kilim/" rel="nofollow noreferrer">Kilim</a>.</p>
+
+<p>However, to really leverage <strong>multicore</strong>, you must OS threads (one per core), otherwise there is not hardware parallelism. But the "logical" threads used by the program can be scheduled in a lightweight fashion on the <em>N</em> OS threads. To my knowledge, it is not possible to tell the JVM how many OS threads to use to schedule the green threads. If somebody has a pointer for that, it would be interesting.</p>
+
+<p>In summary: Multi-threading is a logical concept. An application can be multi-threaded but run on one core. Multicore parallelism is a hardware concept. To leverage mutlicore parallelism, the VM must implement threading so that OS process are used, which will run on different core. </p>
+
+<p><strong>EDIT</strong> </p>
+
+<p>Actually the Java threading and memory model is now described in a dedicated specification <a href="http://jcp.org/aboutJava/communityprocess/review/jsr133/index.html" rel="nofollow noreferrer">JSR-133</a>, instead of Chapter 17 of the Java Language Specification. More info on <a href="http://www.cs.umd.edu/~pugh/java/memoryModel/jsr-133-faq.html" rel="nofollow noreferrer">JSR-133 FAQ</a></p>

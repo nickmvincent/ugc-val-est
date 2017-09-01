@@ -1,0 +1,9 @@
+<p>Sort according to the levenstein distance <a href="http://en.wikipedia.org/wiki/Levenshtein_distance" rel="nofollow">http://en.wikipedia.org/wiki/Levenshtein_distance</a>.  With this distance you can define how close strings are to each other. Implement this in a comparator.</p>
+
+<p>Here is a implementation: <a href="http://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance#Java" rel="nofollow">http://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance#Java</a></p>
+
+<p>Take the code from sanbhat and replace his score function with the levenstein distance from the wikipedia I posted. </p>
+
+<p>The idea is, that you compare each string with your base string and check, if the distances are smaller or greater. A visuell example: Imagine a 2d plane with a point called x. Now you have a list of points and want to sort them according to their distance to x. What you do is, you compare two points a and b from the list by calculating the distance from a and b to x. If a has the smaller distance to x then a must be smaller then b.</p>
+
+<p>Hth</p>

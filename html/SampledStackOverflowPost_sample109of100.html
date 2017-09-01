@@ -1,0 +1,9 @@
+<p>I always use <a href="http://en.wikipedia.org/wiki/Greenwich_Mean_Time" rel="nofollow noreferrer">Greenwich Mean Time</a> as reference to set it. Departing from here, <a href="https://stackoverflow.com/a/6244040/1199132">you just add or deduct ours</a> to fix it to your current timezone. That would be a workaround for you:</p>
+
+<pre><code>&lt;f:convertDateTime pattern="yyyy-MM-dd HH:mm" timeZone="GMT-2"/&gt;
+</code></pre>
+
+<p>If you want to avoid having to specify it once and again you can create your own <a href="http://www.mkyong.com/jsf2/custom-tags-in-jsf-2-0/" rel="nofollow noreferrer">facelet tag</a>. That way you can reuse code and you'll have to change it only once in case of timezone change.</p>
+
+<pre><code>&lt;mytag:customDate value="#{bean.date}" /&gt;
+</code></pre>
