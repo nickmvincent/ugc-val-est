@@ -399,9 +399,15 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
             os.makedirs(directory)
     variables = ['score', 'num_comments', ]
     variables += list_common_features()
-    if rq == 1:
+    if rq == 10:
         subsample_kwargs = {}
         treatment_kwargs = {'has_wiki_link': True, }
+    if rq == 11:
+        subsample_kwargs = {'has_other_link': False}
+        treatment_kwargs = {'has_wiki_link': True, }
+    if rq == 12:
+        subsample_kwargs = {'has_wiki_link': False}
+        treatment_kwargs = {'has_other_link': True, }    
     if rq == 2:
         subsample_kwargs = {
             'has_wiki_link': True,
