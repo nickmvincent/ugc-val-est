@@ -33,7 +33,7 @@ class CausalModel(object):
 		self.strata = None
 		self.estimates = Estimators()
 
-	def est_propensity(self, lin='all', qua=None):
+	def est_propensity(self, feature_names, exclude, lin='all', qua=None):
 		"""
 		Estimates the propensity scores given list of covariates to
 		include linearly or quadratically.
@@ -60,6 +60,14 @@ class CausalModel(object):
 
 		lin_terms = parse_lin_terms(self.raw_data['K'], lin)
 		qua_terms = parse_qua_terms(self.raw_data['K'], qua)
+		X_cut = self.raw_data['X'][:]
+		for feature_name in exclude:
+			try:
+				col_num = feature_names.index(feature_name)
+			except ValueError:
+				continue
+			X_cut = np.delete(X, col_num, 1)
+		modded_data = Data(self.raw_data['Y'], self.raw_data['D'], X_cut)
 
 		self.propensity = Propensity(self.raw_data, lin_terms, qua_terms)
 		self.raw_data._dict['pscore'] = self.propensity['fitted']

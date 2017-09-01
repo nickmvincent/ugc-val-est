@@ -116,7 +116,7 @@ def causal_inference(
         features.append(treatment_name)
         features.append('uid')
         db_name = connection.settings_dict['NAME']
-        filename = 'CI_Tr_{treatment}_on_{platform}_{subset}_{db}_trim{trim_val}_samples{samples}.txt'.format(**{
+        filename = 'CI2_Tr_{treatment}_on_{platform}_{subset}_{db}_trim{trim_val}_samples{samples}.txt'.format(**{
             'treatment': treatment_name,
             'platform': platform,
             'subset': num_rows if num_rows else 'All',
@@ -190,6 +190,11 @@ def causal_inference(
 
         times.append(mark_time('rows_loaded'))
         
+        exclude_from_ps = [
+            'question_score', 'num_other_answers',
+            'in_todayilearned', 
+            'in_borntoday', 'in_wikipedia', 'in_CelebrityBornToday','in_The_Donald',
+        ]
             
         X = np.transpose(np.array(feature_rows))
         X_c = X[D==0]
@@ -271,7 +276,7 @@ def causal_inference(
         causal.est_via_ols()
         times.append(mark_time('est_via_ols'))
         if not quad_psm:
-            causal.est_propensity()
+            causal.est_propensity(successful_fields, exclude_from_ps)
             times.append(mark_time('propensity'))
         else:
             causal.est_propensity_s()
@@ -293,8 +298,8 @@ def causal_inference(
         big_ndifs_counts.append(causal.summary_stats['num_large_ndiffs'])
 
         skip_fields = [
-            'in_todayilearned', 
-            'in_borntoday', 'in_wikipedia', 'in_CelebrityBornToday','in_The_Donald',
+            # 'in_todayilearned', 
+            # 'in_borntoday', 'in_wikipedia', 'in_CelebrityBornToday','in_The_Donald',
         ]
         
         if paired_psm:
