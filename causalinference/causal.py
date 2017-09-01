@@ -66,7 +66,7 @@ class CausalModel(object):
 				col_num = feature_names.index(feature_name)
 			except ValueError:
 				continue
-			X_cut = np.delete(X, col_num, 1)
+			X_cut = np.delete(X_cut, col_num, 1)
 		modded_data = Data(self.raw_data['Y'], self.raw_data['D'], X_cut)
 
 		self.propensity = Propensity(self.raw_data, lin_terms, qua_terms)
