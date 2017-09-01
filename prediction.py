@@ -292,8 +292,6 @@ def causal_inference(
         ndifs.append(causal.summary_stats['sum_of_abs_ndiffs'])
         big_ndifs_counts.append(causal.summary_stats['num_large_ndiffs'])
 
-        print('Now will remove non-predictive variables')
-        print(successful_fields)
         skip_fields = [
             'in_todayilearned', 
             'in_borntoday', 'in_wikipedia', 'in_CelebrityBornToday','in_The_Donald',

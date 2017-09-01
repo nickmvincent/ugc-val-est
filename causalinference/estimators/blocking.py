@@ -25,10 +25,12 @@ class Blocking(Estimator):
             for feature_name in skip_features:
                 try:
                     col_num = feats.index(feature_name)
-                    X = np.delete(X, col_num, 1)
-                    feats.remove(feature_name)
                 except ValueError:
-                    pass
+                    continue
+                X = np.delete(X, col_num, 1)
+                feats.remove(feature_name)
+                print('remove {} at the strata level'.format(feature_name))
+                
 
             try:
                 s.est_via_ols(adj, feature_names)
