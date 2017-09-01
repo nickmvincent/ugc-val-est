@@ -67,7 +67,9 @@ class CausalModel(object):
 				col_num = feats.index(feature_name)
 			except ValueError:
 				continue
-			X_cut = np.delete(X_cut, col_num - cols_deleted, 1)
+			col_to_kill = col_num - cols_deleted
+			X_cut = np.delete(X_cut, col_to_kill, 1)
+			del lin_terms[col_to_kill]
 			feats.remove(feature_name)
 			cols_deleted += 1
 		modded_data = Data(self.raw_data['Y'], self.raw_data['D'], X_cut)
