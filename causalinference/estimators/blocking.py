@@ -22,7 +22,7 @@ class Blocking(Estimator):
         for i, s in enumerate(strata):
             feats = list(feature_names)
             try:
-                s.est_via_ols(adj)
+                s.est_via_ols(adj, feature_names)
             except np.linalg.linalg.LinAlgError as err:
                 X = s.raw_data['X']
                 total = X.shape[0]
@@ -83,7 +83,7 @@ class Blocking(Estimator):
                 
                 strata[i] = causal.CausalModel(
                     s.raw_data['Y'], s.raw_data['D'], X)
-                strata[i].est_via_ols(adj)
+                strata[i].est_via_ols(adj, feature_names)
 
         Ns = [s.raw_data['N'] for s in strata]
         N_cs = [s.raw_data['N_c'] for s in strata]
