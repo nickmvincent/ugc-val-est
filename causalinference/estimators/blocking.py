@@ -141,7 +141,7 @@ class Blocking(Estimator):
             self._dict['atc_se'].append(calc_atx_se(errvals, N_cs))
         for errvals in att_ses:
             self._dict['att_se'].append(calc_atx_se(errvals, N_ts))
-        return ret
+        self._dict['coef_rows'] = ret
 
 
 def calc_atx(atxs, Ns):

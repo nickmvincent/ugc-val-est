@@ -336,7 +336,7 @@ def causal_inference(
             out.append(str(causal.strata))
             try:
                 coef_rows = causal.est_via_blocking(successful_fields, skip_fields)
-                out += coef_rows
+                out += causal.estimates['blocking']['coef_rows']
                 times.append(mark_time('est_via_blocking'))
                 atts = causal.estimates['blocking']['att']
                 w_avg_ndiff = 0
