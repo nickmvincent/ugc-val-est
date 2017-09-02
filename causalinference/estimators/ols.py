@@ -36,6 +36,7 @@ class OLS(Estimator):
 
 			self._dict['ate'].append(calc_ate(olscoef))
 			self._dict['ate_se'].append(calc_ate_se(cov))
+			print('**' + str(len(r2)))
 			self._dict['r2'].append(r2)
 
 			if adj == 2:
