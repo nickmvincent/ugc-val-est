@@ -10,6 +10,8 @@ from django.utils import timezone
 from url_helpers import extract_urls
 
 from textstat.textstat import textstat
+from textblob import TextBlob
+# testimonial.sentiment.polarity
 
 day_to_abbrev = {
     0: 'mon',
@@ -93,6 +95,8 @@ class Post(models.Model):
     body_includes_question_mark = models.BooleanField(default=False)
     body_includes_code = models.BooleanField(default=False)
     body_coleman_liau_index = models.IntegerField(default=0)
+    body_sentiment_polarity = models.IntegerField(default=0)
+    body_sentiment_subjectivity = models.IntegerField(default=0)
 
     # textual metrics for the title field
     title = models.CharField(max_length=1182, default="")
@@ -105,6 +109,8 @@ class Post(models.Model):
     title_starts_capitalized = models.BooleanField(default=False)
     title_includes_question_mark = models.BooleanField(default=False)
     title_coleman_liau_index = models.IntegerField(default=0)
+    title_sentiment_polarity = models.IntegerField(default=0)
+    title_sentiment_subjectivity = models.IntegerField(default=0)
 
     score = models.IntegerField()
     num_comments = models.IntegerField(default=0)
@@ -308,6 +314,10 @@ class Post(models.Model):
             if self.body_includes_code is False:
                 if '<code>' in self.body:
                     self.body_includes_code = True
+            if self.body_sentiment_polarity == 0:
+                blob = TextBlob(self.body)
+                self.body_sentiment_polarity = blob.sentiment.polarity
+                self.body_sentiment_subjectivity = blob.sentiment.subjectivity
         # calculate average scores if needed
         if self.title_length == 0:
             self.title_length = len(self.title)
@@ -340,6 +350,10 @@ class Post(models.Model):
             if self.title_includes_question_mark is False:
                 if '?' in self.title:
                     self.title_includes_question_mark = True
+            if self.title_sentiment_polarity == 0:
+                blob = TextBlob(self.body)
+                self.title_sentiment_polarity = blob.sentiment.polarity
+                self.title_sentiment_subjectivity = blob.sentiment.subjectivity
 
         if self.has_wiki_link and self.wiki_content_error == 0:
             self.reset_edit_metrics()
