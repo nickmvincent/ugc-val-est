@@ -34,11 +34,9 @@ from causalinference import CausalModel
 
 def err_handle(msg, out):
     """error handling for this exploratory code"""
-    print('*** ERR OCCURRED')
-    print(msg)
-    out.append(msg)
     trace = traceback.format_exc()
-    print(trace)
+    print('*** ERR OCCURRED', msg, trace)
+    out.append(msg)
     out.append(trace)
     return out
 
@@ -102,6 +100,7 @@ def causal_inference(
         """return a tuple of time, description of time"""
         return (time.time(), desc)
     start = time.time()
+    summary = {}
     treatment_effects = defaultdict(list)
     goal = 0.1
     fails = 0
@@ -151,19 +150,17 @@ def causal_inference(
             elif feature == 'uid':
                 ids = feature_row
                 continue
-            # elif paired_psm:
-            #     if feature == 
             try:
                 has_any_nans = any(np.isnan(feature_row))
             except Exception:
-                print('Feature {} failed isnan check...'.format(feature))
+                # print('Feature {} failed isnan check...'.format(feature))
                 continue
             if not np.any(feature_row):
-                print(
-                    'Feature {} is all zeros - will lead to singular matrix'.format(feature))
+                # print(
+                #    'Feature {} is all zeros - will lead to singular matrix'.format(feature))
                 continue
             elif has_any_nans:
-                print('Feature {} has a nan value...'.format(feature))
+                # print('Feature {} has a nan value...'.format(feature))
                 continue
             else:
                 if max(feature_row) > 1 or min(feature_row) < 0:
@@ -173,9 +170,7 @@ def causal_inference(
                         'user_comment_karma',
                         'user_reputation',
                     ]:
-                        print(feature)
                         minval = min(feature_row)
-                        print(minval)
                         if minval <= 0:
                             shifted = np.add(-1 * minval + 1, feature_row)
                         else:
@@ -211,7 +206,6 @@ def causal_inference(
             if not np.any(col):
                 to_delete.append(col_num)
         for col_num in to_delete:
-            print('doing a deletion on {}'.format(successful_fields[col_num - cols_deleted]))
             X = np.delete(X, col_num - cols_deleted, 1)
             successful_fields.remove(successful_fields[col_num - cols_deleted])
             cols_deleted += 1
@@ -257,7 +251,6 @@ def causal_inference(
                             names.remove(successful_fields[col_num])
                             break
             for col_num in to_delete:
-                print('doing a deletion on {}'.format(successful_fields[col_num - cols_deleted]))
                 X = np.delete(X, col_num - cols_deleted, 1)
                 successful_fields.remove(successful_fields[col_num - cols_deleted])
                 cols_deleted += 1
@@ -267,7 +260,6 @@ def causal_inference(
         causal = CausalModel(Y, D, X, ids=ids)
         times.append(mark_time('CausalModel'))
         out.append(str(causal.summary_stats))
-        print(causal.summary_stats)
         ndifs.append(causal.summary_stats['sum_of_abs_ndiffs'])
         big_ndifs_counts.append(causal.summary_stats['num_large_ndiffs'])
         causal.est_via_ols()
@@ -286,7 +278,6 @@ def causal_inference(
             for key, val in dic.items():
                 out.append("{}:{}".format(key, val))
         out.append(str(causal.propensity))
-        print(str(causal.propensity))
         # TODO: show my manually chosen is stable/justifiable for paper
         if trim_val == 's':
             causal.trim_s()
@@ -304,7 +295,6 @@ def causal_inference(
         
         
         if paired_psm:
-            print('doing pairing')
             psm_est, psm_summary, psm_rows = causal.est_via_psm()
             out.append('PSM PAIR REGRESSION')
             out.append(str(psm_summary))
@@ -329,15 +319,15 @@ def causal_inference(
                 try:
                     causal.stratify_s()
                 except ValueError as err:
-                    print('stratify_s err: {}'.format(err))
                     fails += 1
-                    print('fails: {}'.format(fails))
                     continue
                 times.append(mark_time('stratify_s'))
             out.append(str(causal.strata))
             try:
                 causal.est_via_blocking(successful_fields, skip_fields)
                 out += causal.estimates['blocking']['coef_rows']
+                print(causal.estimates['blocking'].as_csv)
+                summary['blocking'] = causal.estimates['blocking'].as_csv
                 times.append(mark_time('est_via_blocking'))
                 atts = causal.estimates['blocking']['att']
                 w_avg_ndiff = 0
@@ -351,31 +341,20 @@ def causal_inference(
                 out.append('WEIGHTED AVERAGE OF SUM OF ABSOLUTE VALUE OF ALL NDIFs')
                 ndifs.append(w_avg_ndiff)
                 big_ndifs_counts.append(w_num_large_ndiffs)
-                out.append('NDIF info')
                 out.append(','.join([str(ndif) for ndif in ndifs]))
+                out.append('# of BIG NDIFS')
                 out.append(','.join([str(count) for count in big_ndifs_counts]))
 
                 varname_to_field = {
                     "X{}".format(i):field for i, field in enumerate(successful_fields) if field not in skip_fields
                 }
+                out.append('VARS USED IN BLOCK REGRESSIONS')
                 for dic in [varname_to_field]:
                     for key, val in dic.items():
                         out.append("{}:{}".format(key, val))
             except np.linalg.linalg.LinAlgError as err:
                 msg = 'LinAlgError with est_via_blocking: {}'.format(err)
                 err_handle(msg, out)
-        # try:
-        #     causal.est_via_matching()
-        #     times.append(mark_time('est_via_matching'))
-        # except np.linalg.linalg.LinAlgError as err:
-        #     msg = 'LinAlgError with est_via_matching: {}'.format(err)
-        #     err_handle(msg, out)
-        try:
-            causal.est_via_weighting()
-            times.append(mark_time('est_via_matching'))
-        except Exception as err:
-            msg = 'Error with est_via_weighting: {}'.format(err)
-            err_handle(msg, out)
         out.append(str(causal.estimates))
         timing_info = {}
         prev = times[0][0]
@@ -384,9 +363,7 @@ def causal_inference(
             prev = cur_time
         for key, val in timing_info.items():
             out.append("{}:{}".format(key, val))
-        print(filename)
         if iterations == 1:
-            print('Since iterations==1, writing to filename')
             with open(filename, 'w') as outfile:
                 outfile.write('\n'.join(out))
         else:
@@ -409,12 +386,13 @@ def causal_inference(
         with open('csv_files/' + 'BOOT_' + filename, 'w', newline='') as outfile:
             writer = csv.writer(outfile)
             writer.writerows(boot_rows)
-        causal_inference(
+        summary = causal_inference(
             platform, filename_prefix,
             treatment_name,
             filter_kwargs, exclude_kwargs,
             num_rows, quad_psm, simple_bin, trim_val,
             paired_psm, iterations=1, sample_num=sample_num)
+    return summary
 
             
 
@@ -431,7 +409,6 @@ def simple_linear(platform, quality_mode=False):
     else:
         qs, features, outcomes = get_qs_features_and_outcomes(platform)
     for outcome in outcomes:
-        print('==={}==='.format(outcome))
         field_names = features + [outcome]
         rows = extract_vals_and_method_results(qs, field_names)
         records = values_list_to_records(rows, field_names)
@@ -576,7 +553,7 @@ def parse():
                             filter_kwargs['sample_num'] = 0
                         else:
                             filter_kwargs['sample_num__in'] = args.sample_num.split(',')
-                        causal_inference(
+                        summary = causal_inference(
                             platform, treatment['name'],
                             treatment.get('pre', 'CI'),
                             filter_kwargs, exclude_kwargs,
@@ -584,9 +561,9 @@ def parse():
                             args.simple_bin, trim_val,
                             args.paired_psm, iterations, args.sample_num)
                     # trim_rows.append(results['trim'])
-                # with open('TRIM_SUMMARY_' + args.platform, 'w', newline='') as outfile:
-                #     writer = csv.writer(outfile)
-                #     writer.writerows(trim_rows)
+                with open('SUMMARY.csv', 'w', newline='') as outfile:
+                    writer = csv.writer(outfile)
+                    writer.writerows(summary['blocking'])
 
     if args.quality:
         simple_linear(args.platform, True)

@@ -44,6 +44,25 @@ class Estimator(Dict):
 
 		return output
 
+	def as_csv(self):
+		table_width = 100
+		names = estimation_names()
+		coefs = [self[name] for name in names if name in self.keys()]
+		ses = [self[name] for name in standard_err_names() if name in self.keys()]
+
+		output = '\n'
+
+		rows = [('', 'Est.', 'S.e.', 'z', 'P>|z|',
+		           '[95% Conf. int.]')]
+		for (name, coef, se) in zip(names, coefs, ses):
+			for i, (coef_val, se_val) in enumerate(zip(coef, se)):
+				row = tools.gen_reg_entries(
+					'Y{}: {}'.format(i, name.upper()), coef_val, se_val)
+				rows.append(row)
+		outstr = '\n'.join([','.join(row) for row in rows])
+		return outstr
+
+
 	
 
 class Estimators(Dict):
