@@ -563,7 +563,7 @@ def parse():
                 elif rq == 2:
                     treatments = [
                         {
-                            'CI_c_',
+                            'pre': 'CI_c_',
                             'name': 'has_wiki_link', 
                             'filter_kwargs': {'has_other_link': False},
                             'exclude_kwargs': {'has_wiki_link': True, 'has_c_wiki_link': False},
