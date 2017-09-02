@@ -55,7 +55,7 @@ class Estimator(Dict):
 
 		rows = [('', 'Est.', 'S.e.', 'z', 'P>|z|',
 		           '[95% Conf. int.]', 'r2')]
-		for (name, coef, se, r2) in zip(names, coefs, ses, r2):
+		for (name, coef, se, r2) in zip(names, coefs, ses, r2s):
 			for i, (coef_val, se_val, r2_val) in enumerate(zip(coef, se, r2)):
 				row = list(tools.gen_reg_entries(
 					'Y{}: {}'.format(i, name.upper()), coef_val, se_val))

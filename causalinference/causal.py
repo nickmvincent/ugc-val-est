@@ -62,10 +62,7 @@ class CausalModel(object):
 		qua_terms = parse_qua_terms(self.raw_data['K'], qua)
 		names_in_feats = [name for name in exclude if name in feats]
 		cols_to_exclude = [feats.index(name) for name in names_in_feats]
-		print(cols_to_exclude)
-		print(lin_terms)
 		lin_terms = [term for i, term in enumerate(lin_terms) if i not in cols_to_exclude]
-		print(lin_terms)
 		self.propensity = Propensity(self.raw_data, lin_terms, qua_terms)
 		self.raw_data._dict['pscore'] = self.propensity['fitted']
 		self._post_pscore_init()
