@@ -327,11 +327,11 @@ def causal_inference(
                 causal.est_via_blocking(successful_fields, skip_fields)
                 out += causal.estimates['blocking']['coef_rows']
                 print(causal.estimates['blocking'].as_rows())
-                summary['blocking'] = [filename]
+                print(causal.estimates['blocking'])
+                summary['blocking'] = [[filename]]
                 summary['blocking'] += causal.estimates['blocking'].as_rows()
                 times.append(mark_time('est_via_blocking'))
                 atts = causal.estimates['blocking']['att']
-                r2s = causal.estimates['blocking']['r2']
                 w_avg_ndiff = 0
                 w_num_large_ndiffs = 0
                 for stratum in causal.strata:
