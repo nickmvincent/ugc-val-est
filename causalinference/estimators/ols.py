@@ -24,6 +24,7 @@ class OLS(Estimator):
 		for name in estimation_names() + standard_err_names():
 			self._dict[name] = []
 			self._dict['name_to_coef'] = defaultdict(list)
+		self._dict['r2'] = []
 		for y in Y.T:
 			olscoef, resid = np.linalg.lstsq(Z, y)[:2]
 			r2 = 1 - resid / (y.size * y.var())
@@ -35,7 +36,7 @@ class OLS(Estimator):
 
 			self._dict['ate'].append(calc_ate(olscoef))
 			self._dict['ate_se'].append(calc_ate_se(cov))
-			self._dict['r2'] = r2
+			self._dict['r2'].append(r2)
 
 			if adj == 2:
 				Xmean = X.mean(0)
