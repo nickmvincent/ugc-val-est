@@ -27,7 +27,7 @@ class OLS(Estimator):
 		for y in Y.T:
 			olscoef, resid = np.linalg.lstsq(Z, y)[:2]
 			r2 = 1 - resid / (y.size * y.var())
-			print(r2)
+			print('r2: ' + str(r2))
 			if feature_names:				
 				for name, coef in zip(feature_names, olscoef[2:]):
 					self._dict['name_to_coef'][name].append(coef)

@@ -90,6 +90,8 @@ class Post(models.Model):
     body_percent_spaces = models.IntegerField(default=0)
     body_percent_punctuation = models.IntegerField(default=0)
     body_starts_capitalized = models.BooleanField(default=False)
+    body_includes_question_mark = models.BooleanField(default=False)
+    body_includes_code = models.BooleanField(default=False)
     body_coleman_liau_index = models.IntegerField(default=0)
 
     # textual metrics for the title field
@@ -101,6 +103,7 @@ class Post(models.Model):
     title_percent_spaces = models.IntegerField(default=0)
     title_percent_punctuation = models.IntegerField(default=0)
     title_starts_capitalized = models.BooleanField(default=False)
+    title_includes_question_mark = models.BooleanField(default=False)
     title_coleman_liau_index = models.IntegerField(default=0)
 
     score = models.IntegerField()
@@ -299,6 +302,12 @@ class Post(models.Model):
                     ))
                 except TypeError:
                     self.body_coleman_liau_index = 0
+            if self.body_includes_question_mark is False:
+                if '?' in self.body:
+                    self.body_includes_question_mark = True
+            if self.body_includes_code is False:
+                if '<code>' in self.body:
+                    self.body_includes_code = True
         # calculate average scores if needed
         if self.title_length == 0:
             self.title_length = len(self.title)
@@ -328,6 +337,9 @@ class Post(models.Model):
                     ))
                 except TypeError:
                     self.title_coleman_liau_index = 0
+            if self.title_includes_question_mark is False:
+                if '?' in self.title:
+                    self.title_includes_question_mark = True
 
         if self.has_wiki_link and self.wiki_content_error == 0:
             self.reset_edit_metrics()
