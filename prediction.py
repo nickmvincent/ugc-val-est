@@ -510,7 +510,7 @@ def parse():
             iterations = args.bootstrap
         if args.trim_val is None:
             trim_vals = ['0', 's']
-        elif args.trim_val == 'pair'
+        elif args.trim_val == 'pair':
             trim_vals = [None]
         else:
             trim_vals = args.trim_val.split(',')
@@ -571,7 +571,9 @@ def parse():
                 with open('SUMMARY.csv', 'w', newline='') as outfile:
                     writer = csv.writer(outfile)
                     for summary in summaries:
-                        for key in summarPows(summary[key])
+                        for key in summary(summary[key]):
+                            writer.writerow([key])
+                            writer.writerows(summary[key])
 
     if args.quality:
         simple_linear(args.platform, True)
