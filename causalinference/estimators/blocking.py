@@ -130,6 +130,7 @@ class Blocking(Estimator):
         self._dict = dict()
         for key in estimation_names() + standard_err_names():
             self._dict[key] = []
+        self._dict['r2'] = []
         for vals in ates:
             self._dict['ate'].append(calc_atx(vals, Ns))
         for vals in atcs:
