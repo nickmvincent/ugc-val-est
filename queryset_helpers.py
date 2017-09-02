@@ -46,7 +46,7 @@ def list_textual_metrics(prefix):
             'starts_capitalized',
             'coleman_liau_index',
             'includes_question_mark',
-            'sentiment_polarity', 'sentiment_objectivity',
+            'sentiment_polarity', 'sentiment_subjectivity',
     ]:
         ret.append('{}_{}'.format(prefix, metric))
     return ret
