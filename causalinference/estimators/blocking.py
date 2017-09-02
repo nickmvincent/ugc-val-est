@@ -128,9 +128,8 @@ class Blocking(Estimator):
                                 for s in strata]).T
 
         self._dict = dict()
-        for key in estimation_names() + standard_err_names():
+        for key in estimation_names() + standard_err_names() + ['r2']:
             self._dict[key] = []
-        self._dict['r2'] = []
         for vals in ates:
             self._dict['ate'].append(calc_atx(vals, Ns))
         for vals in atcs:
