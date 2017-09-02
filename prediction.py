@@ -151,6 +151,8 @@ def causal_inference(
             elif feature == 'uid':
                 ids = feature_row
                 continue
+            # elif paired_psm:
+            #     if feature == 
             try:
                 has_any_nans = any(np.isnan(feature_row))
             except Exception:
@@ -193,17 +195,8 @@ def causal_inference(
 
         times.append(mark_time('rows_loaded'))
         exclude_from_ps = [
-            'question_score', 'num_other_answers',
-            'in_todayilearned', 
-            'in_borntoday', 'in_wikipedia', 'in_CelebrityBornToday','in_The_Donald',
         ]
         skip_fields = [
-            'question_score', 'num_other_answers',
-            'in_todayilearned', 
-            'in_borntoday', 'in_wikipedia', 'in_CelebrityBornToday','in_The_Donald',
-            #'year2008', 'year2009', 'year2010',
-            #'year2011', 'year2012', 'year2013',
-            #'year2014', 'year2015',
             'user_is_deleted', 'user_is_mod', 'user_is_suspended',
         ]
             
