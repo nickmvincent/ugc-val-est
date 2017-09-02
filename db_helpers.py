@@ -3,6 +3,7 @@ Helper functions to interface with DB so we don't have to use pgadmin...
 """
 import os
 import sys
+import time
 from collections import defaultdict
 from pprint import pprint
 import datetime
@@ -102,12 +103,14 @@ def bulk_save():
     reddit = SampledRedditThread.objects.all().order_by('uid')
     stack = SampledStackOverflowPost.objects.all().order_by('uid')
 
-    for start, end, total, batch in batch_qs(reddit):
-        print('reddit', start, end, total)
+    start = time.time()
+    for start, end, total, batch in batch_qs(reddit, batch_size=10000):
+        print('reddit', start, end, total, time.time()-start)
         for item in batch:
             item.save()
-    for start, end, total, batch in batch_qs(stack):
-        print('stack', start, end, total)
+    start = time.time()
+    for start, end, total, batch in batch_qs(stack, batch_size=10000):
+        print('stack', start, end, total, time.time() - start)
         for item in batch:
             item.save()
 
