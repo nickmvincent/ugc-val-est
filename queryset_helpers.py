@@ -84,7 +84,7 @@ def list_stack_specific_features():
     body_features = list_textual_metrics('body')
     return body_features + [
         'user_reputation', 
-#        'body_includes_code',
+        'body_includes_code',
         'num_tags',
         'response_time',
         'year2008', 'year2009', 'year2010',

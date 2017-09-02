@@ -57,8 +57,8 @@ class Estimator(Dict):
 		           '[95% Conf. int.]', 'r2')]
 		for (name, coef, se, r2) in zip(names, coefs, ses, r2):
 			for i, (coef_val, se_val, r2_val) in enumerate(zip(coef, se, r2)):
-				row = tools.gen_reg_entries(
-					'Y{}: {}'.format(i, name.upper()), coef_val, se_val)
+				row = list(tools.gen_reg_entries(
+					'Y{}: {}'.format(i, name.upper()), coef_val, se_val))
 				row.append(r2_val)
 				rows.append(row)
 		return rows
