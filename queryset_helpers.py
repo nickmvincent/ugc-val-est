@@ -40,13 +40,13 @@ def list_textual_metrics(prefix):
     textual metric feature names"""
     ret = []
     for metric in [
-            'lexicon_count', 'sentence_count',
+            # 'lexicon_count', 'sentence_count',
             'length', 'percent_uppercase',
             'percent_spaces', 'percent_punctuation',
             'starts_capitalized',
             'coleman_liau_index',
-            'includes_question_mark',
-            'sentiment_polarity', 'sentiment_subjectivity',
+            # 'includes_question_mark',
+            # 'sentiment_polarity', 'sentiment_subjectivity',
     ]:
         ret.append('{}_{}'.format(prefix, metric))
     return ret
@@ -83,12 +83,9 @@ def list_stack_specific_features():
     body_features = list_textual_metrics('body')
     return body_features + [
         'user_reputation', 
-        # 'body_num_links',
-        'body_includes_code',
+#        'body_includes_code',
         'num_tags',
-        # commented out until this is implemente fully
         'response_time',
-        # 'question_score', 'num_other_answers',
         'year2008', 'year2009', 'year2010',
         'year2011', 'year2012', 'year2013',
         'year2014', 'year2015',

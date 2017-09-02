@@ -563,7 +563,9 @@ def parse():
                     # trim_rows.append(results['trim'])
                 with open('SUMMARY.csv', 'w', newline='') as outfile:
                     writer = csv.writer(outfile)
-                    writer.writerows(summary['blocking'])
+                    for key in summary:
+                        writer.writerow([key])
+                        writer.writerows(summary[key])
 
     if args.quality:
         simple_linear(args.platform, True)
