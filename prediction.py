@@ -327,7 +327,8 @@ def causal_inference(
                 causal.est_via_blocking(successful_fields, skip_fields)
                 out += causal.estimates['blocking']['coef_rows']
                 print(causal.estimates['blocking'].as_rows())
-                summary['blocking'] = causal.estimates['blocking'].as_rows()
+                summary['blocking'] = [filename]
+                summary['blocking'] += causal.estimates['blocking'].as_rows()
                 times.append(mark_time('est_via_blocking'))
                 atts = causal.estimates['blocking']['att']
                 r2s = causal.estimates['blocking']['r2']
@@ -508,9 +509,12 @@ def parse():
         else:
             iterations = args.bootstrap
         if args.trim_val is None:
+            trim_vals = ['0', 's']
+        elif args.trim_val == 'pair'
             trim_vals = [None]
         else:
             trim_vals = args.trim_val.split(',')
+        
         if args.platform is None:
             platforms = ['r', 's', ]
         else:
@@ -546,6 +550,7 @@ def parse():
                             'exclude_kwargs': {'has_wiki_link': True, 'has_c_wiki_link': True},
                         },
                     ]
+                summaries = []
                 for trim_val in trim_vals:
                     for treatment in treatments:
                         filter_kwargs = treatment['filter_kwargs']
@@ -561,12 +566,12 @@ def parse():
                             args.num_rows, args.quad_psm,
                             args.simple_bin, trim_val,
                             args.paired_psm, iterations, args.sample_num)
+                        summaries.append(summary)
                     # trim_rows.append(results['trim'])
                 with open('SUMMARY.csv', 'w', newline='') as outfile:
                     writer = csv.writer(outfile)
-                    for key in summary:
-                        writer.writerow([key])
-                        writer.writerows(summary[key])
+                    for summary in summaries:
+                        for key in summarPows(summary[key])
 
     if args.quality:
         simple_linear(args.platform, True)

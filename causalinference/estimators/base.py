@@ -45,20 +45,17 @@ class Estimator(Dict):
 		return output
 
 	def as_rows(self):
-		table_width = 100
 		names = estimation_names()
 		coefs = [self[name] for name in names if name in self.keys()]
 		ses = [self[name] for name in standard_err_names() if name in self.keys()]
 		r2s = self['r2']
-
-		output = '\n'
 
 		rows = [('', 'Est.', 'S.e.', 'z', 'P>|z|',
 		           '[95% Conf. int.]', 'r2')]
 		for (name, coef, se) in zip(names, coefs, ses):
 			for i, (coef_val, se_val, r2_val) in enumerate(zip(coef, se, r2s)):
 				row = list(tools.gen_reg_entries(
-					'Y{}: {}'.format(i, name.upper()), coef_val, se_val))
+					'Y{}: {}'.format(i, name.upper()), coef_val, se_val))[1:]
 				row.append(r2_val)
 				rows.append(row)
 		return rows
