@@ -90,7 +90,9 @@ def extract_vals_and_method_results(qs, field_names):
 
 
 def causal_inference(
-        platform, treatment_name, filter_kwargs, exclude_kwargs,
+        platform, treatment_name, 
+        filename_prefix,
+        filter_kwargs, exclude_kwargs,
         num_rows=None, quad_psm=False, simple_bin=None, trim_val=0,
         paired_psm=None, iterations=1, sample_num=None):
     """
@@ -117,7 +119,8 @@ def causal_inference(
         features.append(treatment_name)
         features.append('uid')
         db_name = connection.settings_dict['NAME']
-        filename = 'CI3_Tr_{treatment}_on_{platform}_{subset}_{db}_trim{trim_val}_samples{samples}.txt'.format(**{
+        filename = '{pre}_Tr_{treatment}_on_{platform}_{subset}_{db}_trim{trim_val}_samples{samples}.txt'.format(**{
+            'pre': filename_prefix,
             'treatment': treatment_name,
             'platform': platform,
             'subset': num_rows if num_rows else 'All',
@@ -401,7 +404,7 @@ def causal_inference(
             ['Bootstrap results for {} iterations of full resampling'.format(
             iterations), str(0.005), str(0.995)]
         ]
-        for outcome, ate_lst in treatment_effects.items():
+        for outcome, att_lst in treatment_effects.items():
             sor = sorted(att_lst)
             n = len(att_lst)
             bot = int(0.005 * n)
@@ -414,7 +417,8 @@ def causal_inference(
             writer = csv.writer(outfile)
             writer.writerows(boot_rows)
         causal_inference(
-            platform, treatment_name,
+            platform, filename_prefix,
+            treatment_name,
             filter_kwargs, exclude_kwargs,
             num_rows, quad_psm, simple_bin, trim_val,
             paired_psm, iterations=1, sample_num=sample_num)
@@ -544,15 +548,13 @@ def parse():
         for platform in platforms:
             for rq in rqs:
                 trim_rows = []
-                if rq == 11:
+                if rq == 1:
                     treatments = [
                         {
                             'name': 'has_other_link', 
                             'filter_kwargs': {},
                             'exclude_kwargs': {'has_wiki_link': True}
-                        }]
-                elif rq == 12:
-                    treatments = [{
+                        }, {
                             'name': 'has_wiki_link',
                             'filter_kwargs': {},
                             'exclude_kwargs': {'has_other_link': True}
@@ -561,9 +563,16 @@ def parse():
                 elif rq == 2:
                     treatments = [
                         {
-                            'name': 'has_c_wiki_link', 
-                            'filter_kwargs': {'has_wiki_link': True, 'day_of_avg_score__isnull': False},
-                            'exclude_kwargs': {},
+                            'CI_c_',
+                            'name': 'has_wiki_link', 
+                            'filter_kwargs': {'has_other_link': False},
+                            'exclude_kwargs': {'has_wiki_link': True, 'has_c_wiki_link': False},
+                        },
+                        {
+                            'pre': 'CI_bad_',
+                            'name': 'has_wiki_link', 
+                            'filter_kwargs': {'has_other_link': False},
+                            'exclude_kwargs': {'has_wiki_link': True, 'has_c_wiki_link': True},
                         },
                     ]
                 for trim_val in trim_vals:
@@ -576,6 +585,7 @@ def parse():
                             filter_kwargs['sample_num__in'] = args.sample_num.split(',')
                         causal_inference(
                             platform, treatment['name'],
+                            treatment.get('pre', 'CI'),
                             filter_kwargs, exclude_kwargs,
                             args.num_rows, args.quad_psm,
                             args.simple_bin, trim_val,
