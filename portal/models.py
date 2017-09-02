@@ -350,7 +350,6 @@ class Post(models.Model):
                 if '?' in self.title:
                     self.title_includes_question_mark = True
             blob = TextBlob(self.title)
-            print(blob.sentiment)
             self.title_sentiment_polarity = blob.sentiment.polarity * 100
             self.title_sentiment_subjectivity = blob.sentiment.subjectivity * 100
 
