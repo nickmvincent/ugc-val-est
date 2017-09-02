@@ -99,6 +99,7 @@ class Blocking(Estimator):
 
         ates = np.array([s.estimates['ols']['ate'] for s in strata]).T
         ate_ses = np.array([s.estimates['ols']['ate_se'] for s in strata]).T
+        r2s = np.array([s.estimates['ols']['r2'] for s in strata]).T
         name_to_coef_mat = defaultdict(list)
         name_to_coef_lst = [s.estimates['ols']['name_to_coef'] for s in strata]
         for name_to_coef in name_to_coef_lst:
@@ -129,12 +130,15 @@ class Blocking(Estimator):
         self._dict = dict()
         for key in estimation_names() + standard_err_names():
             self._dict[key] = []
+        self._dict['r2']
         for vals in ates:
             self._dict['ate'].append(calc_atx(vals, Ns))
         for vals in atcs:
             self._dict['atc'].append(calc_atx(vals, N_cs))
         for vals in atts:
             self._dict['att'].append(calc_atx(vals, N_ts))
+        for vals in r2s:
+            self._dict['r2'].append(calc_atx(vals, N_ts))
         for errvals in ate_ses:
             self._dict['ate_se'].append(calc_atx_se(errvals, Ns))
         for errvals in atc_ses:

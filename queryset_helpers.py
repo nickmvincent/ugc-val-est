@@ -40,13 +40,14 @@ def list_textual_metrics(prefix):
     textual metric feature names"""
     ret = []
     for metric in [
-            # 'lexicon_count', 'sentence_count',
+            # 'lexicon_count',
+            'sentence_count',
             'length', 'percent_uppercase',
             'percent_spaces', 'percent_punctuation',
             'starts_capitalized',
             'coleman_liau_index',
-            # 'includes_question_mark',
-            # 'sentiment_polarity', 'sentiment_subjectivity',
+            'includes_question_mark',
+            'sentiment_polarity', 'sentiment_subjectivity',
     ]:
         ret.append('{}_{}'.format(prefix, metric))
     return ret
