@@ -326,8 +326,8 @@ def causal_inference(
             try:
                 causal.est_via_blocking(successful_fields, skip_fields)
                 out += causal.estimates['blocking']['coef_rows']
-                print(causal.estimates['blocking'].as_csv())
-                summary['blocking'] = causal.estimates['blocking'].as_csv()
+                print(causal.estimates['blocking'].as_rows())
+                summary['blocking'] = causal.estimates['blocking'].as_rows()
                 times.append(mark_time('est_via_blocking'))
                 atts = causal.estimates['blocking']['att']
                 w_avg_ndiff = 0

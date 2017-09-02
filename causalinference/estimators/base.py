@@ -44,7 +44,7 @@ class Estimator(Dict):
 
 		return output
 
-	def as_csv(self):
+	def as_rows(self):
 		table_width = 100
 		names = estimation_names()
 		coefs = [self[name] for name in names if name in self.keys()]
@@ -59,8 +59,7 @@ class Estimator(Dict):
 				row = tools.gen_reg_entries(
 					'Y{}: {}'.format(i, name.upper()), coef_val, se_val)
 				rows.append(row)
-		outstr = '\n'.join([','.join(row) for row in rows])
-		return outstr
+		return rows
 
 
 	
