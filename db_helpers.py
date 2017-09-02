@@ -103,14 +103,14 @@ def bulk_save():
     reddit = SampledRedditThread.objects.all().order_by('uid')
     stack = SampledStackOverflowPost.objects.all().order_by('uid')
 
-    start = time.time()
+    start_time = time.time()
     for start, end, total, batch in batch_qs(reddit, batch_size=10000):
-        print('reddit', start, end, total, time.time()-start)
+        print('reddit', start, end, total, time.time() - start_time)
         for item in batch:
             item.save()
     start = time.time()
     for start, end, total, batch in batch_qs(stack, batch_size=10000):
-        print('stack', start, end, total, time.time() - start)
+        print('stack', start, end, total, time.time() - start_time)
         for item in batch:
             item.save()
 

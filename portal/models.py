@@ -314,10 +314,9 @@ class Post(models.Model):
             if self.body_includes_code is False:
                 if '<code>' in self.body:
                     self.body_includes_code = True
-            if self.body_sentiment_polarity == 0:
-                blob = TextBlob(self.body)
-                self.body_sentiment_polarity = blob.sentiment.polarity
-                self.body_sentiment_subjectivity = blob.sentiment.subjectivity
+            blob = TextBlob(self.body)
+            self.body_sentiment_polarity = blob.sentiment.polarity * 100
+            self.body_sentiment_subjectivity = blob.sentiment.subjectivity * 100
         # calculate average scores if needed
         if self.title_length == 0:
             self.title_length = len(self.title)
@@ -350,10 +349,10 @@ class Post(models.Model):
             if self.title_includes_question_mark is False:
                 if '?' in self.title:
                     self.title_includes_question_mark = True
-            if self.title_sentiment_polarity == 0:
-                blob = TextBlob(self.body)
-                self.title_sentiment_polarity = blob.sentiment.polarity
-                self.title_sentiment_subjectivity = blob.sentiment.subjectivity
+            blob = TextBlob(self.title)
+            print(blob.sentiment)
+            self.title_sentiment_polarity = blob.sentiment.polarity * 100
+            self.title_sentiment_subjectivity = blob.sentiment.subjectivity * 100
 
         if self.has_wiki_link and self.wiki_content_error == 0:
             self.reset_edit_metrics()
