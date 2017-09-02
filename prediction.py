@@ -571,7 +571,7 @@ def parse():
                 with open('SUMMARY.csv', 'w', newline='') as outfile:
                     writer = csv.writer(outfile)
                     for summary in summaries:
-                        for key in summary(summary[key]):
+                        for key in summary:
                             writer.writerow([key])
                             writer.writerows(summary[key])
 
