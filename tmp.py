@@ -1,5 +1,9 @@
-valstr = "40.131     14.114      2.843      0.004     12.468     67.794"
-padded_vals = valstr.split(' ')
-vals = [val.strip() for val in padded_vals if val]
-print(','.join(vals))
-
+def tmp():
+    from portal.models import SampledStackOverflowPost
+    base = SampledStackOverflowPost.objects.all()
+    qs1 = base.filter(has_wiki_link=True)
+    qs2 = base.filter(has_other_link=True)
+    qs3 = base.filter(has_no_link=True)
+    n1, n2, n3 = qs1.count(), qs2.count(), qs3.count()
+    x = sum([n1, n2, n3])
+    print(n1, n2, n3, x, base.count())

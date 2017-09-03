@@ -569,7 +569,7 @@ def parse():
                             args.paired_psm, iterations, args.sample_num)
                         summaries.append(summary)
                     # trim_rows.append(results['trim'])
-                with open('SUMMARY.csv', 'w', newline='') as outfile:
+                with open('SUMMARY_' + platform + '.csv', 'w', newline='') as outfile:
                     writer = csv.writer(outfile)
                     for summary in summaries:
                         for key in summary:

@@ -498,7 +498,7 @@ class SampledStackOverflowPost(Post):
             self.body_num_links = len(extract_urls(self.body))
         if self.body_num_links == 0:
             self.has_no_link = True
-            self.has_no_link = False
+            self.has_other_link = False
         super(SampledStackOverflowPost, self).save(*args, **kwargs)
 
 
