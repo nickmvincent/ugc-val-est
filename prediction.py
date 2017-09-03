@@ -193,6 +193,7 @@ def causal_inference(
         ]
         skip_fields = [
             'user_is_deleted', 'user_is_mod', 'user_is_suspended',
+            'title_includes_question_mark',
         ]
             
         X = np.transpose(np.array(feature_rows))
