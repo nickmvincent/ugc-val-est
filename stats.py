@@ -402,10 +402,10 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
     if rq == 10:
         subsample_kwargs = {}
         treatment_kwargs = {'has_wiki_link': True, }
-    if rq == 11:
+    if rq == 12:
         subsample_kwargs = {'has_other_link': False}
         treatment_kwargs = {'has_wiki_link': True, }
-    if rq == 12:
+    if rq == 11:
         subsample_kwargs = {'has_wiki_link': False}
         treatment_kwargs = {'has_other_link': True, }    
     if rq == 2:
