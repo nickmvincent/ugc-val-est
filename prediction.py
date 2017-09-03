@@ -190,6 +190,7 @@ def causal_inference(
 
         times.append(mark_time('rows_loaded'))
         exclude_from_ps = [
+            'title_sentence_count',
         ]
         skip_fields = [
             'user_is_deleted', 'user_is_mod', 'user_is_suspended',

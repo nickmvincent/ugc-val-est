@@ -128,7 +128,7 @@ Estimated Parameters of Propensity Score
            X34      2.413      0.035     68.853      0.000      2.345      2.482
            X35      1.718      0.011    154.011      0.000      1.697      1.740
 
-TRIM PERFORMED: 0
+TRIM PERFORMED: 0.0
 
 Summary Statistics
 
@@ -367,10 +367,10 @@ Treatment Effect Estimates: Blocking
          Y0: ATT        39.620         1.581        25.067         0.000        36.522        42.718
          Y1: ATT         1.246         0.243         5.128         0.000         0.770         1.722
 
-records_loaded:20.066747426986694
-rows_loaded:39.03171372413635
-CausalModel:2.1565427780151367
-propensity:27.84181833267212
-trim_0:0.011555671691894531
-stratify_s:2.7906341552734375
-est_via_blocking:2.3751890659332275
+records_loaded:21.87442708015442
+rows_loaded:36.88295340538025
+CausalModel:2.2980759143829346
+propensity:28.2133948802948
+trim_0.0:0.005083799362182617
+stratify_s:2.645115852355957
+est_via_blocking:2.0293219089508057
