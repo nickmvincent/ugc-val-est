@@ -41,7 +41,7 @@ def list_textual_metrics(prefix):
     ret = []
     for metric in [
             # 'lexicon_count',
-            'sentence_count',
+            # 'sentence_count',
             'length', 'percent_uppercase',
             'percent_spaces', 'percent_punctuation',
             'starts_capitalized',
