@@ -442,6 +442,7 @@ class SampledRedditThread(Post):
     A sampled reddit THREAD using SQL Rand() function
     Columns are used as regression features - no NULLs allowed
     """
+    orig = models.ForeignKey()
     user_info_processed = models.BooleanField(default=False)
     user_comment_karma = models.IntegerField(default=0)
     user_link_karma = models.IntegerField(default=0)
