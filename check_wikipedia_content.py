@@ -243,6 +243,37 @@ def get_scores_for_posts(posts, session):
         post.save()
 
 
+def get_damaging_likelihood(posts):
+    """Gets two scores for posts passed in"""
+    ores_ep_template = 'https://ores.wikimedia.org/v3/scores/{context}?models=damaging&revids={revids}'
+    revid_to_rev = {}
+    for post in posts:
+        dja_links = post.wiki_links.all()
+        for dja_link in dja_links:
+            if dja_link.language_code != 'en':
+                print('skipping non english version')
+                continue
+            dja_revs = Revision.objects.filter(wiki_link=dja_link)
+            for rev in dja_revs:
+                revid_to_rev[rev.revid] = rev
+        if post.num_edits - post.num_edits_prev_week == 17:
+            print(post.num_edits - post.num_edits_prev_week)
+            print(post.title)
+            print(post.url)
+    ores_context = 'en' + 'wiki'
+    for revbatch in grouper(revid_to_rev.keys(), 50):
+        revbatch = [rev for rev in revbatch if rev]
+        ores_ep = ores_ep_template.format(**{
+            'context': ores_context,
+            'revids': '|'.join(revbatch)
+        })
+        ores_resp = requests.get(ores_ep)
+        ores_resp = ores_resp.json()
+        print(ores_resp)
+        input()
+
+
+
 def get_userinfo_for_all_revs(revs, session):
     """
     Gets the user information for revisions that still need it
@@ -502,6 +533,12 @@ def parse():
                 has_wiki_link=True, all_revisions_pulled=False)
             print('Going to RETRIEVE INFO for {} items'.format(len(filtered)))
             retrieve_links_info(filtered, model)
+        if args.mode == 'damaging':
+            filtered = model.objects.filter(context='The_Donald', has_wiki_link=True)
+            print('checking on potentially damaging donald posts')
+            get_damaging_likelihood(filtered)
+
+
 
 
 if __name__ == "__main__":
