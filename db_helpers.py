@@ -32,12 +32,13 @@ def clear_fixed_errors():
 def show_missing_errors():
     """one off script"""
     counter = defaultdict(int)
-    qs = ErrorLog.objects.all()
+    qs = ErrorLog.objects.all().values()
     for obj in qs:
         if not (
             SampledRedditThread.objects.filter(uid=obj.uid).exists() or
             SampledStackOverflowPost.objects.filter(uid=obj.uid).exists()):
-            counter[obj.msg] += 1
+            counter[obj['msg'] += 1
+            print(obj)
     print(counter)
     print(len(qs))
 
