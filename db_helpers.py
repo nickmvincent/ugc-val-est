@@ -31,11 +31,15 @@ def clear_fixed_errors():
 
 def show_missing_errors():
     """one off script"""
-    for obj in ErrorLog.objects.all():
+    counter = defaultdict(int)
+    qs = ErrorLog.objects.all()
+    for obj in qs:
         if not (
             SampledRedditThread.objects.filter(uid=obj.uid).exists() or
             SampledStackOverflowPost.objects.filter(uid=obj.uid).exists()):
-            print(obj.msg)
+            counter[obj.msg] += 1
+    print(counter)
+    print(len(qs))
 
 def show_wiki_errors():
     for model in (SampledRedditThread, SampledStackOverflowPost):
