@@ -144,7 +144,9 @@ def link_save():
 def sample_articles():
     """Prints out a sample of URLs to text file"""
     num_samples = 100
-    models = [SampledRedditThread, SampledStackOverflowPost]
+    models = [
+        # SampledRedditThread,
+        SampledStackOverflowPost]
     for model in models:
         qs = model.objects.filter(has_wiki_link=True).order_by('?')[:num_samples]
         counter = 0
@@ -159,10 +161,22 @@ def sample_articles():
                         obj.title, obj.context, str(obj.timestamp), wiki_link.title
                     ]
                 else:
-                    fields = [obj.body]
+                    body = obj.body
+                    body_as_list = body.split('<a')
+                    annotated_body_as_list = []
+                    for component in body_as_list:
+                        if 'wikipedia.org/wiki/' in component:
+                            final.append('***' + component)
+                        else:
+                            final.append(component)
+                    final_body = '<a'.join(annotated_body_as_list)
+                    fields = [final_body]
+
                 line = ', '.join(fields)
                 with open(outfilename, 'w') as outfile:
                     outfile.write(line + '\n')
+                if model == SampledStackOverflowPost:
+                    continue # don't need to repeat for all links
 
 def extract_pairs(first, second):
     filename = 'pair_{}_{}'.format(first, second)

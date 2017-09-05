@@ -16,7 +16,6 @@
     <button onclick="goNext()">Next</button>
     
     <button onclick="reset()">Reset</button>
-    <input id="mode" type="text" value="reddit"></input>
     <button onclick="updateMode()">Change Mode</button>
     <div id="currentMode"> </div>
     <button onclick="saveCSV()">Save Progress to CSV</button>
@@ -42,6 +41,7 @@
         filename += `_sample${globalCounter}of100.html`;
         document.getElementById('name').innerHTML = filename;
         document.getElementById('viewer').src = filename;
+        
         globalCounter += 1;
         resetChoices();
     }
@@ -51,12 +51,14 @@
     }
 
     function updateMode() {
-        mode = document.getElementById("mode").value;
-        if(mode === 'reddit') {
-            document.getElementById("currentMode").innerHTML = 'reddit';
-        } else {
+        if (mode === 'reddit') {
+            mode = 'StackOverflow';
             document.getElementById("currentMode").innerHTML = 'StackOverflow';
+        } else {
+            mode = 'reddit'
+            document.getElementById("currentMode").innerHTML = 'reddit';
         }
+
     }
 
     function resetChoices() {
