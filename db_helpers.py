@@ -163,13 +163,12 @@ def sample_articles():
                 else:
                     body = obj.body
                     body_as_list = body.split('<a')
-                    annotated_body_as_list = []
+                    final_body = ''
                     for component in body_as_list:
                         if 'wikipedia.org/wiki/' in component:
-                            annotated_body_as_list.append('***' + component)
-                        else:
-                            annotated_body_as_list.append(component)
-                    final_body = '<a'.join(annotated_body_as_list)
+                            final_body += '***
+                        final_body += '<a' + component
+                    final_body = final_body[:-3]
                     fields = [final_body]
 
                 line = ', '.join(fields)
