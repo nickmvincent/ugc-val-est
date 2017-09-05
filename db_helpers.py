@@ -232,7 +232,7 @@ def so_percent_of_pageviews():
                 count += 1
                 if obj.has_wiki_link:
                     wiki_total += obj.num_pageviews
-                    wiki_count = 0
+                    wiki_count += 1
                 question_ids.append(question_id)
     print('wiki_total', wiki_total)
     print('wiki_count', wiki_count)
