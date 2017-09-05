@@ -166,7 +166,7 @@ def sample_articles():
                     final_body = ''
                     for component in body_as_list:
                         if 'wikipedia.org/wiki/' in component:
-                            final_body += '***
+                            final_body += '***'
                         final_body += '<a' + component
                     final_body = final_body[:-3]
                     fields = [final_body]
