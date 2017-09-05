@@ -228,7 +228,7 @@ def so_percent_of_pageviews():
     dropped_count = 0
 
     dropped_wiki_total = 0
-    dropped_wiki_count = 
+    dropped_wiki_count = 0 
     for start, end, total, batch in batch_qs(qs, batch_size=10000):
         print(start, end, total, time.time() - start_time)
         for obj in batch:
