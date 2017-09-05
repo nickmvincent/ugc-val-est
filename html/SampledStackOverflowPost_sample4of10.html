@@ -1,0 +1,10 @@
+<a<p>Writing to a serial port does not leave a message on the serial port to be read by the same device. This just isn't how a serial port works and is not how most OSes are written to allow as a buffer behavior. What you really need is a virtual serial port.</p>
+
+<p>Check out ***<a href="http://en.wikipedia.org/wiki/COM_port_redirector#Open_source_solutions" rel="nofollow">this</a> section of a wikipedia article on COM port redirectors and see if any of it will fulfill your needs. Otherwise I recommend searching for COM port emulator, serial port virtualization, etc. until you find software that will work for your use case and operating system. This might be hard, especially if timing is important to your simulations.</p>
+
+<p><strong>Edit</strong>: To make this slightly more clear, let's talk about what the pySerial library is actually doing to communicate with python. pySerial is just communicating to the OS's API for the serial port. The OS will, generally, model this as a location to write information to and a location to read information from (buffered in just about all modern computing systems). What's important to understand is that from the point of view of the OS (how the serial port is modeled), the write location can ONLY be written to and the read location can only be read from. This may or may not be how the actual serial hardware interfaces with the machine, in most serial port hardware and interface designs that I've worked with, this is the case for the sake of simplicity and reduced cost. Because of this, you are down to two basic choices.</p>
+
+<ol>
+<li><p>Give the OS a virtual serial port that you can read to AND write from somehow</p></li>
+<li><p>Possibly simpler, put a null modem adapter on one of your computer's serial ports and, using a serial cable, connect the two ports. You can now have your service on one port and your simulated device script on the other.</p></li>
+<

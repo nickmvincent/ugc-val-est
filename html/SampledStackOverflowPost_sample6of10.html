@@ -1,0 +1,27 @@
+<a<p>The global variation is a <em>sum</em>.</p>
+
+<p>You can compute parts of the sum in parallel trivially, and then add them together.</p>
+
+<pre><code>sum(x1...x100) = sum(x1...x50) + sum(x51...x100)
+</code></pre>
+
+<p>The same way, you can compute the global averages - compute the global sum, compute the sum of the object counts, divide (don't divide by the number of nodes; but by the total number of objects).</p>
+
+<pre><code>mean = sum/count
+</code></pre>
+
+<p>Once you have the mean, you can compute the sum of squared deviations using the distributed sum formula above (applied to (xi-mean)^2), then divide by count-1 to get the variance.</p>
+
+<h2>Do not use E[X^2] - (E[X])^2</h2>
+
+<p>While this formula "mean of square minus square of mean" is highly popular, it is numerically unstable when you are using floating point math. It's known as ***<a href="https://en.wikipedia.org/wiki/Catastrophic_cancellation" rel="nofollow">catastrophic cancellation</a>.
+Because the two values can be very close, you lose a lot of digits in precision when computing the difference. I've seen people get a negative variance this way...</p>
+
+<p>With "big data", numerical problems gets worse...</p>
+
+<p>Two ways to avoid these problems:</p>
+
+<ul>
+<li>Use two passes. Computing the mean is stable, and gets you rid of the subtraction of the squares.</li>
+<li>Use an online algorithm such as the one by Knuth and Welford, then use weighted sums to combine the per-partition means and variances. ***<a href="https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance#Parallel_algorithm" rel="nofollow">Details on Wikipedia</a> In my experience, this often is slower; but it may be beneficial on Hadoop due to startup and IO costs.</li>
+<

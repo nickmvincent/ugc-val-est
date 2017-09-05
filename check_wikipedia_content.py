@@ -276,11 +276,14 @@ def get_damaging_likelihood(posts):
         ores_resp = requests.get(ores_ep)
         ores_resp = ores_resp.json()
         scores = ores_resp[ores_context]['scores']
+        print(scores)
         for revid in revbatch:
-            rev = revid_to_rev[revid]
-            pred = scores['score']['prediction']
-            if pred:
-                damaging_count += 1
+            rev_resp = scores[revid]['damaging']
+            if 'score' in rev_resp:
+                pred = rev_resp['score']['prediction']
+                completed += 1
+                if pred:
+                    damaging_count += 1
         completed += len(revbatch)
 
     print('{}/{} damaging posts'.format(damaging_count, completed))    

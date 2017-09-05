@@ -1,0 +1,27 @@
+<a<p>You can find 64 bit version here ***<a href="http://en.wikipedia.org/wiki/Hamming_weight" rel="nofollow noreferrer">http://en.wikipedia.org/wiki/Hamming_weight</a></p>
+
+<p>It is something like this</p>
+
+<pre><code>static long NumberOfSetBits(long i)
+{
+    i = i - ((i &gt;&gt; 1) &amp; 0x5555555555555555);
+    i = (i &amp; 0x3333333333333333) + ((i &gt;&gt; 2) &amp; 0x3333333333333333);
+    return (((i + (i &gt;&gt; 4)) &amp; 0xF0F0F0F0F0F0F0F) * 0x101010101010101) &gt;&gt; 56;
+}
+</code></pre>
+
+<p>This is a 64 bit version of the code form here <a href="https://stackoverflow.com/questions/109023">How to count the number of set bits in a 32-bit integer?</a></p>
+
+<p>Using Joshua's suggestion I would transform it into this:</p>
+
+<pre><code>static int NumberOfSetBits(ulong i)
+{
+    i = i - ((i &gt;&gt; 1) &amp; 0x5555555555555555UL);
+    i = (i &amp; 0x3333333333333333UL) + ((i &gt;&gt; 2) &amp; 0x3333333333333333UL);
+    return (int)(unchecked(((i + (i &gt;&gt; 4)) &amp; 0xF0F0F0F0F0F0F0FUL) * 0x101010101010101UL) &gt;&gt; 56);
+}
+</code></pre>
+
+<p><strong>EDIT</strong>: I found a bug while testing 32 bit version. I added missing parentheses. The sum should be done before bitwise &amp;, in the last line</p>
+
+<p><strong>EDIT2</strong> Added safer version for ulong
