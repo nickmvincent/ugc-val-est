@@ -206,6 +206,8 @@ def so_percent_of_pageviews():
     question_ids = []
     total = 0
     wiki_total = 0
+    wiki_count = 0
+    count = 0
     start_time = time.time()
     for start, end, total, batch in batch_qs(qs, batch_size=10000):
         print(start, end, total, time.time() - start_time)
@@ -214,11 +216,15 @@ def so_percent_of_pageviews():
             question_id = ans.parent_id
             if question_id not in question_ids:
                 total += obj.num_pageviews
+                count += 1
                 if obj.has_wiki_link:
                     wiki_total += obj.num_pageviews
+                    wiki_count = 0
                 question_ids.append(question_id)
-    print(wiki_total)
-    print(total)
+    print('wiki_total', wiki_total)
+    print('wiki_count', wiki_count)
+    print('total', total)
+    print('count', count)
 
 
 if __name__ == "__main__":

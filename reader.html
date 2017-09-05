@@ -7,19 +7,33 @@
   <body style="position:relative; width:100%; height:100%;">
     <iframe id="viewer" src="" style="width:100%; height:80%;"> </iframe>
     <div id="name"> </div>
+    <div id="choices" style="display:flex; flex-direction:row;"> 
+        <div style="margin:0 5px 0 5px"> reuseChoice: </div><div id="reuseChoice"> </div>
+        <div style="margin:0 5px 0 5px"> currentEventChoice: </div><div id="currentEventChoice"> </div>
+    </div>
+    <button onclick="flipChoice('reuseChoice')">Mark as Re-use</button>
+    <button onclick="flipChoice('currentEventChoice')">Mark as Current Event</button>
     <button onclick="goNext()">Next</button>
+    
     <button onclick="reset()">Reset</button>
-    <input id="mode" type="text"> </input>
-    <button onclick="updateMode()">Submit</button>
+    <input id="mode" type="text" value="reddit"></input>
+    <button onclick="updateMode()">Change Mode</button>
     <div id="currentMode"> </div>
+    <button onclick="saveCSV()">Save Progress to CSV</button>
   </body>
 
   <script>
-    console.log('loaded...')
     var globalCounter = 0;
     var mode = 'reddit';
+    var data = [];
+    var choices = {};
+    var filename = false;
     function goNext() {
-        var filename = ''
+        if(filename !== false){
+            var dataRow = [filename, choices['currentEventChoice'], choices['reuseChoice']];
+            data.push(dataRow);              
+        }
+        filename = '';
         if(mode === 'reddit') {
             filename += 'SampledRedditThread';
         } else {
@@ -29,10 +43,13 @@
         document.getElementById('name').innerHTML = filename;
         document.getElementById('viewer').src = filename;
         globalCounter += 1;
+        resetChoices();
     }
+    
     function reset() {
         globalCounter = 0;
     }
+
     function updateMode() {
         mode = document.getElementById("mode").value;
         if(mode === 'reddit') {
@@ -42,5 +59,53 @@
         }
     }
 
+    function resetChoices() {
+        mark('reuseChoice', 0);
+        mark('currentEventChoice', 0)
+    }
+
+    function flipChoice(choice) {
+        var newVal = !choices[choice];
+        mark(choice, newVal);
+    }
+
+    function mark(choice, val) {
+        choices[choice] = Number(val);
+        document.getElementById(choice).innerHTML = val;
+    }
+
+    function saveCSV() {
+        console.log('write');
+        var csvContent = "data:text/csv;charset=utf-8,";
+        data.forEach(function(infoArray, index){
+            dataString = infoArray.join(",");
+            csvContent += index < data.length ? dataString+ "\n" : dataString;
+        }); 
+        console.log(data);
+        var encodedUri = encodeURI(csvContent);
+        var link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "classifications.csv");
+        document.body.appendChild(link);
+
+        link.click();
+    }
+
+    window.onkeyup = function(e) {
+        var key = e.keyCode ? e.keyCode : e.which;
+
+        if (key == 82) { // r
+            flipChoice('reuseChoice');
+        } else if (key == 67) { // c
+            flipChoice('currentEventChoice');
+        } else if (key == 13) { // enter
+            goNext();
+        } else if (key == 83) { //s
+            saveCSV();
+        }
+    }
+
+    goNext()
+    resetChoices()
 </script>
 </html>
