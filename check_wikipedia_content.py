@@ -264,6 +264,7 @@ def get_damaging_likelihood(posts):
             print(post.title)
             print(post.url)
     diff_avg = diff_sum / len(posts)
+    print(diff_avg)
     ores_context = 'en' + 'wiki'
     damaging_count = 0
     count = 0
