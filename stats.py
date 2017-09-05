@@ -436,7 +436,7 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
             datasets += [{
                 'qs': SampledRedditThread.objects.filter(**subsample_kwargs).filter(
                     context='todayilearned'),
-                'name': 'TIL'
+                'name': 'todayilearned'
             }, {
                 'qs': SampledRedditThread.objects.filter(**subsample_kwargs).filter(
                     context__in=TOP_TEN),
@@ -451,12 +451,18 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
                 'name': 'wikipedia'
             }, {
                 'qs': SampledRedditThread.objects.filter(**subsample_kwargs).filter(
-                    context='todayilearned'),
+                    context='CelebrityBornToday'),
                 'name': 'CelebrityBornToday'
             }, {
                 'qs': SampledRedditThread.objects.filter(**subsample_kwargs).filter(
-                    context='todayilearned'),
+                    context='The_Donald'),
                 'name': 'The_Donald'
+            }, {
+                'qs': SampledRedditThread.objects.filter(**subsample_kwargs).exclude(
+                    context__in=[
+                        'The_Donald', 'CelebrityBornToday', 'wikipedia', 'borntoday', 'todayilearned',
+                    ]),
+                'name': 'OTHER'
             }
             
             ]
