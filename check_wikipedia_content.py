@@ -267,21 +267,24 @@ def get_damaging_likelihood(posts):
     print(diff_avg)
     ores_context = 'en' + 'wiki'
     damaging_count = 0
-    count = 0
+    completed = 0
     for revbatch in grouper(revid_to_rev.keys(), 50):
         revbatch = [rev for rev in revbatch if rev]
-        count += len(revbatch)
         ores_ep = ores_ep_template.format(**{
             'context': ores_context,
             'revids': '|'.join(revbatch)
         })
         ores_resp = requests.get(ores_ep)
         ores_resp = ores_resp.json()
-        for obj in ores_resp:
-            pred = obj['score']['prediction']
+        scores = ores_resp['scores']
+        for revid in revbatch:
+            rev = revid_to_rev[revid]
+            pred = scores['score']['prediction']
             if pred:
                 damaging_count += 1
-    print('{}/{} damaging posts'.format(damaging_count, count))    
+        completed += len(revbatch)
+
+    print('{}/{} damaging posts'.format(damaging_count, completed))    
 
 
 
