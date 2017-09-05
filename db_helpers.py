@@ -29,21 +29,19 @@ def clear_fixed_errors():
         print(obj)
         input()
 
+def show_missing_errors():
+    """one off script"""
+    for obj in ErrorLog.objects.all():
+        if not (
+            SampledRedditThread.objects.filter(uid=obj.uid).exists() or
+            SampledStackOverflowPost.objects.filter(uid=obj.uid).exists()):
+            print(obj.msg)
 
 def show_wiki_errors():
     for model in (SampledRedditThread, SampledStackOverflowPost):
         counter = defaultdict(int)
         qs = model.objects.exclude(wiki_content_error=0)
-        for obj in qs.values():
-            # if obj.get('url'):
-            #     print(obj['url'])
-            # else:
-            #     print(obj['body'])
-            try:
-                err = ErrorLog.objects.get(uid=obj['uid'])
-                print(err.msg)
-            except Exception:
-                pass
+        for obj in qs:
             counter[obj['wiki_content_error']] += 1
         pprint(counter)
 
@@ -238,6 +236,8 @@ if __name__ == "__main__":
             clear_json2db()
         elif sys.argv[1] == 'show_wiki_errors':
             show_wiki_errors()
+        elif sys.argv[1] == 'show_missing_errors':
+            show_missing_errors()
         elif sys.argv[1] == 'sample_articles':
             sample_articles()
         elif sys.argv[1] == 'extract_pairs':
