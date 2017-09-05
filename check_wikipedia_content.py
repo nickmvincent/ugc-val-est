@@ -247,7 +247,6 @@ def get_damaging_likelihood(posts):
     """Gets two scores for posts passed in"""
     ores_ep_template = 'https://ores.wikimedia.org/v3/scores/{context}?models=damaging&revids={revids}'
     revid_to_rev = {}
-    diff_sum = 0
     for post in posts:
         dja_links = post.wiki_links.all()
         for dja_link in dja_links:
@@ -257,13 +256,6 @@ def get_damaging_likelihood(posts):
             dja_revs = Revision.objects.filter(wiki_link=dja_link)
             for rev in dja_revs:
                 revid_to_rev[rev.revid] = rev
-        diff = post.num_edits - post.num_edits_prev_week
-        diff_sum += diff
-        if  diff == 17:
-            print(diff, post.title, post.url)
-            print(post.timestamp)
-    diff_avg = diff_sum / len(posts)
-    print(diff_avg)
     ores_context = 'en' + 'wiki'
     damaging_count = 0
     completed = 0
@@ -550,8 +542,8 @@ def parse():
             print('Going to RETRIEVE INFO for {} items'.format(len(filtered)))
             retrieve_links_info(filtered, model)
         if args.mode == 'damaging':
-            filtered = model.objects.filter(context='The_Donald', has_wiki_link=True)
-            print('checking on potentially damaging donald posts')
+            filtered = model.objects.filter(has_wiki_link=True)[:1000]
+            print('checking on potentially damaging posts')
             get_damaging_likelihood(filtered)
 
 
