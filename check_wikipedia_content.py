@@ -260,9 +260,8 @@ def get_damaging_likelihood(posts):
         diff = post.num_edits - post.num_edits_prev_week
         diff_sum += diff
         if  diff == 17:
-            print(diff)
-            print(post.title)
-            print(post.url)
+            print(diff, post.title, post.url)
+            print(post.timestamp)
     diff_avg = diff_sum / len(posts)
     print(diff_avg)
     ores_context = 'en' + 'wiki'
@@ -276,7 +275,7 @@ def get_damaging_likelihood(posts):
         })
         ores_resp = requests.get(ores_ep)
         ores_resp = ores_resp.json()
-        scores = ores_resp['scores']
+        scores = ores_resp[ores_context]['scores']
         for revid in revbatch:
             rev = revid_to_rev[revid]
             pred = scores['score']['prediction']
