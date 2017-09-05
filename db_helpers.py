@@ -166,9 +166,9 @@ def sample_articles():
                     annotated_body_as_list = []
                     for component in body_as_list:
                         if 'wikipedia.org/wiki/' in component:
-                            final.append('***' + component)
+                            annotated_body_as_list.append('***' + component)
                         else:
-                            final.append(component)
+                            annotated_body_as_list.append(component)
                     final_body = '<a'.join(annotated_body_as_list)
                     fields = [final_body]
 
