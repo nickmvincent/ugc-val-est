@@ -218,10 +218,17 @@ def so_percent_of_pageviews():
     qs = SampledStackOverflowPost.objects.filter(sample_num=0).order_by('uid')
     question_ids = []
     total = 0
+    count = 0
+
     wiki_total = 0
     wiki_count = 0
-    count = 0
+
     start_time = time.time()
+    dropped_total = 0
+    dropped_count = 0
+
+    dropped_wiki_total = 0
+    dropped_wiki_count = 
     for start, end, total, batch in batch_qs(qs, batch_size=10000):
         print(start, end, total, time.time() - start_time)
         for obj in batch:
@@ -234,10 +241,20 @@ def so_percent_of_pageviews():
                     wiki_total += obj.num_pageviews
                     wiki_count += 1
                 question_ids.append(question_id)
+            else:
+                dropped_total += obj.num_pageviews
+                dropped_count += 1
+                if obj.has_wiki_link:
+                    dropped_wiki_total += obj.num_pageviews
+                    dropped_wiki_count += 1
     print('wiki_total', wiki_total)
     print('wiki_count', wiki_count)
     print('total', total)
     print('count', count)
+    print('dropped_wiki_total', dropped_wiki_total)
+    print('dropped_wiki_count', dropped_wiki_count)
+    print('dropped_total', dropped_total)
+    print('dropped_count', dropped_count)
 
 
 if __name__ == "__main__":
