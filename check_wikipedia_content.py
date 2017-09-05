@@ -247,6 +247,7 @@ def get_damaging_likelihood(posts):
     """Gets two scores for posts passed in"""
     ores_ep_template = 'https://ores.wikimedia.org/v3/scores/{context}?models=damaging&revids={revids}'
     revid_to_rev = {}
+    diff_sum = 0
     for post in posts:
         dja_links = post.wiki_links.all()
         for dja_link in dja_links:
@@ -256,21 +257,30 @@ def get_damaging_likelihood(posts):
             dja_revs = Revision.objects.filter(wiki_link=dja_link)
             for rev in dja_revs:
                 revid_to_rev[rev.revid] = rev
-        if post.num_edits - post.num_edits_prev_week == 17:
-            print(post.num_edits - post.num_edits_prev_week)
+        diff = post.num_edits - post.num_edits_prev_week
+        diff_sum += diff
+        if  diff == 17:
+            print(diff)
             print(post.title)
             print(post.url)
+    diff_avg = diff_sum / len(posts)
     ores_context = 'en' + 'wiki'
+    damaging_count = 0
+    count = 0
     for revbatch in grouper(revid_to_rev.keys(), 50):
         revbatch = [rev for rev in revbatch if rev]
+        count += len(revbatch)
         ores_ep = ores_ep_template.format(**{
             'context': ores_context,
             'revids': '|'.join(revbatch)
         })
         ores_resp = requests.get(ores_ep)
         ores_resp = ores_resp.json()
-        print(ores_resp)
-        input()
+        for obj in ores_resp:
+            pred = obj['score']['prediction']
+            if pred:
+                damaging_count += 1
+    print('{}/{} damaging posts'.format(damaging_count, count))    
 
 
 
@@ -537,6 +547,7 @@ def parse():
             filtered = model.objects.filter(context='The_Donald', has_wiki_link=True)
             print('checking on potentially damaging donald posts')
             get_damaging_likelihood(filtered)
+
 
 
 
