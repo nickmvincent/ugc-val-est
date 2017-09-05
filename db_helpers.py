@@ -37,8 +37,9 @@ def show_missing_errors():
         if not (
             SampledRedditThread.objects.filter(uid=obj.uid).exists() or
             SampledStackOverflowPost.objects.filter(uid=obj.uid).exists()):
-            counter[obj['msg'] += 1
+            counter[obj['msg']] += 1
             print(obj)
+            input()
     print(counter)
     print(len(qs))
 
