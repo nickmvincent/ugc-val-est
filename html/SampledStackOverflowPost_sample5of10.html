@@ -1,0 +1,44 @@
+<a<h3>Probable Cause</h3>
+
+<p>Most likely this has been caused by the recent ***<a href="http://en.wikipedia.org/wiki/Leap_second" rel="nofollow noreferrer">Leap Second</a> and its impact on quite some unaware/unprepared IT systems, including parts of Linux, MySQL, Java and indeed Tomcat - see the Wired article about the <a href="http://www.wired.com/wiredenterprise/2012/07/leap-second-bug-wreaks-havoc-with-java-linux" rel="nofollow noreferrer">‘Leap Second’ Bug Wreaks Havoc Across Web</a> for the whole story:</p>
+
+<blockquote>
+  <p>[...], saying it experienced the leap bug problem with the 
+  Java-happy Tomcat web servers it uses to serve up its site. “<strong>Our web
+  servers running tomcat came close to zero response (we were able to
+  handle some requests)</strong>,” read an e-mail from a site spokesman. “We were
+  able to connect to servers in order to reset them. <strong>Only rebooting the
+  servers cleared up the issue</strong>.” <em>[emphasis mine]</em></p>
+</blockquote>
+
+<h3>Workaround / Fix</h3>
+
+<p>Accordingly, the solution usually boils down to <em>turning it off and on again</em>, i.e. restarting the server in question, though you might be able to avoid this by simply setting the date, as suggested e.g. in the context of:</p>
+
+<ul>
+<li><p>Linux/Tomcat, see <a href="http://linux.uits.uconn.edu/mas02041/2012/07/01/july-1-2012-tomcat-problems-high-cpuload-probably-caused-by-the-leap-second/" rel="nofollow noreferrer">July 1 2012 Linux problems? High CPU/Load? Probably caused by the Leap Second!</a>:</p>
+
+<blockquote>
+  <p>Apparently, simply forcing a reset of the date is enough to fix the
+  problem:</p>
+
+<pre><code>date -s "`date`"
+</code></pre>
+</blockquote></li>
+<li><p>MySQL, see <a href="http://blog.mozilla.org/it/2012/06/30/mysql-and-the-leap-second-high-cpu-and-the-fix/" rel="nofollow noreferrer">MySQL and the Leap Second, High CPU and the Fix</a> (also linked from the comments on wwwhizz' answer to <a href="https://stackoverflow.com/a/11293475/45773">MySQL high CPU usage</a>, where you'll find two specific variations how to do this depending on your OS):</p>
+
+<blockquote>
+  <p>The fix is quite simple – simply set the date. Alternatively, you can
+  restart the machine, which also works. Restarting MySQL (or Java, or
+  whatever) does NOT fix the problem.</p>
+</blockquote></li>
+</ul>
+
+<h3>Background / Proposed Solutions</h3>
+
+<p>Please note that while the underlying issue is utterly tricky, it is all but unknown in principle, hence there have been prominent posts/users warning about and explaining this and offering suggestions on how to deal with it in principle, in particular:</p>
+
+<ul>
+<li><a href="http://my.opera.com/marcomarongiu/blog/2012/06/01/an-humble-attempt-to-work-around-the-leap-second" rel="nofollow noreferrer">An humble attempt to work around the leap second</a> by Marco Marongiu</li>
+<li><a href="http://googleblog.blogspot.de/2011/09/time-technology-and-leaping-seconds.html" rel="nofollow noreferrer">Time, technology and leaping seconds</a> by Christopher Pascoe</li>
+<
