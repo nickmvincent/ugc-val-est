@@ -168,14 +168,14 @@ def sample_articles():
                         if 'wikipedia.org/wiki/' in component:
                             final_body += '***'
                         final_body += '<a' + component
-                    final_body = final_body[:-3]
+                    final_body = final_body[:-4]
                     fields = [final_body]
 
                 line = ', '.join(fields)
                 with open(outfilename, 'w') as outfile:
                     outfile.write(line + '\n')
                 if model == SampledStackOverflowPost:
-                    continue # don't need to repeat for all links
+                    break # don't need to repeat for all links
 
 def extract_pairs(first, second):
     filename = 'pair_{}_{}'.format(first, second)
