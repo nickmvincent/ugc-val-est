@@ -1,5 +1,0 @@
-<p>The C++ equivalent of <code>#define</code> in the shown scenario is <a href="http://duramecho.com/ComputerInformation/WhyHowCppConst.html" rel="nofollow noreferrer"><code>const</code></a>. Internally <code>#define</code> is used not by the compiler but the <em>precompiler</em>, to modify code before it is actually sent to the compiler. Hence in your case the compiler actually only ever gets to see <code>cout&lt;&lt;100&lt;&lt;endl;</code>. Using <code>const</code> is better practice because it is actually <a href="https://en.wikipedia.org/wiki/Type_safety" rel="nofollow noreferrer">type safe</a>.</p>
-
-<p>The most common use case for <code>#define</code> in C++ is for <a href="https://en.wikipedia.org/wiki/Include_guard" rel="nofollow noreferrer">include guards</a>, to ensure header files are only included once for any specific object.</p>
-
-<p>Runner-up is most likely for platform-specific compilation/optimization, see <a href="https://stackoverflow.com/q/4605842/1729885">this link</a> for some examples.</p>

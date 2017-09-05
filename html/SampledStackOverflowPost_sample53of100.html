@@ -1,9 +1,0 @@
-<ul>
-<li>For calling C from C++ you don't need anything special, since C++ was designed this way</li>
-<li>You can call C from Python by using native extensions for this you should use <a href="http://docs.python.org/3/library/ctypes.html" rel="nofollow noreferrer">ctypes</a> or <a href="http://www.swig.org/" rel="nofollow noreferrer">swig</a> read more <a href="http://docs.python.org/3/extending/index.html" rel="nofollow noreferrer">here</a>. And <a href="http://blog-of-darius.blogspot.com/2011/03/simple-win32-python-and-ctypes-sample.html" rel="nofollow noreferrer">here</a> is example how to call Windows API from Python.</li>
-<li>There is <a href="http://docs.oracle.com/javase/7/docs/technotes/guides/jni/index.html" rel="nofollow noreferrer">Java Native Interface</a> for calling native C libraries from Java and vice verse read more <a href="https://en.wikipedia.org/wiki/Java_Native_Interface" rel="nofollow noreferrer">here</a></li>
-<li>It is also possible to call C++ from C If I remember correctly you need to use "extern C" declaration in your C++ code read <a href="https://stackoverflow.com/questions/7281441/elegantly-call-c-from-c">here</a></li>
-<li>It is possible to call C from JavaScript (for example native node modules)</li>
-</ul>
-
-<p>In fact almost any language has possibility to call C libraries because of amount of C libraries and because those are easy to port from system to system. In fact many complex systems uses script language for so called glue code witch uses C libraries. Any way this is broad topic you should tell more about your problem so that we could help you. If you jest want to test concept I think the Python way is easiest.</p>

@@ -1,15 +1,20 @@
-<a<blockquote>
-  <p>***<a href="http://en.wikipedia.org/wiki/Variadic_function" rel="nofollow noreferrer">There are many mathematical and logical operations that come across naturally as variadic functions. For instance, the summing of numbers or the concatenation of strings or other sequences are operations that can logically apply to any number of operands.</a></p>
-</blockquote>
+<a<p>You shouldn't use (tail) recursion, as Common Lisp has no ***<a href="https://en.wikipedia.org/wiki/Tail_call" rel="nofollow">tail call optimization</a> guarantee.   Use <code>do</code> or <code>loop</code> instead, or even <code>prog</code> with <code>go</code>. </p>
 
-<p>Even though the label <em>variadic functions</em> sounds modern, the concept of what it is may be as old as the wheel. Ok, maybe not that much, but its such a logical evolution that it was probably <em>re-discovered</em> multiple times along the way.</p>
+<p>And algorithmically, <strong><em>always</em></strong> test your potential divisors in <strong><em>increasing</em></strong> order, starting from <em>2</em>, and stop when you exceed <strong><em><code>(sqrt n)</code></em></strong>:</p>
 
-<p>The ***<a href="http://en.wikipedia.org/wiki/Watcom_C/C++_compiler" rel="nofollow noreferrer">Watcom</a> compiler ***<a href="http://en.wikipedia.org/wiki/X86_calling_conventions#Watcom_register_based_calling_convention" rel="nofollow noreferrer">may have been the first</a> to have <strong>implemented</strong> it for the C language:</p>
+<pre><code>(defun ISPRIME (n) 
+  (prog ((d 2))                          ; defines implicit block named NIL
+    LOOP
+      (if (&gt; (* d d) n)
+           ( return-from ISPRIME t ))    ; (return T) also works
+      (if (= (mod n d) 0)
+           ( return-from ISPRIME nil ))  ; or just (return) 
+      (if (= d 2)
+        (incf d 1)
+        (incf d 2))
+      (go LOOP)))
+</code></pre>
 
-<blockquote>
-  <p>Variadic functions fall back to the Watcom stack based calling convention. </p>
-  
-  <p>The Watcom C/C++ compiler is a compiler for the computer programming languages C and C++ that produces executable programs for several platforms and operating systems. The code it produces for MS-DOS executes very fast. It was one of the first compilers to support the Intel 80386 "protected mode". In the mid-1990s some of the most technically ambitious DOS games such as <strong>Doom</strong>, <strong>Descent</strong> and <strong>Duke Nukem 3D</strong> were built using Watcom C. Though no longer sold commercially by Sybase, the Watcom C/C++ compiler and the Watcom Fortran compiler have been made available as the <a href="http://www.openwatcom.org/index.php/Main_Page" rel="nofollow noreferrer">free and open source Open Watcom</a> package with the assistance of SciTech Software</p>
-</blockquote>
+<p><code>(return)</code> is the same as <code>(return nil)</code>, and <code>(return val)</code> is the same as <code>(return-from NIL val)</code>. Since <code>prog</code> defines an implicit block named <code>NIL</code>, shorter, and more general, calls to <code>return</code> can be used there instead.</p>
 
-<p>That said, I think this question is better suited to <a href="https://math.stackexchange.com/">math.stackexchange.com</a>.
+<p>A fun way to pursue here is to use an extendable <em>list of primes</em> created by filtering an increasing numbers supply with this <code>isprime</code> function, to be used as divisors supply in another <code>isprime-p</code> function which would only test its argument by these primes, and not all odds, thus achieving another algorithmic performance gain. The primes list should be extended as needed. The primes would only go  upto the square root of the number being tested, and the primes themselves would only need to be tested by numbers upto the square root of the top prime (so, fourth root of the number being tested).

@@ -1,4 +1,0 @@
-<p>This strange value, is <em>memory garbage</em>. In C,all uninitialized variables(except <code>static</code> and <code>extern</code>) points to memory garbage.
-When you use the value of this variable, anything can happen, you have an <a href="http://en.wikipedia.org/wiki/Undefined_behavior" rel="nofollow"><code>UB</code></a>.You must initialize the values of this variables and check the return-value from <a href="http://www.cplusplus.com/reference/clibrary/cstdio/scanf/" rel="nofollow"><code>scanf()</code></a>. </p>
-
-<p>As @Michael Dorst mentioned on comments, set <code>x</code> and <code>x</code> to some uncomum values(e.g, -1) and after <code>scanf()</code> call, check if the values of them have changed too.</p>

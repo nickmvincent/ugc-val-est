@@ -1,9 +1,0 @@
-<p>As far as I can see, the conversion is correct. The only problem is theat the UTF-8 string has four bytes but you only print the first three. </p>
-
-<p>Obviously, 05 is a non printing character. It's meaning doesn't make sense in abrowser context. (Why are you sending it?) It could be that Chrome refuses to print anything with control codes in it.</p>
-
-<p>The conversion of 0x86 to 0xC2 0x86 is correct. However, it is possible that the font you are using doesn't have a glyph for it. On my Mac, this appears to be the case.</p>
-
-<p><strong>EDIT</strong></p>
-
-<p>Having checked out <a href="https://en.wikipedia.org/wiki/ISO/IEC_8859-9" rel="nofollow noreferrer">ISO-8859-9</a> it turns out that the sequence you are translating contains one ASCII control  code (0x05), one undefined character (0x86) and one ASCII printable character (0x53 or S). The conversion to UTF-8 leaves the ASCII characters (printable or not) untouched but converts the non ASCII character correctly into a UTF-8 two byte sequence. Two out of three of your characters don't make sense when rendered as text and Chrome is clearly refusing to do this.</p>

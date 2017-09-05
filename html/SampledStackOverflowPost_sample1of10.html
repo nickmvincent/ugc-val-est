@@ -1,27 +1,14 @@
-<a<p>You can find 64 bit version here ***<a href="http://en.wikipedia.org/wiki/Hamming_weight" rel="nofollow noreferrer">http://en.wikipedia.org/wiki/Hamming_weight</a></p>
+<a<ol>
+<li>There are only models. Some of them have extended functionality by using the Object-relational mapping methodology - Eloquent ( one of many ).You can read more about ORM here: </li>
+</ol>
 
-<p>It is something like this</p>
+<p>***<a href="https://en.wikipedia.org/wiki/Object-relational_mapping" rel="nofollow">https://en.wikipedia.org/wiki/Object-relational_mapping</a></p>
 
-<pre><code>static long NumberOfSetBits(long i)
-{
-    i = i - ((i &gt;&gt; 1) &amp; 0x5555555555555555);
-    i = (i &amp; 0x3333333333333333) + ((i &gt;&gt; 2) &amp; 0x3333333333333333);
-    return (((i + (i &gt;&gt; 4)) &amp; 0xF0F0F0F0F0F0F0F) * 0x101010101010101) &gt;&gt; 56;
-}
-</code></pre>
+<ol start="2">
+<li><p>They are everything but not lean and pure. They are far blown and use a lot of unnecessary data to create relations between database object in the form of easy to read / use syntax. Example <code>firstModel-&gt;secondModel-&gt;thirdModel-&gt;somethingSilly();</code></p></li>
+<li><p>MVC Models can contain everything as Controller <strong>but</strong> they answer to convention so you should probably read more extensively about MVC and the logic behind it. </p></li>
+<li><p>Pretty much that's the purpose of Artisan. To make everything more simple and easy to use.</p></li>
+<li><p>Yep. </p></li>
+</ol>
 
-<p>This is a 64 bit version of the code form here <a href="https://stackoverflow.com/questions/109023">How to count the number of set bits in a 32-bit integer?</a></p>
-
-<p>Using Joshua's suggestion I would transform it into this:</p>
-
-<pre><code>static int NumberOfSetBits(ulong i)
-{
-    i = i - ((i &gt;&gt; 1) &amp; 0x5555555555555555UL);
-    i = (i &amp; 0x3333333333333333UL) + ((i &gt;&gt; 2) &amp; 0x3333333333333333UL);
-    return (int)(unchecked(((i + (i &gt;&gt; 4)) &amp; 0xF0F0F0F0F0F0F0FUL) * 0x101010101010101UL) &gt;&gt; 56);
-}
-</code></pre>
-
-<p><strong>EDIT</strong>: I found a bug while testing 32 bit version. I added missing parentheses. The sum should be done before bitwise &amp;, in the last line</p>
-
-<p><strong>EDIT2</strong> Added safer version for ulong
+<p>If you need a bit more information I can provide you with answers and url  in the comment below. 

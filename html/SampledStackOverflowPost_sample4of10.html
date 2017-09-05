@@ -1,10 +1,8 @@
-<a<p>Writing to a serial port does not leave a message on the serial port to be read by the same device. This just isn't how a serial port works and is not how most OSes are written to allow as a buffer behavior. What you really need is a virtual serial port.</p>
+<a<p><code>at</code> prints its output to ***<a href="https://en.wikipedia.org/wiki/Stderr#Standard_error_.28stderr.29" rel="nofollow">stderr</a> not stdout. Use <code>2&gt;&amp;1</code> to pipe the stderr of <code>at</code> into stdout. Example:</p>
 
-<p>Check out ***<a href="http://en.wikipedia.org/wiki/COM_port_redirector#Open_source_solutions" rel="nofollow">this</a> section of a wikipedia article on COM port redirectors and see if any of it will fulfill your needs. Otherwise I recommend searching for COM port emulator, serial port virtualization, etc. until you find software that will work for your use case and operating system. This might be hard, especially if timing is important to your simulations.</p>
+<pre><code>~$ out=$(echo cat Hello | at -v 2014-04-03 2&gt;&amp;1 | head -n 1)
+~$ echo $out
+Thu Apr 3 01:21:00 2014
+</code></pre>
 
-<p><strong>Edit</strong>: To make this slightly more clear, let's talk about what the pySerial library is actually doing to communicate with python. pySerial is just communicating to the OS's API for the serial port. The OS will, generally, model this as a location to write information to and a location to read information from (buffered in just about all modern computing systems). What's important to understand is that from the point of view of the OS (how the serial port is modeled), the write location can ONLY be written to and the read location can only be read from. This may or may not be how the actual serial hardware interfaces with the machine, in most serial port hardware and interface designs that I've worked with, this is the case for the sake of simplicity and reduced cost. Because of this, you are down to two basic choices.</p>
-
-<ol>
-<li><p>Give the OS a virtual serial port that you can read to AND write from somehow</p></li>
-<li><p>Possibly simpler, put a null modem adapter on one of your computer's serial ports and, using a serial cable, connect the two ports. You can now have your service on one port and your simulated device script on the other.</p></li>
-<
+<p>With <code>-v</code> it prints the execution time on the first line which is taken by <code>head -n 1</code>.

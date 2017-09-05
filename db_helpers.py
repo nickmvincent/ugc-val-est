@@ -143,9 +143,9 @@ def link_save():
 
 def sample_articles():
     """Prints out a sample of URLs to text file"""
-    num_samples = 100
+    num_samples = 10
     models = [
-        # SampledRedditThread,
+        SampledRedditThread,
         SampledStackOverflowPost]
     for model in models:
         qs = model.objects.filter(has_wiki_link=True).order_by('?')[:num_samples]

@@ -1,5 +1,0 @@
-<ol>
-<li><p>Write your program in the clearest, simplest way. You shouldn't need to do anything to make it "portable."</p></li>
-<li><p>Byte-swapping is done to translate data of one <a href="http://en.wikipedia.org/wiki/Endianness" rel="nofollow noreferrer">endianness</a> to another. <code>bswap_64</code> is for resolving incompatibility between different 64-bit systems such as Power and X86-64. It isn't for manipulating your data.</p></li>
-<li><p>If you want to reverse bytes in C++, try searching the STL for "reverse." You will find <code>std::reverse</code>, a function which takes pointers or iterators to the first and one-past-last bytes of your 20-byte sequence and reverses it. It's in the <code>&lt;algorithm&gt;</code> header.</p></li>
-</ol>

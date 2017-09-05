@@ -1,5 +1,0 @@
-<p>It is <a href="http://en.wikipedia.org/wiki/Priority_inversion" rel="noreferrer">the problem</a> rather than the solution.</p>
-
-<p>It describes the situation that when low-priority threads obtain locks during their work, high-priority threads will have to wait for them to finish (which might take especially long since they are low-priority). The inversion here is that the high-priority thread cannot continue until the low-priority thread does, so in effect it also has low priority now.</p>
-
-<p>A common solution is to have the low-priority threads temporarily inherit the high priority of everyone who is waiting on locks they hold.</p>
