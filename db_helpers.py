@@ -217,40 +217,41 @@ def so_percent_of_pageviews():
     """helper"""
     qs = SampledStackOverflowPost.objects.filter(sample_num=0).order_by('uid')
     question_ids = []
-    total = 0
-    count = 0
 
+    all_total = 0
+    all_count = 0
     wiki_total = 0
     wiki_count = 0
 
-    start_time = time.time()
-    dropped_total = 0
-    dropped_count = 0
-
+    dropped_all_total = 0
+    dropped_all_count = 0
     dropped_wiki_total = 0
     dropped_wiki_count = 0 
+
+    start_time = time.time()
+
     for start, end, total, batch in batch_qs(qs, batch_size=10000):
         print(start, end, total, time.time() - start_time)
         for obj in batch:
             ans = StackOverflowAnswer.objects.get(id=obj.uid)
             question_id = ans.parent_id
             if question_id not in question_ids:
-                total += obj.num_pageviews
-                count += 1
+                all_total += obj.num_pageviews
+                all_count += 1
                 if obj.has_wiki_link:
                     wiki_total += obj.num_pageviews
                     wiki_count += 1
                 question_ids.append(question_id)
             else:
-                dropped_total += obj.num_pageviews
-                dropped_count += 1
+                dropped_all_total += obj.num_pageviews
+                dropped_all_count += 1
                 if obj.has_wiki_link:
                     dropped_wiki_total += obj.num_pageviews
                     dropped_wiki_count += 1
     print('wiki_total', wiki_total)
     print('wiki_count', wiki_count)
-    print('total', total)
-    print('count', count)
+    print('all_total', all_total)
+    print('all_count', all_count)
     print('dropped_wiki_total', dropped_wiki_total)
     print('dropped_wiki_count', dropped_wiki_count)
     print('dropped_total', dropped_total)
