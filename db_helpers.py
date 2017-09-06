@@ -215,7 +215,10 @@ def clear_pre2016_so_pageviews():
 
 def so_percent_of_pageviews():
     """helper"""
-    qs = SampledStackOverflowPost.objects.filter(sample_num=0).order_by('uid')
+    start_date = datetime.datetime(year=2016, month=1, day=1)
+    end_date = datetime.datetime(year=2016, month=12, day=31)
+    qs = SampledStackOverflowPost.objects.filter(
+        sample_num=0, timestamp__gte=start_date, timestamp__lte=end_date).order_by('uid')
     question_ids = []
 
     all_total = 0
@@ -254,8 +257,8 @@ def so_percent_of_pageviews():
     print('all_count', all_count)
     print('dropped_wiki_total', dropped_wiki_total)
     print('dropped_wiki_count', dropped_wiki_count)
-    print('dropped_total', dropped_total)
-    print('dropped_count', dropped_count)
+    print('dropped_total', dropped_all_total)
+    print('dropped_count', dropped_all_count)
 
 
 if __name__ == "__main__":
