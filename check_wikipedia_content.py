@@ -7,6 +7,7 @@ import datetime
 import os
 import time
 import argparse
+from collections import defaultdict
 
 from urllib.parse import unquote
 from itertools import zip_longest
@@ -18,6 +19,8 @@ from url_helpers import extract_urls
 import pytz
 from requests.exceptions import ConnectionError
 import requests
+import mwapi
+import mwreverts.api
 
 WIK = 'wikipedia.org/wiki/'
 
@@ -279,6 +282,28 @@ def get_damaging_likelihood(posts):
         completed += len(revbatch)
 
     print('{}/{} damaging posts'.format(damaging_count, completed))    
+
+
+def check_reverted(qs1, qs2):
+    """Check reverted"""
+    session = mwapi.Session("https://en.wikipedia.org")
+    counts = []
+    for qs in [qs1, qs2]:
+        count = defaultdict(int)
+        counts.append(count)
+        for post in qs1:
+            for link in post.wiki_links.all():
+                revs = Revision.objects.filter(wiki_link=link)
+                for rev in revs:
+                    count['total'] += 1
+                    reverting, reverted, reverted_to = mwreverts.api.check(session, rev.revid)
+                    if reverting:
+                        count['reverting'] += 1
+                    if reverted:
+                        count['reverted'] += 1
+                    if reverted_to:
+                        count['reverted_to'] += 1
+    print(counts)
 
 
 
@@ -545,6 +570,11 @@ def parse():
             filtered = model.objects.filter(has_wiki_link=True)[:1000]
             print('checking on potentially damaging posts')
             get_damaging_likelihood(filtered)
+        if args.mode == 'reverted':
+            qs1 = model.objects.filter(has_wiki_link=True).order_by('?')[:200]
+            qs2 = model.objects.filter(has_wiki_link=True, context="The_Donald").order_by('?')[:200]
+            print('reverted check')
+            check_reverted(qs1, qs2)
 
 
 
