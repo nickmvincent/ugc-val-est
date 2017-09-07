@@ -163,12 +163,12 @@ def sample_articles():
                 else:
                     body = obj.body
                     body_as_list = body.split('<a')
-                    final_body = ''
+                    final_body = 'Answered posted on: ' + str(obj.timestamp) + '\n'
                     for component in body_as_list:
                         if 'wikipedia.org/wiki/' in component:
                             final_body += '***'
                         final_body += '<a' + component
-                    final_body = final_body[:-4]
+                    final_body = final_body[:-2]
                     fields = [final_body]
 
                 line = ', '.join(fields)
