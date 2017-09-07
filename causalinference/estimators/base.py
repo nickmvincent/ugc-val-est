@@ -49,13 +49,10 @@ class Estimator(Dict):
 		coefs = [self[name] for name in names if name in self.keys()]
 		ses = [self[name] for name in standard_err_names() if name in self.keys()]
 		r2s = self['r2']
-		print(coefs)
-		print(r2s)
 
 		rows = [('Est.', 'S.e.', 'z', 'P>|z|',
 		           '[95% Conf. int.]')]
 		for (name, coef, se) in zip(names, coefs, ses):
-			print(len(coef), len(se), len(r2s))
 			for i, (coef_val, se_val) in enumerate(zip(coef, se)):
 				row = list(tools.gen_reg_entries(
 					'Y{}: {}'.format(i, name.upper()), coef_val, se_val))[1:]
