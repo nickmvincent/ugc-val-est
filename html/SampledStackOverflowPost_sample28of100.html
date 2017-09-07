@@ -1,0 +1,9 @@
+Answered posted on: 2013-04-25 20:09:28+00:00
+<a<p>You can use the ***<a href="http://en.wikipedia.org/wiki/Monte_Carlo_method"><em>Monte Carlo Method</em></a> to estimate the difficulty of a word:</p>
+
+<ul>
+<li>Simulate a game by guessing a random letter each time, weighted by letter's frequency in your target language, and count how many guesses it took your randomized player to arrive at a solution. Note that since each guess eliminates a letter, this process is finite, and it returns a number from 1 to 26, inclusive.</li>
+<li>Repeat this process <code>2*N</code> times, where <code>N</code> is the number of <em>unique</em> letters in your word,</li>
+<li>Calculate the score by averaging the results of <code>2*N</code> runs,</li>
+<li>Determine the complexity level: scores less than ten indicate an easy word, and scores above sixteen indicate a hard word; everything else is medium.</li>
+</u

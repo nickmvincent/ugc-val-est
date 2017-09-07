@@ -1,0 +1,22 @@
+Answered posted on: 2015-09-23 08:50:32+00:00
+<a<p>Special characters in HTTP requests should be ***<a href="https://en.wikipedia.org/wiki/Percent-encoding" rel="nofollow noreferrer">percent-encoded</a>. You could use a regular expression replacement with a callback to do this:</p>
+
+<pre><code>function ConvertTo-PercentEncoded([string]$str) {
+  $re = [regex]'[^a-z0-9_-]'
+  $cb = { '%{0:x2}' -f [int][char]$args[0].Value }
+  $re.Replace($str, $cb)
+}
+
+$url = 'http://localhost:3000/test'
+
+Invoke-WebRequest -Uri $url -Method POST -Body (ConvertTo-PercentEncoded "a=")
+</code></pre>
+
+<p>or use the <a href="https://msdn.microsoft.com/en-us/library/system.web.httputility.urlencode.aspx" rel="nofollow noreferrer"><code>UrlEncode()</code></a> method:</p>
+
+<pre><code>Add-Type -Assembly System.Web
+
+$url = 'http://localhost:3000/test'
+
+Invoke-WebRequest -Uri $url -Method POST -Body ([Web.HttpUtility]::UrlEncode('a='))
+</code></pr

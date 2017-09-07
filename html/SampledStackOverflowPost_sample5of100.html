@@ -1,0 +1,46 @@
+Answered posted on: 2013-03-31 23:03:33+00:00
+<a<blockquote>
+  <p>SQLite database in separate class vs. in same class, which is better?</p>
+</blockquote>
+
+<p>This is very comprehensive question and it depends on more factors(type of application, personal requirements, how you'll deal with db etc.). Somebody can prefer to place database as inner class and someone as separated class. Problem is that many developers are trying to "stick" as much code as possible into one class and maybe they "fear" to create a little more classes. I don't know that exactly. I mentioned that only as my personal note.</p>
+
+<p>But let's back to your question. What is better? </p>
+
+<p>I think that approach with separeted class. You should let your Activity classes only "Activity classes" <code>&gt;</code> only for creating and dealing with UI. Application appearance should be separated from application logic. If you'll follow this "rule" your code will become more clean and human-readable(if someone else will look at your code he shouldn't be completely lost). It's not a shame to have 20 purely written classes as to have all stuff sticked in one class(like a pig).</p>
+
+<blockquote>
+  <p>however there is one disadvantage. You have to create an instance of
+  it in the main activity class every time you want to do something. I
+  read that instantiating objects in Android is expensive and should be
+  avoided.</p>
+</blockquote>
+
+<p>Did you think about an usage of ***<a href="http://en.wikipedia.org/wiki/Singleton_pattern" rel="nofollow"><code>Singleton</code></a>? This design pattern is worth to think about it. You will always have only one instance that have many benefits e.q. no waste of memory. I have only good experiences with Singleton. Therefore i recommend you to try and use it.</p>
+
+<h2>Example:</h2>
+
+<pre><code>private static SQLiteOpenHelper instance;
+
+public static SQLiteOpenHelper getInstance(Context mContext) {
+   if (instance == null) {
+      instance = new SQLiteOpenHelperImplementation(mContext);
+   }
+   return instance;
+}
+</code></pre>
+
+<p><strong>And at the end i give you a few suggestions:</strong></p>
+
+<ul>
+<li><p>Everytime you'll work with cursors, databases etc. release / close
+them immediately after work is done. This can solve many exceptions
+related to <code>SQLiteDatabase</code> and <code>Cursor</code></p></li>
+<li><p>An usage of synchronized blocks and methods is pretty good practise
+in the case of concurrent programming to avoid many problems</p></li>
+<li><p>If you have more than one table in database i suggest you create
+"serving" class for each table that will wrap <code>CRUD</code> operations and specific
+methods of the table</p></li>
+<li><p>Before Activity is destroyed, check and release all sources which are not
+already released.</p></li>
+</u

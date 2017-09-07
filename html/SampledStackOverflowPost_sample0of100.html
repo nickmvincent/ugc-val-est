@@ -1,0 +1,14 @@
+Answered posted on: 2012-05-02 16:10:08+00:00
+<a<p>Some terminology: A code like "&amp;amp;" is properly called a ***<a href="http://en.wikipedia.org/wiki/Character_entity_reference" rel="nofollow noreferrer">character entity reference</a>; a code like "&amp;#x26;" is a ***<a href="http://en.wikipedia.org/wiki/Numeric_character_reference" rel="nofollow noreferrer">numeric character reference</a>.</p>
+
+<p>Together, we can refer to them all as "HTML entities."  For a given code point, there is sometimes a character entity reference, but there is always a numeric character reference, which can be formed from the Unicode encoding of the character.  For instance, &#x211b; has the numeric character reference "&amp;#x211b;".</p>
+
+<p>Generally it's the ASCII characters that have character entity references, but not always.</p>
+
+<p>Character entity references are usually easier to read, but in a particular context a set of numeric character references might possibly be.  For instance, if you were writing a regular expression to match a certain block of Unicode characters.</p>
+
+<p>When you say "for validation purposes codes should be used," I think you have in mind the rule that a <a href="https://stackoverflow.com/questions/275150/xhtml-and-ampersand-encoding">bare ampersand is not valid HTML</a>.  That's specific to this character.</p>
+
+<p><strong>Update</strong></p>
+
+<p><s>An example where you have to use the numeric character entity: There is no character entity reference for the single quote character, "&amp;#39;".  A piece of JavaScript to scrub quote characters out of a string has to use the numeric character entity.</s></

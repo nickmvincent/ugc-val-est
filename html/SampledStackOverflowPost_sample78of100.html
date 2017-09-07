@@ -1,0 +1,49 @@
+Answered posted on: 2010-08-03 14:02:29+00:00
+<a<blockquote>
+  <p>Cross platform hardware accelerated 2d C++ app?</p>
+</blockquote>
+
+<p>SDL + OpenGL. Maybe also <a href="http://www.opengl.org/sdk/libs/GLee/" rel="nofollow noreferrer">glee</a> or <a href="http://glew.sourceforge.net/" rel="nofollow noreferrer">glew</a> if you use shaders and/or extensions.
+Glee is easier to use, but it looks like it doesn't support OpenGL versions after 3.0.
+Also you might need <a href="http://www.libsdl.org/projects/SDL_image/" rel="nofollow noreferrer">SDL_image</a> for loading images.</p>
+
+<blockquote>
+  <p>I know there's OpenGL, but I can't seem to find any tutorials on how to use it in a cross platform manner, they all focus on one platform.</p>
+</blockquote>
+
+<pre><code>    SDL_Init(SDL_INIT_VIDEO);
+
+    SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 0);//disable vsync
+
+    if (SDL_SetVideoMode(scrWidth, scrHeight, 32, SDL_OPENGL) == 0){
+        fprintf(stderr, "couldn't set mode %dx%d!\n", 640, 480);
+        SDL_Quit();
+        return -1;
+    }
+    glewInit();//if you use glew, shaders, extensions.
+
+    while(gameIsRunning()){//game loop
+        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+        //OpenGL rendering here 
+        glFlush();
+        SDL_GL_SwapBuffers();       
+    }
+    SDL_Quit();
+</code></pre>
+
+<p>See sdl documentation for more info.</p>
+
+<blockquote>
+  <p>Using SDL is also a possibility, but I'm afraid the game may not perform as well if I use it. Is this necessarily true?</p>
+</blockquote>
+
+<p>With vsync disabled, you can get from few hundreds to thousand frames per second. Exact performance depends on your hardware and scene complexity - I had 300 fps reports for simple 3D dungeon crawler that used "RAW" opengl without display lists/vertex buffer objects. Also, if you use fixed framerate or timer-driven engine, you won't get more frames per second than you asked for.</p>
+
+<p>SDL was used for porting Unreal 2004 to Linux. It also was used in Doom 3/Quake 4 linux port. So it is thoroughly tested and well known.</p>
+
+<p>See ***<a href="http://en.wikipedia.org/wiki/List_of_games_using_SDL" rel="nofollow noreferrer">this list</a> for more info.</

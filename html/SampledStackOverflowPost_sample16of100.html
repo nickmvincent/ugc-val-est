@@ -1,0 +1,16 @@
+Answered posted on: 2016-02-21 02:47:30+00:00
+<a<p>A simpler approach would be to assembly the assembly file, then disassemble it. Most of the parsing problems are eliminated. A disassembly will have fixed columns for the label, op code, and operands, so very little parsing is required.</p>
+
+<p>Using the disassembly, perform two passes. The first pass is to create a data structures to represent each instruction <strong>and</strong> to collect all of the jump targets. </p>
+
+<p>The second pass is to create structures that represent ***<a href="https://en.wikipedia.org/wiki/Basic_block" rel="nofollow">basic blocks</a> (a block of code with a single entry point and exit). Link each basic block to its successor(s). A basic block can have zero, one, or two successors (or N successors in the case of a jump table). A basic block that ends with RET has zero successors. A basic block ending in an unconditional jump has one successor. And a basic block with a conditional jump has two successors - either fall through or target of jump. Basic blocks without predecessors are either subroutine entry points or dead (or invalid) code.</p>
+
+<p>Jump targets are the beginning of a basic block, as is an instruction following an unconditional jump (which should be a jump target or else a subroutine entry point).</p>
+
+<p>Short of running the program (via real hardware or an emulator) knowing the targets of indirect jumps with certainty is infeasible. I suggest supporting a couple of simple cases: 1) a jump table where the table is within the program 2) a jump through a global memory location that used to link to another executable (and the disassembler lists what the target is). In the first case the basic block can have arbitrarily many successors. In the second case the basic block has a single successor.</p>
+
+<p>Note that I'm deliberately leaving out CALLs as part of the CFG. When I implemented a CFG grapher that's what I did. My grapher showed just a single function at a time. If you double clicked a CALL then the subroutines's CFG was displayed. </p>
+
+<p>However, if you want to include the whole subroutine tree in a single CFG, then CALLs would be the end of a basic block, and the instruction following a CALL would be the beginning of a basic block. Note that for anything but the simplest programs it will be hard to view the entire CFG for a program.</p>
+
+<p>I'm leaving out INTs and IRETs because I'm assuming you are dealing with user mode applications. If not, then treat INTs like calls and IRETs like a RET. A hardware Interrupt Serivce Routine (ISR) could be invoked from anywhere where interrupts are enabled, so there won't (usually) be any direct invocations of an ISR - it will just kind of sit over to the side. In more general terms if you are dealing with kernel mode software, you'll have a variety of other considerations.</

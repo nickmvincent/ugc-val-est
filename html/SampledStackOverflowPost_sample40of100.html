@@ -1,0 +1,6 @@
+Answered posted on: 2013-07-22 15:12:37+00:00
+<a<p>No, violation of DRY isn't always bad. Especially, if you fail to come up with a good name for an abstraction of the duplicated code, i.e. a name that suits both contexts, it might be that they're different things after all, and should be left duplicated. </p>
+
+<p>In my experience this kind of coincidence tends to be rare though, and the larger the duplicated code, the most likely it is to describe one single concept.</p>
+
+<p>I also find <em>abstracting to composition</em> is almost always a better idea in that regard than <em>abstracting to inheritance</em> which can easily lead you to false equations and ***<a href="http://en.wikipedia.org/wiki/Liskov_substitution_principle" rel="nofollow">LSP</a> and ***<a href="http://en.wikipedia.org/wiki/Interface_segregation_principle" rel="nofollow">ISP</a> violations.</

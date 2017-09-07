@@ -1,0 +1,16 @@
+Answered posted on: 2014-03-31 07:43:30+00:00
+<a<p>All the code you've shown is ASP.Net side code. The grid is shown on the client, is an HTML element. you need to notify the client of the change. HTTP refresh is not a trivial issue, you have to either:</p>
+
+<ul>
+<li>use a timer of the client and periodically poll for changes</li>
+<li>use ***<a href="http://en.wikipedia.org/wiki/WebSocket" rel="nofollow">WebSockets</a></li>
+<li>use ***<a href="http://en.wikipedia.org/wiki/Server-sent_events" rel="nofollow">Server-Sent Events</a> (<code>Content-Type: text/event-stream</code>) but this is not supported by IE</li>
+</ul>
+
+<p>Polling works but it can get taxing on the server, specially with large number of clients. There are countless examples of ASP.Net backed polling using Ajax.  </p>
+
+<p>WebSockets requires Windows 8/windows Server 2012 and IIS 8, see <a href="http://www.asp.net/aspnet/overview/aspnet-and-visual-studio-2012/whats-new#_Toc318097383" rel="nofollow">Support for WebSockets Protocol</a></p>
+
+<p>You should probably also look into <a href="http://signalr.net/" rel="nofollow">SignalR</a>, which is an ASP.Net library specifically developer for pushing updates to the client.</p>
+
+<p>As you can see, my answer does not even touch the topic of <a href="http://rusanu.com/2006/06/17/the-mysterious-notification/" rel="nofollow">Query Notifications</a>. Getting the notification from the DB to the ASP.Net middle tier is only one part of the equation, and <code>SqlDependency</code> is indeed the right answer. But you're completely missing the second part, the pushing of notification from mid-tier to the browser. You should only notify the browser that the update occurred and the client should refresh. Let the refresh load the data using the usual Page_load event. Use <a href="http://msdn.microsoft.com/en-us/library/system.web.caching.sqlcachedependency%28v=vs.110%29.aspx" rel="nofollow"><code>SqlCacheDependency</code></a> to server the page, this will automatically cache results and refresh <em>the cache</em> on any update.</

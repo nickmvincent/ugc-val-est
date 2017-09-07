@@ -1,0 +1,4 @@
+Answered posted on: 2009-09-04 04:45:41+00:00
+<a<p>You'll probably want some kind of ***<a href="http://en.wikipedia.org/wiki/Heap_(data_structure)" rel="nofollow noreferrer">priority heap</a> if you want to always pop the least element.  If you want to pop what was last pushed, but be able to know the order of the elements remaining in the stack, some kind of search tree e.g. ***<a href="http://en.wikipedia.org/wiki/Red-black_tree" rel="nofollow noreferrer">red-black</a> will support deletion of an element from an arbitrary position (your stack would have a pointer to the tree node so when you pop you can find it).</p>
+
+<p>If you only need to know the minimum (or max) remaining in the stack then ESRogs' is optimal.</

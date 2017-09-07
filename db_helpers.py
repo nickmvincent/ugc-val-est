@@ -263,18 +263,21 @@ def so_percent_of_pageviews():
 
 def mark_top_answers():
     """marks top answers"""
-    qs = SampledStackOverflowPost.objects.all()
+    qs = SampledStackOverflowPost.objects.all().order_by('uid')
     for start, end, total, batch in batch_qs(qs, batch_size=10000):
         print(start, end, total)
         for answer in batch:
             try:
-                question_id = StackOverflowQuestion.objects.using('secondary').filter(id=answer.uid).values('id')[0]['id']
+                question_id = StackOverflowAnswer.objects.using('secondary').filter(id=answer.uid).values('parent_id')[0]['parent_id']
                 other_answers = StackOverflowAnswer.objects.using('secondary').filter(parent_id=question_id)
                 max_score = other_answers.aggregate(Max('score'))
+                print(max_score)
                 if answer.score == max_score:
+                    print('marking top answer as true woohoo!')
                     answer.is_top = True
                     answer.save()
-            except:
+            except Exception as err:
+                print(err)
                 print('MISSING QUESTION UH OH')
 
 
@@ -316,3 +319,5 @@ if __name__ == "__main__":
             fix_bad_registration_time()
         elif sys.argv[1] == 'so_percent_of_pageviews':
             so_percent_of_pageviews()
+        elif sys.argv[1] == 'mark_top_answers':
+            mark_top_answers()

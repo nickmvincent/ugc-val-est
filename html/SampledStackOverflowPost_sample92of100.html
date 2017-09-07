@@ -1,0 +1,62 @@
+Answered posted on: 2013-11-27 19:36:10+00:00
+<a<p>This should have been a comment but I run out of space.</p>
+
+<p>I think a Maximum Likelihood fit is probably the most appropriate approach here. ML method is already implemented for many distributions in <code>scipy.stats</code>. For example, you can find the MLE of normal distribution by calling <code>scipy.stats.norm.fit</code> and find the MLE of exponential distribution in a similar way. Combining these two resulting MLE parameters should give you a pretty good starting parameter for Ex-Gaussian ML fit. In fact I would imaging most of your data is quite nicely Normally distributed. If that is the case, the ML parameter estimates for Normal distribution alone should give you a pretty good starting parameter. </p>
+
+<p>Since Ex-Gaussian only has 3 parameters, I don't think a ML fit will be hard at all. If you could provide a dataset for which your current method doesn't work well, it will be easier to show a real example.</p>
+
+<p>Alright, here you go:</p>
+
+<pre><code>&gt;&gt;&gt; import scipy.special as sse
+&gt;&gt;&gt; import scipy.stats as sss
+&gt;&gt;&gt; import scipy.optimize as so
+&gt;&gt;&gt; from numpy import *
+
+&gt;&gt;&gt; def eg_pdf(p, x): #defines the PDF
+    m=p[0]
+    s=p[1]
+    l=p[2]
+    return 0.5*l*exp(0.5*l*(2*m+l*s*s-2*x))*sse.erfc((m+l*s*s-x)/(sqrt(2)*s))
+
+&gt;&gt;&gt; xo=array([ 450.,  560.,  692.,  730.,  758.,  723.,  486.,  596.,  716.,
+        695.,  757.,  522.,  535.,  419.,  478.,  666.,  637.,  569.,
+        859.,  883.,  551.,  652.,  378.,  801.,  718.,  479.,  544.])
+
+&gt;&gt;&gt; sss.norm.fit(xo) #get the starting parameter vector form the normal MLE
+(624.22222222222217, 132.23977474531389)
+
+&gt;&gt;&gt; def llh(p, f, x): #defines the negative log-likelihood function
+    return -sum(log(f(p,x)))
+
+&gt;&gt;&gt; so.fmin(llh, array([624.22222222222217, 132.23977474531389, 1e-6]), (eg_pdf, xo)) #yeah, the data is not good
+Warning: Maximum number of function evaluations has been exceeded.
+array([  6.14003407e+02,   1.31843250e+02,   9.79425845e-02])
+
+&gt;&gt;&gt; przt=so.fmin(llh, array([624.22222222222217, 132.23977474531389, 1e-6]), (eg_pdf, xo), maxfun=1000) #so, we increase the number of function call uplimit
+Optimization terminated successfully.
+         Current function value: 170.195924
+         Iterations: 376
+         Function evaluations: 681
+
+&gt;&gt;&gt; llh(array([624.22222222222217, 132.23977474531389, 1e-6]), eg_pdf, xo)
+400.02921290185645
+&gt;&gt;&gt; llh(przt, eg_pdf, xo) #quite an improvement over the initial guess
+170.19592431051217
+&gt;&gt;&gt; przt
+array([  6.14007039e+02,   1.31844654e+02,   9.78934519e-02])
+</code></pre>
+
+<p>The optimizer used here (<code>fmin</code>, or Nelder-Mead simplex algorithm) does not use any information from gradient and usually works much slower than the optimizer that does. It appears that the derivative of the negative log-likelihood function of Exponential Gaussian may be written in a close form easily. If so, optimizers that utilize gradient/derivative will be better and more efficient choice (such as <code>fmin_bfgs</code>).</p>
+
+<p>The other thing to consider is parameter constrains. By definition, sigma and lambda has to be positive for Exponential Gaussian. You can use a constrained optimizer (such as <code>fmin_l_bfgs_b</code>). Alternatively, you can optimize for:</p>
+
+<pre><code>&gt;&gt;&gt; def eg_pdf2(p, x): #defines the PDF
+    m=p[0]
+    s=exp(p[1])
+    l=exp(p[2])
+    return 0.5*l*exp(0.5*l*(2*m+l*s*s-2*x))*sse.erfc((m+l*s*s-x)/(sqrt(2)*s))
+</code></pre>
+
+<p>Due to the functional invariance property of MLE, the MLE of this function should be the same as same as the original <code>eg_pdf</code>. There are other transformation that you can use, besides <code>exp()</code>, to project <code>(-inf, +inf)</code> to <code>(0, +inf)</code>.</p>
+
+<p>And you can also consider ***<a href="http://en.wikipedia.org/wiki/Lagrange_multiplier" rel="nofollow">http://en.wikipedia.org/wiki/Lagrange_multiplier</a>.</

@@ -1,0 +1,42 @@
+Answered posted on: 2014-08-21 13:13:25+00:00
+<a<p>When inputting backslashes from the keyboard, always escape them.</p>
+
+<pre><code>str &lt;-"this\\is\\my\\string"    # note doubled backslashes -&gt; 'this\is\my\string'
+gsub("\\", "", str, fixed=TRUE) # ditto
+
+str2 &lt;- "a\\f\\r"               # ditto -&gt; 'a\f\r'
+gsub("\\", "", str2, fixed=TRUE)# ditto
+</code></pre>
+
+<p>Note that if you do</p>
+
+<pre><code>str &lt;- "a\f\r"
+</code></pre>
+
+<p>then <code>str</code> contains <em>no</em> backslashes. It consists of the 3 characters <code>a</code>, <code>\f</code> (which is not normally printable, except as <code>\f</code>, and <code>\r</code> (same).</p>
+
+<p>And just to head off a possible question. If your data was read from a file, the file doesn't have to have doubled backslashes. For example, if you have a file <code>test.txt</code> containing</p>
+
+<pre><code>a\b\c\d\e\f
+</code></pre>
+
+<p>and you do</p>
+
+<pre><code>str &lt;- readLines("test.txt")
+</code></pre>
+
+<p>then <code>str</code> will contain the string <code>a\b\c\d\e\f</code> as you'd expect: 6 letters separated by 5 single backslashes. But you still have to <em>type</em> doubled backslashes if you want to work with it.</p>
+
+<pre><code>str &lt;- gsub("\\", "", str, fixed=TRUE)  # now contains abcdef
+</code></pre>
+
+<hr>
+
+<p>From the <code>dput</code>, it looks like what you've got there is UTF-16 encoded text, which probably came from a Windows machine. According to</p>
+
+<ul>
+<li>***<a href="https://en.wikipedia.org/wiki/Unicode#Character_General_Category" rel="nofollow">https://en.wikipedia.org/wiki/Unicode#Character_General_Category</a></li>
+<li>***<a href="https://en.wikipedia.org/wiki/UTF-16" rel="nofollow">https://en.wikipedia.org/wiki/UTF-16</a></li>
+</ul>
+
+<p>it encodes glyphs in the ***<a href="https://en.wikipedia.org/wiki/Plane_(Unicode)#Supplementary_Multilingual_Plane" rel="nofollow">Supplementary Multilingual Plane</a>, which is pretty obscure. I'll guess that you need to supply the argument <code>encoding="UTF-16"</code> to <code>readLines</code> when you read in the file.</

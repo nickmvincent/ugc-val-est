@@ -1,0 +1,28 @@
+Answered posted on: 2013-09-18 20:31:31+00:00
+<a<blockquote>
+  <p>I need to be able to filter</p>
+</blockquote>
+
+<p>You appear to be creating a ***<a href="http://en.wikipedia.org/wiki/Sargable" rel="nofollow">non-sargable query</a>.</p>
+
+<p>I would suggest that instead of parsing the column you are querying on, create a variable that matches the value you are looking for.</p>
+
+<pre><code>dim myDate = DateTime.Now.ToString("yyyyMMdd");
+
+Dim z = (From r In t Where 
+  (r.appt_date = myDate)).ToArray
+</code></pre>
+
+<blockquote>
+  <p>and sort them by date</p>
+</blockquote>
+
+<p>The way the DB is storing the value should look like:</p>
+
+<pre><code>20120101  // Jan 01, 2012
+20121231  // Dec 31, 2012
+20130101  // Jan 01, 2013
+20131231  // Dec 31, 2013
+</code></pre>
+
+<p>Natural string sorting will sort these in the correct order every time (asc, desc), so <code>.OrderBy()</code> and <code>.OrderByDescending()</code> will work as expected.</

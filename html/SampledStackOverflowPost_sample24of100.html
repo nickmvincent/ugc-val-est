@@ -1,0 +1,9 @@
+Answered posted on: 2012-06-14 13:20:09+00:00
+<a<p>The <code>?</code> in a URL introduces the ***<a href="http://en.wikipedia.org/wiki/Query_string" rel="nofollow">query string</a>, which is data provided to the server. Everything <em>prior to</em> the <code>?</code> specifies the resource on the server (in theory), and everything <em>after</em> it is additional data.</p>
+
+<p>So for example:</p>
+
+<pre>http://example.com/foo/bar/page.php?data=one
+http://example.com/foo/bar/page.php?data=two</pre>
+
+<p>Both URLs cause the <code>page.php</code> page to be retrieved by the server, and since it's a PHP page, a properly-configured server will run the PHP code within it. That PHP code can access the query string data as one big string via <a href="http://www.php.net/manual/en/reserved.variables.server.php" rel="nofollow"><code>$_SERVER['QUERY_STRING']</code></a>, or as a series of name/value pairs (if that's what it is, it doesn't <em>have</em> to be) via <a href="http://www.php.net/manual/en/reserved.variables.get.php" rel="nofollow"><code>$_GET['paramname']</code></a>. Note that that's <code>_GET</code> because query string parameters are <code>GET</code> parameters; <code>POST</code> parameters are sent via a different mechanism (not available for just links; you need a form or similar).</

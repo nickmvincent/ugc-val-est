@@ -1,0 +1,92 @@
+Answered posted on: 2015-05-24 09:17:10+00:00
+<a<p>Your problem lies in <code>url: $('#num_likes_url').val()</code></p>
+
+<pre><code>&lt;input type="hidden" id="num_likes_url" value="/notes/?id={{ note.id }}/increase_num_likes/" &gt;
+</code></pre>
+
+<p>so <code>value</code>is <code>"/notes/?id={{ note.id }}/increase_num_likes/"</code> which is not a valid URI. From ***<a href="http://en.wikipedia.org/wiki/URI_scheme" rel="nofollow">wikipedia</a>:</p>
+
+<pre><code>&lt;scheme name&gt; : &lt;hierarchical part&gt; [ ? &lt;query&gt; ] [ # &lt;fragment&gt; ]
+</code></pre>
+
+<p>The correct way would be to call if you'd like to retrieve the id as a get argument.</p>
+
+<pre><code>"/notes/increase_num_likes/?id={{ note.id }}"
+</code></pre>
+
+<p>your urls.py</p>
+
+<pre><code>url(r'^increase_num_likes/$', increase_num_likes, name='increase_numlikes')
+</code></pre>
+
+<p><strong>Alternatively</strong> you could make use of djangos url parsing:</p>
+
+<p>urls.py</p>
+
+<pre><code>url(r'^(P&lt;id&gt;[\d\w]+)/increase_num_likes/$', increase_num_likes, name='increase_numlikes')
+</code></pre>
+
+<p>views.py</p>
+
+<pre><code>from import json
+
+def increase_num_likes(request,id):
+if id is None:
+    note = get_object_or_404(Note, id=id)
+    data = {'error': True, 'error_text': 'Not ID supplied'}
+else:
+    note = Note.objects.get(id=int(id))
+    note.num_likes += 1
+    note.save()
+    data = {'num_likes_updated': note.num_likes}
+return HttpResponse(simplejson.dumps(data))
+</code></pre>
+
+<p><strong>HTML</strong></p>
+
+<pre><code>&lt;div class="row"&gt;
+    &lt;div class="col-sm-10"&gt;
+        {% if notes %}
+            {% for note in notes %}
+                &lt;div class="col-sm-5" style="border: 1px solid; margin: 10px;"&gt;
+                    &lt;h3 class="page-header"&gt;&lt;a href="{% url 'notes:detailnote' %}?id={{ note.id }}"&gt;{{ note.label }}&lt;/a&gt;&lt;/h3&gt;
+                    &lt;div style="padding: 5px;"&gt; 
+                        {{ note.body }}
+                        &lt;p&gt;
+                            &lt;div&gt;
+                                &lt;a href="/notes/?id={{ note.id }}/increase_num_likes/" id="increase_num_likes_thumb"&gt;
+                                &lt;span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"&gt;&lt;/span&gt;
+                                &lt;/a&gt;
+                            &lt;/div&gt;
+                            &lt;div id="num_likes_div"&gt;
+                                {{ note.num_likes }}
+                            &lt;/div&gt;
+                        &lt;/p&gt;
+                        &lt;input type="hidden" id="num_likes_url" value="/notes/increase_num_likes/?id={{ note.id }}" &gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            {% endfor %}
+        {% endif %}
+    &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+
+<p>Furthermore it's important to set the correct headers:</p>
+
+<p>The <a href="https://docs.djangoproject.com/en/1.8/ref/csrf/#ajax" rel="nofollow">documentation</a> suggests you are required to set the <code>X-CSRFToken</code> header when posting data with AJAX that is not a form which contains the <code>{% csrftoken %}</code> tag.</p>
+
+<p>With jquery acquiring the token on the client is straightforward:</p>
+
+<pre><code>var csrftoken = $.cookie('csrftoken');
+</code></pre>
+
+<p>Set the right header on your ajax call:</p>
+
+<pre><code>$.ajax({
+      method: "POST",
+      headers: { 'X-CSRFToken': $.cookie('csrftoken') }
+      url: $('#num_likes_url').val()
+    })
+</code></pre>
+
+<p>I suspect your POST never reaches your view and is caught by CSRFProtectionMiddleware</

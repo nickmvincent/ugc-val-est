@@ -1,0 +1,12 @@
+Answered posted on: 2011-10-27 19:00:58+00:00
+<a<p>You actually are talking about user authentication, believe it or not.</p>
+
+<blockquote>
+  <p>I'm talking about public/private tokens that an application uses to
+  identify itself so that my API can decide whether or not the
+  application is allowed to use the API in the first place.</p>
+</blockquote>
+
+<p>That's user authentication - it's just that the "user" is the application calling your APIs.</p>
+
+<p>If OAuth isn't enough to do everything you need (and it might, you should check!), you shouldn't start adding yet another custom authentication method to HTTPS. Instead, stand on the shoulders of giants and use ***<a href="http://en.wikipedia.org/wiki/Basic_access_authentication" rel="nofollow">Basic Authentication</a>, because <em>that's what it's for</em>. Your tools, sysadmins and API clients will thank you for it.</

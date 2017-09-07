@@ -1,0 +1,26 @@
+Answered posted on: 2014-07-19 03:59:42+00:00
+<a<p>First of all, I recommend taking this:</p>
+
+<pre><code>(char)((int)ciphertext.charAt(i)+shiftValue)
+</code></pre>
+
+<p>and making it into a separate method: [1]</p>
+
+<pre><code>public char newChar(char oldChar, int shiftValue) {
+    return (char)((int)ciphertext.charAt(i)+shiftValue);
+}
+</code></pre>
+
+<p>Now that we have this method we can ask what's going on.  If you call <code>newChar('B', -3)</code>, the desired output is <code>Y</code> and what you're actually getting is <code>?</code>.</p>
+
+<pre><code>public char newChar(char oldChar, int shiftValue) {
+    int value = (int)ciphertext.charAt(i);
+    value = value + shiftValue;
+    // do something here
+    return (char) value;
+}
+</code></pre>
+
+<p>This is likely a school assignment so I won't fill in all the details for you.  I hope this gives you a clear path of how to proceed.</p>
+
+<p>[1] Any time you're writing the same thing multiple times it's a good candidate for ***<a href="http://en.wikipedia.org/wiki/Code_refactoring" rel="nofollow">refactoring</a>.</

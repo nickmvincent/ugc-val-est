@@ -1,0 +1,25 @@
+Answered posted on: 2013-11-27 19:11:27+00:00
+<a<p><strong>Under the assumption of Simple Uniform Hashing</strong> (i.e. that a hypothetical hashing function will evenly distribute items into the slots of a hash table), I believe the worst-case performance for a lookup operation would the same as the average-case (for an unsuccessful lookup) - <code>Θ(n/m + 1)</code> (average case as per ***<a href="http://en.wikipedia.org/wiki/SUHA_(computer_science)" rel="nofollow noreferrer">Wikipedia</a>).</p>
+
+<p><strong>Why?</strong> Well, consider that, under the above assumption, each slot in the table will have the same number of elements in its chain. Because of this, both the average case and the worst case will involve looking through all the elements in any of the chains.</p>
+
+<p>This is, of course, a pretty optimistic assumption - it practice we can rarely / never predetermine a hash function which will evenly distribute some unknown set of data (and we rarely build hash functions specifically for data sets), but, at the same time, we're unlikely to get to the true worst-case.</p>
+
+<p><strong>In general</strong>, the worst-case running time of a lookup or remove operation for a hash table using chaining is <code>Θ(n)</code>.</p>
+
+<p>In both cases, insert can still be implemented as <code>Θ(1)</code>, since you can just insert at the front of the chain. That is, if we allow duplicates (as <a href="https://stackoverflow.com/users/56778/jim-mischel">Jim</a> mentioned), because, if not, we first have to check if it's already there (i.e. do a lookup).</p>
+
+<p>The worst case happens when all the elements hash to the same value, thus you'd have one really long chain, essentially turning your data structure into a linked-list.</p>
+
+<pre><code>|--------|
+|element1| -&gt; element2 -&gt; element3 -&gt; element4 -&gt; element5
+|--------|
+|  null  |
+|--------|
+|  null  |
+|--------|
+|  null  |
+|--------|
+|  null  |
+|--------|
+</code></pr

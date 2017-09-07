@@ -1,0 +1,12 @@
+Answered posted on: 2014-04-16 09:18:50+00:00
+<a<blockquote>
+  <p>My real question is what happens when the cache grows so large</p>
+</blockquote>
+
+<p>This is where you would implement a sort of Garbage Collection. Items could be removed from the cache following a ***<a href="http://en.wikipedia.org/wiki/Cache_algorithms" rel="nofollow">Cache Algorithm</a>.</p>
+
+<p>So for example following Least Recently Used you would record how many times a specific object was used when it was last accessed and remove those from the cache that were not used recently.</p>
+
+<p><strong>Edit</strong></p>
+
+<p>Soundcloud use an object store and a very interesting read is <a href="http://developers.soundcloud.com/blog/building-the-next-soundcloud" rel="nofollow">this article</a> on how they built their webapp.</

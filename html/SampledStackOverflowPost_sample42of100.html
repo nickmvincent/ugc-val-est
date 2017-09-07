@@ -1,0 +1,158 @@
+Answered posted on: 2015-12-07 04:01:01+00:00
+***<a<p>I decided to solve this, because it annoyed me to death not remembering the name of solution that I had heard before. I did however remember in the end, more on that in the bottom of this post.</p>
+
+<p>My solution depends on the mathematical properties of some cleverly calculated numbers </p>
+
+<pre><code>range = array size
+prime = closestPrimeAfter(range)
+root = closestPrimitiveRootTo(range/2)
+state = root
+</code></pre>
+
+<p>With this setup we can calculate the following repeatedly and it will iterate all elements of the array exactly once in a seemingly random order, after which it will loop to traverse the array in the same exact order again.</p>
+
+<pre><code>state = (state * root) % prime
+</code></pre>
+
+<p>I implemented and tested this in Java, so I decided to paste my code here for future reference.</p>
+
+<pre><code>import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Random;
+
+public class PseudoRandomSequence {
+
+    private long            state;
+    private final long  range;
+    private final long  root;
+    private final long  prime;
+    //Debugging counter
+    private int             dropped = 0;
+
+    public PseudoRandomSequence(int r) {
+        range = r;
+        prime = closestPrimeAfter(range);
+        root = modPow(generator(prime), closestPrimeTo(prime / 2), prime);
+        reset();
+        System.out.println("-- r:" + range);
+        System.out.println("   p:" + prime);
+        System.out.println("   k:" + root);
+        System.out.println("   s:" + state);
+    }
+
+    // https://en.wikipedia.org/wiki/Primitive_root_modulo_n
+    private static long modPow(long base, long exp, long mod) {
+        return BigInteger.valueOf(base).modPow(BigInteger.valueOf(exp), BigInteger.valueOf(mod)).intValue();
+    }
+
+    //http://e-maxx-eng.github.io/algebra/primitive-root.html
+    private static long generator(long p) {
+        ArrayList&lt;Long&gt; fact = new ArrayList&lt;Long&gt;();
+        long phi = p - 1, n = phi;
+        for (long i = 2; i * i &lt;= n; ++i) {
+            if (n % i == 0) {
+                fact.add(i);
+                while (n % i == 0) {
+                    n /= i;
+                }
+            }
+        }
+        if (n &gt; 1) fact.add(n);
+        for (long res = 2; res &lt;= p; ++res) {
+            boolean ok = true;
+            for (long i = 0; i &lt; fact.size() &amp;&amp; ok; ++i) {
+                ok &amp;= modPow(res, phi / fact.get((int) i), p) != 1;
+            }
+            if (ok) {
+                return res;
+            }
+        }
+        return -1;
+    }
+
+    public long get() {
+        return state - 1;
+    }
+
+    public void advance() {
+        //This loop simply skips all results that overshoot the range, which should never happen if range is a prime number.
+        dropped--;
+        do {
+            state = (state * root) % prime;
+            dropped++;
+        } while (state &gt; range);
+    }
+
+    public void reset() {
+        state = root;
+        dropped = 0;
+    }
+
+    private static boolean isPrime(long num) {
+        if (num == 2) return true;
+        if (num % 2 == 0) return false;
+        for (int i = 3; i * i &lt;= num; i += 2) {
+            if (num % i == 0) return false;
+        }
+        return true;
+    }
+
+    private static long closestPrimeAfter(long n) {
+        long up;
+        for (up = n + 1; !isPrime(up); ++up)
+            ;
+        return up;
+    }
+
+    private static long closestPrimeBefore(long n) {
+        long dn;
+        for (dn = n - 1; !isPrime(dn); --dn)
+            ;
+        return dn;
+    }
+
+    private static long closestPrimeTo(long n) {
+        final long dn = closestPrimeBefore(n);
+        final long up = closestPrimeAfter(n);
+        return (n - dn) &gt; (up - n) ? up : dn;
+    }
+
+    private static boolean test(int r, int loops) {
+        final int array[] = new int[r];
+        Arrays.fill(array, 0);
+        System.out.println("TESTING: array size: " + r + ", loops: " + loops + "\n");
+        PseudoRandomSequence prs = new PseudoRandomSequence(r);
+        final long ct = loops * r;
+        //Iterate the array 'loops' times, incrementing the value for each cell for every visit. 
+        for (int i = 0; i &lt; ct; ++i) {
+            prs.advance();
+            final long index = prs.get();
+            array[(int) index]++;
+        }
+        //Verify that each cell was visited exactly 'loops' times, confirming the validity of the sequence
+        for (int i = 0; i &lt; r; ++i) {
+            final int c = array[i];
+            if (loops != c) {
+                System.err.println("ERROR: array element @" + i + " was " + c + " instead of " + loops + " as expected\n");
+                return false;
+            }
+        }
+        //TODO: Verify the "randomness" of the sequence
+        System.out.println("OK:  Sequence checked out with " + prs.dropped + " drops (" + prs.dropped / loops + " per loop vs. diff " + (prs.prime - r) + ") \n");
+        return true;
+    }
+
+    //Run lots of random tests
+    public static void main(String[] args) {
+        Random r = new Random();
+        r.setSeed(1337);
+        for (int i = 0; i &lt; 100; ++i) {
+            PseudoRandomSequence.test(r.nextInt(1000000) + 1, r.nextInt(9) + 1);
+        }
+    }
+
+}
+</code></pre>
+
+<p>As stated in the top, about 10 minutes after spending a good part of my night actually getting a result, I DID remember where I had read about the original way of doing this. It was in a small C implementation of a 2D graphics "dissolve" effect as described in Graphics Gems vol. 1 which in turn is an adaption to 2D with some optimizations of a mechanism called "LFSR" (wikipedia article ***<a href="https://en.wikipedia.org/wiki/Linear_feedback_shift_register" rel="nofollow">here</a>, original dissolve.c source code <a href="http://www.realtimerendering.com/resources/GraphicsGems/gems/Dissolve.c" rel="nofollow">here</a>).</

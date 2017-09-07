@@ -1,0 +1,10 @@
+Answered posted on: 2011-05-06 13:52:14+00:00
+<a<p>Yes it can be useful to use assert to verify the correctness of your program run-time. I would typically use it to catch errors according to the ***<a href="http://en.wikipedia.org/wiki/Fail-fast" rel="nofollow">fail-fast principle</a> to actively detect bugs. </p>
+
+<p>A typical use case would be that an operation succeeded. Consider the following sample: </p>
+
+<pre><code>int nChanges = database.update(..);
+assert(nChanges == 1);
+</code></pre>
+
+<p>I wouldn't consider using it for parameter validation or any such operation which should be validated in regular code according to the contract, since it doesn't throw the appropriate exceptions (and run-time exceptions can be mean). Similarly I wouldn't use it in testing since JUnit already offers assert mechanisms which in contrast to regular assert statements cannot be disabled. </

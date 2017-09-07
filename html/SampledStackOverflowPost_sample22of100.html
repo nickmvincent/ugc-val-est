@@ -1,0 +1,47 @@
+Answered posted on: 2014-03-03 07:47:49+00:00
+<a<p>There are certain components of your requirements that require timer </p>
+
+<blockquote>
+  <p>We cannot ask the printing office to gives us updates of the order, so
+  we need to pull this information from the printing office itself and
+  give this information to our client by calling webservices at their
+  side.</p>
+</blockquote>
+
+<p>and you also mentioned that you need some user interface for </p>
+
+<blockquote>
+  <p>Our content managers should also be able to see the orders, track
+  orders, get information of the orders in our back-end.</p>
+</blockquote>
+
+<p>Like what @Chris had mentioned, there's no best solution when your questions are so high level. </p>
+
+<h2>Getting everyone on the same page</h2>
+
+<p>For a start, you should at least visualize your problems and proposed solutions, minimally in mock-ups or screenflows (doesn't need to be nice and complete). At least, these mock-ups can be used as a baseline or even part of the sign-off.</p>
+
+<p>As for development "frameworks", there are many options available out there that are good in their own ways, you can use some ***<a href="http://en.wikipedia.org/wiki/Object-relational_mapping" rel="nofollow">ORM tools</a> to speed up development</p>
+
+<h2>Quick &amp; easy development :</h2>
+
+<p>Entity framework 6 - Developed by Microsoft themselves that boasts about fluent interaction with database &amp; code-first approach, which promises minimal DB interaction for developers.
+The catch is, it gives poor performance compared to others</p>
+
+<p>There are tons of alternatives like Nhibernate, nHydrate or micro ORMS like active records &amp; <a href="https://code.google.com/p/dapper-dot-net/" rel="nofollow">dapper.net (by stackoverflow guys)</a> </p>
+
+<h2>Determine your timeline</h2>
+
+<p>How long do you have to deliver the project? Do you want to include architecture patterns like ***<a href="http://en.wikipedia.org/wiki/Dependency_injection" rel="nofollow">http://en.wikipedia.org/wiki/Dependency_injection</a> or quality assurance processes unit-testing and continuous integration? Is it worth the budget? Do you have enough time?</p>
+
+<h2>Maintenance</h2>
+
+<p>Are you going to maintain this application? Try to do proper logging, exception handling before the poop hits the fan and get's everyone cursing.</p>
+
+<p>The bulk of your question describes your 'to-do' list, but there are many other omitted yet critical description of your "Question", the tag you used are also misleading. </p>
+
+<p><strong>So my answer for "Best way to implement an application with web services available for the customer" is:</strong> </p>
+
+<p>Use .net MVC5, which comes with WebAPI 2, it can easily help you create web services, and with MVC, isolation of responsibility is part of the design. UI generation is easy, if you understand HTML.</p>
+
+<p>Quick and dirty vs slow and clean is your choice :)</

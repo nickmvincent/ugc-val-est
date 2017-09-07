@@ -1,0 +1,10 @@
+Answered posted on: 2015-04-25 13:24:01+00:00
+<a<p>The fastest way is dependent on the number of entities, and what indexes you already have.</p>
+
+<ul>
+<li><p>If there's a few entities, what you already have performs better because multiple scans of a small set takes less than creating <code>HashSet</code> objects.</p></li>
+<li><p><strong>If all of your entities fit in the memory</strong>, the best way is to build <code>HashSet</code> out of them, and use <code>Except</code> which is detailed nicely by @alex.feigin.</p></li>
+<li><p>If you can't afford loading all entities in the memory, you need to divide them into bulks <em>based on the comparison key</em> and load them into memory and apply the <code>HashSet</code> method repeatedly. Note that bulks can't be based on the number of records, but on the comparison key. For example, load all entities with names starting with <code>'A'</code>, then <code>'B'</code>, and so on.</p></li>
+<li><p>If you already have an index on the database on the comparison key (like, in your case, <code>FirstName</code> and <code>LastName</code>) in one of the databases, you can retrieve a sorted list from the database. This will help you do binary search (***<a href="http://en.wikipedia.org/wiki/Binary_search_algorithm" rel="nofollow noreferrer">http://en.wikipedia.org/wiki/Binary_search_algorithm</a>) on the sorted list for comparison. See <a href="https://msdn.microsoft.com/en-us/library/w4e7fxsh(v=vs.110).aspx" rel="nofollow noreferrer">https://msdn.microsoft.com/en-us/library/w4e7fxsh(v=vs.110).aspx</a></p></li>
+<li><p>If you already have an index on the database on the comparison key <strong>on both databases</strong>, you can get to do this in O(n), and in a scalable way (any number of records). You need to loop through both lists and find the differences only once. See <a href="https://stackoverflow.com/a/161535/187996">https://stackoverflow.com/a/161535/187996</a> for more details.</p></li>
+</u

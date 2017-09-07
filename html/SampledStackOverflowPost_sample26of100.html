@@ -1,0 +1,36 @@
+Answered posted on: 2009-11-02 06:45:50+00:00
+<a<p>here are some hints:</p>
+
+<ol>
+<li><strong>You don't need to use characters</strong>,
+much less file i/o for this problem
+(unless you forgot to state that a
+file must be created).</li>
+<li>Therefore, <strong>use math to find your statistics</strong>. There are lots of ***<a href="http://en.wikipedia.org/wiki/Fibonacci_number" rel="nofollow noreferrer">resources on Fibonacci numbers</a> that might provide a simplifying insight or at least a way to independently spot check your answers.<br>
+
+<ul>
+<li>Here is a complicated hint in non-Fortran lingo:
+<br><code>floor(10^(frac(log_10(7214989861293412))))</code><br>
+(Put this in <a href="http://www.wolframalpha.com/" rel="nofollow noreferrer">Wolfram Alpha</a> to see what it does.)<br></li>
+<li>A simpler hint (for a different approach) is that you can do very
+well in Fortran with simple
+arithmetic inside of looping
+constructs--at least for a first pass at the solution.</li>
+</ul></li>
+<li><strong>Accumulate your statistics as you
+go</strong>. This advice would even apply to your character-driven approach. (This problem is ideally suited
+for coming up with a cute indexing
+scheme for your statistics, but some
+people hate cute schemes in
+programming. If you don't fear
+cuteness ... then you can have associative
+arrays in Fortran as long as your
+keys are integers ;-)</li>
+<li><strong>The most important aspect of this
+problem is the data type you will
+use</strong> to calculate your answers. For
+example, <a href="http://www.wolframalpha.com/input/?i=calculate+the+1476+Fibonacci+number" rel="nofollow noreferrer">here's the last number you
+will have to print</a>.</li>
+</ol>
+
+<p>Cheers, --Jared</

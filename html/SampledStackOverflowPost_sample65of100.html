@@ -1,0 +1,83 @@
+Answered posted on: 2015-10-02 07:12:32+00:00
+<a<p>(I usually) Try not to use loops in Python. While (as @PM-2ring points out in a comment) list expressions are not necessarily any faster than explicit loops, some find that they can write, understand, and debug a lot faster by letting python handle the details of iterating over data as much as possible. </p>
+
+<p>Below are a few version of your program, ultimately "pythonified" down to four lines, just to see where it went.</p>
+
+<p>Usually there are ways to let Python do things for you, using indexing and list expressions. These can be concise and powerful things, and many python functions just do what you would want them to. For example, zip just drops the dangling base pairs at the end without complaining.</p>
+
+<p>The print statements are there just to see what's happening, of course delete them later.</p>
+
+<pre><code>seq='atgggggggcccccc'
+
+s1 = seq[0::3]  # you can drop the zero, it's just for readability
+s2 = seq[1::3]
+s3 = seq[2::3]
+
+c1 = zip( s1,    s2,     s3     )
+c2 = zip( s2,    s3,     s1[1:] )  # frame shift of 1
+c3 = zip( s3,    s1[1:], s2[1:] )  # frame shift of 2
+
+print c1
+print c2
+print c3
+
+co1 = [bp1+bp2+bp3 for (bp1, bp2, bp3) in c1]
+co2 = [bp1+bp2+bp3 for (bp1, bp2, bp3) in c2]
+co3 = [bp1+bp2+bp3 for (bp1, bp2, bp3) in c3]
+
+print co1
+print co2
+print co3
+
+aaseq1 = [codons(thing) for thing in c1]
+aaseq2 = [codons(thing) for thing in c2]
+aaseq3 = [codons(thing) for thing in c3]
+</code></pre>
+
+<p>...which could also be written like this:</p>
+
+<pre><code>s1, s2, s3 = [seq[i::3] for i in range(3)]   # use list comprehension and unpacking
+
+c1 = zip( s1,    s2,     s3     )
+c2 = zip( s2,    s3,     s1[1:] )  # frame shift of 1
+c3 = zip( s3,    s1[1:], s2[1:] )  # frame shift of 2
+
+co1, co2, co3 = [[tr[0]+tr[1]+tr[2] for tr in c] for c in [c1,c2,c3]]
+
+aaseq1, asseq2, asseq3 = [[codons(trip) for trip in co] for co in [co1, co2, co3]]
+</code></pre>
+
+<p>That was just to advertise more python. For beginners it may be less readable. </p>
+
+<p>This is a further pythonification (just to see where this goes...):</p>
+
+<pre><code>S = [seq[i::3] for i in range(3)]   # three reading frames
+
+C = zip(S[0], S[1], S[2]), zip(S[1], S[2], S[0][1:]), zip(S[2], S[0][1:], S[1][1:]) # group
+
+CO = [[''.join(tr) for tr in c] for c in C]    # tuples to triplet strings
+
+AASEQs = [[codons(trip) for trip in co] for co in CO]  # look up Amino Acids
+</code></pre>
+
+<p>and finally, if you want to change the three AA sequences into just three long strings:</p>
+
+<pre><code>final_AASEQs = [''.join(AASEQ) for AASEQ in AASEQs]
+</code></pre>
+
+<p>Just for fun, here is what the dictionary <code>codons</code> might look like (from ***<a href="https://en.wikipedia.org/wiki/DNA_codon_table" rel="nofollow">Wikipedia</a>, note upper case for A, T, G, C bases. So in the question <code>seq  = 'ATGGGGGGGCCCCCC'</code></p>
+
+<pre><code>codons = {'CTT': 'Leu', 'ATG': 'Met', 'AAG': 'Lys', 'AAA': 'Lys', 'ATC': 'Ile',
+          'AAC': 'Asn', 'ATA': 'Ile', 'AGG': 'Arg', 'CCT': 'Pro', 'ACT': 'Thr',
+          'AGC': 'Ser', 'ACA': 'Thr', 'AGA': 'Arg', 'CAT': 'His', 'AAT': 'Asn',
+          'ATT': 'Ile', 'CTG': 'Leu', 'CTA': 'Leu', 'CTC': 'Leu', 'CAC': 'His',
+          'ACG': 'Thr', 'CAA': 'Gln', 'AGT': 'Ser', 'CAG': 'Gln', 'CCG': 'Pro',
+          'CCC': 'Pro', 'TAT': 'Tyr', 'GGT': 'Gly', 'TGT': 'Cys', 'CGA': 'Arg',
+          'CCA': 'Pro', 'CGC': 'Arg', 'GAT': 'Asp', 'CGG': 'Arg', 'TTT': 'Phe',
+          'TGC': 'Cys', 'GGG': 'Gly', 'TAG': 'STOP', 'GGA': 'Gly', 'TGG': 'Trp',
+          'GGC': 'Gly', 'TAC': 'Tyr', 'GAG': 'Glu', 'TCG': 'Ser', 'TTA': 'Leu',
+          'GAC': 'Asp', 'CGT': 'Arg', 'GAA': 'Glu', 'TCA': 'Ser', 'GCA': 'Ala',
+          'GTA': 'Val', 'GCC': 'Ala', 'GTC': 'Val', 'GCG': 'Ala', 'GTG': 'Val',
+          'TTC': 'Phe', 'GTT': 'Val', 'GCT': 'Ala', 'ACC': 'Thr', 'TGA': 'STOP',
+          'TTG': 'Leu', 'TCC': 'Ser', 'TAA': 'STOP', 'TCT': 'Ser'}  # ATG also START
+</code></pr

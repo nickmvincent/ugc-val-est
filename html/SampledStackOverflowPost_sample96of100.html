@@ -1,0 +1,36 @@
+Answered posted on: 2017-02-10 06:44:39+00:00
+<a<p>Well, You can use firebase REST API Approach, in this case, I've used for my chrome app and its working fine. This don't require to have firebase SDK to be added!</p>
+
+<p>Read the following docs,
+<a href="https://firebase.googleblog.com/2014/03/announcing-streaming-for-firebase-rest.html" rel="nofollow noreferrer">https://firebase.googleblog.com/2014/03/announcing-streaming-for-firebase-rest.html</a></p>
+
+<p><a href="https://firebase.google.com/docs/reference/rest/database/" rel="nofollow noreferrer">https://firebase.google.com/docs/reference/rest/database/</a></p>
+
+<p><a href="https://firebase.google.com/docs/database/rest/retrieve-data" rel="nofollow noreferrer">https://firebase.google.com/docs/database/rest/retrieve-data</a></p>
+
+<p>Approach is very simple</p>
+
+<p>Protocol is known as ***<a href="https://en.wikipedia.org/wiki/Server-sent_events" rel="nofollow noreferrer">SSE (Server Sent Events)</a> where you listen to specific server URL and when something changes, you get the event callback.</p>
+
+<p>In this case, firebase officially provides SSE based mechanism</p>
+
+<p>A sample code snippet is,</p>
+
+<pre><code> //firebaseUrl will be like https://xxxxx.firebaseio.com/yourNode.json or https://xxxxx.firebaseio.com/yourNode/.json
+ //notice ".json" at the end of URL, whatever node you want to listen, add .json as suffix
+    var firebaseEventSS = new EventSource(firebaseUrl);
+    //and you will have callbacks where you get the data
+    firebaseEventSS.addEventListener("patch", function (e) {
+                var data = e.data;
+            }, false);
+    firebaseEventSS.addEventListener("put", function (e) {
+                var data = e.data;
+            }, false);
+</code></pre>
+
+<p>Just check few <a href="https://developer.mozilla.org/en-US/docs/Web/API/EventSource" rel="nofollow noreferrer">EventSource examples</a> and combine with Firebase Doc for REST API and you are all set!</p>
+
+<p>Don't forget to close() when it's done.</p>
+
+<pre><code>firebaseEventSS.close();
+</code></pr

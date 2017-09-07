@@ -1,0 +1,25 @@
+Answered posted on: 2012-10-29 14:50:25+00:00
+<a<p>At the top of each header, put a </p>
+
+<pre><code>#pragma once
+</code></pre>
+
+<p>The international standard just says the compiler must ignore this if it doesn't understand it.</p>
+
+<p>But ***<a href="http://en.wikipedia.org/wiki/Pragma_once#Portability" rel="nofollow">nearly all compilers do understand it</a>, it's a <em>de facto</em> standard.</p>
+
+<p>An alternative to the <code>#pragma</code> is to use</p>
+
+<pre><code>#ifndef MYHEADER_H
+#define MYHEADER_H
+
+// Contents of header
+
+#endif
+</code></pre>
+
+<p>which is more ugly, more verbose, less easy to get right, can fail through name collision, and can be less efficient, but which is wholly standard.</p>
+
+<p>Anyway, the idea is to prevent the header contents, like class definitions, from being included twice or more in <em>the same translation unit</em>.</p>
+
+<p>Note, however, that you <em>can</em> do identical <code>typedef</code>s in the same translation unit.</

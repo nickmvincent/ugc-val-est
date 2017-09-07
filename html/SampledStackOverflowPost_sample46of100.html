@@ -1,0 +1,11 @@
+Answered posted on: 2009-12-28 03:34:37+00:00
+<a<p>On Windows, the <code>iTunes Library XML Location:1</code> entry in <code>iTunesPrefs.xml</code> is a ***<a href="http://en.wikipedia.org/wiki/Base64" rel="noreferrer">Base 64 encoded</a> Unicode string, so you'll need to decode it before you can use it.  On my PC, it decodes to <code>C:\Documents and Settings\Emerick\My Documents\My Music\iTunes\iTunes Music Library.xml</code>.</p>
+
+<p>It should be relatively easy to decode this value using your language of choice; your platform may even provide utility libraries that make this trivial.  In C#, for example, the decoding function would look something like this:</p>
+
+<pre><code>static public string DecodeBase64(string encodedData)
+{
+  byte[] encodedBytes = System.Convert.FromBase64String(encodedData);
+  return System.Text.UnicodeEncoding.Unicode.GetString(encodedBytes);
+}
+</code></pr

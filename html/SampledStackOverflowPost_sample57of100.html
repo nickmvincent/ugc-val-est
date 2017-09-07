@@ -1,0 +1,7 @@
+Answered posted on: 2012-01-15 17:18:00+00:00
+<a<p>The number of permutations of size n is n!, which grows exponentially.
+For example, the number of all permutations of 20 elements is 2432902008176640000(~2.43290201 × 10^18), quite big number.</p>
+
+<p>Like you correctly guessed, there is a <a href="http://www.cut-the-knot.org/do_you_know/AllPerm.shtml" rel="nofollow">recursive algorithm</a> for generating all permutations, but it is quite ineffecient in both time and space for reasons listed above.</p>
+
+<p>However, if your task is generating a <em>random</em> permutation, an efficient algorithm does exist: ***<a href="http://en.wikipedia.org/wiki/Knuth_shuffle" rel="nofollow">Fisher–Yates shuffle</a>. It requires O(n) time(assuming you can generate a random integer in O(1)), and O(1) of additional memory.</

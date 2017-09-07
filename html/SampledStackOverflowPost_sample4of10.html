@@ -1,8 +1,0 @@
-<a<p><code>at</code> prints its output to ***<a href="https://en.wikipedia.org/wiki/Stderr#Standard_error_.28stderr.29" rel="nofollow">stderr</a> not stdout. Use <code>2&gt;&amp;1</code> to pipe the stderr of <code>at</code> into stdout. Example:</p>
-
-<pre><code>~$ out=$(echo cat Hello | at -v 2014-04-03 2&gt;&amp;1 | head -n 1)
-~$ echo $out
-Thu Apr 3 01:21:00 2014
-</code></pre>
-
-<p>With <code>-v</code> it prints the execution time on the first line which is taken by <code>head -n 1</code>.
