@@ -291,7 +291,7 @@ def check_reverted(qs1, qs2):
     for qs in [qs1, qs2]:
         count = defaultdict(int)
         counts.append(count)
-        for post in qs1:
+        for post in qs:
             for link in post.wiki_links.all():
                 revs = Revision.objects.filter(wiki_link=link)
                 for rev in revs:
@@ -571,8 +571,8 @@ def parse():
             print('checking on potentially damaging posts')
             get_damaging_likelihood(filtered)
         if args.mode == 'reverted':
-            qs1 = model.objects.filter(has_wiki_link=True).order_by('?')[:200]
-            qs2 = model.objects.filter(has_wiki_link=True, context="The_Donald").order_by('?')[:200]
+            qs1 = model.objects.filter(has_wiki_link=True).order_by('?')[:50]
+            qs2 = model.objects.filter(has_wiki_link=True, context="The_Donald").order_by('?')[:50]
             print('reverted check')
             check_reverted(qs1, qs2)
 
