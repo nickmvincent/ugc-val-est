@@ -37,7 +37,6 @@ class OLS(Estimator):
 			self._dict['ate'].append(calc_ate(olscoef))
 			self._dict['ate_se'].append(calc_ate_se(cov))
 			self._dict['r2'].append(r2)
-			print(r2)
 
 			if adj == 2:
 				Xmean = X.mean(0)

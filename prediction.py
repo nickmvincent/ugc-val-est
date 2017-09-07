@@ -102,7 +102,7 @@ def causal_inference(
     start = time.time()
     summary = {}
     treatment_effects = defaultdict(list)
-    goal = 0.1
+    goal = 0
     fails = 0
     for iteration in range(iterations):
         if float(iteration) / iterations > goal:
@@ -153,14 +153,10 @@ def causal_inference(
             try:
                 has_any_nans = any(np.isnan(feature_row))
             except Exception:
-                # print('Feature {} failed isnan check...'.format(feature))
                 continue
             if not np.any(feature_row):
-                # print(
-                #    'Feature {} is all zeros - will lead to singular matrix'.format(feature))
                 continue
             elif has_any_nans:
-                # print('Feature {} has a nan value...'.format(feature))
                 continue
             else:
                 if max(feature_row) > 1 or min(feature_row) < 0:
@@ -327,8 +323,6 @@ def causal_inference(
             try:
                 causal.est_via_blocking(successful_fields, skip_fields)
                 out += causal.estimates['blocking']['coef_rows']
-                print(causal.estimates['blocking'].as_rows())
-                print(causal.estimates['blocking'])
                 summary['blocking'] = [[filename]]
                 summary['blocking'] += causal.estimates['blocking'].as_rows()
                 times.append(mark_time('est_via_blocking'))
