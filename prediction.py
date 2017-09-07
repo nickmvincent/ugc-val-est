@@ -112,7 +112,6 @@ def causal_inference(
         times, atts = [], []
         ndifs, big_ndifs_counts = [], []
         times.append(mark_time('function_start')) 
-        
         qs, features, outcomes = get_qs_features_and_outcomes(
             platform, num_rows=num_rows, filter_kwargs=filter_kwargs, exclude_kwargs=exclude_kwargs)
         features.append(treatment_name)
