@@ -484,6 +484,7 @@ class SampledStackOverflowPost(Post):
     question_score = models.IntegerField(default=0)
     num_question_comments = models.IntegerField(default=0)
     response_time = models.IntegerField(blank=True, null=True)
+    is_top = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         """overload save method"""

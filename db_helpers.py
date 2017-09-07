@@ -261,10 +261,29 @@ def so_percent_of_pageviews():
     print('dropped_count', dropped_all_count)
 
 
+def mark_top_answers():
+    """marks top answers"""
+    qs = SampledStackOverflowPost.objects.all()
+    for start, end, total, batch in batch_qs(qs, batch_size=10000):
+        print(start, end, total)
+        for answer in batch:
+            try:
+                question_id = StackOverflowQuestion.objects.using('secondary').filter(id=answer.uid).values('id')[0]['id']
+                other_answers = StackOverflowAnswer.objects.using('secondary').filter(parent_id=question_id)
+                max_score = other_answers.aggregate(Max('score'))
+                if answer.score == max_score:
+                    answer.is_top = True
+                    answer.save()
+            except:
+                print('MISSING QUESTION UH OH')
+
+
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dja.settings")
     import django
     django.setup()
+    from django.db.models import Max
+
     from portal.models import (
         ErrorLog, SampledRedditThread,
         SampledStackOverflowPost,
