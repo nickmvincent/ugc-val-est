@@ -105,7 +105,7 @@ def causal_inference(
     goal = 0
     fails = 0
     for iteration in range(iterations):
-        if float(iteration) / iterations > goal:
+        if float(iteration) / iterations >= goal:
             print('{}/{}|'.format(iteration, iterations), end='')
             goal += 0.1
         out = []
