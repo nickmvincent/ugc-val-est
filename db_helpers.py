@@ -270,7 +270,7 @@ def mark_top_answers():
             try:
                 question_id = StackOverflowAnswer.objects.using('secondary').filter(id=answer.uid).values('parent_id')[0]['parent_id']
                 other_answers = StackOverflowAnswer.objects.using('secondary').filter(parent_id=question_id)
-                max_score = other_answers.aggregate(Max('score'))
+                max_score = other_answers.aggregate(Max('score'))['score__max']
                 print(max_score)
                 if answer.score == max_score:
                     print('marking top answer as true woohoo!')
