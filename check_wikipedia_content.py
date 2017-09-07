@@ -304,6 +304,13 @@ def check_reverted(qs1, qs2):
                     if reverted_to:
                         count['reverted_to'] += 1
     print(counts)
+    send_mail(
+        'Reverted counts :D',
+        str(counts),
+        settings.EMAIL_HOST_USER,
+        ['nickmvincent@gmail.com'],
+        fail_silently=False,
+    )
 
 
 
@@ -571,8 +578,8 @@ def parse():
             print('checking on potentially damaging posts')
             get_damaging_likelihood(filtered)
         if args.mode == 'reverted':
-            qs1 = model.objects.filter(has_wiki_link=True).order_by('?')[:50]
-            qs2 = model.objects.filter(has_wiki_link=True, context="The_Donald").order_by('?')[:50]
+            qs1 = model.objects.filter(has_wiki_link=True).order_by('?')[:813]
+            qs2 = model.objects.filter(has_wiki_link=True, context="The_Donald")
             print('reverted check')
             check_reverted(qs1, qs2)
 
@@ -584,6 +591,7 @@ if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dja.settings")
     import django
     from django.db.utils import IntegrityError
+    from django.core.mail import send_mail
     django.setup()
     from portal.models import (
         SampledRedditThread, SampledStackOverflowPost,
