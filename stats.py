@@ -25,14 +25,17 @@ import numpy as np
 from scipy import stats
 
 
-def so_special():
+def so_special(treatment_feature, extra_filter):
     """helper"""
-    qs = SampledStackOverflowPost.objects.filter(
-        sample_num=0).order_by('uid')
-    question_ids = []
-
+    if extra_filter:
+        qs = SampledStackOverflowPost.objects.filter(
+            has_wiki_link=True, sample_num=0).order_by('uid')
+    else:
+        qs = SampledStackOverflowPost.objects.filter(
+            sample_num=0).order_by('uid')
+    treat_question_ids = []
+    control_question_ids = []
     start_time = time.time()
-
     count = defaultdict(int)
     treat = []
     control = []
@@ -42,20 +45,21 @@ def so_special():
         for obj in batch:
             ans = StackOverflowAnswer.objects.using('secondary').get(id=obj.uid)
             question_id = ans.parent_id
-            if question_id not in question_ids:
-                if obj.has_wiki_link:
+            if getattr(obj, treatment_feature):
+                if question_id not in treat_question_ids:
                     treat.append(obj.num_pageviews)
                     count['treatment_total'] += obj.num_pageviews
                     count['treatment_count'] += 1
+                    treat_question_ids.append(question_id)
                 else:
+                    count['dropped_treatment_total'] += obj.num_pageviews
+                    count['dropped_treatment_count'] += 1
+            else:
+                if question id not in control_question_ids:
                     control.append(obj.num_pageviews)
                     count['control_total'] += obj.num_pageviews
                     count['control_count'] += 1
-                question_ids.append(question_id)
-            else:
-                if obj.has_wiki_link:
-                    count['dropped_treatment_total'] += obj.num_pageviews
-                    count['dropped_treatment_count'] += 1
+                    control_question_ids.append(question_id)
                 else:
                     count['dropped_control_total'] += obj.num_pageviews
                     count['dropped_control_count'] += 1
@@ -650,7 +654,10 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
             descriptive_stats[name] = {}
             inferential_stats[name] = {}
             if rq == 13:
-                treat, control = so_special()
+                treat, control = so_special('has_wiki_link')
+            elif rq == 14:
+                treat, control = so_special('has_c_wiki_link', filter)
+            if rq == 13 or rq == 14:
                 treatment = {
                     'name': 'Treatment',
                     'var_to_vec': {
