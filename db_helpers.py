@@ -213,42 +213,6 @@ def clear_pre2016_so_pageviews():
     qs = SampledStackOverflowPost.objects.filter(timestamp__lt=cutoff)
     qs.update(num_wiki_pageviews=None, num_wiki_pageviews_prev_week=None)
 
-def so_special():
-    """helper"""
-    qs = SampledStackOverflowPost.objects.filter(
-        sample_num=0).order_by('uid')
-    question_ids = []
-
-    start_time = time.time()
-
-    count = defaultdict(int)
-    treat = []
-    control = []
-
-    for start, end, total, batch in batch_qs(qs, batch_size=10000):
-        print(start, end, total, time.time() - start_time)
-        for obj in batch:
-            ans = StackOverflowAnswer.objects.using('secondary').get(id=obj.uid)
-            question_id = ans.parent_id
-            if question_id not in question_ids:
-                if obj.has_wiki_link:
-                    treat.append(obj.num_pageviews)
-                    count['treatment_total'] += obj.num_pageviews
-                    count['treatment_count'] += 1
-                else:
-                    control.append(obj.num_pageviews)
-                    count['control_total'] += obj.num_pageviews
-                    count['control_count'] += 1
-                question_ids.append(question_id)
-            else:
-                if obj.has_wiki_link:
-                    count['dropped_treatment_total'] += obj.num_pageviews
-                    count['dropped_treatment_count'] += 1
-                else:
-                    count['dropped_control_total'] += obj.num_pageviews
-                    count['dropped_control_count'] += 1
-    print(count)
-    return treat, control
 
 
 def mark_top_answers():
@@ -307,7 +271,5 @@ if __name__ == "__main__":
             extract_pairs(sys.argv[2], sys.argv[3])
         elif sys.argv[1] == 'fix_bad_registration_time':
             fix_bad_registration_time()
-        elif sys.argv[1] == 'so_special':
-            so_special()
         elif sys.argv[1] == 'mark_top_answers':
             mark_top_answers()

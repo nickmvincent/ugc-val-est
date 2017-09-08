@@ -495,9 +495,9 @@ def parse():
         simple_linear(args.platform)
     else:
         if args.rq is None:
-            rqs = [1, 2]
+            rqs = ['1', '2']
         else:
-            rqs = [int(args.rq)]
+            rqs = [args.rq]
         if args.bootstrap is None:
             iterations = 1
         else:
@@ -515,7 +515,7 @@ def parse():
             platforms = [args.platform]
         for platform in platforms:
             for rq in rqs:
-                if rq == 1:
+                if rq == '1':
                     treatments = [
                         {
                             'name': 'has_other_link',
@@ -527,7 +527,7 @@ def parse():
                             'exclude_kwargs': {'has_other_link': True}
                         },
                     ]
-                elif rq == 12:
+                elif rq == '1-is_top':
                     treatments = [
                         {
                             'name': 'has_other_link',
@@ -539,7 +539,19 @@ def parse():
                             'exclude_kwargs': {'has_other_link': True}
                         },
                     ]
-                elif rq == 2:
+                elif rq == 'til':
+                    treatments = [
+                        {
+                            'name': 'has_other_link',
+                            'filter_kwargs': {'is_top': True},
+                            'exclude_kwargs': {'has_wiki_link': True}
+                        }, {
+                            'name': 'has_wiki_link',
+                            'filter_kwargs': {'is_top': True},
+                            'exclude_kwargs': {'has_other_link': True}
+                        },
+                    ]
+                elif rq == '2':
                     treatments = [
                         {
                             'pre': 'CI_c_',
@@ -554,7 +566,7 @@ def parse():
                             'exclude_kwargs': {'has_wiki_link': True, 'has_c_wiki_link': True},
                         },
                     ]
-                elif rq == 22:
+                elif rq == '2-is_top':
                     treatments = [
                         {
                             'pre': 'CI_c_',
