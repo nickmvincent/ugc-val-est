@@ -215,7 +215,6 @@ def clear_pre2016_so_pageviews():
 
 def so_special():
     """helper"""
-    from portal.models import SampledStackOverflowPost
     qs = SampledStackOverflowPost.objects.filter(
         sample_num=0).order_by('uid')
     question_ids = []

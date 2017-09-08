@@ -25,6 +25,43 @@ import numpy as np
 from scipy import stats
 
 
+def so_special():
+    """helper"""
+    qs = SampledStackOverflowPost.objects.filter(
+        sample_num=0).order_by('uid')
+    question_ids = []
+
+    start_time = time.time()
+
+    count = defaultdict(int)
+    treat = []
+    control = []
+
+    for start, end, total, batch in batch_qs(qs, batch_size=10000):
+        print(start, end, total, time.time() - start_time)
+        for obj in batch:
+            ans = StackOverflowAnswer.objects.using('secondary').get(id=obj.uid)
+            question_id = ans.parent_id
+            if question_id not in question_ids:
+                if obj.has_wiki_link:
+                    treat.append(obj.num_pageviews)
+                    count['treatment_total'] += obj.num_pageviews
+                    count['treatment_count'] += 1
+                else:
+                    control.append(obj.num_pageviews)
+                    count['control_total'] += obj.num_pageviews
+                    count['control_count'] += 1
+                question_ids.append(question_id)
+            else:
+                if obj.has_wiki_link:
+                    count['dropped_treatment_total'] += obj.num_pageviews
+                    count['dropped_treatment_count'] += 1
+                else:
+                    count['dropped_control_total'] += obj.num_pageviews
+                    count['dropped_control_count'] += 1
+    print(count)
+    return treat, control
+
 def percent_bias(x_arr, y_arr):
     """Calculate the percent bias for two groups
     Inputs should be numerical arrays corresponding to the two groups
