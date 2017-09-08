@@ -213,52 +213,42 @@ def clear_pre2016_so_pageviews():
     qs = SampledStackOverflowPost.objects.filter(timestamp__lt=cutoff)
     qs.update(num_wiki_pageviews=None, num_wiki_pageviews_prev_week=None)
 
-def so_percent_of_pageviews():
+def so_special():
     """helper"""
-    start_date = datetime.datetime(year=2016, month=1, day=1)
-    end_date = datetime.datetime(year=2016, month=12, day=31)
     qs = SampledStackOverflowPost.objects.filter(
-        sample_num=0, timestamp__gte=start_date, timestamp__lte=end_date).order_by('uid')
+        sample_num=0).order_by('uid')
     question_ids = []
 
-    all_total = 0
-    all_count = 0
-    wiki_total = 0
-    wiki_count = 0
-
-    dropped_all_total = 0
-    dropped_all_count = 0
-    dropped_wiki_total = 0
-    dropped_wiki_count = 0 
-
     start_time = time.time()
+
+    count = defaultdict(int)
+    treat = []
+    control = []
 
     for start, end, total, batch in batch_qs(qs, batch_size=10000):
         print(start, end, total, time.time() - start_time)
         for obj in batch:
-            ans = StackOverflowAnswer.objects.get(id=obj.uid)
+            ans = StackOverflowAnswer.objects.using('secondary').get(id=obj.uid)
             question_id = ans.parent_id
             if question_id not in question_ids:
-                all_total += obj.num_pageviews
-                all_count += 1
                 if obj.has_wiki_link:
-                    wiki_total += obj.num_pageviews
-                    wiki_count += 1
+                    treat.append(obj.num_pageviews)
+                    count['treatment_total'] += obj.num_pageviews
+                    count['treatment_count'] += 1
+                else:
+                    control.append(obj.num_pageviews)
+                    count['control_total'] += obj.num_pageviews
+                    count['control_count'] += 1
                 question_ids.append(question_id)
             else:
-                dropped_all_total += obj.num_pageviews
-                dropped_all_count += 1
                 if obj.has_wiki_link:
-                    dropped_wiki_total += obj.num_pageviews
-                    dropped_wiki_count += 1
-    print('wiki_total', wiki_total)
-    print('wiki_count', wiki_count)
-    print('all_total', all_total)
-    print('all_count', all_count)
-    print('dropped_wiki_total', dropped_wiki_total)
-    print('dropped_wiki_count', dropped_wiki_count)
-    print('dropped_total', dropped_all_total)
-    print('dropped_count', dropped_all_count)
+                    count['dropped_treatment_total'] += obj.num_pageviews
+                    count['dropped_treatment_count'] += 1
+                else:
+                    count['dropped_control_total'] += obj.num_pageviews
+                    count['dropped_control_count'] += 1
+    print(count)
+    return treat, control
 
 
 def mark_top_answers():
@@ -317,7 +307,7 @@ if __name__ == "__main__":
             extract_pairs(sys.argv[2], sys.argv[3])
         elif sys.argv[1] == 'fix_bad_registration_time':
             fix_bad_registration_time()
-        elif sys.argv[1] == 'so_percent_of_pageviews':
-            so_percent_of_pageviews()
+        elif sys.argv[1] == 'so_special':
+            so_special()
         elif sys.argv[1] == 'mark_top_answers':
             mark_top_answers()

@@ -390,7 +390,7 @@ def make_method_getter(method_name):
     return get_method_outputs
 
 
-def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_num=None):
+def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_num=None, special_pageviews=False):
     """Driver"""
     csv_dir = 'csv_files'
     png_dir = 'png_files'
@@ -402,19 +402,22 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
     if rq == 10:
         subsample_kwargs = {}
         treatment_kwargs = {'has_wiki_link': True, }
-    if rq == 12:
+    elif rq == 12:
         subsample_kwargs = {'has_other_link': False}
         treatment_kwargs = {'has_wiki_link': True, }
-    if rq == 11:
+    elif rq == 11:
         subsample_kwargs = {'has_wiki_link': False}
         treatment_kwargs = {'has_other_link': True, }    
-    if rq == 2:
+    elif rq == 13:
+        subsample_kwargs = {}
+        treatment_kwargs = {}
+    elif rq == 2:
         subsample_kwargs = {
             'has_wiki_link': True,
             'day_of_avg_score__isnull': False,
         }
         treatment_kwargs = {'has_c_wiki_link': True, }
-    if rq == 3:
+    elif rq == 3:
         subsample_kwargs = {
             'has_wiki_link': True,
             'day_of_avg_score__isnull': False,
@@ -514,6 +517,7 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
         variables += ['num_pageviews']
         extractor = get_links_from_body
         extract_from = 'body'
+            
     if rq == 3:
         variables = [
             ('num_edits', 'num_edits_prev_week'),
@@ -605,10 +609,26 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
                         'name': 'Control',
                         'qs': qs
                     }
-            groups = [treatment, control]
 
             descriptive_stats[name] = {}
             inferential_stats[name] = {}
+            if rq == 13:
+                treat, control = so_special()
+                treatment = {
+                    'name': 'Treatment',
+                    'var_to_vec': {
+                        'num_pageviews': treat   
+                    }
+                }
+                control = {
+                    'name': 'Control',
+                    'var_to_vec': {
+                        'num_pageviews': control   
+                    }
+                }
+                variables = ['num_pageviews']
+            groups = [treatment, control]
+            
             for variable in variables:
                 variable_name = variable
                 treatment_var, control_var, method = None, None, None
@@ -802,6 +822,7 @@ if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dja.settings")
     import django
     from django.db import connection
+    from db_helpers import so_special
     django.setup()
     from portal.models import (
         SampledRedditThread, SampledStackOverflowPost,
