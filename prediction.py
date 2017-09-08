@@ -87,7 +87,7 @@ def extract_vals_and_method_results(qs, field_names):
 
 
 def causal_inference(
-        platform, treatment_name, 
+        platform, treatment_name,
         filename_prefix,
         filter_kwargs, exclude_kwargs,
         num_rows=None, quad_psm=False, simple_bin=None, trim_val=0,
@@ -110,7 +110,7 @@ def causal_inference(
         out = []
         times, atts = [], []
         ndifs, big_ndifs_counts = [], []
-        times.append(mark_time('function_start')) 
+        times.append(mark_time('function_start'))
         qs, features, outcomes = get_qs_features_and_outcomes(
             platform, num_rows=num_rows, filter_kwargs=filter_kwargs, exclude_kwargs=exclude_kwargs)
         if 'is_top' in filter_kwargs:
@@ -174,7 +174,8 @@ def causal_inference(
                         adjusted_feature = np.log(shifted)
                     else:
                         adjusted_feature = feature_row
-                    adjusted_feature = (adjusted_feature - np.mean(adjusted_feature)) / np.std(adjusted_feature)
+                    adjusted_feature = (
+                        adjusted_feature - np.mean(adjusted_feature)) / np.std(adjusted_feature)
                     feature_rows.append(adjusted_feature)
                 else:
                     feature_rows.append(feature_row)
@@ -191,10 +192,10 @@ def causal_inference(
             'user_is_deleted', 'user_is_mod', 'user_is_suspended',
             'title_includes_question_mark',
         ]
-            
+
         X = np.transpose(np.array(feature_rows))
-        X_c = X[D==0]
-        X_t = X[D==1]
+        X_c = X[D == 0]
+        X_t = X[D == 1]
         to_delete, cols_deleted = [], 0
         for col_num, col in enumerate(X_c.T):
             if not np.any(col):
@@ -207,7 +208,6 @@ def causal_inference(
             successful_fields.remove(successful_fields[col_num - cols_deleted])
             cols_deleted += 1
 
-
         dummies = {
             'months':	[
                 'jan', 'feb', 'mar', 'apr',
@@ -216,10 +216,11 @@ def causal_inference(
             ],
             'hours': ['zero_to_six', 'six_to_twelve', 'twelve_to_eighteen', ],
             'contexts': ['in_todayilearned',
-                        'in_borntoday', 'in_wikipedia', 'in_CelebrityBornToday', 'in_The_Donald', ],
+                         'in_borntoday', 'in_wikipedia', 'in_CelebrityBornToday',
+                         'in_The_Donald', ],
             'years': ['year2008', 'year2009', 'year2010',
-                    'year2011', 'year2012', 'year2013',
-                    'year2014', 'year2015', ],
+                      'year2011', 'year2012', 'year2013',
+                      'year2014', 'year2015', ],
             'days:': [
                 'mon', 'tues', 'wed', 'thurs',
                 'fri', 'sat',
@@ -249,7 +250,8 @@ def causal_inference(
                             break
             for col_num in to_delete:
                 X = np.delete(X, col_num - cols_deleted, 1)
-                successful_fields.remove(successful_fields[col_num - cols_deleted])
+                successful_fields.remove(
+                    successful_fields[col_num - cols_deleted])
                 cols_deleted += 1
             if can_break:
                 break
@@ -268,14 +270,15 @@ def causal_inference(
             causal.est_propensity_s()
             times.append(mark_time('propensity_s'))
         varname_to_field = {
-            "X{}".format(i):field for i, field in enumerate(successful_fields) if field not in exclude_from_ps
+            "X{}".format(i): field for i, field in enumerate(
+                successful_fields) if field not in exclude_from_ps
         }
-        outname_to_field = {"Y{}".format(i):field for i, field in enumerate(outcomes)}
+        outname_to_field = {"Y{}".format(
+            i): field for i, field in enumerate(outcomes)}
         for dic in [varname_to_field, outname_to_field]:
             for key, val in dic.items():
                 out.append("{}:{}".format(key, val))
         out.append(str(causal.propensity))
-        # TODO: show my manually chosen is stable/justifiable for paper
         if trim_val == 's':
             causal.trim_s()
         elif trim_val is None:
@@ -289,8 +292,6 @@ def causal_inference(
         ndifs.append(causal.summary_stats['sum_of_abs_ndiffs'])
         big_ndifs_counts.append(causal.summary_stats['num_large_ndiffs'])
 
-        
-        
         if paired_psm:
             psm_est, psm_summary, psm_rows = causal.est_via_psm()
             out.append('PSM PAIR REGRESSION')
@@ -334,16 +335,20 @@ def causal_inference(
                     count = stratum.raw_data['N']
                     fraction = count / causal.raw_data['N']
                     w_avg_ndiff += fraction * val
-                    w_num_large_ndiffs += fraction * stratum.summary_stats['num_large_ndiffs']
-                out.append('WEIGHTED AVERAGE OF SUM OF ABSOLUTE VALUE OF ALL NDIFs')
+                    w_num_large_ndiffs += fraction * \
+                        stratum.summary_stats['num_large_ndiffs']
+                out.append(
+                    'WEIGHTED AVERAGE OF SUM OF ABSOLUTE VALUE OF ALL NDIFs')
                 ndifs.append(w_avg_ndiff)
                 big_ndifs_counts.append(w_num_large_ndiffs)
                 out.append(','.join([str(ndif) for ndif in ndifs]))
                 out.append('# of BIG NDIFS')
-                out.append(','.join([str(count) for count in big_ndifs_counts]))
+                out.append(','.join([str(count)
+                                     for count in big_ndifs_counts]))
 
                 varname_to_field = {
-                    "X{}".format(i):field for i, field in enumerate(successful_fields) if field not in skip_fields
+                    "X{}".format(i): field for i, field in enumerate(
+                        successful_fields) if field not in skip_fields
                 }
                 out.append('VARS USED IN BLOCK REGRESSIONS')
                 for dic in [varname_to_field]:
@@ -369,7 +374,7 @@ def causal_inference(
     if iterations > 1:
         boot_rows = [
             ['Bootstrap results for {} iterations of full resampling'.format(
-            iterations), str(0.005), str(0.995)]
+                iterations), str(0.005), str(0.995)]
         ]
         for outcome, att_lst in treatment_effects.items():
             sor = sorted(att_lst)
@@ -390,8 +395,6 @@ def causal_inference(
             num_rows, quad_psm, simple_bin, trim_val,
             paired_psm, iterations=1, sample_num=sample_num)
     return summary
-
-            
 
 
 def simple_linear(platform, quality_mode=False):
@@ -442,10 +445,6 @@ def simple_linear(platform, quality_mode=False):
         # The coefficients
         # The mean squared error
         y_test_hat = regr.predict(X_test)
-        lin_msg = "Linear | MSE: {}, R2: {}".format(
-            np.mean((y_test_hat - y_test) ** 2),
-            regr.score(X_test, y_test)
-        )
 
 
 def parse():
@@ -509,19 +508,17 @@ def parse():
             trim_vals = [None]
         else:
             trim_vals = args.trim_val.split(',')
-        
+
         if args.platform is None:
             platforms = ['r', 's', ]
         else:
             platforms = [args.platform]
-        fiter_kwargs = {}
         for platform in platforms:
             for rq in rqs:
-                trim_rows = []
                 if rq == 1:
                     treatments = [
                         {
-                            'name': 'has_other_link', 
+                            'name': 'has_other_link',
                             'filter_kwargs': {},
                             'exclude_kwargs': {'has_wiki_link': True}
                         }, {
@@ -533,12 +530,12 @@ def parse():
                 elif rq == 12:
                     treatments = [
                         {
-                            'name': 'has_other_link', 
-                            'filter_kwargs': {'is_top'=True},
+                            'name': 'has_other_link',
+                            'filter_kwargs': {'is_top': True},
                             'exclude_kwargs': {'has_wiki_link': True}
                         }, {
                             'name': 'has_wiki_link',
-                            'filter_kwargs': {'is_top'=True},
+                            'filter_kwargs': {'is_top': True},
                             'exclude_kwargs': {'has_other_link': True}
                         },
                     ]
@@ -546,13 +543,13 @@ def parse():
                     treatments = [
                         {
                             'pre': 'CI_c_',
-                            'name': 'has_wiki_link', 
+                            'name': 'has_wiki_link',
                             'filter_kwargs': {'has_other_link': False},
                             'exclude_kwargs': {'has_wiki_link': True, 'has_c_wiki_link': False},
                         },
                         {
                             'pre': 'CI_bad_',
-                            'name': 'has_wiki_link', 
+                            'name': 'has_wiki_link',
                             'filter_kwargs': {'has_other_link': False},
                             'exclude_kwargs': {'has_wiki_link': True, 'has_c_wiki_link': True},
                         },
@@ -561,19 +558,18 @@ def parse():
                     treatments = [
                         {
                             'pre': 'CI_c_',
-                            'name': 'has_wiki_link', 
-                            'filter_kwargs': {'has_other_link': False, 'is_top'=True},
+                            'name': 'has_wiki_link',
+                            'filter_kwargs': {'has_other_link': False, 'is_top': True},
                             'exclude_kwargs': {'has_wiki_link': True, 'has_c_wiki_link': False},
                         },
                         {
                             'pre': 'CI_bad_',
-                            'name': 'has_wiki_link', 
-                            'filter_kwargs': {'has_other_link': False, 'is_top'=True},
+                            'name': 'has_wiki_link',
+                            'filter_kwargs': {'has_other_link': False, 'is_top': True},
                             'exclude_kwargs': {'has_wiki_link': True, 'has_c_wiki_link': True},
                         },
                     ]
-                
-                
+
                 summaries = []
                 for trim_val in trim_vals:
                     for treatment in treatments:
@@ -582,7 +578,8 @@ def parse():
                         if args.sample_num is None:
                             filter_kwargs['sample_num'] = 0
                         else:
-                            filter_kwargs['sample_num__in'] = args.sample_num.split(',')
+                            filter_kwargs['sample_num__in'] = args.sample_num.split(
+                                ',')
                         summary = causal_inference(
                             platform, treatment['name'],
                             treatment.get('pre', 'CI'),
