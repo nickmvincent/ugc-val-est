@@ -58,7 +58,6 @@ def get_qs_features_and_outcomes(platform, num_rows=None, filter_kwargs=None, ex
     elif platform == 's':
         qs = SampledStackOverflowPost.objects.all()
         features = common_features + list_stack_specific_features()
-        outcomes += ['num_pageviews', ]
     if filter_kwargs is not None:
         qs = qs.filter(**filter_kwargs)
     if exclude_kwargs is not None:
@@ -114,6 +113,8 @@ def causal_inference(
         times.append(mark_time('function_start')) 
         qs, features, outcomes = get_qs_features_and_outcomes(
             platform, num_rows=num_rows, filter_kwargs=filter_kwargs, exclude_kwargs=exclude_kwargs)
+        if 'is_top' in filter_kwargs:
+            outcomes = ['pageviews']
         features.append(treatment_name)
         features.append('uid')
         db_name = connection.settings_dict['NAME']
@@ -529,6 +530,18 @@ def parse():
                             'exclude_kwargs': {'has_other_link': True}
                         },
                     ]
+                elif rq == 12:
+                    treatments = [
+                        {
+                            'name': 'has_other_link', 
+                            'filter_kwargs': {is_top=True},
+                            'exclude_kwargs': {'has_wiki_link': True}
+                        }, {
+                            'name': 'has_wiki_link',
+                            'filter_kwargs': {is_top=True},
+                            'exclude_kwargs': {'has_other_link': True}
+                        },
+                    ]
                 elif rq == 2:
                     treatments = [
                         {
@@ -544,6 +557,23 @@ def parse():
                             'exclude_kwargs': {'has_wiki_link': True, 'has_c_wiki_link': True},
                         },
                     ]
+                elif rq == 22:
+                    treatments = [
+                        {
+                            'pre': 'CI_c_',
+                            'name': 'has_wiki_link', 
+                            'filter_kwargs': {'has_other_link': False, is_top=True},
+                            'exclude_kwargs': {'has_wiki_link': True, 'has_c_wiki_link': False},
+                        },
+                        {
+                            'pre': 'CI_bad_',
+                            'name': 'has_wiki_link', 
+                            'filter_kwargs': {'has_other_link': False, is_top=True},
+                            'exclude_kwargs': {'has_wiki_link': True, 'has_c_wiki_link': True},
+                        },
+                    ]
+                
+                
                 summaries = []
                 for trim_val in trim_vals:
                     for treatment in treatments:
