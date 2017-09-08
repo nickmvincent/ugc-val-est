@@ -286,9 +286,10 @@ def get_damaging_likelihood(posts):
 
 def check_reverted(qs1, qs2):
     """Check reverted"""
-    session = mwapi.Session("https://en.wikipedia.org")
+    session = mwapi.Session("https://en.wikipedia.org", user_agent='ugc-val-est; nickvincent@u.northwestern.edu; research tool')
     counts = []
     for qs in [qs1, qs2]:
+        print('Going to do qs with {} posts'.format(len(qs)))
         count = defaultdict(int)
         counts.append(count)
         for post in qs:
@@ -579,8 +580,9 @@ def parse():
             get_damaging_likelihood(filtered)
         if args.mode == 'reverted':
             qs1 = model.objects.filter(has_wiki_link=True).order_by('?')[:813]
-            qs2 = model.objects.filter(has_wiki_link=True, context="The_Donald")
+            qs2 = model.objects.filter(has_wiki_link=True, context="The_Donald").order_by('uid')
             print('reverted check')
+            print(qs1.count(), qs2.count())
             check_reverted(qs1, qs2)
 
 
@@ -592,6 +594,7 @@ if __name__ == "__main__":
     import django
     from django.db.utils import IntegrityError
     from django.core.mail import send_mail
+    from dja import settings
     django.setup()
     from portal.models import (
         SampledRedditThread, SampledStackOverflowPost,
