@@ -859,9 +859,9 @@ if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dja.settings")
     import django
     from django.db import connection
-    from db_helpers import so_special
     django.setup()
     from portal.models import (
         SampledRedditThread, SampledStackOverflowPost,
+        StackOverflowAnswer, StackOverflowQuestion
     )
     parse()
