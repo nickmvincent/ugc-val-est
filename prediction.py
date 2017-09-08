@@ -504,7 +504,7 @@ def parse():
         else:
             iterations = args.bootstrap
         if args.trim_val is None:
-            trim_vals = ['0', 's']
+            trim_vals = ['0']
         elif args.trim_val == 'pair':
             trim_vals = [None]
         else:
@@ -534,11 +534,11 @@ def parse():
                     treatments = [
                         {
                             'name': 'has_other_link', 
-                            'filter_kwargs': {is_top=True},
+                            'filter_kwargs': {'is_top'=True},
                             'exclude_kwargs': {'has_wiki_link': True}
                         }, {
                             'name': 'has_wiki_link',
-                            'filter_kwargs': {is_top=True},
+                            'filter_kwargs': {'is_top'=True},
                             'exclude_kwargs': {'has_other_link': True}
                         },
                     ]
@@ -562,13 +562,13 @@ def parse():
                         {
                             'pre': 'CI_c_',
                             'name': 'has_wiki_link', 
-                            'filter_kwargs': {'has_other_link': False, is_top=True},
+                            'filter_kwargs': {'has_other_link': False, 'is_top'=True},
                             'exclude_kwargs': {'has_wiki_link': True, 'has_c_wiki_link': False},
                         },
                         {
                             'pre': 'CI_bad_',
                             'name': 'has_wiki_link', 
-                            'filter_kwargs': {'has_other_link': False, is_top=True},
+                            'filter_kwargs': {'has_other_link': False, 'is_top'=True},
                             'exclude_kwargs': {'has_wiki_link': True, 'has_c_wiki_link': True},
                         },
                     ]
