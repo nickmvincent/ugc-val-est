@@ -180,6 +180,7 @@ class Post(models.Model):
     num_edits = models.IntegerField(default=0)
     num_new_editors = models.IntegerField(default=0)
     num_new_editors_retained = models.IntegerField(default=0)
+    num_new_editors_retained_180 = models.IntegerField(default=0)
     num_new_edits = models.IntegerField(default=0)
     num_old_edits = models.IntegerField(default=0)
     num_inactive_edits = models.IntegerField(default=0)
@@ -190,6 +191,7 @@ class Post(models.Model):
     num_edits_prev_week = models.IntegerField(default=0)
     num_new_editors_prev_week = models.IntegerField(default=0)
     num_new_editors_retained_prev_week = models.IntegerField(default=0)
+    num_new_editors_retained_prev_week_180 = models.IntegerField(default=0)
     num_new_edits_prev_week = models.IntegerField(default=0)
     num_old_edits_prev_week = models.IntegerField(default=0)
     num_inactive_edits_prev_week = models.IntegerField(default=0)
@@ -209,8 +211,8 @@ class Post(models.Model):
             'num_edits',
             'num_edits_prev_week',
 
-            'num_new_editors', 'num_new_editors_retained',
-            'num_new_editors_prev_week', 'num_new_editors_retained_prev_week',
+            'num_new_editors', 'num_new_editors_retained', 'num_new_editors_retained_180',
+            'num_new_editors_prev_week', 'num_new_editors_retained_prev_week', 'num_new_editors_retained_prev_week_180',
 
             'num_new_edits', 'num_old_edits',
             'num_new_edits_prev_week', 'num_old_edits_prev_week',
@@ -391,6 +393,8 @@ class Post(models.Model):
                                     users_seen[revision.user] = True
                                     if revision.user_retained:
                                         self.num_new_editors_retained += 1
+                                    if revision.user_retained_180:
+                                        self.num_new_editors_retained_180 += 1
                             else:
                                 self.num_old_edits += 1
                             if revision.editcount and revision.editcount <= 5:
@@ -410,6 +414,8 @@ class Post(models.Model):
                                     users_seen[revision.user] = True
                                     if revision.user_retained:
                                         self.num_new_editors_retained_prev_week += 1
+                                    if revision.user_retained_180:
+                                        self.num_new_editors_retained_prev_week_180 += 1
                             else:
                                 self.num_old_edits_prev_week += 1
 
