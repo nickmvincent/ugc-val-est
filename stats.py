@@ -68,7 +68,7 @@ def so_special(treatment_feature, extra_filter):
                 count['dropped_control_total'] += obj.num_pageviews
                 count['dropped_control_count'] += 1
                 continue
-            if question id not in control_question_ids:
+            if question_id not in control_question_ids:
                 control.append(obj.num_pageviews)
                 count['control_total'] += obj.num_pageviews
                 count['control_count'] += 1
@@ -444,7 +444,7 @@ def make_method_getter(method_name):
     return get_method_outputs
 
 
-def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_num=None, special_pageviews=False):
+def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_num=None):
     """Driver"""
     csv_dir = 'csv_files'
     png_dir = 'png_files'
@@ -882,6 +882,6 @@ if __name__ == "__main__":
     django.setup()
     from portal.models import (
         SampledRedditThread, SampledStackOverflowPost,
-        StackOverflowAnswer, StackOverflowQuestion
+        StackOverflowAnswer
     )
     parse()
