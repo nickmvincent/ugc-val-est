@@ -667,9 +667,9 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
             descriptive_stats[name] = {}
             inferential_stats[name] = {}
             if rq == 13:
-                treat, control = so_special('has_wiki_link')
+                treat, control = so_special('has_wiki_link', 0)
             elif rq == 14:
-                treat, control = so_special('has_c_wiki_link', filter)
+                treat, control = so_special('has_c_wiki_link', 1)
             if rq == 13 or rq == 14:
                 treatment = {
                     'name': 'Treatment',
