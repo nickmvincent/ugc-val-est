@@ -114,7 +114,7 @@ def causal_inference(
         qs, features, outcomes = get_qs_features_and_outcomes(
             platform, num_rows=num_rows, filter_kwargs=filter_kwargs, exclude_kwargs=exclude_kwargs)
         if 'is_top' in filter_kwargs:
-            outcomes = ['pageviews']
+            outcomes = ['num_pageviews']
         features.append(treatment_name)
         features.append('uid')
         db_name = connection.settings_dict['NAME']

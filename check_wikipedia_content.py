@@ -296,14 +296,17 @@ def check_reverted(qs1, qs2):
             for link in post.wiki_links.all():
                 revs = Revision.objects.filter(wiki_link=link)
                 for rev in revs:
-                    count['total'] += 1
-                    reverting, reverted, reverted_to = mwreverts.api.check(session, rev.revid)
-                    if reverting:
-                        count['reverting'] += 1
-                    if reverted:
-                        count['reverted'] += 1
-                    if reverted_to:
-                        count['reverted_to'] += 1
+                    try:
+                        count['total'] += 1
+                        reverting, reverted, reverted_to = mwreverts.api.check(session, rev.revid)
+                        if reverting:
+                            count['reverting'] += 1
+                        if reverted:
+                            count['reverted'] += 1
+                        if reverted_to:
+                            count['reverted_to'] += 1
+                    except Exception as err:
+                        print(err)
     print(counts)
     send_mail(
         'Reverted counts :D',
@@ -579,7 +582,7 @@ def parse():
             print('checking on potentially damaging posts')
             get_damaging_likelihood(filtered)
         if args.mode == 'reverted':
-            qs1 = model.objects.filter(has_wiki_link=True).order_by('?')[:813]
+            qs1 = model.objects.filter(has_wiki_link=True).order_by('?')[:816]
             qs2 = model.objects.filter(has_wiki_link=True, context="The_Donald").order_by('uid')
             print('reverted check')
             print(qs1.count(), qs2.count())
