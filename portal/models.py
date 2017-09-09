@@ -559,6 +559,7 @@ class Revision(models.Model):
     revid = models.CharField(max_length=50, primary_key=True)
     lastrev_date = models.DateTimeField(blank=True, null=True)
     user_retained = models.BooleanField(default=False)
+    user_retained_180 = models.BooleanField(default=False)
     score = models.IntegerField(blank=True, null=True)
     user = models.CharField(max_length=100)
     editcount = models.IntegerField(blank=True, null=True)
@@ -572,6 +573,12 @@ class Revision(models.Model):
         if self.lastrev_date and self.timestamp:
             if self.lastrev_date - self.timestamp > datetime.timedelta(days=30):
                 self.user_retained = True
+            else:
+                self.user_retained = False
+            if self.lastrev_date - self.timestamp > datetime.timedelta(days=180):
+                self.user_retained_180 = True
+            else:
+                self.user_retained_180 = False
         super(Revision, self).save(*args, **kwargs)
 
 

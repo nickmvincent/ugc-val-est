@@ -124,6 +124,12 @@ def bulk_save():
             item.save()
 
 
+def bulk_save_rev():
+    for obj in Revision.objects.all():
+        obj.save()
+    qs = Revision.objects.filter(user_retained_180=True)
+    print(qs.count())
+
 def link_save():
     """
     Runs through all the rows and re-saves to trigger
@@ -257,6 +263,8 @@ if __name__ == "__main__":
             show_samples()
         elif sys.argv[1] == 'bulk_save':
             bulk_save()
+        elif sys.argv[1] == 'bulk_save_rev':
+            bulk_save_rev()
         elif sys.argv[1] == 'link_save':
             link_save()
         elif sys.argv[1] == 'clear_json2db':
