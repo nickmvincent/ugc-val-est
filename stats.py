@@ -28,11 +28,16 @@ from scipy import stats
 def so_special(treatment_feature, extra_filter):
     """helper"""
     if extra_filter:
-        qs = SampledStackOverflowPost.objects.filter(
-            has_wiki_link=True, sample_num=0).order_by('uid')
+        qs1 = SampledStackOverflowPost.objects.filter(
+            has_wiki_link=True, sample_num=0, has_c_wiki_link=True).order_by('uid')
+        qs2 = SampledStackOverflowPost.objects.filter(
+            has_wiki_link=True, sample_num=0, has_c_wiki_link=False).order_by('uid')
     else:
-        qs = SampledStackOverflowPost.objects.filter(
+        qs1 = SampledStackOverflowPost.objects.filter(
+            sample_num=0, has_wiki_link=True).order_by('uid')
+        qs1 = SampledStackOverflowPost.objects.filter(
             sample_num=0).order_by('uid')
+
     treat_question_ids = []
     control_question_ids = []
     start_time = time.time()
@@ -40,29 +45,37 @@ def so_special(treatment_feature, extra_filter):
     treat = []
     control = []
 
-    for start, end, total, batch in batch_qs(qs, batch_size=10000):
-        print(start, end, total, time.time() - start_time)
+    for start, end, total, batch in batch_qs(qs1, batch_size=10000):
+        print('qs1', start, end, total, time.time() - start_time)
         for obj in batch:
             ans = StackOverflowAnswer.objects.using('secondary').get(id=obj.uid)
             question_id = ans.parent_id
-            if getattr(obj, treatment_feature):
-                if question_id not in treat_question_ids:
-                    treat.append(obj.num_pageviews)
-                    count['treatment_total'] += obj.num_pageviews
-                    count['treatment_count'] += 1
-                    treat_question_ids.append(question_id)
-                else:
-                    count['dropped_treatment_total'] += obj.num_pageviews
-                    count['dropped_treatment_count'] += 1
+            if question_id not in treat_question_ids:
+                treat.append(obj.num_pageviews)
+                count['treatment_total'] += obj.num_pageviews
+                count['treatment_count'] += 1
+                treat_question_ids.append(question_id)
+
             else:
-                if question id not in control_question_ids:
-                    control.append(obj.num_pageviews)
-                    count['control_total'] += obj.num_pageviews
-                    count['control_count'] += 1
-                    control_question_ids.append(question_id)
-                else:
-                    count['dropped_control_total'] += obj.num_pageviews
-                    count['dropped_control_count'] += 1
+                count['dropped_treatment_total'] += obj.num_pageviews
+                count['dropped_treatment_count'] += 1
+    for start, end, total, batch in batch_qs(qs2, batch_size=10000):
+        print('qs2', start, end, total, time.time() - start_time)
+        for obj in batch:
+            ans = StackOverflowAnswer.objects.using('secondary').get(id=obj.uid)
+            question_id = ans.parent_id
+            if question_id in treat_question_ids:
+                count['dropped_control_total'] += obj.num_pageviews
+                count['dropped_control_count'] += 1
+                continue
+            if question id not in control_question_ids:
+                control.append(obj.num_pageviews)
+                count['control_total'] += obj.num_pageviews
+                count['control_count'] += 1
+                control_question_ids.append(question_id)
+            else:
+                count['dropped_control_total'] += obj.num_pageviews
+                count['dropped_control_count'] += 1
     print(count)
     return treat, control
 
@@ -449,7 +462,7 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
     elif rq == 11:
         subsample_kwargs = {'has_wiki_link': False}
         treatment_kwargs = {'has_other_link': True, }    
-    elif rq == 13:
+    elif rq == 13 or rq == 14:
         subsample_kwargs = {}
         treatment_kwargs = {}
     elif rq == 2:
