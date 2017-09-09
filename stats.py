@@ -35,8 +35,8 @@ def so_special(treatment_feature, extra_filter):
     else:
         qs1 = SampledStackOverflowPost.objects.filter(
             sample_num=0, has_wiki_link=True).order_by('uid')
-        qs1 = SampledStackOverflowPost.objects.filter(
-            sample_num=0).order_by('uid')
+        qs2 = SampledStackOverflowPost.objects.filter(
+            sample_num=0, has_wiki_link=False).order_by('uid')
 
     treat_question_ids = []
     control_question_ids = []
