@@ -29,9 +29,9 @@ def so_special(treatment_feature, extra_filter):
     """helper"""
     if extra_filter:
         qs1 = SampledStackOverflowPost.objects.filter(
-            has_wiki_link=True, sample_num=0, has_c_wiki_link=True).order_by('uid')
+            has_wiki_link=True, sample_num__in=[0,1,2], has_c_wiki_link=True).order_by('uid')
         qs2 = SampledStackOverflowPost.objects.filter(
-            has_wiki_link=True, sample_num=0, has_c_wiki_link=False).order_by('uid')
+            has_wiki_link=True, sample_num__in=[0,1,2], has_c_wiki_link=False).order_by('uid')
     else:
         qs1 = SampledStackOverflowPost.objects.filter(
             sample_num=0, has_wiki_link=True).order_by('uid')
