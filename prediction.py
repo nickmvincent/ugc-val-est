@@ -389,8 +389,9 @@ def causal_inference(
             writer = csv.writer(outfile)
             writer.writerows(boot_rows)
         summary = causal_inference(
-            platform, filename_prefix,
+            platform, 
             treatment_name,
+            filename_prefix,
             filter_kwargs, exclude_kwargs,
             num_rows, quad_psm, simple_bin, trim_val,
             paired_psm, iterations=1, sample_num=sample_num)
