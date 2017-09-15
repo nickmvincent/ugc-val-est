@@ -579,7 +579,7 @@ def test():
                     try:
                         rev_in_db = Revision.objects.filter(revid=rev.get('revid')).values()[0]
                         print('^^FROM DB:', rev_in_db)
-                        wiki_link = WikiLink.objects.filter(rev_in_db.get('wiki_link_id'))[0]
+                        wiki_link = WikiLink.objects.filter(id=rev_in_db.get('wiki_link_id'))[0]
                         print('Here is the wiki link we are on, and here is the wiki link this rev goes to...')
                         print(wiki_link.id, links)
                     except:
