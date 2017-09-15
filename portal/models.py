@@ -367,7 +367,9 @@ class Post(models.Model):
             for link_obj in self.wiki_links.all():
                 num_links += 1
                 all_possible_links = WikiLink.objects.filter(title=link_obj.title)
-                revisions = Revision.objects.filter(wiki_link__in=all_possible_links)
+                starttime = self.timestamp - datetime.timedelta(days=7)
+                endtime = self.timestamp + datetime.timedelta(days=7)
+                revisions = Revision.objects.filter(wiki_link__in=all_possible_links, timestamp__gte=starttime, timestamp__lte=endtime)
                 if revisions.exists():
                     for field, dt in field_to_dt.items():
                         ores_score = get_closest_to(
@@ -384,7 +386,6 @@ class Post(models.Model):
                                 self.has_c_wiki_link = True
                     for revision in revisions:
                         users_seen = {}
-                        starttime = self.timestamp - datetime.timedelta(days=7)
                         if revision.timestamp > self.timestamp:
                             self.num_edits += 1
                             if revision.registration and revision.registration > self.timestamp:
@@ -406,7 +407,7 @@ class Post(models.Model):
                                 self.num_minor_edits += 1
                             else:
                                 self.num_major_edits += 1
-                        elif revision.timestamp > starttime:
+                        else:
                             self.num_edits_prev_week += 1
                             if revision.registration and revision.registration > starttime:
                                 self.num_new_edits_prev_week += 1
