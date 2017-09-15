@@ -296,15 +296,14 @@ def check_dupe_wikilinks():
                                 before = post.num_edits, post.num_edits_prev_week
                                 print(before)
                                 post.save()
-                                print('saved')
                                 after = post.num_edits, post.num_edits_prev_week
                                 if after[0] - before[0] != 0 or after[1] - before[1] != 0:
                                     print(before, after)
                                     count += 1
+                                    input()
         if has_err:
             print(obj.num_edits, obj.num_edits_prev_week)
             obj.save()
-            print('main post saved')
             print(obj.num_edits, obj.num_edits_prev_week)
             cache[obj.uid] = True
     print(count)
