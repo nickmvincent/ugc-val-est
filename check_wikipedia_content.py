@@ -246,7 +246,7 @@ def get_scores_for_posts(posts, session):
         completed += len(revbatch)
         counter += 1
 
-        if counter == 10:
+        if counter == 2:
             counter = 0
             print('Finished {}/{} revs, time: {}'.format(
                 completed, num_revs, time.time() - start
@@ -531,7 +531,7 @@ def retrieve_links_info(posts_needing_revs, model):
     revs_needing_userinfo = Revision.objects.filter(editcount=None, err_code=0)
     print('About to get users for {} revs'.format(len(revs_needing_userinfo)))    
     get_userinfo_for_all_revs(revs_needing_userinfo, session)
-    retrieve_posts(session, model)
+    retrieve_scores(session, model)
 
 
 def retrieve_scores(session, model):
