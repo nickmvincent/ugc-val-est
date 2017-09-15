@@ -575,17 +575,21 @@ def test():
                 for dja_link in post.wiki_links.all():
                     all_links = WikiLink.objects.filter(title=dja_link.title)
                     for link in all_links:
+                        revs = Revision.objects.filter(wiki_link=link, timestamp__gte=week_before_post, timestamp__lte=week_after_post)
                         if link.id == dja_link.id:
-                            print('**' + link.url, link.err_code, Revision.objects.filter(wiki_link=link).count())
-                    
+                            print('**' + link.url, ',', revs.count())
+                        else:
+                            print(link.url, ',', revs.count())
             if after_count != post.num_edits:    
                 print('after_count', after_count, 'saved after count', post.num_edits)
                 for dja_link in post.wiki_links.all():
                     all_links = WikiLink.objects.filter(title=dja_link.title)
                     for link in all_links:
+                        revs = Revision.objects.filter(wiki_link=link, timestamp__gte=week_before_post, timestamp__lte=week_after_post)
                         if link.id == dja_link.id:
-                            print('**' + link.url, link.err_code, Revision.objects.filter(wiki_link=link).count())
-
+                            print('**' + link.url, ',', revs.count())
+                        else:
+                            print(link.url, ',', revs.count())
 def parse():
     """
     Parse args and do the appropriate analysis
