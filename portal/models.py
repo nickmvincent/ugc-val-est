@@ -366,7 +366,8 @@ class Post(models.Model):
             missing_necessary_ores = False
             for link_obj in self.wiki_links.all():
                 num_links += 1
-                revisions = Revision.objects.filter(wiki_link=link_obj)
+                all_possible_links = WikiLink.objects.filter(title=link_obj.title)
+                revisions = Revision.objects.filter(wiki_link__in=all_possible_links)
                 if revisions.exists():
                     for field, dt in field_to_dt.items():
                         ores_score = get_closest_to(

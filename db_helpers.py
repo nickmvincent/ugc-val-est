@@ -270,6 +270,7 @@ def check_dupe_wikilinks():
     qs_r = SampledRedditThread.objects.filter(has_wiki_link=True)
     qs_s = SampledStackOverflowPost.objects.filter(has_wiki_link=True)
     for obj in qs_r:
+        has_err = False
         links = obj.wiki_links.all()
         for link in links:
             matching_links = WikiLink.objects.filter(title=link.title)
@@ -286,7 +287,18 @@ def check_dupe_wikilinks():
                             val = abs(dt.total_seconds())
                             if val < 1.21e6: # 14 days
                                 print('*** PROBLEM')
-                                print(val)
+                                has_err = True
+                                print(post.num_edits, post.num_edits_prev_week)
+                                post.save()
+                                print('saved')
+                                print(post.num_edits, post.num_edits_prev_week)
+                                input()
+        if has_err:
+            print(obj.num_edits, obj.num_edits_prev_week)
+            obj.save()
+            print('obj saved')
+            print(obj.num_edits, obj.num_edits_prev_week)
+            input()
 
 
 
