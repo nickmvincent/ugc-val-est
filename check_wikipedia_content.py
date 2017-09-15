@@ -531,11 +531,12 @@ def test():
     session = requests.Session()
     session.headers.update(
         {'User-Agent': 'ugc-val-est; nickvincent@u.northwestern.edu; research tool'})
-    qsr = SampledRedditThread.objects.filter(has_wiki_link=True).order_by('?')[:200]
+    qsr = SampledRedditThread.objects.filter(has_wiki_link=True).order_by('?')[:100]
+    qss = SampledStackOverflowPost.objects.filter(has_wiki_link=True).order_by('?')[:100]
     qsdonald = SampledRedditThread.objects.filter(has_wiki_link=True, context='The_Donald')
-    qss = SampledStackOverflowPost.objects.filter(has_wiki_link=True).order_by('?')[:200]
+    
     pageview_api_str_fmt = '%Y%m%d'
-    for qs in [qsr, qss]:
+    for qs in [qsr, qss, qsdonald]:
         print('=====')
         for post in qs:
             day_of_post_short_str = post.timestamp.strftime(pageview_api_str_fmt)
