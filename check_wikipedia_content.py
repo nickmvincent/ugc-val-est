@@ -600,8 +600,8 @@ def test():
                         rev_in_db = Revision.objects.filter(revid=rev.get('revid')).values()[0]
                         print('^^FROM DB:', rev_in_db)
                         wiki_link = WikiLink.objects.filter(id=rev_in_db.get('wiki_link_id'))[0]
-                        print('Here is the wiki link we are on, and here is the wiki link this rev goes to...')
-                        print('{} ({})'.format(wiki_link.title, wiki_link.id), links)
+                        print('Here is the wiki links we are on, and here is the wiki link this rev goes to...')
+                        print(links, '{} ({})'.format(wiki_link.title, wiki_link.id))
                     except:
                         print('^^ rev missing...')
                     break
