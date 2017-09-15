@@ -182,8 +182,7 @@ def make_revid_request(session, prefix, title, start, end=None):
 
 def make_user_request(session, prefix, users):
     """
-    Returns an endpoint that will give us a revid in json format
-    closest to the timestamp, but prior to to the timestamp.
+    make a user request
     """
     base = 'https://{}.wikipedia.org/w/api.php?action=query&'.format(prefix)
     usprop_params = ['editcount', 'registration', ]
@@ -520,6 +519,7 @@ def retrieve_links_info(posts_needing_revs, model):
     revs_needing_userinfo = Revision.objects.filter(editcount=None, err_code=0)
     print('About to get users for {} revs'.format(len(revs_needing_userinfo)))    
     get_userinfo_for_all_revs(revs_needing_userinfo, session)
+
     posts_needing_score = model.objects.filter(
         has_wiki_link=True,
         day_of_avg_score=None, wiki_content_error=0
@@ -527,6 +527,49 @@ def retrieve_links_info(posts_needing_revs, model):
     print('About to get scores for {} posts'.format(len(posts_needing_score)))
     get_scores_for_posts(posts_needing_score, session)
 
+
+def test():
+    """
+    Test code
+    """
+    session = requests.Session()
+    session.headers.update(
+        {'User-Agent': 'ugc-val-est; nickvincent@u.northwestern.edu; research tool'})
+    qsr = SampledRedditThread.objects.filter(has_wiki_link=True).order_by('?')[:5]
+    qss = SampledStackOverflowPost.objects.filter(has_wiki_link=True).order_by('?')[:5]
+
+    for qs in [qsr, qss]:
+        for post in qs:
+            before_count = 0
+            after_count = 0
+            
+            for dja_link in post.wiki_links.all():
+                revisions = []
+                wiki_api_str_fmt = '%Y%m%d%H%M%S'
+                week_before_post = post.timestamp - datetime.timedelta(days=7)
+                week_after_post = post.timestamp + datetime.timedelta(days=7)
+                week_before_post_str = week_before_post.strftime(wiki_api_str_fmt)
+                week_after_post_str = week_after_post.strftime(wiki_api_str_fmt)
+                revid_result_pages = make_revid_request(
+                    session, dja_link.language_code, dja_link.title, week_before_post_str,
+                    week_after_post_str)
+                for result_page in revid_result_pages:
+                    pages = result_page.get('pages', {})
+                    for _, page in pages.items():
+                        if 'missing' in page:
+                            raise PostMissingValidLink(post, dja_link)
+                        if 'revisions' in page:
+                            revisions += page['revisions']
+                for rev_obj in revisions:
+                    stamp = datetime.datetime.strptime(
+                        rev_obj['timestamp'],
+                        '%Y-%m-%dT%H:%M:%SZ').astimezone(pytz.UTC)
+                    if stamp < post.timestamp:
+                        before_count += 1
+                    else:
+                        after_count += 1
+            print('before_count', before_count, 'saved', post.num_edits_prev_week)
+            print('before_count', after_count, 'saved', post.num_edits)
 
 def parse():
     """
@@ -542,7 +585,12 @@ def parse():
     parser.add_argument(
         '--clear_first', action='store_true', default=False,
         help='identify, retrieve, full (performs both in sequence)')
+    parser.add_argument(
+        '--test', action='store_true', default=False,
+        help='test')
     args = parser.parse_args()
+    if args.test:
+        test()
     if args.platform is None:
         platforms = ['r', 's']
     else:
@@ -587,6 +635,9 @@ def parse():
             print('reverted check')
             print(qs1.count(), qs2.count())
             check_reverted(qs1, qs2)
+
+
+
 
 
 
