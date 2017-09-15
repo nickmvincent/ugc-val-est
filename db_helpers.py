@@ -274,8 +274,8 @@ def check_dupe_wikilinks():
         for link in links:
             matching_links = WikiLink.objects.filter(title=link.title)
             for matching_link in matching_links:
-                matching_reddit_posts = SampledRedditThread.objects.filter(wiki_links__contains=matching_link)
-                matching_so_posts = SampledRedditThread.objects.filter(wiki_link_links__contains=matching_link)
+                matching_reddit_posts = SampledRedditThread.objects.filter(wiki_links=matching_link)
+                matching_so_posts = SampledRedditThread.objects.filter(wiki_links=matching_link)
                 for matching_qs in [matching_reddit_posts, matching_so_posts]:
                     for post in matching_qs:
                         if post.uid == obj.uid:
