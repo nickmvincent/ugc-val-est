@@ -542,7 +542,7 @@ def test():
     #qsdonald = SampledRedditThread.objects.filter(has_wiki_link=True, context='The_Donald')
     
     pageview_api_str_fmt = '%Y%m%d'
-    for qs in [qsr, qss, qsdonald]:
+    for qs in [qsr, qss]:
         print('=====')
         for post in qs:
             day_of_post_short_str = post.timestamp.strftime(pageview_api_str_fmt)
