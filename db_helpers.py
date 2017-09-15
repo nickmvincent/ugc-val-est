@@ -272,9 +272,25 @@ def check_dupe_wikilinks():
 
     for obj in WikiLink.objects.all():
         dupe = WikiLink.objects.filter(title=obj.title)
+        try:
+            post = SampledStackOverflowPost.objects.get(wiki_link=obj)
+        except:
+            try:
+                post = SampledRedditThread.objects.get(wiki_link=obj)
+        print('***', post.timestamp)
         if dupe.exists():
             print(dupe.count())
-            print(dupe[0].title)
+            print(obj.url)
+            print(obj.)
+            for dupe_obj in dupe:
+                 try:
+                    dupe_post = SampledStackOverflowPost.objects.get(wiki_link=dupe_obj)
+                except:
+                    try:
+                        dupe_post = SampledRedditThread.objects.get(wiki_link=dupe_obj)
+                print(dupe_obj.url, dupe_post.timestamp)
+
+            input()
             count += 1
     print(count)
 
