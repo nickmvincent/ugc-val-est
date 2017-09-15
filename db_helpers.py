@@ -245,29 +245,35 @@ def quick_helper():
     from portal.models import SampledRedditThread
     from portal.models import SampledStackOverflowPost
 
-    qs_r = SampledRedditThread.objects.filter(has_wiki_link=True)
-    qs_s = SampledStackOverflowPost.objects.filter(has_wiki_link=True)
-    for obj in qs_r:
-        obj.save()
-        if obj.num_edits > 3:
-            print(obj.num_edits_prev_week, obj.num_edits, obj.timestamp)
-            for link in obj.wiki_links.all():
-                print(link.url)
-            print('---')
-            x = input()
-            if x == 'y':
-                print('breaking')
-                break
-    for obj in qs_s:
-        obj.save()
-        if obj.num_edits > 25:
-            print(obj.num_edits_prev_week, obj.num_edits, obj.timestamp)
-            for link in obj.wiki_links.all():
-                print(link.url)
-            print('---')
-            x = input()
-            if x == 'y':
-                break
+    # qs_r = SampledRedditThread.objects.filter(has_wiki_link=True)
+    # for obj in qs_r:
+    #     obj.save()
+    #     if obj.num_edits > 3:
+    #         print(obj.num_edits_prev_week, obj.num_edits, obj.timestamp)
+    #         for link in obj.wiki_links.all():
+    #             print(link.url)
+    #         print('---')
+    #         x = input()
+    #         if x == 'y':
+    #             print('breaking')
+    #             break
+    # for obj in qs_s:
+    #     obj.save()
+    #     if obj.num_edits > 25:
+    #         print(obj.num_edits_prev_week, obj.num_edits, obj.timestamp)
+    #         for link in obj.wiki_links.all():
+    #             print(link.url)
+    #         print('---')
+    #         x = input()
+    #         if x == 'y':
+    #             break
+    wiki_links = WikiLink.objects.filter(title='SQL_injection')
+    for link in wiki_links:
+        posts = SampledStackOverflowPost.objects.filter(wiki_links=link)
+        for post in posts:
+            print(post.num_edits, post.num_edits_prev_week)
+    
+    
 
 
 def check_dupe_wikilinks():

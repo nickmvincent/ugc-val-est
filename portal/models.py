@@ -369,7 +369,8 @@ class Post(models.Model):
                 all_possible_links = WikiLink.objects.filter(title=link_obj.title)
                 starttime = self.timestamp - datetime.timedelta(days=7)
                 endtime = self.timestamp + datetime.timedelta(days=7)
-                revisions = Revision.objects.filter(wiki_link__in=all_possible_links, timestamp__gte=starttime, timestamp__lte=endtime)
+                revisions = Revision.objects.filter(
+                    wiki_link__in=all_possible_links, timestamp__gte=starttime, timestamp__lte=endtime)
                 if revisions.exists():
                     for field, dt in field_to_dt.items():
                         ores_score = get_closest_to(
