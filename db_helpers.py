@@ -245,20 +245,38 @@ def quick_helper():
     from portal.models import SampledRedditThread
     from portal.models import SampledStackOverflowPost
 
-    qs_r = SampledRedditThread.objects.filter(has_wiki_link=True)[:5]
-    qs_s = SampledStackOverflowPost.objects.filter(has_wiki_link=True)[:5]
+    qs_r = SampledRedditThread.objects.filter(has_wiki_link=True)[:100]
+    qs_s = SampledStackOverflowPost.objects.filter(has_wiki_link=True)[:100]
     for obj in qs_r:
-        print(obj.num_edits_prev_week, obj.num_edits, obj.timestamp)
-        for link in obj.wiki_links.all():
-            print(link.url)
-        print('---')
-        input()
+        if obj.num_edits > 3:
+            print(obj.num_edits_prev_week, obj.num_edits, obj.timestamp)
+            for link in obj.wiki_links.all():
+                print(link.url)
+            print('---')
+            input()
     for obj in qs_s:
-        print(obj.num_edits_prev_week, obj.num_edits, obj.timestamp)
-        for link in obj.wiki_links.all():
-            print(link.url)
-        print('---')
-        input()
+        if obj.num_edits > 25:
+            print(obj.num_edits_prev_week, obj.num_edits, obj.timestamp)
+            for link in obj.wiki_links.all():
+                print(link.url)
+            print('---')
+            input()
+
+
+def check_dupe_wikilinks():
+    from portal.models import WikiLink
+    qs = WikiLink.objects.all()
+    n = len(qs)
+    print('Going to check {} links'.format(n))
+    count = 0
+
+    for obj in WikiLink.objects.all():
+        dupe = WikiLink.objects.filter(title=obj.title)
+        if dupe.exists():
+            print(dupe.title)
+            count += 1
+    print(count)
+
 
 
 if __name__ == "__main__":
