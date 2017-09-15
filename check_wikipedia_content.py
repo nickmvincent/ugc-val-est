@@ -494,9 +494,8 @@ def retrieve_links_info(posts_needing_revs, model):
     process_start = time.time()
     print('About to get revisions for {} posts'.format(len(posts_needing_revs)))
     for post in posts_needing_revs:
-        if count % 100 == 0:
-            print('Finished: {}, Errors: {}, Time: {}'.format(
-                count, err_count, time.time() - process_start))
+        print('Finished: {}, Errors: {}, Time: {}'.format(
+            count, err_count, time.time() - process_start))
         count += 1
         try:
             get_revs_for_single_post(post, session)
