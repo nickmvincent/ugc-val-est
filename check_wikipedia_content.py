@@ -708,7 +708,7 @@ def parse():
                 identify_links(filtered, field)
             if args.mode == 'retrieve' or args.mode == 'full':
                 filtered = model.objects.filter(
-                    has_wiki_link=True, sample_num=0).order_by('uid')[args.offset:args.limit]
+                    has_wiki_link=True, sample_num=0).order_by('uid')[int(args.offset):int(args.limit)]
                 def not_retrieved(obj):
                     return obj.all_revisions_pulled is False
                 filtered = filter(not_retrieved, filtered)
