@@ -216,7 +216,8 @@ def get_scores_for_posts(posts, session):
             if dja_link.language_code != 'en':
                 print('skipping non english version')
                 continue
-            dja_revs = Revision.objects.filter(wiki_link=dja_link)
+            all_possible_links = WikiLink.objects.filter(title=link_obj.title)
+            dja_revs = Revision.objects.filter(wiki_link__in=all_possible_links)
             try:
                 for timestamp in [post.timestamp, post.timestamp + datetime.timedelta(days=7)]:
                     closest_rev = get_closest_to(dja_revs, timestamp)
@@ -541,6 +542,12 @@ def retrieve_scores(session, model):
     posts_needing_score = model.objects.filter(
         has_wiki_link=True,
         day_of_avg_score=None, wiki_content_error=0
+    )
+    print('About to get scores for {} posts'.format(len(posts_needing_score)))
+    get_scores_for_posts(posts_needing_score, session)
+    posts_needing_score = model.objects.filter(
+        has_wiki_link=True,
+        week_after_avg_score=None, wiki_content_error=0
     )
     print('About to get scores for {} posts'.format(len(posts_needing_score)))
     get_scores_for_posts(posts_needing_score, session)
