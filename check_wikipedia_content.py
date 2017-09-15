@@ -574,6 +574,11 @@ def test():
                 print('before', before_count, '|', post.num_edits_prev_week, post.timestamp)
                 for rev in revisions:
                     print(rev)
+                    try:
+                        rev_in_db = Revision.objects.filter(revid=revid).values()[0]
+                        print(rev_in_db)
+                    except:
+                        pass
                 input()
                 for dja_link in post.wiki_links.all():
                     all_links = WikiLink.objects.filter(title=dja_link.title)
@@ -584,7 +589,9 @@ def test():
                         else:
                             print(link.url, '|', revs.count())
             if after_count != post.num_edits:    
-                print('after_count', after_count, 'saved after count', post.num_edits, post.timestamp)
+                print('after', after_count, '|', post.num_edits, post.timestamp)
+                for rev in revisions:
+                    print(rev)
                 for dja_link in post.wiki_links.all():
                     all_links = WikiLink.objects.filter(title=dja_link.title)
                     for link in all_links:
