@@ -264,38 +264,29 @@ def quick_helper():
 
 
 def check_dupe_wikilinks():
-    from portal.models import WikiLink
-    qs = WikiLink.objects.all()
-    n = len(qs)
-    print('Going to check {} links'.format(n))
-    count = 0
+    from portal.models import SampledRedditThread
+    from portal.models import SampledStackOverflowPost
 
-    for obj in WikiLink.objects.all():
-        dupe = WikiLink.objects.filter(title=obj.title)
-        try:
-            post = SampledStackOverflowPost.objects.get(wiki_link=obj)
-        except:
-            try:
-                post = SampledRedditThread.objects.get(wiki_link=obj)
-            except:
-                continue
-        print('***', post.timestamp)
-        if dupe.exists():
-            print(dupe.count())
-            print(obj.url)
-            for dupe_obj in dupe:
-                try:
-                    dupe_post = SampledStackOverflowPost.objects.get(wiki_link=dupe_obj)
-                except:
-                    try:
-                        dupe_post = SampledRedditThread.objects.get(wiki_link=dupe_obj)
-                    except:
+    qs_r = SampledRedditThread.objects.filter(has_wiki_link=True).select_related('wiki_link')[:100]
+    qs_s = SampledStackOverflowPost.objects.filter(has_wiki_link=True).select_related('wiki_link')[:100]
+    for obj in qs_r:
+        link = obj.wiki_link
+        matching_links = WikiLink.objects.filter(title=link.title)
+        for matching_link in matching_links:
+            matching_reddit_posts = SampledRedditThread.objects.filter(wiki_link=matching_link)
+            matching_so_posts = SampledRedditThread.objects.filter(wiki_link=matching_link)
+            for matching_qs in [matching_reddit_posts, matching_so_posts]:
+                for post in matching_qs:
+                    if post.uid == obj.uid:
                         continue
-                print(dupe_obj.url, dupe_post.timestamp)
+                    else:
+                        print(obj.timestamp, post.timestamp)
+                        dt = obj.timestamp - post.timestamp
+                        val = abs(dt.total_seconds())
+                        if val < 1.21e6: # 14 days
+                            print('*** PROBLEM')
+                            print(val)
 
-            input()
-            count += 1
-    print(count)
 
 
 
