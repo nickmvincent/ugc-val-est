@@ -543,9 +543,11 @@ def test():
         for post in qs:
             before_count = 0
             after_count = 0
+            links = []
             for dja_link in post.wiki_links.all():
                 if dja_link.language_code != 'en':
                     continue
+                links.append(dja_link.id)
                 revisions = []
                 wiki_api_str_fmt = '%Y%m%d%H%M%S'
                 week_before_post = post.timestamp - datetime.timedelta(days=7)
@@ -577,6 +579,9 @@ def test():
                     try:
                         rev_in_db = Revision.objects.filter(revid=rev.get('revid')).values()[0]
                         print('^^FROM DB:', rev_in_db)
+                        wiki_link = WikiLink.objects.filter(rev_in_db.get('wiki_link_id'))[0]
+                        print('Here is the wiki link we are on, and here is the wiki link this rev goes to...')
+                        print(wiki_link.id, links)
                     except:
                         print('^^ rev missing...')
                 input()
