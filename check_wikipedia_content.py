@@ -711,7 +711,7 @@ def parse():
     if args.test:
         test()
     elif args.get_scores_only:
-        get_scores_only(SampledRedditThread)
+        get_scores_only(SampledStackOverflowPost)
     else:
         if args.platform is None:
             platforms = ['r', 's']
