@@ -273,7 +273,8 @@ def check_dupe_wikilinks():
     for obj in WikiLink.objects.all():
         dupe = WikiLink.objects.filter(title=obj.title)
         if dupe.exists():
-            print(dupe.title)
+            print(dupe.count())
+            print(dupe[0].title)
             count += 1
     print(count)
 
