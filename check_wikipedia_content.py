@@ -209,6 +209,7 @@ def get_scores_for_posts(posts, session):
     """Gets two scores for posts passed in"""
     ores_ep_template = 'https://ores.wikimedia.org/v3/scores/{context}?models=wp10&revids={revids}'
     revid_to_rev = {}
+    print('Collecting revids for {} posts'.format(len(posts)))
     for post in posts:
         dja_links = post.wiki_links.all()
         for dja_link in dja_links:
@@ -219,7 +220,8 @@ def get_scores_for_posts(posts, session):
             try:
                 for timestamp in [post.timestamp, post.timestamp + datetime.timedelta(days=7)]:
                     closest_rev = get_closest_to(dja_revs, timestamp)
-                    revid_to_rev[closest_rev.revid] = closest_rev
+                    if closest_rev.score is None:
+                        revid_to_rev[closest_rev.revid] = closest_rev
             except IndexError:
                 continue
         ores_context = 'en' + 'wiki'
@@ -251,6 +253,7 @@ def get_scores_for_posts(posts, session):
             print('Finished {}/{} revs, time: {}'.format(
                 completed, num_revs, time.time() - start
             ))
+    print('saving posts...')
     for post in posts:
         post.save()
 
