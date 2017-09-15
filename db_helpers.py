@@ -321,3 +321,5 @@ if __name__ == "__main__":
             mark_top_answers()
         elif sys.argv[1] == 'quick_helper':
             quick_helper()
+        elif sys.argv[1] == 'check_dupe_wikilinks':
+            check_dupe_wikilinks()
