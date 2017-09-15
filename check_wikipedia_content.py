@@ -576,9 +576,9 @@ def test():
                     print(rev)
                     try:
                         rev_in_db = Revision.objects.filter(revid=rev.get('revid')).values()[0]
-                        print('FROM DB:', rev_in_db)
+                        print('^^FROM DB:', rev_in_db)
                     except:
-                        pass
+                        print('^^ rev missing...')
                 input()
                 for dja_link in post.wiki_links.all():
                     all_links = WikiLink.objects.filter(title=dja_link.title)
