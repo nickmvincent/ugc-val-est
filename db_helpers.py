@@ -263,7 +263,7 @@ def quick_helper():
                     Revision.objects.filter(
                         wiki_link__in=all_possible_links), dt)
                 ores_score = rev.score
-                revs.append(rev.revid)
+                revs.append((rev.revid, rev.score))
                 if ores_score is None:
                     missing_necessary_ores = True
                 if missing_necessary_ores:
