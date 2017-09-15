@@ -116,8 +116,8 @@ def make_mediawiki_request(session, base, params, verbose=False):
             results.append(result['query'])
         if 'continue' not in result:
             break
-        if 'end' not in req:
-            break
+        # if 'end' not in req:
+        #     break
         last_continue = result['continue']
     return results
 
