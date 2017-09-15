@@ -284,7 +284,7 @@ def check_dupe_wikilinks():
             print(dupe.count())
             print(obj.url)
             for dupe_obj in dupe:
-                 try:
+                try:
                     dupe_post = SampledStackOverflowPost.objects.get(wiki_link=dupe_obj)
                 except:
                     try:
