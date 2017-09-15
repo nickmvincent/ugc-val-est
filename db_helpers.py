@@ -245,8 +245,8 @@ def quick_helper():
     from portal.models import SampledRedditThread
     from portal.models import SampledStackOverflowPost
 
-    qs_r = SampledRedditThread.objects.filter(has_wiki_link=True)[:500]
-    qs_s = SampledStackOverflowPost.objects.filter(has_wiki_link=True)[:500]
+    qs_r = SampledRedditThread.objects.filter(has_wiki_link=True)
+    qs_s = SampledStackOverflowPost.objects.filter(has_wiki_link=True)
     for obj in qs_r:
         obj.save()
         if obj.num_edits > 3:
@@ -261,7 +261,7 @@ def quick_helper():
     for obj in qs_s:
         obj.save()
         print(obj.num_edits)
-        if obj.num_edits > 75:
+        if obj.num_edits > 50:
             print(obj.num_edits_prev_week, obj.num_edits, obj.timestamp)
             for link in obj.wiki_links.all():
                 print(link.url)
