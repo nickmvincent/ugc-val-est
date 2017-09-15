@@ -260,8 +260,7 @@ def quick_helper():
                 break
     for obj in qs_s:
         obj.save()
-        print(obj.num_edits)
-        if obj.num_edits > 50:
+        if obj.num_edits > 25:
             print(obj.num_edits_prev_week, obj.num_edits, obj.timestamp)
             for link in obj.wiki_links.all():
                 print(link.url)
