@@ -575,8 +575,8 @@ def test():
                 for rev in revisions:
                     print(rev)
                     try:
-                        rev_in_db = Revision.objects.filter(revid=revid).values()[0]
-                        print(rev_in_db)
+                        rev_in_db = Revision.objects.filter(revid=rev.get('revid')).values()[0]
+                        print('FROM DB:', rev_in_db)
                     except:
                         pass
                 input()
