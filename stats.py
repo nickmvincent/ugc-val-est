@@ -478,6 +478,11 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
             'week_after_avg_score__isnull': False,
         }
         treatment_kwargs = None
+    elif rq == 32:
+        subsample_kwargs = {
+            'has_wiki_link': True,
+        }
+        treatment_kwargs = None
     if sample_num is None:
         subsample_kwargs['sample_num'] = 0
     else:
@@ -575,22 +580,16 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
     if rq == 3:
         variables = [
             ('num_edits', 'num_edits_prev_week'),
-            # ('norm_change_edits', make_method_getter('norm_change_edits')),
             ('num_new_editors', 'num_new_editors_prev_week'),
             ('num_new_editors_retained', 'num_new_editors_retained_prev_week'),
             ('num_new_editors_retained_180', 'num_new_editors_retained_prev_week_180'),
-            # ('percent_new_editors', make_method_getter('percent_new_editors')),
-            # ('percent_active_editors', make_method_getter('percent_active_editors')),
-            # ('percent_active_editors', make_method_getter('percent_active_editors')),
-            # ('percent_inactive_editors', make_method_getter(
-            #     'percent_inactive_editors')),
-            # ('num_active_edits', 'num_active_edits_prev_week'),
-            # ('num_inactive_edits', 'num_inactive_edits_prev_week'),
-            # ('num_major_edits', 'num_major_edits_prev_week'),
-            # ('num_minor_edits', 'num_minor_edits_prev_week'),
             ('percent_of_revs_preceding_post',
              make_method_getter('percent_of_revs_preceding_post')),
             ('week_after_avg_score', 'day_of_avg_score'),
+            ('num_wiki_pageviews', 'num_wiki_pageviews_prev_week')
+        ]
+    if rq == 32:
+        variables = [
             ('num_wiki_pageviews', 'num_wiki_pageviews_prev_week')
         ]
     db_name = connection.settings_dict['NAME']

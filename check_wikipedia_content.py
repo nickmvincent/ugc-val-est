@@ -632,10 +632,12 @@ def test():
                             print('**' + link.url, '|', revs.count())
                         else:
                             print(link.url, '|', revs.count())
-            if before_pageviews != post.num_wiki_pageviews_prev_week:
-                print('error with before pageviews', before_pageviews, post.num_wiki_pageviews_prev_week)
-            if after_pageviews != post.num_wiki_pageviews:
-                print('ERROR', after_pageviews, post.num_wiki_pageviews)
+            num_wiki_pageviews_prev_week = post.num_wiki_pageviews_prev_week if post.num_wiki_pageviews_prev_week else 0
+            num_wiki_pageviews = post.num_wiki_pageviews if post.num_wiki_pageviews else 0
+            if before_pageviews != num_wiki_pageviews_prev_week and post.:
+                print('error with before pageviews', before_pageviews, num_wiki_pageviews_prev_week)
+            if after_pageviews != num_wiki_pageviews:
+                print('ERROR', after_pageviews, num_wiki_pageviews)
 def parse():
     """
     Parse args and do the appropriate analysis
