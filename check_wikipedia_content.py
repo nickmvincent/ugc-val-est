@@ -370,6 +370,7 @@ def get_userinfo_for_all_revs(revs, session):
 def get_revs_for_single_post(post, session):
     """check a single post"""
     dja_links = post.wiki_links.all()
+    total_revs = 0
     for dja_link in dja_links:
         if dja_link.language_code != 'en':
             continue
@@ -442,6 +443,7 @@ def get_revs_for_single_post(post, session):
             revids.append(rev_kwargs['revid'])
 
         revs_made = 0
+        total_revs += len(rev_kwargs_lst)
         for rev_kwargs in rev_kwargs_lst:
             if 'lastrev_date' not in rev_kwargs:
                 rev_kwargs['lastrev_date'] = rev_kwargs['timestamp']
@@ -455,6 +457,8 @@ def get_revs_for_single_post(post, session):
             except IntegrityError as err:
                 if 'duplicate key' not in str(err):
                     print(err)
+    return total_revs    
+        
 
 
 def identify_links(filtered, field):
@@ -497,8 +501,11 @@ def retrieve_links_info(posts_needing_revs, model):
         print('Finished: {}, Errors: {}, Time: {}'.format(
             count, err_count, time.time() - process_start))
         count += 1
+        total_revs = 0
         try:
-            get_revs_for_single_post(post, session)
+            revs_found = get_revs_for_single_post(post, session)
+            print('found {} revs...'.format(revs_found))
+            total_revs += revs_found
             post.all_revisions_pulled = True
             post.save()
         except (
