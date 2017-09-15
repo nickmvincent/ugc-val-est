@@ -557,7 +557,7 @@ def test():
                     pages = result_page.get('pages', {})
                     for _, page in pages.items():
                         if 'missing' in page:
-                            raise PostMissingValidLink(post, dja_link)
+                            continue
                         if 'revisions' in page:
                             revisions += page['revisions']
                 for rev_obj in revisions:
