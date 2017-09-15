@@ -532,6 +532,7 @@ def test():
     session.headers.update(
         {'User-Agent': 'ugc-val-est; nickvincent@u.northwestern.edu; research tool'})
     qsr = SampledRedditThread.objects.filter(has_wiki_link=True).order_by('?')[:200]
+    qsdonald = SampledRedditThread.objects.filter(has_wiki_link=True, context='The_Donald')
     qss = SampledStackOverflowPost.objects.filter(has_wiki_link=True).order_by('?')[:200]
     pageview_api_str_fmt = '%Y%m%d'
     for qs in [qsr, qss]:
@@ -634,7 +635,7 @@ def test():
                             print(link.url, '|', revs.count())
             num_wiki_pageviews_prev_week = post.num_wiki_pageviews_prev_week if post.num_wiki_pageviews_prev_week else 0
             num_wiki_pageviews = post.num_wiki_pageviews if post.num_wiki_pageviews else 0
-            if before_pageviews != num_wiki_pageviews_prev_week and post.:
+            if before_pageviews != num_wiki_pageviews_prev_week:
                 print('error with before pageviews', before_pageviews, num_wiki_pageviews_prev_week)
             if after_pageviews != num_wiki_pageviews:
                 print('ERROR', after_pageviews, num_wiki_pageviews)
