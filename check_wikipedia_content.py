@@ -536,7 +536,7 @@ def test():
     session.headers.update(
         {'User-Agent': 'ugc-val-est; nickvincent@u.northwestern.edu; research tool'})
     qsr = SampledRedditThread.objects.filter(has_wiki_link=True).order_by('?')[:200]
-    qss = SampledStackOverflowPost.objects.filter(has_wiki_link=True).order_by('?')[:20]
+    qss = SampledStackOverflowPost.objects.filter(has_wiki_link=True).order_by('?')[:5]
 
     for qs in [qsr, qss]:
         print('=====')
