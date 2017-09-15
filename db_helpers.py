@@ -267,8 +267,8 @@ def check_dupe_wikilinks():
     from portal.models import SampledRedditThread
     from portal.models import SampledStackOverflowPost
 
-    qs_r = SampledRedditThread.objects.filter(has_wiki_link=True).select_related('wiki_link')[:100]
-    qs_s = SampledStackOverflowPost.objects.filter(has_wiki_link=True).select_related('wiki_link')[:100]
+    qs_r = SampledRedditThread.objects.filter(has_wiki_link=True)
+    qs_s = SampledStackOverflowPost.objects.filter(has_wiki_link=True)
     for obj in qs_r:
         link = obj.wiki_link
         matching_links = WikiLink.objects.filter(title=link.title)
