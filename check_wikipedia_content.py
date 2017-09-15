@@ -604,6 +604,7 @@ def test():
                         print('{} ({})'.format(wiki_link.title, wiki_link.id), links)
                     except:
                         print('^^ rev missing...')
+                    break
                 input()
                 for dja_link in post.wiki_links.all():
                     all_links = WikiLink.objects.filter(title=dja_link.title)
@@ -625,6 +626,7 @@ def test():
                         print('{} ({})'.format(wiki_link.title, wiki_link.id), links)
                     except:
                         print('^^ rev missing...')
+                    break
                 input()
                 for dja_link in post.wiki_links.all():
                     all_links = WikiLink.objects.filter(title=dja_link.title)
