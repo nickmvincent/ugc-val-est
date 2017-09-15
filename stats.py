@@ -732,6 +732,7 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
                                     group['qs'], 'context', name + '_' + group['name'])
 
                     len1, len2 = len(treatment['vals']), len(control['vals'])
+                    print(len1, len2)
                     if len1 == 0 or len2 == 0 and not bootstrap:
                         print('Skipping variable {} because {}, {}.'.format(
                            variable_name, len1, len2))
