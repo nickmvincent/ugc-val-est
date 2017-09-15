@@ -531,7 +531,10 @@ def retrieve_links_info(posts_needing_revs, model):
     revs_needing_userinfo = Revision.objects.filter(editcount=None, err_code=0)
     print('About to get users for {} revs'.format(len(revs_needing_userinfo)))    
     get_userinfo_for_all_revs(revs_needing_userinfo, session)
+    retrieve_posts(session, model)
 
+
+def retrieve_scores(session, model):
     posts_needing_score = model.objects.filter(
         has_wiki_link=True,
         day_of_avg_score=None, wiki_content_error=0
@@ -662,6 +665,14 @@ def test():
                 print('error with after pageviews', after_pageviews, num_wiki_pageviews)
                 print(post.timestamp)
                 input()
+
+def get_scores_only(model):
+    session = requests.Session()
+    session.headers.update(
+        {'User-Agent': 'ugc-val-est; nickvincent@u.northwestern.edu; research tool'})
+    retrieve_scores(session, model)
+
+
 def parse():
     """
     Parse args and do the appropriate analysis
@@ -680,12 +691,17 @@ def parse():
         '--test', action='store_true', default=False,
         help='test')
     parser.add_argument(
+        '--get_scores_only', action='store_true', default=False,
+        help='test')
+    parser.add_argument(
         '--start')
     parser.add_argument(
         '--end')
     args = parser.parse_args()
     if args.test:
         test()
+    elif args.get_scores_only:
+        get_scores_only(SampledRedditThread)
     else:
         if args.platform is None:
             platforms = ['r', 's']
