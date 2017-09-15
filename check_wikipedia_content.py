@@ -572,6 +572,9 @@ def test():
                         after_count += 1
             if before_count != post.num_edits_prev_week:
                 print('before_count', before_count, 'saved before count', post.num_edits_prev_week)
+                for rev in revisions:
+                    print(rev)
+                input()
                 for dja_link in post.wiki_links.all():
                     all_links = WikiLink.objects.filter(title=dja_link.title)
                     for link in all_links:
