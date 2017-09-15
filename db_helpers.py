@@ -267,8 +267,10 @@ def check_dupe_wikilinks():
     from portal.models import SampledRedditThread
     from portal.models import SampledStackOverflowPost
 
+    cache = {}
     qs_r = SampledRedditThread.objects.filter(has_wiki_link=True)
     qs_s = SampledStackOverflowPost.objects.filter(has_wiki_link=True)
+    count = 0
     for obj in qs_r:
         has_err = False
         links = obj.wiki_links.all()
@@ -281,24 +283,31 @@ def check_dupe_wikilinks():
                     for post in matching_qs:
                         if post.uid == obj.uid:
                             continue
+                        elif post.uid in cache:
+                            continue
                         else:
-                            print(obj.timestamp, post.timestamp)
+                            cache[post.uid] = True
                             dt = obj.timestamp - post.timestamp
                             val = abs(dt.total_seconds())
                             if val < 1.21e6: # 14 days
                                 print('*** PROBLEM')
+                                print(obj.timestamp, post.timestamp)
                                 has_err = True
-                                print(post.num_edits, post.num_edits_prev_week)
+                                before = post.num_edits, post.num_edits_prev_week
+                                print(before)
                                 post.save()
                                 print('saved')
-                                print(post.num_edits, post.num_edits_prev_week)
-                                input()
+                                after = post.num_edits, post.num_edits_prev_week
+                                if after[0] - before[0] != 0 or after[1] - before[1] != 0:
+                                    print(before, after)
+                                    count += 1
         if has_err:
             print(obj.num_edits, obj.num_edits_prev_week)
             obj.save()
-            print('obj saved')
+            print('main post saved')
             print(obj.num_edits, obj.num_edits_prev_week)
-            input()
+            cache[obj.uid] = True
+    print(count)
 
 
 
