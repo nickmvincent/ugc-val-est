@@ -481,6 +481,7 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
     elif rq == 32:
         subsample_kwargs = {
             'has_wiki_link': True,
+            'all_revisions_pulled': True,
         }
         treatment_kwargs = None
     if sample_num is None:
@@ -589,6 +590,7 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
         ]
     if rq == 32:
         variables = [
+            ('num_edits', 'num_edits_prev_week'),
             ('num_wiki_pageviews', 'num_wiki_pageviews_prev_week')
         ]
     db_name = connection.settings_dict['NAME']
