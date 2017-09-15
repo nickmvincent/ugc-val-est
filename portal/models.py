@@ -376,7 +376,8 @@ class Post(models.Model):
                 if revisions.exists():
                     for field, dt in field_to_dt.items():
                         ores_score = get_closest_to(
-                            revisions, dt).score
+                            Revision.objects.filter(
+                                wiki_link__in=all_possible_links), dt).score
                         if ores_score is None:
                             missing_necessary_ores = True
                         else:
