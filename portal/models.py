@@ -5,13 +5,14 @@ doing data analysis
 # pylint:disable=C0103
 
 import datetime
+from urllib.parse import unquote
+
 from django.db import models
 from django.utils import timezone
 from url_helpers import extract_urls
 
 from textstat.textstat import textstat
 from textblob import TextBlob
-# testimonial.sentiment.polarity
 
 day_to_abbrev = {
     0: 'mon',
@@ -547,6 +548,12 @@ class WikiLink(models.Model):
             self.title = url[i:url_query_params]
         else:
             self.title = url[i:]
+        # possibly need to cut it further
+        article_location = url.find('#')
+        if article_location != -1:
+            self.title = url[i:article_location]
+        self.title = unquote(self.title)
+        
         super(WikiLink, self).save(*args, **kwargs)
 
 
