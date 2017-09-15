@@ -241,6 +241,26 @@ def mark_top_answers():
                 print('MISSING QUESTION UH OH')
 
 
+def quick_helper():
+    from portal.models import SampledRedditThread
+    from portal.models import SampledStackOverflowPost
+
+    qs_r = SampledRedditThread.objects.filter(has_wiki_link=True)[:5]
+    qs_s = SampledStackOverflowPost.objects.filter(has_wiki_link=True)[:5]
+    for obj in qs_r:
+        print(obj.num_edits_prev_week, obj.num_edits, obj.timestamp)
+        for link in obj.wiki_links.all():
+            print(link.url)
+        print('---')
+        input()
+    for obj in qs_s:
+        print(obj.num_edits_prev_week, obj.num_edits, obj.timestamp)
+        for link in obj.wiki_links.all():
+            print(link.url)
+        print('---')
+        input()
+
+
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dja.settings")
     import django
@@ -281,3 +301,5 @@ if __name__ == "__main__":
             fix_bad_registration_time()
         elif sys.argv[1] == 'mark_top_answers':
             mark_top_answers()
+        elif sys.argv[1] == 'quick_helper':
+            quick_helper()
