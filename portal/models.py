@@ -551,7 +551,11 @@ class WikiLink(models.Model):
             self.title = url[i:]
         # possibly need to cut it further
         article_location = url.find('#')
-        if article_location != -1 and article_location < url_query_params:
+        if (
+                article_location != -1 and
+                (article_location < url_query_params or
+                url_query_params == -1)
+        ):
             self.title = url[i:article_location]
         self.title = unquote(self.title)
         
