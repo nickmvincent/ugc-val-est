@@ -535,8 +535,8 @@ def test():
     session = requests.Session()
     session.headers.update(
         {'User-Agent': 'ugc-val-est; nickvincent@u.northwestern.edu; research tool'})
-    qsr = SampledRedditThread.objects.filter(has_wiki_link=True).order_by('?')[:100]
-    qss = SampledStackOverflowPost.objects.filter(has_wiki_link=True).order_by('?')[:10]
+    qsr = SampledRedditThread.objects.filter(has_wiki_link=True).order_by('?')[:200]
+    qss = SampledStackOverflowPost.objects.filter(has_wiki_link=True).order_by('?')[:20]
 
     for qs in [qsr, qss]:
         print('=====')
@@ -570,8 +570,18 @@ def test():
                         after_count += 1
             if before_count != post.num_edits_prev_week:
                 print('before_count', before_count, 'saved before count', post.num_edits_prev_week)
+                post.save()
+                print(post.num_edits_prev_week)
+                for dja_link in post.wiki_links.all():
+                    print(dja_link.url)
+                    all_links = WikiLink.objects.filter(title=dja_link.title)
+                    for link in all_links:
+                        print(link.url)
+                    
             if after_count != post.num_edits:    
                 print('after_count', after_count, 'saved after count', post.num_edits)
+                post.save()
+                print(post.num_edits)
 
 def parse():
     """
