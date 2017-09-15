@@ -381,11 +381,7 @@ def get_revs_for_single_post(post, session):
         week_after_post_str = week_after_post.strftime(wiki_api_str_fmt)
 
         day_of_post_short_str = post.timestamp.strftime(pageview_api_str_fmt)
-        hashtag_index = dja_link.title.find('#')
-        if hashtag_index != -1:
-            norm_title = dja_link.title[:hashtag_index]
-        else:
-            norm_title = dja_link.title
+        norm_title = dja_link.title
         if len(norm_title) >= 2:
             norm_title = norm_title[0].upper() + norm_title[1:]
         norm_title = norm_title.replace(' ', '_')
@@ -537,12 +533,15 @@ def test():
         {'User-Agent': 'ugc-val-est; nickvincent@u.northwestern.edu; research tool'})
     qsr = SampledRedditThread.objects.filter(has_wiki_link=True).order_by('?')[:200]
     qss = SampledStackOverflowPost.objects.filter(has_wiki_link=True).order_by('?')[:200]
-
+    pageview_api_str_fmt = '%Y%m%d'
     for qs in [qsr, qss]:
         print('=====')
         for post in qs:
+            day_of_post_short_str = post.timestamp.strftime(pageview_api_str_fmt)
             before_count = 0
             after_count = 0
+            before_pageviews = 0
+            after_pageviews = 0
             links = []
             for dja_link in post.wiki_links.all():
                 if dja_link.language_code != 'en':
@@ -572,6 +571,25 @@ def test():
                         before_count += 1
                     else:
                         after_count += 1
+                norm_title = dja_link.title
+                if len(norm_title) >= 2:
+                    norm_title = norm_title[0].upper() + norm_title[1:]
+                norm_title = norm_title.replace(' ', '_')
+                norm_title = norm_title.replace('/', '%2F')
+                pageviews_prev_week = make_pageview_request(
+                    session,
+                    title=norm_title, start=week_before_post.strftime(
+                        pageview_api_str_fmt),
+                    end=day_of_post_short_str)
+                pageviews = make_pageview_request(
+                    session,
+                    title=norm_title, start=day_of_post_short_str,
+                    end=week_after_post.strftime(pageview_api_str_fmt))
+                if pageviews_prev_week and pageviews:
+                    before_pageviews += sum(
+                        [entry['views'] for entry in pageviews_prev_week])
+                    after_pageviews += sum(
+                        [entry['views'] for entry in pageviews])
             if before_count != post.num_edits_prev_week:
                 print('before', before_count, '|', post.num_edits_prev_week, post.timestamp)
                 for rev in revisions:
@@ -614,6 +632,10 @@ def test():
                             print('**' + link.url, '|', revs.count())
                         else:
                             print(link.url, '|', revs.count())
+            if before_pageviews != post.num_wiki_pageviews_prev_week:
+                print('ERROR')
+            if after_pageviews != post.num_wiki_pageviews:
+                print('ERROR')
 def parse():
     """
     Parse args and do the appropriate analysis
