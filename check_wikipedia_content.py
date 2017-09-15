@@ -216,7 +216,7 @@ def get_scores_for_posts(posts, session):
             if dja_link.language_code != 'en':
                 print('skipping non english version')
                 continue
-            all_possible_links = WikiLink.objects.filter(title=link_obj.title)
+            all_possible_links = WikiLink.objects.filter(title=dja_link.title)
             dja_revs = Revision.objects.filter(wiki_link__in=all_possible_links)
             try:
                 for timestamp in [post.timestamp, post.timestamp + datetime.timedelta(days=7)]:
