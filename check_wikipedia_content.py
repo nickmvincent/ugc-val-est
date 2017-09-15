@@ -544,6 +544,8 @@ def test():
             before_count = 0
             after_count = 0
             for dja_link in post.wiki_links.all():
+                if dja_link.language_code != 'en':
+                    continue
                 revisions = []
                 wiki_api_str_fmt = '%Y%m%d%H%M%S'
                 week_before_post = post.timestamp - datetime.timedelta(days=7)
@@ -571,18 +573,18 @@ def test():
             if before_count != post.num_edits_prev_week:
                 print('before_count', before_count, 'saved before count', post.num_edits_prev_week)
                 for dja_link in post.wiki_links.all():
-                    print(dja_link.url, dja_link.err_code, Revision.objects.filter(wiki_link=dja_link).count())
                     all_links = WikiLink.objects.filter(title=dja_link.title)
                     for link in all_links:
-                        print(link.url, link.err_code, Revision.objects.filter(wiki_link=link).count())
+                        if link.uid == dja_link.uid:
+                            print('**' + link.url, link.err_code, Revision.objects.filter(wiki_link=link).count())
                     
             if after_count != post.num_edits:    
                 print('after_count', after_count, 'saved after count', post.num_edits)
                 for dja_link in post.wiki_links.all():
-                    print(dja_link.url, dja_link.err_code, Revision.objects.filter(wiki_link=dja_link).count())
                     all_links = WikiLink.objects.filter(title=dja_link.title)
                     for link in all_links:
-                        print(link.url, link.err_code, Revision.objects.filter(wiki_link=link).count())
+                        if link.uid == dja_link.uid:
+                            print('**' + link.url, link.err_code, Revision.objects.filter(wiki_link=link).count())
 
 def parse():
     """
