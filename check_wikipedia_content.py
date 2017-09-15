@@ -718,7 +718,7 @@ def parse():
                 identify_links(filtered, field)
             if args.mode == 'retrieve' or args.mode == 'full':
                 full =  model.objects.filter(
-                    has_wiki_link=True, sample_num=0).order_by('uid')
+                    has_wiki_link=True).order_by('uid')
                 print('fullcount', full.count())
                 filtered = full[int(args.start):int(args.end)]
                 filtered = [item for item in list(filtered) if item.all_revisions_pulled is False]
