@@ -704,7 +704,7 @@ def parse():
                 identify_links(filtered, field)
             if args.mode == 'retrieve' or args.mode == 'full':
                 filtered = model.objects.filter(
-                    has_wiki_link=True, all_revisions_pulled=False)
+                    has_wiki_link=True, all_revisions_pulled=False, sample_num=0)
                 print('Going to RETRIEVE INFO for {} items'.format(len(filtered)))
                 retrieve_links_info(filtered, model)
             if args.mode == 'damaging':
