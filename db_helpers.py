@@ -271,7 +271,9 @@ def quick_helper():
     for link in wiki_links:
         posts = SampledStackOverflowPost.objects.filter(wiki_links=link)
         for post in posts:
+            post.save()
             print(post.num_edits, post.num_edits_prev_week)
+            input()
     
     
 
