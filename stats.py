@@ -586,7 +586,6 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
             ('percent_of_revs_preceding_post',
              make_method_getter('percent_of_revs_preceding_post')),
             ('week_after_avg_score', 'day_of_avg_score'),
-            ('num_wiki_pageviews', 'num_wiki_pageviews_prev_week')
         ]
     if rq == 32:
         variables = [

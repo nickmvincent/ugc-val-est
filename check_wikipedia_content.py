@@ -669,6 +669,10 @@ def parse():
     parser.add_argument(
         '--test', action='store_true', default=False,
         help='test')
+    parser.add_argument(
+        '--offset')
+    parser.add_argument(
+        '--limit')
     args = parser.parse_args()
     if args.test:
         test()
@@ -704,7 +708,10 @@ def parse():
                 identify_links(filtered, field)
             if args.mode == 'retrieve' or args.mode == 'full':
                 filtered = model.objects.filter(
-                    has_wiki_link=True, all_revisions_pulled=False, sample_num=0)
+                    has_wiki_link=True, sample_num=0).order_by('uid')[args.offset:args.limit]
+                def not_retrieved(obj):
+                    return obj.all_revisions_pulled is False
+                filtered = filter(not_retrieved, filtered)
                 print('Going to RETRIEVE INFO for {} items'.format(len(filtered)))
                 retrieve_links_info(filtered, model)
             if args.mode == 'damaging':
