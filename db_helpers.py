@@ -290,11 +290,8 @@ def check_dupe_wikilinks():
                             dt = obj.timestamp - post.timestamp
                             val = abs(dt.total_seconds())
                             if val < 1.21e6: # 14 days
-                                print('*** PROBLEM')
-                                print(obj.timestamp, post.timestamp)
                                 has_err = True
                                 before = post.num_edits, post.num_edits_prev_week
-                                print(before)
                                 post.save()
                                 after = post.num_edits, post.num_edits_prev_week
                                 if after[0] - before[0] != 0 or after[1] - before[1] != 0:
