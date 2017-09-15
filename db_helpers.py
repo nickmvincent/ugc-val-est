@@ -277,6 +277,8 @@ def check_dupe_wikilinks():
         except:
             try:
                 post = SampledRedditThread.objects.get(wiki_link=obj)
+            except:
+                continue
         print('***', post.timestamp)
         if dupe.exists():
             print(dupe.count())
@@ -288,6 +290,8 @@ def check_dupe_wikilinks():
                 except:
                     try:
                         dupe_post = SampledRedditThread.objects.get(wiki_link=dupe_obj)
+                    except:
+                        continue
                 print(dupe_obj.url, dupe_post.timestamp)
 
             input()
