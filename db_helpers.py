@@ -270,22 +270,23 @@ def check_dupe_wikilinks():
     qs_r = SampledRedditThread.objects.filter(has_wiki_link=True)
     qs_s = SampledStackOverflowPost.objects.filter(has_wiki_link=True)
     for obj in qs_r:
-        link = obj.wiki_link
-        matching_links = WikiLink.objects.filter(title=link.title)
-        for matching_link in matching_links:
-            matching_reddit_posts = SampledRedditThread.objects.filter(wiki_link=matching_link)
-            matching_so_posts = SampledRedditThread.objects.filter(wiki_link=matching_link)
-            for matching_qs in [matching_reddit_posts, matching_so_posts]:
-                for post in matching_qs:
-                    if post.uid == obj.uid:
-                        continue
-                    else:
-                        print(obj.timestamp, post.timestamp)
-                        dt = obj.timestamp - post.timestamp
-                        val = abs(dt.total_seconds())
-                        if val < 1.21e6: # 14 days
-                            print('*** PROBLEM')
-                            print(val)
+        links = obj.wiki_links.all()
+        for link in links:
+            matching_links = WikiLink.objects.filter(title=link.title)
+            for matching_link in matching_links:
+                matching_reddit_posts = SampledRedditThread.objects.filter(wiki_link=matching_link)
+                matching_so_posts = SampledRedditThread.objects.filter(wiki_link=matching_link)
+                for matching_qs in [matching_reddit_posts, matching_so_posts]:
+                    for post in matching_qs:
+                        if post.uid == obj.uid:
+                            continue
+                        else:
+                            print(obj.timestamp, post.timestamp)
+                            dt = obj.timestamp - post.timestamp
+                            val = abs(dt.total_seconds())
+                            if val < 1.21e6: # 14 days
+                                print('*** PROBLEM')
+                                print(val)
 
 
 
