@@ -547,7 +547,7 @@ def test():
             for dja_link in post.wiki_links.all():
                 if dja_link.language_code != 'en':
                     continue
-                links.append(dja_link.id)
+                links.append('{} ({})'.format(dja_link.title, dja_link.id))
                 revisions = []
                 wiki_api_str_fmt = '%Y%m%d%H%M%S'
                 week_before_post = post.timestamp - datetime.timedelta(days=7)
@@ -581,7 +581,7 @@ def test():
                         print('^^FROM DB:', rev_in_db)
                         wiki_link = WikiLink.objects.filter(id=rev_in_db.get('wiki_link_id'))[0]
                         print('Here is the wiki link we are on, and here is the wiki link this rev goes to...')
-                        print(wiki_link.id, links)
+                        print('{} ({})'.format(wiki_link.title, wiki_link.id), links)
                     except:
                         print('^^ rev missing...')
                 input()
@@ -597,6 +597,15 @@ def test():
                 print('after', after_count, '|', post.num_edits, post.timestamp)
                 for rev in revisions:
                     print(rev)
+                    try:
+                        rev_in_db = Revision.objects.filter(revid=rev.get('revid')).values()[0]
+                        print('^^FROM DB:', rev_in_db)
+                        wiki_link = WikiLink.objects.filter(id=rev_in_db.get('wiki_link_id'))[0]
+                        print('Here is the wiki link we are on, and here is the wiki link this rev goes to...')
+                        print('{} ({})'.format(wiki_link.title, wiki_link.id), links)
+                    except:
+                        print('^^ rev missing...')
+                input()
                 for dja_link in post.wiki_links.all():
                     all_links = WikiLink.objects.filter(title=dja_link.title)
                     for link in all_links:
