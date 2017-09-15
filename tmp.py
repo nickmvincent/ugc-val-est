@@ -17,8 +17,9 @@ def tmp2():
     from portal.models import SampledRedditThread, WikiLink, Revision, get_closest_to
     import datetime
     qs = SampledRedditThread.objects.filter(has_wiki_link=True,day_of_avg_score__isnull=True)
-    count = 0
     for post in qs:
+        post.save()
+        print(post.day_of_avg_score)
         for link_obj in post.wiki_links.all():
             all_possible_links = WikiLink.objects.filter(title=link_obj.title)
             field_to_dt = {
@@ -35,10 +36,8 @@ def tmp2():
                 revs.append(rev.revid)
                 if ores_score is None:
                     missing_necessary_ores = True
-                count += 1
-            if missing_necessary_ores:
-                print(revs)
+                if missing_necessary_ores:
+                    print(revs)
+        input()
 
-            if count >= 10:
-                break
                     
