@@ -531,7 +531,7 @@ def test():
     session = requests.Session()
     session.headers.update(
         {'User-Agent': 'ugc-val-est; nickvincent@u.northwestern.edu; research tool'})
-    qsr = SampledRedditThread.objects.filter(has_wiki_link=True).order_by('?')[:100]
+    qsr = SampledRedditThread.objects.filter(has_wiki_link=True).order_by('?')[:1]
     qss = SampledStackOverflowPost.objects.filter(has_wiki_link=True).order_by('?')[:100]
     qsdonald = SampledRedditThread.objects.filter(has_wiki_link=True, context='The_Donald')
     
@@ -638,8 +638,12 @@ def test():
             num_wiki_pageviews = post.num_wiki_pageviews if post.num_wiki_pageviews else 0
             if before_pageviews != num_wiki_pageviews_prev_week:
                 print('error with before pageviews', before_pageviews, num_wiki_pageviews_prev_week)
+                print(post.timestamp)
+                input()
             if after_pageviews != num_wiki_pageviews:
-                print('ERROR', after_pageviews, num_wiki_pageviews)
+                print('error with after pageviews', after_pageviews, num_wiki_pageviews)
+                print(post.timestamp)
+                input()
 def parse():
     """
     Parse args and do the appropriate analysis
