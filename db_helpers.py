@@ -256,10 +256,12 @@ def quick_helper():
             print('---')
             x = input()
             if x == 'y':
+                print('breaking')
                 break
     for obj in qs_s:
         obj.save()
-        if obj.num_edits > 100:
+        print(obj.num_edits)
+        if obj.num_edits > 75:
             print(obj.num_edits_prev_week, obj.num_edits, obj.timestamp)
             for link in obj.wiki_links.all():
                 print(link.url)
