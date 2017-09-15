@@ -571,7 +571,7 @@ def test():
                     else:
                         after_count += 1
             if before_count != post.num_edits_prev_week:
-                print('before_count', before_count, 'saved before count', post.num_edits_prev_week)
+                print('before', before_count, '|', post.num_edits_prev_week, post.timestamp)
                 for rev in revisions:
                     print(rev)
                 input()
@@ -580,19 +580,19 @@ def test():
                     for link in all_links:
                         revs = Revision.objects.filter(wiki_link=link, timestamp__gte=week_before_post, timestamp__lte=week_after_post)
                         if link.id == dja_link.id:
-                            print('**' + link.url, ',', revs.count())
+                            print('**' + link.url,'|',revs.count())
                         else:
-                            print(link.url, ',', revs.count())
+                            print(link.url, '|', revs.count())
             if after_count != post.num_edits:    
-                print('after_count', after_count, 'saved after count', post.num_edits)
+                print('after_count', after_count, 'saved after count', post.num_edits, post.timestamp)
                 for dja_link in post.wiki_links.all():
                     all_links = WikiLink.objects.filter(title=dja_link.title)
                     for link in all_links:
                         revs = Revision.objects.filter(wiki_link=link, timestamp__gte=week_before_post, timestamp__lte=week_after_post)
                         if link.id == dja_link.id:
-                            print('**' + link.url, ',', revs.count())
+                            print('**' + link.url, '|', revs.count())
                         else:
-                            print(link.url, ',', revs.count())
+                            print(link.url, '|', revs.count())
 def parse():
     """
     Parse args and do the appropriate analysis
@@ -613,56 +613,51 @@ def parse():
     args = parser.parse_args()
     if args.test:
         test()
-    if args.platform is None:
-        platforms = ['r', 's']
     else:
-        platforms = [args.platform]
-    for platform in platforms:
-        if platform == 'r':
-            field = 'url'
-            model = SampledRedditThread
+        if args.platform is None:
+            platforms = ['r', 's']
         else:
-            field = 'body'
-            model = SampledStackOverflowPost
-        if args.clear_first:
-            for obj in model.objects.filter(all_revisions_pulled=True):
-                for wiki_link in obj.wiki_links.all():
-                    Revision.objects.filter(wiki_link=wiki_link).delete()
-                obj.wiki_links.all().delete()
-                ErrorLog.objects.filter(uid=obj.uid).delete()
-            model.objects.filter(all_revisions_pulled=True).update(
-                has_wiki_link=False,
-                day_of_avg_score=None,
-                week_after_avg_score=None,
-                wiki_content_error=0,
-                num_wiki_links=0,
-                all_revisions_pulled=False,
-            )
-        if args.mode == 'identify' or args.mode == 'full':
-            filtered = model.objects.filter(**{field + '__contains': WIK})
-            print('Going to IDENTIFY {} items'.format(len(filtered)))
-            identify_links(filtered, field)
-        if args.mode == 'retrieve' or args.mode == 'full':
-            filtered = model.objects.filter(
-                has_wiki_link=True, all_revisions_pulled=False)
-            print('Going to RETRIEVE INFO for {} items'.format(len(filtered)))
-            retrieve_links_info(filtered, model)
-        if args.mode == 'damaging':
-            filtered = model.objects.filter(has_wiki_link=True)[:1000]
-            print('checking on potentially damaging posts')
-            get_damaging_likelihood(filtered)
-        if args.mode == 'reverted':
-            qs1 = model.objects.filter(has_wiki_link=True).order_by('?')[:816]
-            qs2 = model.objects.filter(has_wiki_link=True, context="The_Donald").order_by('uid')
-            print('reverted check')
-            print(qs1.count(), qs2.count())
-            check_reverted(qs1, qs2)
-
-
-
-
-
-
+            platforms = [args.platform]
+        for platform in platforms:
+            if platform == 'r':
+                field = 'url'
+                model = SampledRedditThread
+            else:
+                field = 'body'
+                model = SampledStackOverflowPost
+            if args.clear_first:
+                for obj in model.objects.filter(all_revisions_pulled=True):
+                    for wiki_link in obj.wiki_links.all():
+                        Revision.objects.filter(wiki_link=wiki_link).delete()
+                    obj.wiki_links.all().delete()
+                    ErrorLog.objects.filter(uid=obj.uid).delete()
+                model.objects.filter(all_revisions_pulled=True).update(
+                    has_wiki_link=False,
+                    day_of_avg_score=None,
+                    week_after_avg_score=None,
+                    wiki_content_error=0,
+                    num_wiki_links=0,
+                    all_revisions_pulled=False,
+                )
+            if args.mode == 'identify' or args.mode == 'full':
+                filtered = model.objects.filter(**{field + '__contains': WIK})
+                print('Going to IDENTIFY {} items'.format(len(filtered)))
+                identify_links(filtered, field)
+            if args.mode == 'retrieve' or args.mode == 'full':
+                filtered = model.objects.filter(
+                    has_wiki_link=True, all_revisions_pulled=False)
+                print('Going to RETRIEVE INFO for {} items'.format(len(filtered)))
+                retrieve_links_info(filtered, model)
+            if args.mode == 'damaging':
+                filtered = model.objects.filter(has_wiki_link=True)[:1000]
+                print('checking on potentially damaging posts')
+                get_damaging_likelihood(filtered)
+            if args.mode == 'reverted':
+                qs1 = model.objects.filter(has_wiki_link=True).order_by('?')[:816]
+                qs2 = model.objects.filter(has_wiki_link=True, context="The_Donald").order_by('uid')
+                print('reverted check')
+                print(qs1.count(), qs2.count())
+                check_reverted(qs1, qs2)
 
 
 if __name__ == "__main__":
