@@ -575,7 +575,7 @@ def test():
                 for dja_link in post.wiki_links.all():
                     all_links = WikiLink.objects.filter(title=dja_link.title)
                     for link in all_links:
-                        if link.uid == dja_link.uid:
+                        if link.id == dja_link.id:
                             print('**' + link.url, link.err_code, Revision.objects.filter(wiki_link=link).count())
                     
             if after_count != post.num_edits:    
@@ -583,7 +583,7 @@ def test():
                 for dja_link in post.wiki_links.all():
                     all_links = WikiLink.objects.filter(title=dja_link.title)
                     for link in all_links:
-                        if link.uid == dja_link.uid:
+                        if link.id == dja_link.id:
                             print('**' + link.url, link.err_code, Revision.objects.filter(wiki_link=link).count())
 
 def parse():
