@@ -245,22 +245,28 @@ def quick_helper():
     from portal.models import SampledRedditThread
     from portal.models import SampledStackOverflowPost
 
-    qs_r = SampledRedditThread.objects.filter(has_wiki_link=True)[:100]
-    qs_s = SampledStackOverflowPost.objects.filter(has_wiki_link=True)[:100]
+    qs_r = SampledRedditThread.objects.filter(has_wiki_link=True)[:500]
+    qs_s = SampledStackOverflowPost.objects.filter(has_wiki_link=True)[:500]
     for obj in qs_r:
+        obj.save()
         if obj.num_edits > 3:
             print(obj.num_edits_prev_week, obj.num_edits, obj.timestamp)
             for link in obj.wiki_links.all():
                 print(link.url)
             print('---')
-            input()
+            x = input()
+            if x == 'y':
+                break
     for obj in qs_s:
-        if obj.num_edits > 25:
+        obj.save()
+        if obj.num_edits > 100:
             print(obj.num_edits_prev_week, obj.num_edits, obj.timestamp)
             for link in obj.wiki_links.all():
                 print(link.url)
             print('---')
-            input()
+            x = input()
+            if x == 'y':
+                break
 
 
 def check_dupe_wikilinks():
