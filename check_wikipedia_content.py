@@ -95,7 +95,13 @@ def make_mediawiki_request(session, base, params, verbose=False):
     """
     results = []
     last_continue = {}
+    first = True
     while True:
+        if first:
+            first = False
+        else:
+            print('redoing this one...')
+            verbose = True
         # Clone original request
         req = params.copy()
         # Modify it with the values returned in the 'continue' section of the last result.
@@ -336,6 +342,7 @@ def get_userinfo_for_all_revs(revs, session):
     completed = 0
     start = time.time()    
     for userbatch in grouper(user_to_revs.keys(), 50):
+        print('starting batch...')
         userbatch = [user for user in userbatch if user]
         users = []
         user_result_pages = make_user_request(
@@ -498,18 +505,17 @@ def retrieve_links_info(posts_needing_revs, model):
         {'User-Agent': 'ugc-val-est; nickvincent@u.northwestern.edu; research tool'})
 
     count = 0
+    total_revs = 0
     err_count = 0
     process_start = time.time()
     print('About to get revisions for {} posts'.format(len(posts_needing_revs)))
     for post in posts_needing_revs:
-        print('Finished: {}, Errors: {}, Time: {}'.format(
-            count, err_count, time.time() - process_start))
+        if count % 10 == 0:
+            print('Finished: {}, Revs: {}, Errors: {}, Time: {}'.format(
+            count, total_revs, err_count, time.time() - process_start))
         count += 1
-        total_revs = 0
         try:
-            revs_found = get_revs_for_single_post(post, session)
-            print('found {} revs...'.format(revs_found))
-            total_revs += revs_found
+            total_revs += get_revs_for_single_post(post, session)
             post.all_revisions_pulled = True
             post.save()
         except (
