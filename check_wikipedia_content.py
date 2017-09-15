@@ -97,11 +97,11 @@ def make_mediawiki_request(session, base, params, verbose=False):
     last_continue = {}
     first = True
     while True:
-        if first:
-            first = False
-        else:
-            print('redoing this one...')
-            verbose = True
+        # if first:
+        #     first = False
+        # else:
+        #     print('redoing this one...')
+        #     verbose = True
         # Clone original request
         req = params.copy()
         # Modify it with the values returned in the 'continue' section of the last result.
@@ -717,8 +717,10 @@ def parse():
                 print('Going to IDENTIFY {} items'.format(len(filtered)))
                 identify_links(filtered, field)
             if args.mode == 'retrieve' or args.mode == 'full':
-                filtered = model.objects.filter(
-                    has_wiki_link=True, sample_num=0).order_by('uid')[int(args.start):int(args.end)]
+                full =  model.objects.filter(
+                    has_wiki_link=True, sample_num=0).order_by('uid')
+                print('fullcount', full.count())
+                filtered = full[int(args.start):int(args.end)]
                 filtered = [item for item in list(filtered) if item.all_revisions_pulled is False]
                 print('Going to RETRIEVE INFO for {} items'.format(len(filtered)))
                 retrieve_links_info(filtered, model)
