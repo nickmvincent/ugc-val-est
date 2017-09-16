@@ -544,8 +544,8 @@ def recalc_pageviews_for_posts(posts, model):
     total_revs = 0
     err_count = 0
     process_start = time.time()
-    print('About to recalc pageviews for {} posts'.format(len(posts_needing_revs)))
-    for post in posts_needing_revs:
+    print('About to recalc pageviews for {} posts'.format(len(posts)))
+    for post in posts:
         if count % 10 == 0:
             print('Finished: {}, Revs: {}, Errors: {}, Time: {}'.format(
             count, total_revs, err_count, time.time() - process_start))
