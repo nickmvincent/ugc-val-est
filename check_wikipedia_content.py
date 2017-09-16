@@ -789,7 +789,7 @@ def parse():
         get_scores_only(SampledStackOverflowPost)
     elif args.recalc_pageviews_so:
         posts = SampledStackOverflowPost.objects.filter(has_wiki_link=True)
-        recalc_pageviews_for_posts(SampledStackOverflowPost)
+        recalc_pageviews_for_posts(posts, SampledStackOverflowPost)
     else:
         if args.platform is None:
             platforms = ['r', 's']
