@@ -621,17 +621,26 @@ def test():
     """
     Test code
     """
+    def print_links(post):
+        for link in post.wiki_links.all():
+            print(link.url, end=',')
+            print('')
     session = requests.Session()
     session.headers.update(
         {'User-Agent': 'ugc-val-est; nickvincent@u.northwestern.edu; research tool'})
-    qsr = SampledRedditThread.objects.filter(has_wiki_link=True).order_by('?')[:1000]
-    qss = SampledStackOverflowPost.objects.filter(has_wiki_link=True).order_by('?')[:1000]
-    #qsdonald = SampledRedditThread.objects.filter(has_wiki_link=True, context='The_Donald')
+    qsr = SampledRedditThread.objects.filter(has_wiki_link=True).order_by('?')[:500]
+    qss = SampledStackOverflowPost.objects.filter(has_wiki_link=True).order_by('?')[:500]
     
     pageview_api_str_fmt = '%Y%m%d'
     for qs in [qsr, qss]:
+        tested = 0
+        n_err = 0
         print('=====')
         for post in qs:
+            if tested % 100 == 0:
+                print(tested)
+            tested += 1
+            
             day_of_post_short_str = post.timestamp.strftime(pageview_api_str_fmt)
             before_count = 0
             after_count = 0
@@ -693,8 +702,11 @@ def test():
                         [entry['views'] for entry in pageviews_prev_week])
                     after_pageviews += sum(
                         [entry['views'] for entry in pageviews])
+            
             if before_count != post.num_edits_prev_week:
                 print('before', before_count, '|', post.num_edits_prev_week, post.timestamp)
+                n_err += 1
+                print_links(post)
                 for rev in revisions:
                     print(rev)
                     try:
@@ -706,7 +718,6 @@ def test():
                     except:
                         print('^^ rev missing...')
                     break
-                input()
                 for dja_link in post.wiki_links.all():
                     all_links = WikiLink.objects.filter(title=dja_link.title)
                     for link in all_links:
@@ -715,7 +726,9 @@ def test():
                             print('**' + link.url,'|',revs.count())
                         else:
                             print(link.url, '|', revs.count())
-            if after_count != post.num_edits:    
+            if after_count != post.num_edits:
+                n_err += 1
+                print_links(post)
                 print('after', after_count, '|', post.num_edits, post.timestamp)
                 for rev in revisions:
                     print(rev)
@@ -728,7 +741,6 @@ def test():
                     except:
                         print('^^ rev missing...')
                     break
-                input()
                 for dja_link in post.wiki_links.all():
                     all_links = WikiLink.objects.filter(title=dja_link.title)
                     for link in all_links:
@@ -740,13 +752,14 @@ def test():
             num_wiki_pageviews_prev_week = post.num_wiki_pageviews_prev_week if post.num_wiki_pageviews_prev_week else 0
             num_wiki_pageviews = post.num_wiki_pageviews if post.num_wiki_pageviews else 0
             if before_pageviews != num_wiki_pageviews_prev_week:
+                n_err += 1
                 print('error with before pageviews', before_pageviews, num_wiki_pageviews_prev_week)
                 print(post.timestamp)
-                input()
             if after_pageviews != num_wiki_pageviews:
+                n_err += 1
                 print('error with after pageviews', after_pageviews, num_wiki_pageviews)
                 print(post.timestamp)
-                input()
+        print('{}/{}'.format(tested, n_err))
 
 def get_scores_only(model):
     session = requests.Session()
