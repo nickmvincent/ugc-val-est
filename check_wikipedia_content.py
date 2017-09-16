@@ -389,7 +389,6 @@ def recalc_pageviews_for_post(post, session):
     for dja_link in dja_links:
         if dja_link.language_code != 'en':
             continue
-        wiki_api_str_fmt = '%Y%m%d%H%M%S'
         pageview_api_str_fmt = '%Y%m%d'
         week_before_post = post.timestamp - datetime.timedelta(days=7)
         week_after_post = post.timestamp + datetime.timedelta(days=7)
@@ -788,7 +787,8 @@ def parse():
     elif args.get_scores_only:
         get_scores_only(SampledStackOverflowPost)
     elif args.recalc_pageviews_so:
-        posts = SampledStackOverflowPost.objects.filter(has_wiki_link=True)
+        posts = SampledStackOverflowPost.objects.filter(has_wiki_link=True, sample_num__in=[0,1,2],
+        timestamp__gte=datetime.datetime(year=2015, month=1, day=1))
         recalc_pageviews_for_posts(posts, SampledStackOverflowPost)
     else:
         if args.platform is None:
