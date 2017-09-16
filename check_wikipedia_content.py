@@ -381,11 +381,47 @@ def get_userinfo_for_all_revs(revs, session):
             print('Finished {}/{} users, time: {}'.format(
                 completed, num_users, time.time() - start))
 
+def recalc_pageviews_for_post(post, session):
+    """check a single post"""
+    dja_links = post.wiki_links.all()
+    post.num_wiki_pageviews = 0
+    post.num_wiki_pageviews_prev_week = 0
+    for dja_link in dja_links:
+        if dja_link.language_code != 'en':
+            continue
+        wiki_api_str_fmt = '%Y%m%d%H%M%S'
+        pageview_api_str_fmt = '%Y%m%d'
+        week_before_post = post.timestamp - datetime.timedelta(days=7)
+        week_after_post = post.timestamp + datetime.timedelta(days=7)
+
+        day_of_post_short_str = post.timestamp.strftime(pageview_api_str_fmt)
+        norm_title = dja_link.title
+        if len(norm_title) >= 2:
+            norm_title = norm_title[0].upper() + norm_title[1:]
+        norm_title = norm_title.replace(' ', '_')
+        norm_title = norm_title.replace('/', '%2F')
+        pageviews_prev_week = make_pageview_request(
+            session,
+            title=norm_title, start=week_before_post.strftime(
+                pageview_api_str_fmt),
+            end=day_of_post_short_str)
+        pageviews = make_pageview_request(
+            session,
+            title=norm_title, start=day_of_post_short_str,
+            end=week_after_post.strftime(pageview_api_str_fmt))
+        if pageviews_prev_week and pageviews:
+            post.num_wiki_pageviews_prev_week += sum(
+                [entry['views'] for entry in pageviews_prev_week])
+            post.num_wiki_pageviews += sum(
+                [entry['views'] for entry in pageviews])
+
 
 def get_revs_for_single_post(post, session):
     """check a single post"""
     dja_links = post.wiki_links.all()
     total_revs = 0
+    post.num_wiki_pageviews = 0
+    post.num_wiki_pageviews_prev_week = 0
     for dja_link in dja_links:
         if dja_link.language_code != 'en':
             continue
@@ -412,9 +448,9 @@ def get_revs_for_single_post(post, session):
             title=norm_title, start=day_of_post_short_str,
             end=week_after_post.strftime(pageview_api_str_fmt))
         if pageviews_prev_week and pageviews:
-            post.num_wiki_pageviews_prev_week = sum(
+            post.num_wiki_pageviews_prev_week += sum(
                 [entry['views'] for entry in pageviews_prev_week])
-            post.num_wiki_pageviews = sum(
+            post.num_wiki_pageviews += sum(
                 [entry['views'] for entry in pageviews])
 
         # now get revids for the time window
@@ -498,6 +534,34 @@ def identify_links(filtered, field):
             post.has_wiki_link = True
             post.num_wiki_links += 1
             post.save()
+
+
+def recalc_pageviews_for_posts(posts, model):
+    session = requests.Session()
+    session.headers.update(
+        {'User-Agent': 'ugc-val-est; nickvincent@u.northwestern.edu; research tool'})
+    count = 0
+    total_revs = 0
+    err_count = 0
+    process_start = time.time()
+    print('About to recalc pageviews for {} posts'.format(len(posts_needing_revs)))
+    for post in posts_needing_revs:
+        if count % 10 == 0:
+            print('Finished: {}, Revs: {}, Errors: {}, Time: {}'.format(
+            count, total_revs, err_count, time.time() - process_start))
+        count += 1
+        try:
+            recalc_pageviews_for_post(post, session)
+            post.save()
+        except (
+                MissingRevisionId, PostMissingValidLink
+        ):
+            err_count += 1
+            post.all_revisions_pulled = True
+            post.save()
+        except (ConnectionError, JSONDecodeError) as err:
+            err_count += 1
+            print('{} occurred so this result will NOT be saved'.format(err))
 
 
 def retrieve_links_info(posts_needing_revs, model):
@@ -584,9 +648,13 @@ def test():
                 week_after_post = post.timestamp + datetime.timedelta(days=7)
                 week_before_post_str = week_before_post.strftime(wiki_api_str_fmt)
                 week_after_post_str = week_after_post.strftime(wiki_api_str_fmt)
-                revid_result_pages = make_revid_request(
-                    session, dja_link.language_code, dja_link.title, week_before_post_str,
-                    week_after_post_str)
+                try:
+                    revid_result_pages = make_revid_request(
+                        session, dja_link.language_code, dja_link.title, week_before_post_str,
+                        week_after_post_str)
+                except JSONDecodeError:
+                    print('JSONDecodeError')
+                    continue
                 for result_page in revid_result_pages:
                     pages = result_page.get('pages', {})
                     for _, page in pages.items():
@@ -607,15 +675,19 @@ def test():
                     norm_title = norm_title[0].upper() + norm_title[1:]
                 norm_title = norm_title.replace(' ', '_')
                 norm_title = norm_title.replace('/', '%2F')
-                pageviews_prev_week = make_pageview_request(
-                    session,
-                    title=norm_title, start=week_before_post.strftime(
-                        pageview_api_str_fmt),
-                    end=day_of_post_short_str)
-                pageviews = make_pageview_request(
-                    session,
-                    title=norm_title, start=day_of_post_short_str,
-                    end=week_after_post.strftime(pageview_api_str_fmt))
+                try:
+                    pageviews_prev_week = make_pageview_request(
+                        session,
+                        title=norm_title, start=week_before_post.strftime(
+                            pageview_api_str_fmt),
+                        end=day_of_post_short_str)
+                    pageviews = make_pageview_request(
+                        session,
+                        title=norm_title, start=day_of_post_short_str,
+                        end=week_after_post.strftime(pageview_api_str_fmt))
+                except JSONDecodeError:
+                    print('JSONDecodeError with pageviews')
+                    continue
                 if pageviews_prev_week and pageviews:
                     before_pageviews += sum(
                         [entry['views'] for entry in pageviews_prev_week])
@@ -704,6 +776,9 @@ def parse():
         '--get_scores_only', action='store_true', default=False,
         help='test')
     parser.add_argument(
+        '--recalc_pageviews_so', action='store_true', default=False,
+        help='test')
+    parser.add_argument(
         '--start')
     parser.add_argument(
         '--end')
@@ -712,6 +787,9 @@ def parse():
         test()
     elif args.get_scores_only:
         get_scores_only(SampledStackOverflowPost)
+    elif args.recalc_pageviews_so:
+        posts = SampledStackOverflowPost.objects.filter(has_wiki_link=True)
+        recalc_pageviews_for_posts(SampledStackOverflowPost)
     else:
         if args.platform is None:
             platforms = ['r', 's']
