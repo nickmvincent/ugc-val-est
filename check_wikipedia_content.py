@@ -413,6 +413,7 @@ def recalc_pageviews_for_post(post, session):
                 [entry['views'] for entry in pageviews_prev_week])
             post.num_wiki_pageviews += sum(
                 [entry['views'] for entry in pageviews])
+    post.save()
 
 
 def get_revs_for_single_post(post, session):
