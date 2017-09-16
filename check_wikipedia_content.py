@@ -560,8 +560,8 @@ def test():
     session = requests.Session()
     session.headers.update(
         {'User-Agent': 'ugc-val-est; nickvincent@u.northwestern.edu; research tool'})
-    qsr = SampledRedditThread.objects.filter(has_wiki_link=True).order_by('?')[:200]
-    qss = SampledStackOverflowPost.objects.filter(has_wiki_link=True).order_by('?')[:200]
+    qsr = SampledRedditThread.objects.filter(has_wiki_link=True).order_by('?')[:1000]
+    qss = SampledStackOverflowPost.objects.filter(has_wiki_link=True).order_by('?')[:1000]
     #qsdonald = SampledRedditThread.objects.filter(has_wiki_link=True, context='The_Donald')
     
     pageview_api_str_fmt = '%Y%m%d'
