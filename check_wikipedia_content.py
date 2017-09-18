@@ -107,6 +107,7 @@ def make_mediawiki_request(session, base, params, verbose=False):
         # Modify it with the values returned in the 'continue' section of the last result.
         req.update(last_continue)
         # Call API
+        verbose = True
         if verbose:
             print(base + '?' + '&'.join(
                 ['{}={}'.format(key, val) for key, val in req.items()]
@@ -721,15 +722,16 @@ def test():
                         print(links, '{} ({})'.format(wiki_link.title, wiki_link.id))
                     except:
                         print('^^ rev missing...')
+                    input()
                     break
-                for dja_link in post.wiki_links.all():
-                    all_links = WikiLink.objects.filter(title=dja_link.title)
-                    for link in all_links:
-                        revs = Revision.objects.filter(wiki_link=link, timestamp__gte=week_before_post, timestamp__lte=week_after_post)
-                        if link.id == dja_link.id:
-                            print('**' + link.url,'|',revs.count())
-                        else:
-                            print(link.url, '|', revs.count())
+                # for dja_link in post.wiki_links.all():
+                #     all_links = WikiLink.objects.filter(title=dja_link.title)
+                #     for link in all_links:
+                #         revs = Revision.objects.filter(wiki_link=link, timestamp__gte=week_before_post, timestamp__lte=week_after_post)
+                #         if link.id == dja_link.id:
+                #             print('**' + link.url,'|',revs.count())
+                #         else:
+                #             print(link.url, '|', revs.count())
             if after_count != post.num_edits:
                 n_err += 1
                 # print_links(post)
@@ -745,14 +747,14 @@ def test():
                     except:
                         print('^^ rev missing...')
                     break
-                for dja_link in post.wiki_links.all():
-                    all_links = WikiLink.objects.filter(title=dja_link.title)
-                    for link in all_links:
-                        revs = Revision.objects.filter(wiki_link=link, timestamp__gte=week_before_post, timestamp__lte=week_after_post)
-                        if link.id == dja_link.id:
-                            print('**' + link.url, '|', revs.count())
-                        else:
-                            print(link.url, '|', revs.count())
+                # for dja_link in post.wiki_links.all():
+                #     all_links = WikiLink.objects.filter(title=dja_link.title)
+                #     for link in all_links:
+                #         revs = Revision.objects.filter(wiki_link=link, timestamp__gte=week_before_post, timestamp__lte=week_after_post)
+                #         if link.id == dja_link.id:
+                #             print('**' + link.url, '|', revs.count())
+                #         else:
+                #             print(link.url, '|', revs.count())
             num_wiki_pageviews_prev_week = post.num_wiki_pageviews_prev_week if post.num_wiki_pageviews_prev_week else 0
             num_wiki_pageviews = post.num_wiki_pageviews if post.num_wiki_pageviews else 0
             if before_pageviews != num_wiki_pageviews_prev_week:
