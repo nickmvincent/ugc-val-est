@@ -79,7 +79,7 @@ def main(platform):
                         'json2db JSONDecode Error',
                         path,
                         settings.EMAIL_HOST_USER,
-                        ['nickmvincent@gmail.com'],
+                        ['REDACTED'],
                         fail_silently=False,
                     )
                     continue
@@ -115,7 +115,7 @@ def main(platform):
                         'json2db Error!',
                         full_msg,
                         settings.EMAIL_HOST_USER,
-                        ['nickmvincent@gmail.com'],
+                        ['REDACTED'],
                         fail_silently=False,
                     )
             if not confirmation_sent:
@@ -123,7 +123,7 @@ def main(platform):
                     'Confirmation email: json2db ran successfully for one round',
                     path,
                     settings.EMAIL_HOST_USER,
-                    ['nickmvincent@gmail.com'],
+                    ['REDACTED'],
                     fail_silently=False,
                 )
                 confirmation_sent = True

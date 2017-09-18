@@ -49,13 +49,6 @@ def main():
     print(report_body)
     show_errors()
     explore_queryset()
-    # send_mail(
-    #     'DB Status Report',
-    #     report_body,
-    #     settings.EMAIL_HOST_USER,
-    #     ['nickmvincent@gmail.com'],
-    #     fail_silently=False,
-    # )
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dja.settings")
