@@ -359,3 +359,5 @@ if __name__ == "__main__":
             quick_helper()
         elif sys.argv[1] == 'check_dupe_wikilinks':
             check_dupe_wikilinks()
+        elif sys.argv[1] == 'clear_pre2016_so_pageviews':
+            clear_pre2016_so_pageviews()
