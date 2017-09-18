@@ -217,7 +217,7 @@ def extract_pairs(first, second):
         outfile.write(control_output)
 
 def clear_pre2016_so_pageviews():
-    cutoff = datetime.datetime(year=2016, day=1, month=1, hour=0, minute=0, second=0)
+    cutoff = datetime.datetime(year=2015, day=1, month=7, hour=0, minute=0, second=0)
     qs = SampledStackOverflowPost.objects.filter(timestamp__lt=cutoff)
     qs.update(num_wiki_pageviews=None, num_wiki_pageviews_prev_week=None)
 
