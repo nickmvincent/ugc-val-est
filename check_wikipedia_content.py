@@ -462,7 +462,6 @@ def get_revs_for_single_post(post, session):
             pages = result_page.get('pages', {})
             redirects = result_page.get('redirects', {})
             if redirects:
-                print(redirects)
                 dja_link.alt_title = redirects[0]['to']
                 dja_link.save()
             for _, page in pages.items():
@@ -584,10 +583,11 @@ def retrieve_links_info(posts_needing_revs, model):
     process_start = time.time()
     print('About to get revisions for {} posts'.format(len(posts_needing_revs)))
     for post in posts_needing_revs:
-        if count % 10 == 0:
+        if count % 100 == 0:
             print('Finished: {}, Revs: {}, Errors: {}, Time: {}'.format(
             count, total_revs, err_count, time.time() - process_start))
         count += 1
+        continue
         try:
             total_revs += get_revs_for_single_post(post, session)
             post.all_revisions_pulled = True
