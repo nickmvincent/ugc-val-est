@@ -463,14 +463,15 @@ def get_revs_for_single_post(post, session):
             pages = result_page.get('pages', {})
             redirects = result_page.get('redirects', {})
             if redirects:
-                wiki_link.alt_title = redirects[0]['to']
-                wiki_link.save()
+                dja_link.alt_title = redirects[0]['to']
+                dja_link.save()
             for _, page in pages.items():
                 if 'missing' in page:
                     raise PostMissingValidLink(post, dja_link)
                 if 'revisions' in page:
                     revisions += page['revisions']
-
+        # TODO KILL THIS
+        break
         # if no revs were found in the two week block, look backwards
         if not revisions:
             revid_result_pages = make_revid_request(
@@ -855,8 +856,8 @@ def parse():
                 print('Going to IDENTIFY {} items'.format(len(filtered)))
                 identify_links(filtered, field)
             if args.mode == 'retrieve' or args.mode == 'full':
-                full =  model.objects.filter(
-                    has_wiki_link=True).order_by('uid')
+                full = model.objects.filter(
+                    has_wiki_link=True, sample_num__in=[0,1,2]).order_by('uid')
                 print('fullcount', full.count())
                 filtered = full[int(args.start):int(args.end)]
                 # filtered = [item for item in list(filtered) if item.all_revisions_pulled is False]
