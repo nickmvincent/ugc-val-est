@@ -758,8 +758,8 @@ def test():
                 n_err += 1
                 print('error with before pageviews', before_pageviews, num_wiki_pageviews_prev_week)
                 print(post.timestamp)
-            else:
-                print(num_wiki_pageviews_prev_week, links)
+            #else:
+                #print(num_wiki_pageviews_prev_week, links)
             if after_pageviews != num_wiki_pageviews:
                 n_err += 1
                 print('error with after pageviews', after_pageviews, num_wiki_pageviews)
