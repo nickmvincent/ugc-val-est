@@ -1,8 +1,0 @@
-Answered posted on: 2016-05-29 19:43:58+00:00
-<a<p>Edit: As  Matthieu M. pointed out, the OP asked if a string contains a keyword. My answer only works when the string equals the keyword or if you can split the string e.g. by the space character.</p>
-
-<p>Especially with a high number of possible candidates and knowing them at compile time using a ***<a href="https://en.wikipedia.org/wiki/Perfect_hash_function" rel="nofollow">perfect hash function</a> with a tool like gperf is worth a try. The main principle is, that you seed a generator with your seed and it generates a function that contains a hash function which has no collisions for all seed values. At runtime you give the function a string and it calculates the hash and then it checks if it is the only possible candidate corresponding to the hashvalue.</p>
-
-<p>The runtime cost is hashing the string and then comparing against the only possible candidate (O(1) for seed size and O(1) for string length).</p>
-
-<p>To make the comparison case insensitive you just use tolower on the seed and on your string.</

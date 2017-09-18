@@ -1,4 +1,0 @@
-Answered posted on: 2017-05-02 17:53:57+00:00
-<a<p>The original ***<a href="https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm" rel="nofollow noreferrer">Dijkstra algorithm</a> does not take a collection of simple paths (i.e., paths without repeated vertices) as input -- it just takes the starting and end vertices (and the graph) as input. The APOC procedure is an implementation of that algorithm, so there is no way to do what you request.</p>
-
-<p>In fact, if you already have a collection of the simple paths between two vertices, there is no need to use the Dijkstra algorithm anyway. You just need to sum the weights of the edges in each simple path -- and the path with the smallest sum would be your result. (However, I suspect that this technique will be more expensive overall than just using the Dijkstra algorithm alone to get the result.)</

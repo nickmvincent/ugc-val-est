@@ -1,8 +1,0 @@
-Answered posted on: 2012-03-21 00:34:51+00:00
-<a<p>Common C compilers will not perform array bounds checking for you.</p>
-
-<p><a href="http://staff.aist.go.jp/y.oiwa/FailSafeC/index-en.html" rel="nofollow">Some compilers are available that claim to support array bounds</a> -- but their performance is usually poor enough compared to the normal compilers that they are usually not distributed far and wide.</p>
-
-<p>***<a href="http://en.wikipedia.org/wiki/Cyclone_%28programming_language%29" rel="nofollow">There are even dialects of C intended to provide memory safety</a>, but again, these usually do not get very far. (The linked Cyclone, for example, only supports 32 bit platforms, last time I looked into it.)</p>
-
-<p>You may build your own datastructures to provide bounds checking if you wish. If you maintain a structure that includes a pointer to the start of your data, a data member that includes the allocated size, and functions that work on the structure, you can implement all this. But the onus is entirely on you or your environment to provide these datastructures.</

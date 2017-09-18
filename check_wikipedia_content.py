@@ -23,7 +23,7 @@ import mwapi
 import mwreverts.api
 
 WIK = 'wikipedia.org/wiki/'
-
+USER_AGENT = {'User-Agent': 'ugc-val-est; myname@myuni.edu; research tool'}
 
 def grouper(iterable, groupsize, fillvalue=None):
     """Separate an iterable into groups of size groupsize"""
@@ -299,7 +299,7 @@ def get_damaging_likelihood(posts):
 
 def check_reverted(qs1, qs2):
     """Check reverted"""
-    session = mwapi.Session("https://en.wikipedia.org", user_agent='ugc-val-est; nickvincent@u.northwestern.edu; research tool')
+    session = mwapi.Session("https://en.wikipedia.org", user_agent='ugc-val-est; myname@myuni.edu; research tool')
     counts = []
     for qs in [qs1, qs2]:
         print('Going to do qs with {} posts'.format(len(qs)))
@@ -325,7 +325,7 @@ def check_reverted(qs1, qs2):
         'Reverted counts :D',
         str(counts),
         settings.EMAIL_HOST_USER,
-        ['nickmvincent@gmail.com'],
+        ['REDACTED'],
         fail_silently=False,
     )
 
@@ -539,7 +539,7 @@ def identify_links(filtered, field):
 def recalc_pageviews_for_posts(posts, model):
     session = requests.Session()
     session.headers.update(
-        {'User-Agent': 'ugc-val-est; nickvincent@u.northwestern.edu; research tool'})
+        USER_AGENT)
     count = 0
     total_revs = 0
     err_count = 0
@@ -570,7 +570,7 @@ def retrieve_links_info(posts_needing_revs, model):
     """
     session = requests.Session()
     session.headers.update(
-        {'User-Agent': 'ugc-val-est; nickvincent@u.northwestern.edu; research tool'})
+        USER_AGENT)
 
     count = 0
     total_revs = 0
@@ -627,7 +627,7 @@ def test():
             print('')
     session = requests.Session()
     session.headers.update(
-        {'User-Agent': 'ugc-val-est; nickvincent@u.northwestern.edu; research tool'})
+        USER_AGENT)
     qsr = SampledRedditThread.objects.filter(has_wiki_link=True).order_by('?')[:500]
     qss = SampledStackOverflowPost.objects.filter(has_wiki_link=True).order_by('?')[:500]
     
@@ -764,7 +764,7 @@ def test():
 def get_scores_only(model):
     session = requests.Session()
     session.headers.update(
-        {'User-Agent': 'ugc-val-est; nickvincent@u.northwestern.edu; research tool'})
+        USER_AGENT)
     retrieve_scores(session, model)
 
 

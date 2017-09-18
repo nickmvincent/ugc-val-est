@@ -1,6 +1,0 @@
-Answered posted on: 2016-03-09 16:47:05+00:00
-<a<p>1 - Yes. Each class should live in its own file. This facilitates many things, like naming those files (using the class name), SRP and most importantly, auto-loading.</p>
-
-<p>2 - In here I disagree. Each file should deal with as many objects of as many types as it needs to. Each domain and the classes that represent its business rules are different, so it really depends on the concrete project that you're working on. Don't be scared of manipulating many different objects in a single PHP file. Just make sure that the class itself is cohesive and it doesn't do too many things. Keep things simple and try to stick to the ***<a href="https://en.wikipedia.org/wiki/Single_responsibility_principle" rel="nofollow">Single Responsibility Principle</a>.</p>
-
-<p>I think that the best place to start getting lots of answers to these kind of questions is in the <a href="http://www.php-fig.org/" rel="nofollow">PHP-FIG</a> website. In here there's lots of documentation about standards, documentation, auto-loading, etc.</

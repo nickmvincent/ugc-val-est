@@ -1,4 +1,0 @@
-Answered posted on: 2009-11-04 13:40:07+00:00
-<a<p>I'm not sure what in your code (running on the client's PC) you expect to cause the php script (running on the server) to run. You'll need to invoke the php by making some kind of http request (like get <a href="http://yoururl/recheckcookie.php" rel="nofollow noreferrer">http://yoururl/recheckcookie.php</a>). With at HTTP request, the javascript code on the client to queries the webserver for the output of your recheckcookie.php script. This script can then recheck the cookie, and return some/no output.</p>
-
-<p>Look up ***<a href="http://en.wikipedia.org/wiki/XMLHttpRequest" rel="nofollow noreferrer">XMLHttpRequest</a> or preferably the corresponding JQuery to see how to perform the HTTP request.</
