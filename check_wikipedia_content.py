@@ -461,6 +461,10 @@ def get_revs_for_single_post(post, session):
             week_after_post_str)
         for result_page in revid_result_pages:
             pages = result_page.get('pages', {})
+            redirects = result_page.get('redirects', {})
+            if redirects:
+                wiki_link.alt_title = redirects[0]['to']
+                wiki_link.save()
             for _, page in pages.items():
                 if 'missing' in page:
                     raise PostMissingValidLink(post, dja_link)
@@ -855,7 +859,7 @@ def parse():
                     has_wiki_link=True).order_by('uid')
                 print('fullcount', full.count())
                 filtered = full[int(args.start):int(args.end)]
-                filtered = [item for item in list(filtered) if item.all_revisions_pulled is False]
+                # filtered = [item for item in list(filtered) if item.all_revisions_pulled is False]
                 print('Going to RETRIEVE INFO for {} items'.format(len(filtered)))
                 retrieve_links_info(filtered, model)
             if args.mode == 'damaging':

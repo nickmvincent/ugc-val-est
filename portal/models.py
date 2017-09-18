@@ -530,6 +530,7 @@ class WikiLink(models.Model):
     url = models.CharField(max_length=300)
     language_code = models.CharField(max_length=10, blank=True, null=True)
     title = models.CharField(max_length=300, blank=True, null=True)
+    alt_title = models.CharField(max_length=300, blank=True, null=True)
     err_code = models.IntegerField(default=0)
 
     def save(self, *args, **kwargs):
