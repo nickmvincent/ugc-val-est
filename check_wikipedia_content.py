@@ -107,7 +107,6 @@ def make_mediawiki_request(session, base, params, verbose=False):
         # Modify it with the values returned in the 'continue' section of the last result.
         req.update(last_continue)
         # Call API
-        verbose = True
         if verbose:
             print(base + '?' + '&'.join(
                 ['{}={}'.format(key, val) for key, val in req.items()]
@@ -463,6 +462,7 @@ def get_revs_for_single_post(post, session):
             pages = result_page.get('pages', {})
             redirects = result_page.get('redirects', {})
             if redirects:
+                print(redirects)
                 dja_link.alt_title = redirects[0]['to']
                 dja_link.save()
             for _, page in pages.items():
