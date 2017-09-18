@@ -1,0 +1,4 @@
+Bootstrap results for 1000 iterations of full resampling,0.005,0.995
+score,31.3794314578,39.0263273623
+num_comments,-0.688573580327,0.572234762815
+112917.98464512825

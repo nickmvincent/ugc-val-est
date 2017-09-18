@@ -452,6 +452,7 @@ def parse():
     """
     Parse args and do the appropriate analysis
     """
+    np.seterr(divide='ignore', invalid='ignore')
     parser = argparse.ArgumentParser(
         description='Train predictive model')
     parser.add_argument(
