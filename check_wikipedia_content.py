@@ -771,7 +771,7 @@ def test():
         average_diff = average_diff / tested
         average_wrong_diff = average_wrong_diff / tested
         print('average_diff', average_diff)
-        print('average_wrong_diff', average__wrong_diff)
+        print('average_wrong_diff', average_wrong_diff)
             
         print('{}/{}'.format(tested, n_err))
 
