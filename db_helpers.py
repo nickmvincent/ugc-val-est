@@ -135,9 +135,9 @@ def link_save():
     Runs through all the rows and re-saves to trigger
     computation
     """
-    for link in WikiLink.objects.all():
-        link.save()
-    #reddit = SampledRedditThread.objects.filter(has_wiki_link=True).order_by('uid')
+    # for link in WikiLink.objects.all():
+    #     link.save()
+    reddit = SampledRedditThread.objects.filter(has_wiki_link=True).order_by('uid')
     stack = SampledStackOverflowPost.objects.filter(has_wiki_link=True).order_by('uid')
 
     # for start, end, total, batch in batch_qs(reddit):
