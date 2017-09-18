@@ -587,9 +587,10 @@ def retrieve_links_info(posts_needing_revs, model):
             print('Finished: {}, Revs: {}, Errors: {}, Time: {}'.format(
             count, total_revs, err_count, time.time() - process_start))
         count += 1
-        continue
         try:
             total_revs += get_revs_for_single_post(post, session)
+            continue
+            
             post.all_revisions_pulled = True
             post.save()
         except (
