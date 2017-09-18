@@ -23,7 +23,7 @@ import mwapi
 import mwreverts.api
 
 WIK = 'wikipedia.org/wiki/'
-USER_AGENT = {'User-Agent': 'ugc-val-est; myname@myuni.edu; research tool'}
+USER_AGENT = {'User-Agent': 'ugc-val-est; nickvincent@u.northwestern.edu; research tool'}
 
 def grouper(iterable, groupsize, fillvalue=None):
     """Separate an iterable into groups of size groupsize"""
@@ -629,7 +629,7 @@ def test():
     session.headers.update(
         USER_AGENT)
     qsr = SampledRedditThread.objects.filter(has_wiki_link=True).order_by('?')[:500]
-    qss = SampledStackOverflowPost.objects.filter(has_wiki_link=True).order_by('?')[:500]
+    qss = SampledStackOverflowPost.objects.filter(has_wiki_link=True).order_by('?')[:1]
     
     pageview_api_str_fmt = '%Y%m%d'
     for qs in [qsr, qss]:
@@ -755,10 +755,13 @@ def test():
                 n_err += 1
                 print('error with before pageviews', before_pageviews, num_wiki_pageviews_prev_week)
                 print(post.timestamp)
+            else:
+                print(num_wiki_pageviews_prev_week, links)
             if after_pageviews != num_wiki_pageviews:
                 n_err += 1
                 print('error with after pageviews', after_pageviews, num_wiki_pageviews)
                 print(post.timestamp)
+            
         print('{}/{}'.format(tested, n_err))
 
 def get_scores_only(model):
