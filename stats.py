@@ -478,10 +478,11 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
             'week_after_avg_score__isnull': False,
         }
         treatment_kwargs = None
-    elif rq == 32:
+    elif rq == 33:
         subsample_kwargs = {
             'has_wiki_link': True,
-            'all_revisions_pulled': True,
+            'num_wiki_pageviews__gt': 0,
+            'num_wiki_pageviews_prev_week__gt': 0,
         }
         treatment_kwargs = None
     if sample_num is None:
@@ -592,6 +593,10 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
     if rq == 32:
         variables = [
             ('num_edits', 'num_edits_prev_week'),
+            ('num_wiki_pageviews', 'num_wiki_pageviews_prev_week')
+        ]
+    if rq == 33:
+        variables = [
             ('num_wiki_pageviews', 'num_wiki_pageviews_prev_week')
         ]
     db_name = connection.settings_dict['NAME']
