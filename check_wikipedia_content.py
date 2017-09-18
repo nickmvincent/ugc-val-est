@@ -23,7 +23,7 @@ import mwapi
 import mwreverts.api
 
 WIK = 'wikipedia.org/wiki/'
-USER_AGENT = {'User-Agent': 'ugc-val-est; myname@u.myuni.edu; research tool'}
+USER_AGENT = {'User-Agent': 'ugc-val-est; nickvincent@u.northwestern.edu; research tool'}
 
 def grouper(iterable, groupsize, fillvalue=None):
     """Separate an iterable into groups of size groupsize"""
@@ -628,11 +628,14 @@ def test():
     session = requests.Session()
     session.headers.update(
         USER_AGENT)
-    qsr = SampledRedditThread.objects.filter(has_wiki_link=True).order_by('?')[:500]
-    qss = SampledStackOverflowPost.objects.filter(has_wiki_link=True).order_by('?')[:1]
+    qsr = SampledRedditThread.objects.filter(has_wiki_link=True, sample_num__in=[0,1,2]).order_by('?')[:1]
+    qss = SampledStackOverflowPost.objects.filter(has_wiki_link=True,  sample_num__in=[0,1,2]).order_by('?')[:200]
     
     pageview_api_str_fmt = '%Y%m%d'
-    for qs in [qsr, qss]:
+    for qs in [
+        #qsr,
+        qss
+    ]:
         tested = 0
         n_err = 0
         print('=====')
