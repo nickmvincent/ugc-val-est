@@ -630,7 +630,6 @@ def test():
         USER_AGENT)
     qsr = SampledRedditThread.objects.filter(has_wiki_link=True, sample_num__in=[0,1,2]).order_by('?')[:1]
     qss = SampledStackOverflowPost.objects.filter(has_wiki_link=True,  sample_num__in=[0,1,2]).order_by('?')[:200]
-    
     pageview_api_str_fmt = '%Y%m%d'
     for qs in [
         #qsr,
@@ -639,6 +638,8 @@ def test():
         tested = 0
         n_err = 0
         print('=====')
+        average_diff = 0
+        
         for post in qs:
             if tested % 100 == 0:
                 print(tested)
@@ -764,6 +765,10 @@ def test():
                 n_err += 1
                 print('error with after pageviews', after_pageviews, num_wiki_pageviews)
                 print(post.timestamp)
+            average_diff += after_count - before_count
+        
+        average_diff = average_diff / tested
+        print(average_diff)
             
         print('{}/{}'.format(tested, n_err))
 
