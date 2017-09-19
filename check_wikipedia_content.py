@@ -635,11 +635,11 @@ def test():
     session = requests.Session()
     session.headers.update(
         USER_AGENT)
-    qsr = SampledRedditThread.objects.filter(has_wiki_link=True, sample_num__in=[0,1,2]).order_by('?')[:1]
-    qss = SampledStackOverflowPost.objects.filter(has_wiki_link=True,  sample_num__in=[0,1,2]).order_by('?')[:1000]
+    qsr = SampledRedditThread.objects.filter(has_wiki_link=True, sample_num__in=[0,1,2]).order_by('?')[:500]
+    qss = SampledStackOverflowPost.objects.filter(has_wiki_link=True,  sample_num__in=[0,1,2]).order_by('?')[:500]
     pageview_api_str_fmt = '%Y%m%d'
     for qs in [
-        #qsr,
+        qsr,
         qss
     ]:
         tested = 0
