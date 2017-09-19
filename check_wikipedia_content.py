@@ -409,6 +409,7 @@ def recalc_pageviews_for_post(post, session):
             title=norm_title, start=day_of_post_short_str,
             end=week_after_post.strftime(pageview_api_str_fmt))
         if pageviews_prev_week and pageviews:
+            print('This guy got pageviews....')
             post.num_wiki_pageviews_prev_week += sum(
                 [entry['views'] for entry in pageviews_prev_week])
             post.num_wiki_pageviews += sum(
@@ -824,7 +825,7 @@ def parse():
         get_scores_only(SampledStackOverflowPost)
     elif args.recalc_pageviews_so:
         posts = SampledStackOverflowPost.objects.filter(has_wiki_link=True, sample_num__in=[0,1,2],
-        timestamp__gte=datetime.datetime(year=2015, month=1, day=1))
+        timestamp__gte=datetime.datetime(year=2015, month=7, day=1), num_wiki_pageviews=0)
         recalc_pageviews_for_posts(posts, SampledStackOverflowPost)
     else:
         if args.platform is None:
