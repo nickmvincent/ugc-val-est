@@ -367,7 +367,6 @@ class Post(models.Model):
             missing_necessary_ores = False
             for link_obj in self.wiki_links.all():
                 num_links += 1
-                all_possible_links = WikiLink.objects.filter(title__in=[link_obj.title, link_obj.alt_title])
                 all_possible_links = WikiLink.objects.filter(
                     models.Q(title__in=[link_obj.title, link_obj.alt_title]) | models.Q(alt_title__in=[link_obj.title, link_obj.alt_title])
                 )

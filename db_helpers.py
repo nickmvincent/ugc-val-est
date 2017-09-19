@@ -137,17 +137,19 @@ def link_save():
     """
     # for link in WikiLink.objects.all():
     #     link.save()
-    reddit = SampledRedditThread.objects.filter(has_wiki_link=True).order_by('uid')
-    stack = SampledStackOverflowPost.objects.filter(has_wiki_link=True).order_by('uid')
-
-    # for start, end, total, batch in batch_qs(reddit):
-    #     print('reddit', start, end, total)
-    #     for item in batch:
-    #         item.save()
-    for start, end, total, batch in batch_qs(stack):
-        print('stack', start, end, total)
-        for item in batch:
-            item.save()
+    print('link_save')
+    if 'reddit' in sys.argv:
+        reddit = SampledRedditThread.objects.filter(has_wiki_link=True, sample_num__in=[0,1,2]).order_by('uid')
+        for start, end, total, batch in batch_qs(reddit):
+            print('reddit', start, end, total)
+            for item in batch:
+                item.save()
+    if 'so' in sys.argv:
+        stack = SampledStackOverflowPost.objects.filter(has_wiki_link=True, sample_num__in=[0,1,2]).order_by('uid')
+        for start, end, total, batch in batch_qs(stack):
+            print('stack', start, end, total)
+            for item in batch:
+                item.save()
 
 def sample_articles():
     """Prints out a sample of URLs to text file"""
