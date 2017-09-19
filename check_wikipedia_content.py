@@ -542,7 +542,7 @@ def identify_links(filtered, field):
             post.save()
 
 
-def recalc_pageviews_for_posts(posts, model):
+def recalc_pageviews_for_posts(posts):
     session = requests.Session()
     session.headers.update(
         USER_AGENT)
@@ -812,7 +812,7 @@ def parse():
         '--get_scores_only', action='store_true', default=False,
         help='test')
     parser.add_argument(
-        '--recalc_pageviews_so', action='store_true', default=False,
+        '--recalc_pageviews', action='store_true', default=False,
         help='test')
     parser.add_argument(
         '--start')
@@ -823,10 +823,10 @@ def parse():
         test()
     elif args.get_scores_only:
         get_scores_only(SampledStackOverflowPost)
-    elif args.recalc_pageviews_so:
-        posts = SampledStackOverflowPost.objects.filter(has_wiki_link=True, sample_num__in=[0,1,2],
+    elif args.recalc_pageviews:
+        posts = SampledRedditThread.objects.filter(has_wiki_link=True, sample_num__in=[0,1,2],
         timestamp__gte=datetime.datetime(year=2015, month=7, day=1), num_wiki_pageviews=0)
-        recalc_pageviews_for_posts(posts, SampledStackOverflowPost)
+        recalc_pageviews_for_posts(posts)
     else:
         if args.platform is None:
             platforms = ['r', 's']
