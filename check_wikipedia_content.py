@@ -23,7 +23,7 @@ import mwapi
 import mwreverts.api
 
 WIK = 'wikipedia.org/wiki/'
-USER_AGENT = {'User-Agent': 'ugc-val-est; nickvincent@u.northwestern.edu; research tool'}
+USER_AGENT = {'User-Agent': 'ugc-val-est; myname@myuni.edu; research tool'}
 
 def grouper(iterable, groupsize, fillvalue=None):
     """Separate an iterable into groups of size groupsize"""
