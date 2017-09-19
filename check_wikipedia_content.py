@@ -825,7 +825,8 @@ def parse():
         get_scores_only(SampledStackOverflowPost)
     elif args.recalc_pageviews:
         posts = SampledRedditThread.objects.filter(has_wiki_link=True, sample_num__in=[0,1,2],
-        timestamp__gte=datetime.datetime(year=2015, month=7, day=1), num_wiki_pageviews=0)
+           # timestamp__gte=datetime.datetime(year=2015, month=7, day=1),
+            num_wiki_pageviews=0)
         recalc_pageviews_for_posts(posts)
     else:
         if args.platform is None:
