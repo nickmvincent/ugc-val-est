@@ -93,7 +93,15 @@ def causal_inference(
         num_rows=None, quad_psm=False, simple_bin=None, trim_val=0,
         paired_psm=None, iterations=1, sample_num=None):
     """
+    Args:
+        platform - r for reddit or s for stackoverflow
+        filename_prefix - will affect the output files
+        filter_kwargs - which entities to include (e.g. has wiki link or not?)
+        exlude_kwargs - which entities to exclude
+        num_rows - the number of rows to use (defaults to all)
+        
     Use causalinference module to perform causal inference analysis
+
     """
     def mark_time(desc):
         """return a tuple of time, description of time"""
