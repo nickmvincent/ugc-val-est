@@ -1,8 +1,0 @@
-17 All the wishful thinking, anti-Trump Cuckservatives are like "Okay, now that he's won fives more states, he should drop out... That's it for him, he's finished, there's no way he's winning any of the remaining ten." https://en.wikipedia.org/wiki/Republican_Party_presidential_primaries,_2016#Schedule
-2016-04-27 01:52:17+00:00
-
-2814/49348 damaging posts
-1576/19152 damaging posts
-
-
-[defaultdict(<class 'int'>, {'total': 6986, 'reverted': 1238, 'reverting': 912, 'reverted_to': 911}), defaultdict(<class 'int'>, {'total': 742, 'reverted_to': 77, 'reverted': 124, 'reverting': 70})]
