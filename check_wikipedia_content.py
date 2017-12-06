@@ -421,6 +421,7 @@ def get_revs_for_single_post(post, session):
     """check a single post"""
     dja_links = post.wiki_links.all()
     total_revs = 0
+    # RQ2 Metric: num_wiki_pageviews
     post.num_wiki_pageviews = 0
     post.num_wiki_pageviews_prev_week = 0
     for dja_link in dja_links:

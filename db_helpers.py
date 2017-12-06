@@ -94,8 +94,8 @@ def fix_bad_registration_time():
 
 
 def show_samples():
-    """Show samples of reddit threads"""
-    for model in [SampledRedditThread, ]: #SampledStackOverflowPost]:
+    """Show samples of all posts"""
+    for model in [SampledRedditThread, SampledStackOverflowPost]:
         samples1 = model.objects.all().values()[:5]
         samples2 = model.objects.filter(has_wiki_link=True).values()[:5]
         for samples in [samples1, samples2]:

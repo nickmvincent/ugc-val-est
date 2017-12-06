@@ -5,7 +5,8 @@ Not for prod use
 Should be run from Anaconda environment with scipy installed
 (Anconda Prompt -> activate sci_basic)
 
-python prediction.py --platform r --treatment has_wiki_link --paired_psm
+python prediction.py --platform r --rq 1 --paired_psm --trim_val pair
+
 
 """
 # pylint: disable=C0103

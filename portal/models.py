@@ -393,10 +393,12 @@ class Post(models.Model):
                     for revision in revisions:
                         users_seen = {}
                         if revision.timestamp > self.timestamp:
+                            # RQ2 Metric: num_edits
                             self.num_edits += 1
                             if revision.registration and revision.registration > self.timestamp:
                                 self.num_new_edits += 1
                                 if users_seen.get(revision.user) is None:
+                                    # RQ2 Metric: num_new_editors
                                     self.num_new_editors += 1
                                     users_seen[revision.user] = True
                                     if revision.user_retained:
@@ -405,6 +407,7 @@ class Post(models.Model):
                                         self.num_new_editors_retained_180 += 1
                             else:
                                 self.num_old_edits += 1
+                            # the following metrics were not used in the paper
                             if revision.editcount and revision.editcount <= 5:
                                 self.num_inactive_edits += 1
                             else:
@@ -414,10 +417,12 @@ class Post(models.Model):
                             else:
                                 self.num_major_edits += 1
                         else:
+                            # RQ2 Metric: num_edits_prev_week
                             self.num_edits_prev_week += 1
                             if revision.registration and revision.registration > starttime:
                                 self.num_new_edits_prev_week += 1
                                 if users_seen.get(revision.user) is None:
+                                    # RQ2 Metric: num_new_editors_prev_weem
                                     self.num_new_editors_prev_week += 1
                                     users_seen[revision.user] = True
                                     if revision.user_retained:
@@ -429,6 +434,7 @@ class Post(models.Model):
 
                             if self.timestamp - revision.timestamp < datetime.timedelta(hours=3):
                                 self.num_edits_preceding_post += 1
+                            # Below metrics not used in paper
                             if revision.editcount and revision.editcount <= 5:
                                 self.num_inactive_edits_prev_week += 1
                             else:
@@ -438,6 +444,7 @@ class Post(models.Model):
                             else:
                                 self.num_major_edits_prev_week += 1
             if num_links:
+                # the fields used in this comprehension are day_of and week_after
                 output_field_to_val = {
                     field + '_avg_score': val / num_links for field, val in field_to_score.items()}
                 for output_field, val in output_field_to_val.items():
@@ -447,6 +454,8 @@ class Post(models.Model):
                         setattr(self, output_field, val)
 
         if not self.has_wiki_link and not self.has_no_link:
+            # if it has no Wiki link and wasn't marked as "has_no_link"
+            # then it must have a non-wiki link!
             self.has_other_link = True
         super(Post, self).save(*args, **kwargs)
 
@@ -471,7 +480,11 @@ class SampledRedditThread(Post):
     in_other = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
-        """save method"""
+        """
+        save method
+        
+        This runs BEFORE post.save is called, which is important
+        """
         if self.context in likely_subreddits:
             attr = 'in_' + self.context
             setattr(self, attr, True)
@@ -512,6 +525,7 @@ class SampledStackOverflowPost(Post):
         if self.body_num_links == 0:
             self.body_num_links = len(extract_urls(self.body))
         if self.body_num_links == 0:
+            # if no links were found, it has no link and it certainly does not have an "other" link!
             self.has_no_link = True
             self.has_other_link = False
         super(SampledStackOverflowPost, self).save(*args, **kwargs)
