@@ -810,7 +810,7 @@ def parse():
         '--test', action='store_true', default=False,
         help='test')
     parser.add_argument(
-        '--test_num', default=False,
+        '--test_num', type=int,
         help='number of items to test')
     parser.add_argument(
         '--get_scores_only', action='store_true', default=False,
@@ -825,7 +825,7 @@ def parse():
     args = parser.parse_args()
     if args.test:
         if args.test_num:
-            test(args.test_num)
+            test(int(args.test_num))
         else:
             test()
     elif args.get_scores_only:
