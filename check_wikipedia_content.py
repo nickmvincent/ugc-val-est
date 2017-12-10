@@ -86,7 +86,7 @@ class PostMissingValidLink(Exception):
 # 5 is mystery
 
 
-def make_mediawiki_request(session, base, params, verbose=False):
+def make_mediawiki_request(session, base, params, verbose=True):
     """
     Args:
         endpoint - a mediawiki api endpoint, fully formated (not template)
@@ -626,7 +626,7 @@ def retrieve_scores(session, model):
     get_scores_for_posts(posts_needing_score, session)
 
 
-def test():
+def test(num=500):
     """
     Test code
     """
@@ -637,8 +637,8 @@ def test():
     session = requests.Session()
     session.headers.update(
         USER_AGENT)
-    qsr = SampledRedditThread.objects.filter(has_wiki_link=True, sample_num__in=[0,1,2]).order_by('?')[:500]
-    qss = SampledStackOverflowPost.objects.filter(has_wiki_link=True,  sample_num__in=[0,1,2]).order_by('?')[:500]
+    qsr = SampledRedditThread.objects.filter(has_wiki_link=True, sample_num__in=[0,1,2]).order_by('?')[:num]
+    qss = SampledStackOverflowPost.objects.filter(has_wiki_link=True,  sample_num__in=[0,1,2]).order_by('?')[:num]
     pageview_api_str_fmt = '%Y%m%d'
     for qs in [
         qsr,
@@ -810,6 +810,9 @@ def parse():
         '--test', action='store_true', default=False,
         help='test')
     parser.add_argument(
+        '--test_num', default=False,
+        help='number of items to test')
+    parser.add_argument(
         '--get_scores_only', action='store_true', default=False,
         help='test')
     parser.add_argument(
@@ -821,7 +824,10 @@ def parse():
         '--end')
     args = parser.parse_args()
     if args.test:
-        test()
+        if args.test_num:
+            test(args.test_num)
+        else:
+            test()
     elif args.get_scores_only:
         get_scores_only(SampledStackOverflowPost)
     elif args.recalc_pageviews:
