@@ -143,16 +143,17 @@ def make_pageview_request(session, **kwargs):
     """
     base = 'http://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/all-agents/{title}/daily/{start}/{end}'
     endpoint = base.format(**kwargs)
-    if MASTER_VERBOSE:
-        print('Pageview request:')
-        print(endpoint)
+    
     result = session.get(endpoint)
     result = result.json()
     try:
         result = result['items']
     except KeyError:
         result = None
-    print(result)
+    if MASTER_VERBOSE:
+        print('Pageview request:')
+        print(endpoint)
+        print(result)
     return result
 
 
