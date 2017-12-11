@@ -24,7 +24,7 @@ import mwreverts.api
 
 WIK = 'wikipedia.org/wiki/'
 USER_AGENT = {'User-Agent': 'ugc-val-est; myname@myuni.edu; research tool'}
-MASTER_VERBOSE = True
+MASTER_VERBOSE = False
 
 def grouper(iterable, groupsize, fillvalue=None):
     """Separate an iterable into groups of size groupsize"""
@@ -788,8 +788,8 @@ def test(num=500):
         
         average_diff = average_diff / tested
         average_wrong_diff = average_wrong_diff / tested
-        print('average_diff', average_diff)
-        print('average_wrong_diff', average_wrong_diff)
+        print('average_diff_in_edits', average_diff)
+        print('average_diff_in_edits_db', average_wrong_diff)
             
         print('Error/Tested: {}/{}'.format(n_err, tested))
 
