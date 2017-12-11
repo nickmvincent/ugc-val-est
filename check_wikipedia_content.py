@@ -24,6 +24,7 @@ import mwreverts.api
 
 WIK = 'wikipedia.org/wiki/'
 USER_AGENT = {'User-Agent': 'ugc-val-est; myname@myuni.edu; research tool'}
+MASTER_VERBOSE = True
 
 def grouper(iterable, groupsize, fillvalue=None):
     """Separate an iterable into groups of size groupsize"""
@@ -86,13 +87,15 @@ class PostMissingValidLink(Exception):
 # 5 is mystery
 
 
-def make_mediawiki_request(session, base, params, verbose=True):
+def make_mediawiki_request(session, base, params, verbose=False):
     """
     Args:
         endpoint - a mediawiki api endpoint, fully formated (not template)
     Returns:
         full results, with pagination processed
     """
+    if MASTER_VERBOSE:
+        verbose = True
     results = []
     last_continue = {}
     first = True
@@ -108,6 +111,7 @@ def make_mediawiki_request(session, base, params, verbose=True):
         req.update(last_continue)
         # Call API
         if verbose:
+            print('Mediawiki API request:')
             print(base + '?' + '&'.join(
                 ['{}={}'.format(key, val) for key, val in req.items()]
             ))
@@ -139,12 +143,16 @@ def make_pageview_request(session, **kwargs):
     """
     base = 'http://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/all-agents/{title}/daily/{start}/{end}'
     endpoint = base.format(**kwargs)
+    if MASTER_VERBOSE:
+        print('Pageview request:')
+        print(endpoint)
     result = session.get(endpoint)
     result = result.json()
     try:
         result = result['items']
     except KeyError:
         result = None
+    print(result)
     return result
 
 
@@ -783,7 +791,7 @@ def test(num=500):
         print('average_diff', average_diff)
         print('average_wrong_diff', average_wrong_diff)
             
-        print('{}/{}'.format(tested, n_err))
+        print('Error/Tested: {}/{}'.format(n_err, tested))
 
 def get_scores_only(model):
     session = requests.Session()
