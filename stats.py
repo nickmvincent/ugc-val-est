@@ -591,6 +591,11 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
             ('week_after_avg_score', 'day_of_avg_score'),
             ('num_wiki_pageviews', 'num_wiki_pageviews_prev_week')
         ]
+    if rq == 32:
+        variables = [
+            ('num_edits', 'num_edits_prev_week'),
+            ('num_wiki_pageviews', 'num_wiki_pageviews_prev_week')
+        ]
     # if rq == 33:
     #     variables = [
     #         ('num_wiki_pageviews', 'num_wiki_pageviews_prev_week')

@@ -541,27 +541,30 @@ def parse():
                 elif rq == '1-is_top':
                     treatments = [
                         {
+                            'pre': 'IS_TOP_CI',
                             'name': 'has_other_link',
                             'filter_kwargs': {'is_top': True},
                             'exclude_kwargs': {'has_wiki_link': True}
                         }, {
+                            'pre': 'IS_TOP_CI',
                             'name': 'has_wiki_link',
                             'filter_kwargs': {'is_top': True},
                             'exclude_kwargs': {'has_other_link': True}
                         },
                     ]
-                elif rq == 'til':
-                    treatments = [
-                        {
-                            'name': 'has_other_link',
-                            'filter_kwargs': {'is_top': True},
-                            'exclude_kwargs': {'has_wiki_link': True}
-                        }, {
-                            'name': 'has_wiki_link',
-                            'filter_kwargs': {'is_top': True},
-                            'exclude_kwargs': {'has_other_link': True}
-                        },
-                    ]
+                # i do not know what this was for...
+                # elif rq == 'til':
+                #     treatments = [
+                #         {
+                #             'name': 'has_other_link',
+                #             'filter_kwargs': {'is_top': True},
+                #             'exclude_kwargs': {'has_wiki_link': True}
+                #         }, {
+                #             'name': 'has_wiki_link',
+                #             'filter_kwargs': {'is_top': True},
+                #             'exclude_kwargs': {'has_other_link': True}
+                #         },
+                #     ]
                 elif rq == '2':
                     treatments = [
                         {
@@ -580,13 +583,13 @@ def parse():
                 elif rq == '2-is_top':
                     treatments = [
                         {
-                            'pre': 'CI_c_',
+                            'pre': 'IS_TOP_CI_c_',
                             'name': 'has_wiki_link',
                             'filter_kwargs': {'has_other_link': False, 'is_top': True},
                             'exclude_kwargs': {'has_wiki_link': True, 'has_c_wiki_link': False},
                         },
                         {
-                            'pre': 'CI_bad_',
+                            'pre': 'IS_TOP_CI_bad_',
                             'name': 'has_wiki_link',
                             'filter_kwargs': {'has_other_link': False, 'is_top': True},
                             'exclude_kwargs': {'has_wiki_link': True, 'has_c_wiki_link': True},

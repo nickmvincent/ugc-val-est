@@ -480,8 +480,6 @@ def get_revs_for_single_post(post, session):
                     raise PostMissingValidLink(post, dja_link)
                 if 'revisions' in page:
                     revisions += page['revisions']
-        # TODO KILL THIS
-        break
         # if no revs were found in the two week block, look backwards
         if not revisions:
             revid_result_pages = make_revid_request(
@@ -739,7 +737,6 @@ def test(num=500):
                         print(links, '{} ({})'.format(wiki_link.title, wiki_link.id))
                     except:
                         print('^^ rev missing...')
-                    input()
                     break
                 # for dja_link in post.wiki_links.all():
                 #     all_links = WikiLink.objects.filter(title=dja_link.title)
