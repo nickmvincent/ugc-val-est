@@ -80,7 +80,8 @@ def so_special(treatment_feature, extra_filter):
     return treat, control
 
 def percent_bias(x_arr, y_arr):
-    """Calculate the percent bias for two groups
+    """
+    Calculate the percent bias for two groups
     Inputs should be numerical arrays corresponding to the two groups
     """
     delta = np.mean(x_arr) - np.mean(y_arr)
@@ -579,7 +580,7 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
         extractor = get_links_from_body
         extract_from = 'body'
             
-    if rq == 3:
+    if rq == 3 or rq == 33:
         variables = [
             ('num_edits', 'num_edits_prev_week'),
             ('num_new_editors', 'num_new_editors_prev_week'),
@@ -590,15 +591,10 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
             ('week_after_avg_score', 'day_of_avg_score'),
             ('num_wiki_pageviews', 'num_wiki_pageviews_prev_week')
         ]
-    if rq == 32:
-        variables = [
-            ('num_edits', 'num_edits_prev_week'),
-            ('num_wiki_pageviews', 'num_wiki_pageviews_prev_week')
-        ]
-    if rq == 33:
-        variables = [
-            ('num_wiki_pageviews', 'num_wiki_pageviews_prev_week')
-        ]
+    # if rq == 33:
+    #     variables = [
+    #         ('num_wiki_pageviews', 'num_wiki_pageviews_prev_week')
+    #     ]
     db_name = connection.settings_dict['NAME']
     output_filename = "STATS_on_{}_rq_{}_{}_samples{}.csv".format(
         platform, rq, db_name,
