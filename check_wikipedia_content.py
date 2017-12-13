@@ -617,7 +617,6 @@ def retrieve_links_info(posts_needing_revs, model):
         except PostMissingValidLink:
             print('Post was missing a valid link')
             print(post.body)
-            input()
             err_count += 1
             post.all_revisions_pulled = True
             post.save()
