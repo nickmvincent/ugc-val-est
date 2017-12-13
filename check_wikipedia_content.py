@@ -94,7 +94,7 @@ def normalize_title(title):
             title = title[0].upper() + title[1:]
     title = title.replace(' ', '_')
     title = title.replace('/', '%2F')
-    title = title.replace('&#39', "%27")
+    title = title.replace('&#39;', "%27")
     return title
 
 def make_mediawiki_request(session, base, params, verbose=False):
@@ -846,7 +846,7 @@ def parse():
     if args.fix_27:
         filtered = SampledStackOverflowPost.objects.filter(
             body__contains=WIK, sample_num__in=[0,1,2],
-            has_c_wiki_link=True).filter(body__contains='&#39')
+            has_c_wiki_link=True).filter(body__contains='&#39;')
         print('Found {} in fix_27'.format(len(filtered)))
         identify_links(filtered, 'body')
         retrieve_links_info(filtered, SampledStackOverflowPost)
