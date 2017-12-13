@@ -95,6 +95,7 @@ def normalize_title(title):
     title = title.replace(' ', '_')
     title = title.replace('/', '%2F')
     title = title.replace('&#39;', "%27")
+    print(title)
     return title
 
 def make_mediawiki_request(session, base, params, verbose=False):
