@@ -90,11 +90,11 @@ def normalize_title(title):
     """
     Normalizes a title
     """
+    print(title)
     if len(title) >= 2:
             title = title[0].upper() + title[1:]
     title = title.replace(' ', '_')
     title = title.replace('/', '%2F')
-    title = title.replace('&#39;', "%27")
     print(title)
     return title
 
@@ -444,6 +444,7 @@ def get_revs_for_single_post(post, session):
     for dja_link in dja_links:
         if dja_link.language_code != 'en':
             continue
+        dja_link.save() # just to update the title - this can be removed later!
         wiki_api_str_fmt = '%Y%m%d%H%M%S'
         pageview_api_str_fmt = '%Y%m%d'
         week_before_post = post.timestamp - datetime.timedelta(days=7)
@@ -847,9 +848,10 @@ def parse():
     if args.fix_27:
         filtered = SampledStackOverflowPost.objects.filter(
             body__contains=WIK, sample_num__in=[0,1,2],
-            has_c_wiki_link=True).filter(body__contains='&#39;')
+            has_c_wiki_link=True, has_wiki_link=False).filter(body__contains='&#39;')
         print('Found {} in fix_27'.format(len(filtered)))
         identify_links(filtered, 'body')
+        print('Now retrieving')
         retrieve_links_info(filtered, SampledStackOverflowPost)
     elif args.test:
         if args.test_num:

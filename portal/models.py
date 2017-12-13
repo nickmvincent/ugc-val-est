@@ -553,6 +553,7 @@ class WikiLink(models.Model):
         """overload save method"""
         url = self.url.replace('.m.', '.')
         url = url.replace('www.', '')
+        url = url.replace('&#39;', "'")
         prefix_start = url.find('//') + 2
         prefix_end = url.find('.wiki')
         if prefix_end == -1:
