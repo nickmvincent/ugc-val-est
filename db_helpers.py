@@ -48,14 +48,6 @@ def show_missing_errors():
     print(counter)
     print(len(qs))
 
-def show_wiki_errors():
-    for model in (SampledRedditThread, SampledStackOverflowPost):
-        counter = defaultdict(int)
-        qs = model.objects.exclude(wiki_content_error=0)
-        for obj in qs:
-            counter[obj['wiki_content_error']] += 1
-        pprint(counter)
-
 
 def clear_json2db():
     """Delete entries populated by the json2db script"""
@@ -345,8 +337,6 @@ if __name__ == "__main__":
             link_save()
         elif sys.argv[1] == 'clear_json2db':
             clear_json2db()
-        elif sys.argv[1] == 'show_wiki_errors':
-            show_wiki_errors()
         elif sys.argv[1] == 'show_missing_errors':
             show_missing_errors()
         elif sys.argv[1] == 'sample_articles':

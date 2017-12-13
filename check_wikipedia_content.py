@@ -607,7 +607,8 @@ def retrieve_links_info(posts_needing_revs, model):
             post.save()
         except (
                 MissingRevisionId, PostMissingValidLink
-        ):
+        ) as err:
+            print(err)
             err_count += 1
             post.all_revisions_pulled = True
             post.save()
@@ -836,11 +837,13 @@ def parse():
     )
     args = parser.parse_args()
     if args.fix_27:
-        filtered = SampledStackOverflowPost.objects.filter(body__contains=WIK).filter(body__contains='&#39')
-        print('Found {} with wiki links and &#39'.format(len(filtered)))
+        filtered = SampledStackOverflowPost.objects.filter(
+            body__contains=WIK, sample_num__in=[0,1,2],
+            has_c_wiki_link=True).filter(body__contains='&#39')
+        print('Found {} in fix_27'.format(len(filtered)))
         identify_links(filtered, 'body')
         retrieve_links_info(filtered, SampledStackOverflowPost)
-    if args.test:
+    elif args.test:
         if args.test_num:
             test(int(args.test_num))
         else:
