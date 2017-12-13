@@ -86,6 +86,16 @@ class PostMissingValidLink(Exception):
 
 # 5 is mystery
 
+def normalize_title(title):
+    """
+    Normalizes a title
+    """
+    if len(title) >= 2:
+            title = title[0].upper() + title[1:]
+    title = title.replace(' ', '_')
+    title = title.replace('/', '%2F')
+    title = title.replace('&#39', "%27")
+    return title
 
 def make_mediawiki_request(session, base, params, verbose=False):
     """
@@ -403,11 +413,8 @@ def recalc_pageviews_for_post(post, session):
         week_after_post = post.timestamp + datetime.timedelta(days=7)
 
         day_of_post_short_str = post.timestamp.strftime(pageview_api_str_fmt)
-        norm_title = dja_link.title
-        if len(norm_title) >= 2:
-            norm_title = norm_title[0].upper() + norm_title[1:]
-        norm_title = norm_title.replace(' ', '_')
-        norm_title = norm_title.replace('/', '%2F')
+        # norm_title = dja_link.title
+        norm_title = normalize_title(dja_link.title)
         pageviews_prev_week = make_pageview_request(
             session,
             title=norm_title, start=week_before_post.strftime(
@@ -444,11 +451,7 @@ def get_revs_for_single_post(post, session):
         week_after_post_str = week_after_post.strftime(wiki_api_str_fmt)
 
         day_of_post_short_str = post.timestamp.strftime(pageview_api_str_fmt)
-        norm_title = dja_link.title
-        if len(norm_title) >= 2:
-            norm_title = norm_title[0].upper() + norm_title[1:]
-        norm_title = norm_title.replace(' ', '_')
-        norm_title = norm_title.replace('/', '%2F')
+        norm_title = normalize_title(dja_link.title)
         pageviews_prev_week = make_pageview_request(
             session,
             title=norm_title, start=week_before_post.strftime(
@@ -828,7 +831,15 @@ def parse():
         '--start')
     parser.add_argument(
         '--end')
+    parser.add_argument(
+        '--fix_27'
+    )
     args = parser.parse_args()
+    if args.fix_27:
+        filtered = SampledStackOverflowPost.objects.filter(body__contains: WIK}).filter(body__contains: '&#39')
+        print('Found {} with wiki links and &#39'.format(len(filtered)))
+        identify_links(filtered, 'body')
+        retrieve_links_info(filtered, SampledStackOverflowPost)
     if args.test:
         if args.test_num:
             test(int(args.test_num))
