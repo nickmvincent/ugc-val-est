@@ -903,6 +903,16 @@ def parse():
                 # filtered = [item for item in list(filtered) if item.all_revisions_pulled is False]
                 print('Going to RETRIEVE INFO for {} items'.format(len(filtered)))
                 retrieve_links_info(filtered, model)
+            if args.mode == 'try_untouched':
+                # this will try to identify and pull revisions for WP-containing posts that haven't been touched yet
+                filtered = model.objects.filter(**{
+                    field + '__contains': WIK,
+                    has_wiki_link = False
+                })
+                print('Going to IDENTIFY {} untouched items'.format(len(filtered)))
+                identify_links(filtered, field)
+                print('Now retrieving')
+                retrieve_links_info(filtered, model)
             if args.mode == 'damaging':
                 filtered = model.objects.filter(has_wiki_link=True)[:1000]
                 print('checking on potentially damaging posts')
