@@ -848,7 +848,7 @@ def parse():
     if args.fix_27:
         filtered = SampledStackOverflowPost.objects.filter(
             body__contains=WIK, sample_num__in=[0,1,2],
-            has_c_wiki_link=True, has_wiki_link=False).filter(body__contains='&#39;')
+            has_c_wiki_link=True).filter(body__contains='&#39;')
         print('Found {} in fix_27'.format(len(filtered)))
         identify_links(filtered, 'body')
         print('Now retrieving')
