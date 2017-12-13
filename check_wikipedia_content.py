@@ -907,7 +907,7 @@ def parse():
                 # this will try to identify and pull revisions for WP-containing posts that haven't been touched yet
                 filtered = model.objects.filter(**{
                     field + '__contains': WIK,
-                    has_wiki_link = False
+                    has_wiki_link: False,
                 })
                 print('Going to IDENTIFY {} untouched items'.format(len(filtered)))
                 identify_links(filtered, field)
