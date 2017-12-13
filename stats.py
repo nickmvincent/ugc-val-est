@@ -487,7 +487,7 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
         }
         treatment_kwargs = None
     if sample_num is None:
-        subsample_kwargs['sample_num'] = 0
+        subsample_kwargs['sample_num__in'] = [0, 1, 2]
     else:
         subsample_kwargs['sample_num__in'] = [int(x) for x in sample_num.split(',')]
     print(subsample_kwargs)

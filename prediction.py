@@ -602,7 +602,7 @@ def parse():
                         filter_kwargs = treatment['filter_kwargs']
                         exclude_kwargs = treatment['exclude_kwargs']
                         if args.sample_num is None:
-                            filter_kwargs['sample_num'] = 0
+                            filter_kwargs['sample_num__in'] = [0,1,2]
                         else:
                             filter_kwargs['sample_num__in'] = args.sample_num.split(
                                 ',')
