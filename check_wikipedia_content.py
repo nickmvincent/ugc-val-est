@@ -750,17 +750,8 @@ def test(num=500):
                     except:
                         print('^^ rev missing...')
                     break
-                # for dja_link in post.wiki_links.all():
-                #     all_links = WikiLink.objects.filter(title=dja_link.title)
-                #     for link in all_links:
-                #         revs = Revision.objects.filter(wiki_link=link, timestamp__gte=week_before_post, timestamp__lte=week_after_post)
-                #         if link.id == dja_link.id:
-                #             print('**' + link.url,'|',revs.count())
-                #         else:
-                #             print(link.url, '|', revs.count())
             if after_count != post.num_edits:
                 n_err += 1
-                # print_links(post)
                 print('after', after_count, '|', post.num_edits, post.timestamp)
                 for rev in revisions:
                     print(rev)
@@ -773,22 +764,13 @@ def test(num=500):
                     except:
                         print('^^ rev missing...')
                     break
-                # for dja_link in post.wiki_links.all():
-                #     all_links = WikiLink.objects.filter(title=dja_link.title)
-                #     for link in all_links:
-                #         revs = Revision.objects.filter(wiki_link=link, timestamp__gte=week_before_post, timestamp__lte=week_after_post)
-                #         if link.id == dja_link.id:
-                #             print('**' + link.url, '|', revs.count())
-                #         else:
-                #             print(link.url, '|', revs.count())
             num_wiki_pageviews_prev_week = post.num_wiki_pageviews_prev_week if post.num_wiki_pageviews_prev_week else 0
             num_wiki_pageviews = post.num_wiki_pageviews if post.num_wiki_pageviews else 0
             if before_pageviews != num_wiki_pageviews_prev_week:
                 n_err += 1
                 print('error with before pageviews', before_pageviews, num_wiki_pageviews_prev_week)
                 print(post.timestamp)
-            #else:
-                #print(num_wiki_pageviews_prev_week, links)
+
             if after_pageviews != num_wiki_pageviews:
                 n_err += 1
                 print('error with after pageviews', after_pageviews, num_wiki_pageviews)

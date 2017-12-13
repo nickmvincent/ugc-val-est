@@ -134,7 +134,7 @@ def causal_inference(
             'subset': num_rows if num_rows else 'All',
             'db': db_name,
             'trim_val': trim_val,
-            'samples': sample_num if sample_num else 0
+            'samples': sample_num if sample_num else '0,1,2'
         })
         field_names = features + outcomes
         rows = qs.values_list(*field_names)
