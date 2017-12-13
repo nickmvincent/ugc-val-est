@@ -836,7 +836,7 @@ def parse():
     )
     args = parser.parse_args()
     if args.fix_27:
-        filtered = SampledStackOverflowPost.objects.filter(body__contains: WIK}).filter(body__contains: '&#39')
+        filtered = SampledStackOverflowPost.objects.filter(body__contains=WIK).filter(body__contains='&#39')
         print('Found {} with wiki links and &#39'.format(len(filtered)))
         identify_links(filtered, 'body')
         retrieve_links_info(filtered, SampledStackOverflowPost)
