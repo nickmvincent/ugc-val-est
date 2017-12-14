@@ -312,7 +312,7 @@ def print_potential_wikilinks():
     qs_r = SampledRedditThread.objects.filter(url__contains='wikipedia.org/wiki/')
     qs_s = SampledStackOverflowPost.objects.filter(body__contains='wikipedia.org/wiki/')
     url_list = []
-    for index, qs in [qs_r, qs_s]:
+    for index, qs in enumerate([qs_r, qs_s]):
         print('===')
         print(len(qs))
         for post in qs:
