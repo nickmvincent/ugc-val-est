@@ -306,11 +306,11 @@ def check_dupe_wikilinks():
             cache[obj.uid] = True
     print(count)
 
-
+WIK = 'wikipedia.org/wiki/'
 def print_potential_wikilinks():
     from url_helpers import extract_urls
-    qs_r = SampledRedditThread.objects.filter(url__contains='wikipedia.org/wiki/')
-    qs_s = SampledStackOverflowPost.objects.filter(body__contains='wikipedia.org/wiki/')
+    qs_r = SampledRedditThread.objects.filter(url__contains=WIK)
+    qs_s = SampledStackOverflowPost.objects.filter(body__contains=WIK)
     url_list = []
     for index, qs in enumerate([qs_r, qs_s]):
         print('===')
