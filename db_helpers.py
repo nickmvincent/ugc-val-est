@@ -321,7 +321,7 @@ def print_potential_wikilinks():
         for post in qs:
             urls = extract_urls(post.body, WIK) if index == 1 else [post.url]
             for url in urls:
-                if 'File:' in url or 'File%3a' in url:
+                if 'File:' in url or 'File%3a' in url or 'File%3A' in url:
                     continue
                 if 'www.google' in url:
                     continue
