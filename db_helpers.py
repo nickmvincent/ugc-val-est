@@ -309,8 +309,11 @@ def check_dupe_wikilinks():
 WIK = 'wikipedia.org/wiki/'
 def print_potential_wikilinks():
     from url_helpers import extract_urls
-    qs_r = SampledRedditThread.objects.filter(url__contains=WIK, has_wiki_link=False)
-    qs_s = SampledStackOverflowPost.objects.filter(body__contains=WIK, has_wiki_link=False)
+    import csv
+    qs_r = SampledRedditThread.objects.filter(
+        url__contains=WIK, has_wiki_link=False, sample_num__in=[0,1,2])
+    qs_s = SampledStackOverflowPost.objects.filter(
+        body__contains=WIK, has_wiki_link=False, sample_num__in=[0,1,2])
     url_list = []
     for index, qs in enumerate([qs_r, qs_s]):
         print('===')
@@ -318,7 +321,9 @@ def print_potential_wikilinks():
         for post in qs:
             urls = extract_urls(post.body, WIK) if index == 1 else [post.url]
             for url in urls:
-                if 'File:' in url:
+                if 'File:' in url or 'File%3a:
+                    continue
+                if 'www.google' in url:
                     continue
                 else:
                     print(url)
