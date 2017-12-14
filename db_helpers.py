@@ -312,10 +312,11 @@ def print_potential_wikilinks():
     qs_r = SampledRedditThread.objects.filter(url__contains='wikipedia.org/wiki/')
     qs_s = SampledStackOverflowPost.objects.filter(body__contains='wikipedia.org/wiki/')
     url_list = []
-    for qs in [qs_r, qs_s]:
+    for index, qs in [qs_r, qs_s]:
         print('===')
+        print(len(qs))
         for post in qs:
-            urls = extract_urls(post.body, WIK) if field == 'body' else [post.url]
+            urls = extract_urls(post.body, WIK) if index == 1 else [post.url]
             for url in urls:
                 if 'File:' in url:
                     continue
