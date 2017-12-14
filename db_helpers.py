@@ -321,13 +321,14 @@ def print_potential_wikilinks():
         for post in qs:
             urls = extract_urls(post.body, WIK) if index == 1 else [post.url]
             for url in urls:
-                if 'File:' in url or 'File%3a':
+                if 'File:' in url or 'File%3a' in url:
                     continue
                 if 'www.google' in url:
                     continue
                 else:
                     print(url)
                     url_list.append(url)
+    print(len(url_list))
     with open('url_list.csv', 'w', newline='') as outfile:
         writer = csv.writer(outfile)
         writer.writerows(url_list)
