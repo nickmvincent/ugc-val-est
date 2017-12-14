@@ -1,0 +1,4 @@
+What about SO articles w/ multiple Wikipedia links?
+    Sum the number of Wikipedia pageviews.
+    Sum the number of Wikipedia edits.
+    Pick the highest quality article for determining the "article quality".

@@ -307,6 +307,26 @@ def check_dupe_wikilinks():
     print(count)
 
 
+def print_potential_wikilinks():
+    from url_helpers import extract_urls
+    qs_r = SampledRedditThread.objects.filter(url__contains='wikipedia.org/wiki/')
+    qs_s = SampledStackOverflowPost.objects.filter(body__contains='wikipedia.org/wiki/')
+    url_list = []
+    for qs in [qs_r, qs_s]:
+        print('===')
+        for post in qs:
+            urls = extract_urls(post.body, WIK) if field == 'body' else [post.url]
+            for url in urls:
+                if 'File:' in url:
+                    continue
+                else:
+                    print(url)
+                    url_list.append(url)
+    with open('url_list.csv', 'w', newline='') as outfile:
+        writer = csv.writer(outfile)
+        writer.writerows(url_list)
+    
+
 
 
 if __name__ == "__main__":
@@ -353,3 +373,5 @@ if __name__ == "__main__":
             check_dupe_wikilinks()
         elif sys.argv[1] == 'clear_pre2016_so_pageviews':
             clear_pre2016_so_pageviews()
+        elif sys.argv[1] == 'print_potential_wikilinks':
+            print_potential_wikilinks()
