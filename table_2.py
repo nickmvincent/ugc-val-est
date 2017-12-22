@@ -1,3 +1,4 @@
+import os
 import numpy as np
 from scipy import stats
 
@@ -9,6 +10,7 @@ def main():
         'has_wiki_link': True,
         'day_of_avg_score__isnull': False,
         'week_after_avg_score__isnull': False,
+        'sample_num__in': [0,1,2],
     }
     qsr = SampledRedditThread.objects.filter(**kwargs)
     qss = SampledStackOverflowPost.objects.filter(**kwargs)
@@ -19,6 +21,7 @@ def main():
         vals_r = qsr.values_list(var, flat=True)
         vals_s = qss.values_list(var, flat=True)
         print('Variable is', var)
+        print(len(vals_r), len(vals_s))
         print('Mean for Reddit is', np.mean(vals_r))
         print('Mean for SO is', np.mean(vals_s))
 

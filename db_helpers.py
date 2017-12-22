@@ -331,7 +331,8 @@ def print_potential_wikilinks():
     print(len(url_list))
     with open('url_list.csv', 'w', newline='') as outfile:
         writer = csv.writer(outfile)
-        writer.writerows([url_list])
+        for url in url_list:
+            writer.writerow([url])
     
 
 
