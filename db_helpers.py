@@ -334,18 +334,25 @@ def print_potential_wikilinks():
         for url in url_list:
             writer.writerow([url])
 
+    # write out links that had a 
+
     qs_r = SampledRedditThread.objects.filter(
         has_wiki_link=True, day_of_avg_score__isnull=True, sample_num__in=[0,1,2])
     qs_s = SampledStackOverflowPost.objects.filter(
         has_wiki_link=True, day_of_avg_score__isnull=True, sample_num__in=[0,1,2])
     has_link_but_no_ores = []
+    err = defaultdict(int)
     for index, qs in enumerate([qs_r, qs_s]):
         for post in qs:
             urls = extract_urls(post.body, WIK) if index == 1 else [post.url]
-            has_link_but_no_ores.append(urls)
+            if post.wiki_content_error == 0:
+                has_link_but_no_ores.append(urls)
+            else:
+                errs[post.wiki_content_error] += 1
     with open('has_link_but_no_ores.csv', 'w', newline='') as outfile:
         writer = csv.writer(outfile)
         writer.writerows(has_link_but_no_ores)
+    print(errs)
             
 
 
