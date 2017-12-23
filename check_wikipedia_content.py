@@ -270,6 +270,7 @@ def get_scores_for_posts(posts, session):
                 rev.score = map_ores_code_to_int(predicted_code)
             except KeyError:
                 print('KeyError')
+                print(scores)
                 rev.err_code = 4  # missingOresResponse
             rev.save()
         completed += len(revbatch)
