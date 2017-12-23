@@ -341,7 +341,7 @@ def print_potential_wikilinks():
     qs_s = SampledStackOverflowPost.objects.filter(
         has_wiki_link=True, day_of_avg_score__isnull=True, sample_num__in=[0,1,2])
     has_link_but_no_ores = []
-    err = defaultdict(int)
+    errs = defaultdict(int)
     for index, qs in enumerate([qs_r, qs_s]):
         for post in qs:
             urls = extract_urls(post.body, WIK) if index == 1 else [post.url]
