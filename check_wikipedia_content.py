@@ -9,6 +9,7 @@ import time
 import argparse
 from collections import defaultdict
 
+
 from urllib.parse import unquote
 from itertools import zip_longest
 from json.decoder import JSONDecodeError
@@ -917,6 +918,8 @@ if __name__ == "__main__":
     import django
     from django.db.utils import IntegrityError
     from django.core.mail import send_mail
+    from django.db import models
+
     from dja import settings
     django.setup()
     from portal.models import (
