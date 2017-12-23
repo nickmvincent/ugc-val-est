@@ -799,6 +799,18 @@ def get_scores_only(model):
     retrieve_scores(session, model)
 
 
+def rerun_all_scores(model):
+    session = requests.Session()
+    session.headers.update(
+        USER_AGENT)
+    all_posts = model.objects.filter(
+        has_wiki_link=True
+    )
+    print('About to get scores for {} posts'.format(len(all_posts)))
+    get_scores_for_posts(all_posts, session)
+
+
+
 def parse():
     """
     Parse args and do the appropriate analysis
@@ -821,6 +833,9 @@ def parse():
         help='number of items to test')
     parser.add_argument(
         '--get_scores_only', action='store_true', default=False,
+        help='test')
+    parser.add_argument(
+        '--rerun_all_scores', action='store_true', default=False,
         help='test')
     parser.add_argument(
         '--recalc_pageviews', action='store_true', default=False,
@@ -849,6 +864,9 @@ def parse():
     elif args.get_scores_only:
         for model in [SampledRedditThread, SampledStackOverflowPost]:
             get_scores_only(model)
+    elif args.rerun_all_scores:
+        for model in [SampledRedditThread, SampledStackOverflowPost]:
+            rerun_all_scores(model)
     elif args.recalc_pageviews:
         posts = SampledRedditThread.objects.filter(has_wiki_link=True, sample_num__in=[0,1,2],
            # timestamp__gte=datetime.datetime(year=2015, month=7, day=1),
