@@ -236,7 +236,10 @@ def get_scores_for_posts(posts, session):
             if dja_link.language_code != 'en':
                 print('skipping non english version')
                 continue
-            all_possible_links = WikiLink.objects.filter(title=dja_link.title)
+            # all_possible_links = WikiLink.objects.filter(title=dja_link.title)
+            all_possible_links = WikiLink.objects.filter(
+                models.Q(title__in=[dja_link.title, dja_link.alt_title]) | models.Q(alt_title__in=[dja_link.title, dja_link.alt_title])
+            )
             dja_revs = Revision.objects.filter(wiki_link__in=all_possible_links)
             try:
                 for timestamp in [post.timestamp, post.timestamp + datetime.timedelta(days=7)]:
@@ -244,6 +247,7 @@ def get_scores_for_posts(posts, session):
                     if closest_rev.score is None:
                         revid_to_rev[closest_rev.revid] = closest_rev
             except IndexError:
+                print('IndexError')
                 continue
         ores_context = 'en' + 'wiki'
     counter, start = 0, time.time()
@@ -264,6 +268,7 @@ def get_scores_for_posts(posts, session):
                 predicted_code = scores[str(revid)]['wp10']['score']['prediction']
                 rev.score = map_ores_code_to_int(predicted_code)
             except KeyError:
+                print('KeyError')
                 rev.err_code = 4  # missingOresResponse
             rev.save()
         completed += len(revbatch)
