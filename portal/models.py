@@ -358,6 +358,9 @@ class Post(models.Model):
 
         if self.has_wiki_link and self.wiki_content_error == 0:
             self.reset_edit_metrics()
+            self.has_good_wiki_link = False
+            self.has_b_wiki_link = False
+            self.has_c_wiki_link = False
             field_to_dt = {
                 'day_of': self.timestamp,
                 'week_after': self.timestamp + datetime.timedelta(days=7),

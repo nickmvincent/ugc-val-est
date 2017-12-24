@@ -122,26 +122,24 @@ def bulk_save_rev():
     qs = Revision.objects.filter(user_retained_180=True)
     print(qs.count())
 
-def link_save():
+def save_links_and_posts():
     """
     Runs through all the rows and re-saves to trigger
     computation
     """
-    # for link in WikiLink.objects.all():
-    #     link.save()
-    print('link_save')
-    if 'reddit' in sys.argv:
-        reddit = SampledRedditThread.objects.filter(has_wiki_link=True, sample_num__in=[0,1,2]).order_by('uid')
-        for start, end, total, batch in batch_qs(reddit):
-            print('reddit', start, end, total)
-            for item in batch:
-                item.save()
-    if 'so' in sys.argv:
-        stack = SampledStackOverflowPost.objects.filter(has_wiki_link=True, sample_num__in=[0,1,2]).order_by('uid')
-        for start, end, total, batch in batch_qs(stack):
-            print('stack', start, end, total)
-            for item in batch:
-                item.save()
+    for link in WikiLink.objects.all():
+        link.save()
+    print('save_links_and_posts')
+    reddit = SampledRedditThread.objects.filter(has_wiki_link=True, sample_num__in=[0,1,2]).order_by('uid')
+    for start, end, total, batch in batch_qs(reddit):
+        print('reddit', start, end, total)
+        for item in batch:
+            item.save()
+    stack = SampledStackOverflowPost.objects.filter(has_wiki_link=True, sample_num__in=[0,1,2]).order_by('uid')
+    for start, end, total, batch in batch_qs(stack):
+        print('stack', start, end, total)
+        for item in batch:
+            item.save()
 
 def sample_articles():
     """Prints out a sample of URLs to text file"""
@@ -385,8 +383,8 @@ if __name__ == "__main__":
             bulk_save()
         elif sys.argv[1] == 'bulk_save_rev':
             bulk_save_rev()
-        elif sys.argv[1] == 'link_save':
-            link_save()
+        elif sys.argv[1] == 'save_links_and_posts':
+            save_links_and_posts()
         elif sys.argv[1] == 'clear_json2db':
             clear_json2db()
         elif sys.argv[1] == 'show_missing_errors':
