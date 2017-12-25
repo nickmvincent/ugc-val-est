@@ -805,7 +805,7 @@ def rerun_all_scores(model):
     session.headers.update(
         USER_AGENT)
     all_posts = model.objects.filter(
-        has_wiki_link=True, has_c_wiki_link=False,
+        has_wiki_link=True, has_c_wiki_link=True,
     )
     print('About to get scores for {} posts'.format(len(all_posts)))
     get_scores_for_posts(all_posts, session)
@@ -867,7 +867,7 @@ def parse():
             get_scores_only(model)
     elif args.rerun_all_scores:
         for model in [
-            # SampledRedditThread,
+            SampledRedditThread,
             SampledStackOverflowPost
         ]:
             rerun_all_scores(model)

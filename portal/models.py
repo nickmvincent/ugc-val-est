@@ -458,7 +458,6 @@ class Post(models.Model):
                         closest_rev = get_closest_to(prev_revisions, self.timestamp)
                         ores_score = closest_rev.score
                         if ores_score:
-                            print('Fixing missing score where revision did not fall within a 2 week period')
                             if ores_score >= 4:
                                 self.has_good_wiki_link = True
                             if ores_score >= 3:
@@ -467,8 +466,6 @@ class Post(models.Model):
                                 self.has_c_wiki_link = True
                             field_to_score['day_of'] += ores_score
                             field_to_score['week_after'] += ores_score
-                        else:
-                            print('Tried to fix missing score but failed... that is an error...')
             if num_links:
                 # the fields used in this comprehension are day_of and week_after
                 output_field_to_val = {
