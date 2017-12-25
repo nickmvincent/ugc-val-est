@@ -467,6 +467,8 @@ class Post(models.Model):
                                 self.has_c_wiki_link = True
                             field_to_score['day_of'] += ores_score
                             field_to_score['week_after'] += ores_score
+                        else:
+                            print('Tried to fix missing score but failed... that is an error...')
             if num_links:
                 # the fields used in this comprehension are day_of and week_after
                 output_field_to_val = {
