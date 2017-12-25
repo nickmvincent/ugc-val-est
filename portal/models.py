@@ -455,7 +455,7 @@ class Post(models.Model):
                     # but that revision didn't fall within a 2 week period
                     prev_revisions = Revision.objects.filter(
                         wiki_link__in=all_possible_links,
-                        timestamp_lte=starttime
+                        timestamp__lte=starttime
                     )
                     if prev_revisions.exists():
                         rev = prev_revisions[0]
