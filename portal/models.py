@@ -361,6 +361,8 @@ class Post(models.Model):
             self.has_good_wiki_link = False
             self.has_b_wiki_link = False
             self.has_c_wiki_link = False
+            self.day_of_avg_score = None
+            self.week_after_avg_score = None
             field_to_dt = {
                 'day_of': self.timestamp,
                 'week_after': self.timestamp + datetime.timedelta(days=7),
@@ -378,6 +380,8 @@ class Post(models.Model):
                 revisions = Revision.objects.filter(
                     wiki_link__in=all_possible_links,
                     timestamp__gte=starttime, timestamp__lte=endtime)
+
+                
                 if revisions.exists():
                     for field, dt in field_to_dt.items():
                         ores_score = get_closest_to(
@@ -446,6 +450,26 @@ class Post(models.Model):
                                 self.num_minor_edits_prev_week += 1
                             else:
                                 self.num_major_edits_prev_week += 1
+                else:
+                    # we need to account for all the revisions that have a "good revision",
+                    # but that revision didn't fall within a 2 week period
+                    prev_revisions = Revision.objects.filter(
+                        wiki_link__in=all_possible_links,
+                        timestamp_lte=starttime
+                    )
+                    if prev_revisions.exists():
+                        rev = prev_revisions[0]
+                        ores_score = rev.score
+                        if ores_score >= 4:
+                            self.has_good_wiki_link = True
+                        if ores_score >= 3:
+                            self.has_b_wiki_link = True
+                        if ores_score >= 2:
+                            self.has_c_wiki_link = True
+                        self.day_of_avg_score = ores_score
+                        self.week_after_avg_score = ores_score
+                    
+
             if num_links:
                 # the fields used in this comprehension are day_of and week_after
                 output_field_to_val = {

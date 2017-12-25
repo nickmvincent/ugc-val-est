@@ -370,6 +370,9 @@ def check_on_revisions():
     print(no_timestamps[:5])    
 
 
+def quality_distribution():
+    qs_good= SampledStackOverflowPost.objects.filter()
+
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dja.settings")
