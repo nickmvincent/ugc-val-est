@@ -1,4 +1,3 @@
-python db_helpers.py save_links_and_posts
 python db_helpers.py print_potential_wikilinks
 
 

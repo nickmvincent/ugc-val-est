@@ -417,3 +417,7 @@ if __name__ == "__main__":
             clear_pre2016_so_pageviews()
         elif sys.argv[1] == 'print_potential_wikilinks':
             print_potential_wikilinks()
+        elif sys.argv[1] == 'clean_db_then_delete':
+            clean_db_then_delete()
+        elif sys.argv[1] == 'check_on_revisions':
+            check_on_revisions() 
