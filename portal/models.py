@@ -460,16 +460,15 @@ class Post(models.Model):
                     if prev_revisions.exists():
                         rev = prev_revisions[0]
                         ores_score = rev.score
-                        if ores_score >= 4:
-                            self.has_good_wiki_link = True
-                        if ores_score >= 3:
-                            self.has_b_wiki_link = True
-                        if ores_score >= 2:
-                            self.has_c_wiki_link = True
-                        self.day_of_avg_score = ores_score
-                        self.week_after_avg_score = ores_score
-                    
-
+                        if ores_score:
+                            if ores_score >= 4:
+                                self.has_good_wiki_link = True
+                            if ores_score >= 3:
+                                self.has_b_wiki_link = True
+                            if ores_score >= 2:
+                                self.has_c_wiki_link = True
+                            field_to_score['day_of'] += ores_score
+                            field_to_score['week_after'] += ores_score
             if num_links:
                 # the fields used in this comprehension are day_of and week_after
                 output_field_to_val = {
