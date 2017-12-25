@@ -237,6 +237,8 @@ def get_scores_for_posts(posts, session):
             if dja_link.language_code != 'en':
                 print('skipping non english version')
                 continue
+            print(dja_link.url)
+            print(dja_link.title)
             # all_possible_links = WikiLink.objects.filter(title=dja_link.title)
             all_possible_links = WikiLink.objects.filter(
                 models.Q(title__in=[dja_link.title, dja_link.alt_title]) | models.Q(alt_title__in=[dja_link.title, dja_link.alt_title])

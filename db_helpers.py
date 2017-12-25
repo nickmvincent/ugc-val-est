@@ -353,9 +353,21 @@ def print_potential_wikilinks():
     print(errs)
             
 
+def clean_db_then_delete():
+    qsr = SampledRedditThread.objects.filter(sample_num=3)
+    qss = SampledStackOverflowPost.objects.filter(sample_num=3)
+    qrs.delete()
+    qss.delete()
 
-    
-    
+
+def check_on_revisions():
+    no_users = Revision.objects.filter(user__isnull=True)
+    print('There are {} revs with null user field'.format(len(no_users)))
+    print(no_users[:5])
+
+    no_timestamps = Revision.objects.filter(timestamp__isnull=True)
+    print('There are {} revs with null timestamp field'.format(len(no_timestamps)))
+    print(no_timestamps[:5])    
 
 
 
