@@ -230,12 +230,12 @@ def get_scores_for_posts(posts, session):
     """Gets two scores for posts passed in"""
     ores_ep_template = 'https://ores.wikimedia.org/v3/scores/{context}?models=wp10&revids={revids}'
     revid_to_rev = {}
+    index_errs = []
     print('Collecting revids for {} posts'.format(len(posts)))
     for post in posts:
         dja_links = post.wiki_links.all()
         for dja_link in dja_links:
             if dja_link.language_code != 'en':
-                print('skipping non english version')
                 continue
             all_possible_links = WikiLink.objects.filter(
                 models.Q(title__in=[dja_link.title, dja_link.alt_title]) | models.Q(alt_title__in=[dja_link.title, dja_link.alt_title])
@@ -247,9 +247,10 @@ def get_scores_for_posts(posts, session):
                     if closest_rev.score is None:
                         revid_to_rev[closest_rev.revid] = closest_rev
             except IndexError:
-                print('IndexError')
+                index_errs += dja_link.title
                 continue
         ores_context = 'en' + 'wiki'
+    print('done collecting revids, there were {} index errs'.format(len(index_errs)))
     counter, start = 0, time.time()
     completed = 0
     num_revs = len(revid_to_rev.keys())
@@ -799,11 +800,12 @@ def get_scores_only(model):
 
 
 def rerun_all_scores(model):
+    # temporarily modifeid to only do bad ones
     session = requests.Session()
     session.headers.update(
         USER_AGENT)
     all_posts = model.objects.filter(
-        has_wiki_link=True
+        has_wiki_link=True, has_c_wiki_link=False,
     )
     print('About to get scores for {} posts'.format(len(all_posts)))
     get_scores_for_posts(all_posts, session)
