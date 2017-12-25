@@ -380,8 +380,6 @@ class Post(models.Model):
                 revisions = Revision.objects.filter(
                     wiki_link__in=all_possible_links,
                     timestamp__gte=starttime, timestamp__lte=endtime)
-
-                
                 if revisions.exists():
                     for field, dt in field_to_dt.items():
                         ores_score = get_closest_to(
@@ -454,13 +452,13 @@ class Post(models.Model):
                     # we need to account for all the revisions that have a "good revision",
                     # but that revision didn't fall within a 2 week period
                     prev_revisions = Revision.objects.filter(
-                        wiki_link__in=all_possible_links,
-                        timestamp__lte=starttime
+                        wiki_link__in=all_possible_links
                     )
                     if prev_revisions.exists():
-                        rev = prev_revisions[0]
-                        ores_score = rev.score
+                        closest_rev = get_closest_to(prev_revisions, self.timestamp)
+                        ores_score = closest_rev.score
                         if ores_score:
+                            print('Fixing missing score where revision did not fall within a 2 week period')
                             if ores_score >= 4:
                                 self.has_good_wiki_link = True
                             if ores_score >= 3:
