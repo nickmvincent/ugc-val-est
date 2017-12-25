@@ -357,7 +357,7 @@ def print_potential_wikilinks():
 def clean_db_then_delete():
     qsr = SampledRedditThread.objects.filter(sample_num=3)
     qss = SampledStackOverflowPost.objects.filter(sample_num=3)
-    qrs.delete()
+    qsr.delete()
     qss.delete()
 
 
