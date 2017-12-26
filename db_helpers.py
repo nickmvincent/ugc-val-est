@@ -127,9 +127,9 @@ def save_links_and_posts():
     Runs through all the rows and re-saves to trigger
     computation
     """
-    # print('saving links... (slow)')
-    # for link in WikiLink.objects.all():
-    #     link.save()
+    print('saving links... (slow)')
+    for link in WikiLink.objects.all():
+        link.save()
     print('saving posts... (slow)')
     reddit = SampledRedditThread.objects.filter(has_wiki_link=True, sample_num__in=[0,1,2]).order_by('uid')
     for start, end, total, batch in batch_qs(reddit):
