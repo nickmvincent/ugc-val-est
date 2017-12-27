@@ -1,1 +1,0 @@
-Should note that links to media on WP were not included (i.e. image files)
