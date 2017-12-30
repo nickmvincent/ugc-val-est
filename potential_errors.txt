@@ -69,6 +69,9 @@ Change in edits for low quality articles
 
 
 
+Every revision has it "retention" calculated (did the user who made the revision make another post +1 month later and +6 months later?)
+But only the revisions that are marked as "gained" (because the registration took place AFTER the start of the analysis week) will be included in the editors that are marked as "retained" 
+
 
 
 
