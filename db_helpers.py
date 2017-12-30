@@ -239,9 +239,9 @@ def mark_top_answers():
 def quick_helper():
     links = WikiLink.objects.all().order_by('?')[:10]
     for link in links:
-        print(url)
-        print(title)
-        print(alt_title)
+        print(link.url)
+        print(link.title)
+        print(link.alt_title)
     
     
 
