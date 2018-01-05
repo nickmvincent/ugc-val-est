@@ -350,14 +350,15 @@ class Post(models.Model):
                 except TypeError:
                     self.title_coleman_liau_index = 0
             # TODO DELETE THIS ASAP
-            super(Post, self).save(*args, **kwargs)
-            return
+            
             if self.title_includes_question_mark is False:
                 if '?' in self.title:
                     self.title_includes_question_mark = True
             blob = TextBlob(self.title)
             self.title_sentiment_polarity = blob.sentiment.polarity * 100
             self.title_sentiment_subjectivity = blob.sentiment.subjectivity * 100
+        super(Post, self).save(*args, **kwargs)
+        return
 
         if self.has_wiki_link and self.wiki_content_error == 0:
             self.reset_edit_metrics()
