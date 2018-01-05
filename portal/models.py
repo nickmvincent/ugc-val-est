@@ -349,6 +349,9 @@ class Post(models.Model):
                     ))
                 except TypeError:
                     self.title_coleman_liau_index = 0
+            # TODO DELETE THIS ASAP
+            super(Post, self).save(*args, **kwargs)
+            return
             if self.title_includes_question_mark is False:
                 if '?' in self.title:
                     self.title_includes_question_mark = True

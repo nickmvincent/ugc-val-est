@@ -90,11 +90,11 @@ def bulk_save():
         print('reddit', start, end, total, time.time() - start_time)
         for item in batch:
             item.save()
-    start = time.time()
-    for start, end, total, batch in batch_qs(stack, batch_size=10000):
-        print('stack', start, end, total, time.time() - start_time)
-        for item in batch:
-            item.save()
+    # start = time.time()
+    # for start, end, total, batch in batch_qs(stack, batch_size=10000):
+    #     print('stack', start, end, total, time.time() - start_time)
+    #     for item in batch:
+    #         item.save()
 
 
 def bulk_save_rev():
