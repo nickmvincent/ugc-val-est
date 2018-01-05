@@ -325,9 +325,9 @@ class Post(models.Model):
             self.title_length = len(self.title)
         if self.title_length != 0:
             if self.title_lexicon_count == 0:
-                self.title_lexicon_count = textstat.lexicon_count(self.body)
+                self.title_lexicon_count = textstat.lexicon_count(self.title)
             if self.title_sentence_count == 0:
-                self.title_sentence_count = textstat.sentence_count(self.body)
+                self.title_sentence_count = textstat.sentence_count(self.title)
             if self.title_percent_uppercase == 0:
                 num_uppers = sum(1 for c in self.title if c.isupper())
                 self.title_percent_uppercase = round(

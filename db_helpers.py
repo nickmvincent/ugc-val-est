@@ -108,20 +108,20 @@ def save_links_and_posts():
     Runs through all the rows and re-saves to trigger
     computation
     """
-    print('saving links... (slow)')
-    for link in WikiLink.objects.all():
-        link.save()
+    # print('saving links... (slow)')
+    # for link in WikiLink.objects.all():
+    #     link.save()
     print('saving posts... (slow)')
     reddit = SampledRedditThread.objects.filter(has_wiki_link=True, sample_num__in=[0,1,2]).order_by('uid')
     for start, end, total, batch in batch_qs(reddit):
         print('reddit', start, end, total)
         for item in batch:
             item.save()
-    stack = SampledStackOverflowPost.objects.filter(has_wiki_link=True, sample_num__in=[0,1,2]).order_by('uid')
-    for start, end, total, batch in batch_qs(stack):
-        print('stack', start, end, total)
-        for item in batch:
-            item.save()
+    # stack = SampledStackOverflowPost.objects.filter(has_wiki_link=True, sample_num__in=[0,1,2]).order_by('uid')
+    # for start, end, total, batch in batch_qs(stack):
+    #     print('stack', start, end, total)
+    #     for item in batch:
+    #         item.save()
 
 def sample_articles():
     """Prints out a sample of URLs to text file"""

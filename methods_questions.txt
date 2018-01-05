@@ -2,3 +2,6 @@ What about SO articles w/ multiple Wikipedia links?
     Sum the number of Wikipedia pageviews.
     Sum the number of Wikipedia edits.
     Pick the highest quality article for determining the "article quality".
+
+Note that the textstat metrics are not used (sentence count and lexicon count)
+    They are clearly broken based on our validations
