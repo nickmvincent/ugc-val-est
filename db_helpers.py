@@ -68,7 +68,7 @@ def show_samples():
     """Show samples of all posts"""
     out = []
     for model in [SampledRedditThread, SampledStackOverflowPost]:
-        samples1 = model.objects.all(has_wiki_link=False).values()[:5]
+        samples1 = model.objects.filter(has_wiki_link=False).values()[:5]
         samples2 = model.objects.filter(has_wiki_link=True).values()[:5]
         for index, samples in enumerate([samples1, samples2]):
             if index == 0:
