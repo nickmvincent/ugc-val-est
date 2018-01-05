@@ -5,7 +5,7 @@ import os
 import sys
 import time
 from collections import defaultdict
-from pprint import pprint
+from pprint import pprint, pformat
 import datetime
 from queryset_helpers import (
     list_common_features,
@@ -66,14 +66,17 @@ def reset_revision_info():
 
 def show_samples():
     """Show samples of all posts"""
+    out = []
     for model in [SampledRedditThread, SampledStackOverflowPost]:
         samples1 = model.objects.all().values()[:5]
         samples2 = model.objects.filter(has_wiki_link=True).values()[:5]
-        for samples in [samples1, samples2]:
+        for index, samples in enumerate([samples1, samples2]):
             for sample in samples:
-                print(model.__name__)
-                pprint(sample)
-                print('====\n')
+                out.append(model.__name__, index)
+                out.append(pformat(sample))
+                out.append('===')
+    with open('show_samples.txt', 'w') as outfile:
+        outfile.write('\n'.join(out))
 
 
 def bulk_save():
