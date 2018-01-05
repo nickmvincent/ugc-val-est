@@ -66,10 +66,18 @@ def reset_revision_info():
 
 def show_samples():
     """Show samples of all posts"""
+    from queryset_helpers import (
+        list_common_features,
+        list_reddit_specific_features, list_stack_specific_features
+    )
     out = []
     for model in [SampledRedditThread, SampledStackOverflowPost]:
-        samples1 = model.objects.filter(has_wiki_link=False).values()[:5]
-        samples2 = model.objects.filter(has_wiki_link=True).values()[:5]
+        if model == SampledRedditThread:
+            feats = list_common_features() +  list_reddit_specific_features()
+        else:
+            feats = list_common_features + list_stack_specific_features()
+        samples1 = model.objects.filter(has_wiki_link=False):5]
+        samples2 = model.objects.filter(has_wiki_link=True)[:5]
         for index, samples in enumerate([samples1, samples2]):
             if index == 0:
                 x = 'No WP link'
@@ -77,9 +85,10 @@ def show_samples():
                 x = 'Has WP link'
 
             for sample in samples:
-                out.append(model.__name__ + '' + x)
-                out.append(pformat(sample))
-                out.append('===')
+                out.append(model.__name__ + ' ' + x)
+                for feat in feats:
+                    out.append('{}, {}'.format(feat, sample.getattr(feat)))
+                out.append('===\n')
     with open('show_samples.txt', 'w') as outfile:
         outfile.write('\n'.join(out))
 
