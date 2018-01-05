@@ -68,11 +68,11 @@ def show_samples():
     """Show samples of all posts"""
     out = []
     for model in [SampledRedditThread, SampledStackOverflowPost]:
-        samples1 = model.objects.all().values()[:5]
-        samples2 = model.objects.filter(has_wiki_link=True).values()[:5]
+        samples1 = model.objects.all().values()[:2]
+        samples2 = model.objects.filter(has_wiki_link=True).values()[:2]
         for index, samples in enumerate([samples1, samples2]):
             for sample in samples:
-                out.append(model.__name__, index)
+                out.append(model.__name__ + str(index))
                 out.append(pformat(sample))
                 out.append('===')
     with open('show_samples.txt', 'w') as outfile:
