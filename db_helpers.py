@@ -15,20 +15,6 @@ from queryset_helpers import (
 import pytz
 
 
-def clear_fixed_errors():
-    """one off script"""
-    count = 0
-    for obj in ErrorLog.objects.all():
-        if (
-            SampledRedditThread.objects.filter(uid=obj.uid).exists() or
-            SampledStackOverflowPost.objects.filter(uid=obj.uid).exists()):
-            obj.delete()
-            count += 1
-    print('Deleted', count)
-    for obj in ErrorLog.objects.all():
-        print(obj)
-        input()
-
 def show_missing_errors():
     """one off script"""
     counter = defaultdict(int)
@@ -78,13 +64,6 @@ def reset_revision_info():
     ErrorLog.objects.all().delete()
 
 
-def fix_bad_registration_time():
-    fixed_time = datetime.datetime(year=2017, month=5, day=1).astimezone(pytz.UTC)
-    Revision.objects.filter(registration__gte=fixed_time).update(
-        registration=None
-    )
-
-
 def show_samples():
     """Show samples of all posts"""
     for model in [SampledRedditThread, SampledStackOverflowPost]:
@@ -95,7 +74,6 @@ def show_samples():
                 print(model.__name__)
                 pprint(sample)
                 print('====\n')
-
 
 
 def bulk_save():
@@ -209,12 +187,6 @@ def extract_pairs(first, second):
         outfile.write(treated_output)
         outfile.write(control_output)
 
-def clear_pre2016_so_pageviews():
-    cutoff = datetime.datetime(year=2015, day=1, month=7, hour=0, minute=0, second=0)
-    qs = SampledStackOverflowPost.objects.filter(timestamp__lt=cutoff)
-    qs.update(num_wiki_pageviews=None, num_wiki_pageviews_prev_week=None)
-
-
 
 def mark_top_answers():
     """marks top answers"""
@@ -236,14 +208,12 @@ def mark_top_answers():
                 print('MISSING QUESTION UH OH')
 
 
-def quick_helper():
+def print_link_titles_and_redirects():
     links = WikiLink.objects.all().order_by('?')[:10]
     for link in links:
         print(link.url)
         print(link.title)
         print(link.alt_title)
-    
-    
 
 
 def check_dupe_wikilinks():
@@ -334,11 +304,8 @@ def print_potential_wikilinks():
     print(errs)
             
 
-def clean_db_then_delete():
-    qsr = SampledRedditThread.objects.filter(sample_num=3)
-    qss = SampledStackOverflowPost.objects.filter(sample_num=3)
-    qsr.delete()
-    qss.delete()
+def clean_then_delete():
+    ErrorLog.objects.delete()
 
 
 def check_on_revisions():
@@ -349,10 +316,6 @@ def check_on_revisions():
     no_timestamps = Revision.objects.filter(timestamp__isnull=True)
     print('There are {} revs with null timestamp field'.format(len(no_timestamps)))
     print(no_timestamps[:5])    
-
-
-def quality_distribution():
-    qs_good= SampledStackOverflowPost.objects.filter()
 
 
 if __name__ == "__main__":
@@ -401,7 +364,7 @@ if __name__ == "__main__":
             clear_pre2016_so_pageviews()
         elif sys.argv[1] == 'print_potential_wikilinks':
             print_potential_wikilinks()
-        elif sys.argv[1] == 'clean_db_then_delete':
-            clean_db_then_delete()
+        elif sys.argv[1] == 'clean_then_delete':
+            clean_then_delete()
         elif sys.argv[1] == 'check_on_revisions':
             check_on_revisions() 
