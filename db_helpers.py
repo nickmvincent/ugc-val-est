@@ -76,6 +76,7 @@ def show_samples():
             feats = list_common_features() +  list_reddit_specific_features()
         else:
             feats = list_common_features() + list_stack_specific_features()
+        feats = ['title', 'body', 'is_top'] + feats
         samples1 = model.objects.filter(has_wiki_link=False).order_by('?')[:5]
         samples2 = model.objects.filter(has_wiki_link=True).order_by('?')[:5]
         for index, samples in enumerate([samples1, samples2]):

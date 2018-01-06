@@ -1,4 +1,4 @@
-This is a stream-of-consciousness text file for brainstorming errors I need to check on
+This is a list of steps I've taken after finishing the analysis to check for any potential validity errors.
 
 Sampling
     Code review
