@@ -1,13 +1,18 @@
 This is a stream-of-consciousness text file for brainstorming errors I need to check on
 
 Sampling
-    Did multiple rounds of code review
+    Code review
+        Reviewed the sampling code in multiple rounds, and after substantial refactoring
     compare descriptive stats of each sample to actual descriptive stats
+        Did this at multiple stages (first submission, camera ready)
 
 Computing features
+    Code Review
     checked descriptive stats of all features used in PSM
         Smell test - anything weird like an all zero column, etc
         Do mean values make sense (e.g. percents less than 100, binaries less than 1)
+
+    Manually look over some random samples and verify everything is as expected
 
     Potentially problematic:
         dummy variables and singular matrices
@@ -64,8 +69,6 @@ There are some miscellaneous numbers included throughout the text that should be
     Revenue calculations
     Change in edits for low quality articles
 
-Every revision has it "retention" calculated (did the user who made the revision make another post +1 month later and +6 months later?)
-But only the revisions that are marked as "gained" (because the registration took place AFTER the start of the analysis week) will be included in the editors that are marked as "retained" 
 
 
 
