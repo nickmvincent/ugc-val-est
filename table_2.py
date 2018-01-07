@@ -16,7 +16,7 @@ def main():
     qss = SampledStackOverflowPost.objects.filter(**kwargs)
 
     for var in [
-        'num_edits', 'num_edits_prev_week'
+        'num_edits', 'num_edits_prev_week', 
     ]:
         vals_r = qsr.values_list(var, flat=True)
         vals_s = qss.values_list(var, flat=True)

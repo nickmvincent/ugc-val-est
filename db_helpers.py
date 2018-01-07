@@ -75,7 +75,7 @@ def show_samples():
         if model == SampledRedditThread:
             feats = list_common_features() +  list_reddit_specific_features()
         else:
-            feats = list_common_features() + list_stack_specific_features() + ['is_top']
+            feats = list_common_features() + list_stack_specific_features() + ['is_top', 'num_other_answers']
         feats = ['title', 'body'] + feats
         samples1 = model.objects.filter(has_wiki_link=False).order_by('?')[:5]
         samples2 = model.objects.filter(has_wiki_link=True).order_by('?')[:5]
