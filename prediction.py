@@ -342,12 +342,9 @@ def causal_inference(
                 for stratum in causal.strata:
                     val = stratum.summary_stats['sum_of_abs_ndiffs']
                     if np.isnan(val):
-                        print('skipping a stratum bc val was 0')
+                        # could be nan bc STD for a variable was 0
                         continue
                     count = stratum.raw_data['N']
-                    if count == 0:
-                        print('Skipping a stratum bc count N was 0')
-                        continue
                     fraction = count / causal.raw_data['N']
                     w_avg_ndiff += fraction * val
                     w_num_large_ndiffs += fraction * \
