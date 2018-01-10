@@ -1,0 +1,966 @@
+SampledRedditThread No WP link
+title, Put the Stark/Avengers tower in the golden skyline behind Jimmy Fallon
+body, 
+mon, True
+tues, False
+wed, False
+thurs, False
+fri, False
+sat, False
+jan, False
+feb, False
+mar, False
+apr, False
+may, False
+jun, False
+jul, True
+aug, False
+sep, False
+octo, False
+nov, False
+zero_to_six, False
+six_to_twelve, True
+twelve_to_eighteen, False
+seconds_since_user_creation, 9016737
+title_length, 70
+title_percent_uppercase, 7
+title_percent_spaces, 14
+title_percent_punctuation, 0
+title_starts_capitalized, True
+title_coleman_liau_index, 13
+title_includes_question_mark, False
+title_sentiment_polarity, -5
+title_sentiment_subjectivity, 60
+user_comment_karma, 517
+user_link_karma, 708
+user_is_mod, False
+user_is_suspended, False
+user_is_deleted, False
+===
+
+SampledRedditThread No WP link
+title, Bernie Sanders rallies thousands at Seattle’s KeyArena
+body, 
+mon, True
+tues, False
+wed, False
+thurs, False
+fri, False
+sat, False
+jan, False
+feb, False
+mar, True
+apr, False
+may, False
+jun, False
+jul, False
+aug, False
+sep, False
+octo, False
+nov, False
+zero_to_six, False
+six_to_twelve, True
+twelve_to_eighteen, False
+seconds_since_user_creation, 54476608
+title_length, 54
+title_percent_uppercase, 9
+title_percent_spaces, 11
+title_percent_punctuation, 0
+title_starts_capitalized, True
+title_coleman_liau_index, 16
+title_includes_question_mark, False
+title_sentiment_polarity, 0
+title_sentiment_subjectivity, 0
+user_comment_karma, 29
+user_link_karma, 27821
+user_is_mod, True
+user_is_suspended, False
+user_is_deleted, False
+===
+
+SampledRedditThread No WP link
+title, babe showing off her sexy feet
+body, 
+mon, False
+tues, False
+wed, False
+thurs, False
+fri, False
+sat, False
+jan, True
+feb, False
+mar, False
+apr, False
+may, False
+jun, False
+jul, False
+aug, False
+sep, False
+octo, False
+nov, False
+zero_to_six, True
+six_to_twelve, False
+twelve_to_eighteen, False
+seconds_since_user_creation, 138412157
+title_length, 30
+title_percent_uppercase, 0
+title_percent_spaces, 17
+title_percent_punctuation, 0
+title_starts_capitalized, False
+title_coleman_liau_index, 3
+title_includes_question_mark, False
+title_sentiment_polarity, 50
+title_sentiment_subjectivity, 100
+user_comment_karma, 2288
+user_link_karma, 105807
+user_is_mod, True
+user_is_suspended, False
+user_is_deleted, False
+===
+
+SampledRedditThread No WP link
+title, ITAP of a stranger during a foggy night
+body, 
+mon, False
+tues, False
+wed, False
+thurs, False
+fri, True
+sat, False
+jan, False
+feb, False
+mar, False
+apr, False
+may, False
+jun, False
+jul, False
+aug, False
+sep, False
+octo, False
+nov, False
+zero_to_six, False
+six_to_twelve, False
+twelve_to_eighteen, False
+seconds_since_user_creation, 8149886
+title_length, 39
+title_percent_uppercase, 10
+title_percent_spaces, 18
+title_percent_punctuation, 0
+title_starts_capitalized, True
+title_coleman_liau_index, 4
+title_includes_question_mark, False
+title_sentiment_polarity, 0
+title_sentiment_subjectivity, 0
+user_comment_karma, 315
+user_link_karma, 2496
+user_is_mod, False
+user_is_suspended, False
+user_is_deleted, False
+===
+
+SampledRedditThread No WP link
+title, [FREE EVENT] Spiders, Scorpions, Moths and More: Night Hike at Joaquin Miller Park
+body, 
+mon, False
+tues, False
+wed, False
+thurs, False
+fri, False
+sat, False
+jan, False
+feb, False
+mar, False
+apr, False
+may, False
+jun, True
+jul, False
+aug, False
+sep, False
+octo, False
+nov, False
+zero_to_six, True
+six_to_twelve, False
+twelve_to_eighteen, False
+seconds_since_user_creation, 22033488
+title_length, 82
+title_percent_uppercase, 22
+title_percent_spaces, 15
+title_percent_punctuation, 2
+title_starts_capitalized, False
+title_coleman_liau_index, 13
+title_includes_question_mark, False
+title_sentiment_polarity, 45
+title_sentiment_subjectivity, 65
+user_comment_karma, 95
+user_link_karma, 1376
+user_is_mod, False
+user_is_suspended, False
+user_is_deleted, False
+===
+
+SampledRedditThread Has WP link
+title, TIL: CBS is not officially authorized to broadcast the Macy's Thanksgiving Day Parade. In 2012 Macy's rerouted the parade to make it more difficult for CBS to broadcast.
+body, 
+mon, False
+tues, True
+wed, False
+thurs, False
+fri, False
+sat, False
+jan, False
+feb, False
+mar, False
+apr, False
+may, False
+jun, False
+jul, False
+aug, False
+sep, False
+octo, False
+nov, True
+zero_to_six, False
+six_to_twelve, False
+twelve_to_eighteen, False
+seconds_since_user_creation, 3833509
+title_length, 169
+title_percent_uppercase, 9
+title_percent_spaces, 16
+title_percent_punctuation, 1
+title_starts_capitalized, True
+title_coleman_liau_index, 12
+title_includes_question_mark, False
+title_sentiment_polarity, -12
+title_sentiment_subjectivity, 49
+user_comment_karma, 327
+user_link_karma, 4350
+user_is_mod, False
+user_is_suspended, False
+user_is_deleted, False
+===
+
+SampledRedditThread Has WP link
+title, The extreme weather events of 535–536... is thought to have been caused by an extensive atmospheric dust veil, possibly resulting from a large volcanic eruption in the tropics, and/or debris from space impacting the Earth.
+body, 
+mon, False
+tues, False
+wed, False
+thurs, False
+fri, True
+sat, False
+jan, False
+feb, False
+mar, False
+apr, False
+may, False
+jun, False
+jul, True
+aug, False
+sep, False
+octo, False
+nov, False
+zero_to_six, False
+six_to_twelve, False
+twelve_to_eighteen, False
+seconds_since_user_creation, 180323484
+title_length, 222
+title_percent_uppercase, 1
+title_percent_spaces, 15
+title_percent_punctuation, 3
+title_starts_capitalized, True
+title_coleman_liau_index, 14
+title_includes_question_mark, False
+title_sentiment_polarity, 1
+title_sentiment_subjectivity, 55
+user_comment_karma, 3746
+user_link_karma, 128591
+user_is_mod, True
+user_is_suspended, False
+user_is_deleted, False
+===
+
+SampledRedditThread Has WP link
+title, TIL During the American Revolution, the Britain offered the Russian Empire the Island of Minorca in exchange for them joining the fight against the colonists. Catherine the Great (Empress of Russia) declined the offer and publicly revealed their attempted bribery.
+body, [deleted]
+mon, False
+tues, False
+wed, False
+thurs, False
+fri, True
+sat, False
+jan, False
+feb, False
+mar, False
+apr, False
+may, False
+jun, False
+jul, False
+aug, False
+sep, False
+octo, False
+nov, False
+zero_to_six, False
+six_to_twelve, False
+twelve_to_eighteen, False
+seconds_since_user_creation, 0
+title_length, 264
+title_percent_uppercase, 6
+title_percent_spaces, 15
+title_percent_punctuation, 1
+title_starts_capitalized, True
+title_coleman_liau_index, 15
+title_includes_question_mark, False
+title_sentiment_polarity, 20
+title_sentiment_subjectivity, 20
+user_comment_karma, 0
+user_link_karma, 0
+user_is_mod, False
+user_is_suspended, False
+user_is_deleted, True
+===
+
+SampledRedditThread Has WP link
+title, Today, Sweden celebrates "Fettisdagen", a tradition dating back as far as the 1500s, by eating a wheat bun with whipped cream and marzipan.
+body, [deleted]
+mon, False
+tues, True
+wed, False
+thurs, False
+fri, False
+sat, False
+jan, False
+feb, True
+mar, False
+apr, False
+may, False
+jun, False
+jul, False
+aug, False
+sep, False
+octo, False
+nov, False
+zero_to_six, False
+six_to_twelve, False
+twelve_to_eighteen, False
+seconds_since_user_creation, 0
+title_length, 139
+title_percent_uppercase, 2
+title_percent_spaces, 16
+title_percent_punctuation, 3
+title_starts_capitalized, True
+title_coleman_liau_index, 13
+title_includes_question_mark, False
+title_sentiment_polarity, 5
+title_sentiment_subjectivity, 50
+user_comment_karma, 0
+user_link_karma, 0
+user_is_mod, False
+user_is_suspended, False
+user_is_deleted, True
+===
+
+SampledRedditThread Has WP link
+title, TIL: Of James Dresnok - One of Six Americans that Defected to N. Korea is from Richmond, VA.
+body, 
+mon, False
+tues, False
+wed, False
+thurs, True
+fri, False
+sat, False
+jan, False
+feb, False
+mar, False
+apr, False
+may, False
+jun, False
+jul, False
+aug, False
+sep, False
+octo, False
+nov, True
+zero_to_six, False
+six_to_twelve, False
+twelve_to_eighteen, False
+seconds_since_user_creation, 169873197
+title_length, 92
+title_percent_uppercase, 16
+title_percent_spaces, 18
+title_percent_punctuation, 3
+title_starts_capitalized, True
+title_coleman_liau_index, 6
+title_includes_question_mark, False
+title_sentiment_polarity, 0
+title_sentiment_subjectivity, 0
+user_comment_karma, 10198
+user_link_karma, 3013
+user_is_mod, False
+user_is_suspended, False
+user_is_deleted, False
+===
+
+SampledStackOverflowPost No WP link
+title, Javascript Gallery onmouseUp with "#" link without jumping to top of page
+body, <p>Adding a return false will usually stop the page from jumping to the top when clicking on a # link.</p>
+
+<pre><code>&lt;a href="#" onclick="return false;"&gt;&lt;img src="..." /&gt;&lt;/a&gt;
+</code></pre>
+
+<p>For your problem, I would go with Shawn's solution and just use CSS.  So delete all of the links around the images and add this to your document:</p>
+
+<pre><code>&lt;style&gt; img{cursor:pointer;} #Display{cursor:auto;} &lt;/style&gt;
+</code></pre>
+
+<p>The second entry (#Display) is to make sure your main image does not get the pointer cursor.  It would be better to just drop a class on each of your images and then assign the cursor to images with that class.  That would look like so:</p>
+
+<pre><code>&lt;style&gt; img.myImage{cursor:pointer;} &lt;/style&gt;    
+&lt;img class="myImage" src="..."&gt;
+</code></pre>
+mon, False
+tues, False
+wed, True
+thurs, False
+fri, False
+sat, False
+jan, False
+feb, False
+mar, False
+apr, False
+may, False
+jun, True
+jul, False
+aug, False
+sep, False
+octo, False
+nov, False
+zero_to_six, False
+six_to_twelve, False
+twelve_to_eighteen, True
+seconds_since_user_creation, 12771268
+body_length, 832
+body_percent_uppercase, 2
+body_percent_spaces, 13
+body_percent_punctuation, 1
+body_starts_capitalized, True
+body_coleman_liau_index, 16
+body_includes_question_mark, False
+body_sentiment_polarity, 7
+body_sentiment_subjectivity, 45
+user_reputation, 1001
+body_includes_code, True
+num_tags, 4
+response_time, 483
+year2008, False
+year2009, False
+year2010, False
+year2011, True
+year2012, False
+year2013, False
+year2014, False
+year2015, False
+is_top, True
+===
+
+SampledStackOverflowPost No WP link
+title, Javascript - Arguments Vs Nested functions Vs Performance
+body, <p>Actually browsers do optimize even nested functions to where performance differences compared to functions declared in outer scope become negligible.</p>
+
+<p>I blogged <a href="http://thorstenlorenz.wordpress.com/2012/06/02/performance-concerns-for-nested-javascript-functions/" rel="nofollow">my findings</a> and created a <a href="http://jsperf.com/nested-functions-looped" rel="nofollow">performance test</a> to support this claim.</p>
+
+<p>EDIT: The test was broken, <a href="http://jsperf.com/nested-functions-looped/10" rel="nofollow">after fixing</a> the test shows that it's still faster not to nest functions.</p>
+mon, True
+tues, False
+wed, False
+thurs, False
+fri, False
+sat, False
+jan, False
+feb, False
+mar, False
+apr, False
+may, False
+jun, True
+jul, False
+aug, False
+sep, False
+octo, False
+nov, False
+zero_to_six, False
+six_to_twelve, False
+twelve_to_eighteen, True
+seconds_since_user_creation, 97856139
+body_length, 624
+body_percent_uppercase, 1
+body_percent_spaces, 9
+body_percent_punctuation, 1
+body_starts_capitalized, True
+body_coleman_liau_index, 16
+body_includes_question_mark, False
+body_sentiment_polarity, -40
+body_sentiment_subjectivity, 40
+user_reputation, 7824
+body_includes_code, False
+num_tags, 3
+response_time, 22165
+year2008, False
+year2009, False
+year2010, False
+year2011, False
+year2012, True
+year2013, False
+year2014, False
+year2015, False
+is_top, False
+===
+
+SampledStackOverflowPost No WP link
+title, How do I update a variable logged in to Chrome console
+body, <p>You can't have a line that updates. The console lines are appended to, not capable of being overwritten.</p>
+
+<p>You need to build a custom UX to handle this need for your app as an overlay. Or you can use Device Mode as "Responsive" to let you resize freely and see the update width/height within that window.</p>
+mon, True
+tues, False
+wed, False
+thurs, False
+fri, False
+sat, False
+jan, False
+feb, False
+mar, False
+apr, False
+may, False
+jun, True
+jul, False
+aug, False
+sep, False
+octo, False
+nov, False
+zero_to_six, False
+six_to_twelve, True
+twelve_to_eighteen, False
+seconds_since_user_creation, 90784940
+body_length, 317
+body_percent_uppercase, 3
+body_percent_spaces, 17
+body_percent_punctuation, 2
+body_starts_capitalized, True
+body_coleman_liau_index, 9
+body_includes_question_mark, False
+body_sentiment_polarity, 15
+body_sentiment_subjectivity, 60
+user_reputation, 5133
+body_includes_code, False
+num_tags, 5
+response_time, 17636
+year2008, False
+year2009, False
+year2010, False
+year2011, False
+year2012, False
+year2013, False
+year2014, False
+year2015, False
+is_top, True
+===
+
+SampledStackOverflowPost No WP link
+title, Hide and then append data with jQuery
+body, <p><code>mydata</code> is a text, so when it is passed to jQuery it will be considered as a selector thus no element will be returned and the hide call will not do anything after that.</p>
+
+<p>You need to hide the <code>wrap</code> element and show it</p>
+
+<p><div class="snippet" data-lang="js" data-hide="false">
+<div class="snippet-code">
+<pre class="snippet-code-js lang-js prettyprint-override"><code>$('.link').click(function(e) {
+  var wrap = $(this).closest('.wrap').find('.list');
+  var mydata = "test data";
+  wrap.hide().html(mydata).show(6000);
+});</code></pre>
+<pre class="snippet-code-html lang-html prettyprint-override"><code>&lt;script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"&gt;&lt;/script&gt;
+&lt;div class="wrap"&gt;
+  &lt;div class="box"&gt;
+    &lt;div class="list"&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;a href="#" class="link"&gt;click me&lt;/a&gt;
+&lt;/div&gt;</code></pre>
+</div>
+</div>
+</p>
+mon, False
+tues, False
+wed, True
+thurs, False
+fri, False
+sat, False
+jan, False
+feb, False
+mar, False
+apr, False
+may, False
+jun, False
+jul, False
+aug, False
+sep, True
+octo, False
+nov, False
+zero_to_six, False
+six_to_twelve, True
+twelve_to_eighteen, False
+seconds_since_user_creation, 200013502
+body_length, 962
+body_percent_uppercase, 0
+body_percent_spaces, 9
+body_percent_punctuation, 2
+body_starts_capitalized, False
+body_coleman_liau_index, 16
+body_includes_question_mark, False
+body_sentiment_polarity, -40
+body_sentiment_subjectivity, 60
+user_reputation, 288390
+body_includes_code, True
+num_tags, 2
+response_time, 155
+year2008, False
+year2009, False
+year2010, False
+year2011, False
+year2012, False
+year2013, False
+year2014, False
+year2015, True
+is_top, True
+===
+
+SampledStackOverflowPost No WP link
+title, 'License expired' error when dynamically generating Excel docs in ASP.NET
+body, <p>I'm gonna take a WAG and say that you just can't slap any old copy of Office on a server and let multiple users access it via your website.  You need to look at the licensing restrictions for using MS office in a server environment.  </p>
+mon, False
+tues, False
+wed, False
+thurs, False
+fri, True
+sat, False
+jan, False
+feb, False
+mar, False
+apr, False
+may, False
+jun, False
+jul, False
+aug, False
+sep, False
+octo, True
+nov, False
+zero_to_six, False
+six_to_twelve, False
+twelve_to_eighteen, True
+seconds_since_user_creation, 6837007
+body_length, 241
+body_percent_uppercase, 3
+body_percent_spaces, 20
+body_percent_punctuation, 1
+body_starts_capitalized, True
+body_coleman_liau_index, 7
+body_includes_question_mark, False
+body_sentiment_polarity, 5
+body_sentiment_subjectivity, 10
+user_reputation, 101288
+body_includes_code, False
+num_tags, 3
+response_time, 690
+year2008, True
+year2009, False
+year2010, False
+year2011, False
+year2012, False
+year2013, False
+year2014, False
+year2015, False
+is_top, False
+===
+
+SampledStackOverflowPost Has WP link
+title, Search different columns in MySQL Join
+body, <p>After <code>WHERE</code>, you have to specify a <em>single</em> condition, not two or three or more.</p>
+
+<p>This condition can be constructed from simpler conditions using <a href="https://en.wikipedia.org/wiki/Logical_connective" rel="nofollow">logical operators</a> such as AND, OR, XOR, NOT.</p>
+
+<p>For example the AND operator joins two conditions in such a way that the resulting condition is true only if both of the operands are true. So when you say</p>
+
+<pre><code>story.title LIKE '%SEARCH_TERM%' AND users.name LIKE '%SEARCH_TERM%'
+</code></pre>
+
+<p>this is true for results in which both <code>story.title LIKE '%SEARCH_TERM%'</code> and <code>users.name LIKE '%SEARCH_TERM%'</code> are true. This is most likely not what you want. In contrast,</p>
+
+<pre><code>story.title LIKE '%SEARCH_TERM%' OR users.name LIKE '%SEARCH_TERM%'
+</code></pre>
+
+<p>is true for results in which <code>story.title LIKE '%SEARCH_TERM%'</code> is true and for results in which <code>users.name LIKE '%SEARCH_TERM%'</code> is true.</p>
+mon, False
+tues, False
+wed, False
+thurs, False
+fri, True
+sat, False
+jan, False
+feb, False
+mar, False
+apr, False
+may, False
+jun, False
+jul, False
+aug, False
+sep, False
+octo, False
+nov, False
+zero_to_six, False
+six_to_twelve, True
+twelve_to_eighteen, False
+seconds_since_user_creation, 96379179
+body_length, 1029
+body_percent_uppercase, 14
+body_percent_spaces, 12
+body_percent_punctuation, 2
+body_starts_capitalized, True
+body_coleman_liau_index, 16
+body_includes_question_mark, False
+body_sentiment_polarity, 23
+body_sentiment_subjectivity, 67
+user_reputation, 23806
+body_includes_code, True
+num_tags, 2
+response_time, 922
+year2008, False
+year2009, False
+year2010, False
+year2011, False
+year2012, False
+year2013, True
+year2014, False
+year2015, False
+is_top, True
+===
+
+SampledStackOverflowPost Has WP link
+title, What is the term for shrinking the HTML code of websites? Came across some days ago, but unable to recollect now
+body, <p>The term is <a href="http://en.wikipedia.org/wiki/Minification_%28programming%29" rel="nofollow">minification</a>.</p>
+
+<p>Typically JavaScript and CSS are minified.</p>
+
+<p>A good minifier will not only remove unnecessary symbols (e.g. white space and comments) but will also rewrite verbose JavaScript into an equivalent, more compact form.  Variable renaming is common for JavaScript minification.  An example of a more compact but equivalent expression is to use !0 for true and !1 for false.</p>
+
+<p>One can also gain some efficiency by removing extra white space from HTML, though I have not personally heard that referred to as minifying.</p>
+mon, False
+tues, False
+wed, False
+thurs, False
+fri, False
+sat, True
+jan, False
+feb, True
+mar, False
+apr, False
+may, False
+jun, False
+jul, False
+aug, False
+sep, False
+octo, False
+nov, False
+zero_to_six, False
+six_to_twelve, False
+twelve_to_eighteen, False
+seconds_since_user_creation, 113588922
+body_length, 652
+body_percent_uppercase, 3
+body_percent_spaces, 13
+body_percent_punctuation, 2
+body_starts_capitalized, True
+body_coleman_liau_index, 16
+body_includes_question_mark, False
+body_sentiment_polarity, 14
+body_sentiment_subjectivity, 45
+user_reputation, 109751
+body_includes_code, False
+num_tags, 1
+response_time, 106
+year2008, False
+year2009, False
+year2010, False
+year2011, False
+year2012, False
+year2013, True
+year2014, False
+year2015, False
+is_top, True
+===
+
+SampledStackOverflowPost Has WP link
+title, Optimizing recursive calls over data structures
+body, <p>You're asking for the <a href="http://en.wikipedia.org/wiki/Continuation-passing_style" rel="nofollow noreferrer">continuation-passing-style</a> transformation with <a href="http://en.wikipedia.org/wiki/Defunctionalization" rel="nofollow noreferrer">defunctionalized</a> continuations; it's covered in chapter 6 of <a href="http://rads.stackoverflow.com/amzn/click/0262062798" rel="nofollow noreferrer">Essentials of Programming Languages</a>, with code in Scheme. But it'd be a huge pain to implement for C++. Maybe if you have a compiler frontend that converts C++ into reasonably accessible datastructures, though, and you need to do this to a <em>lot</em> of code. The book also explains how to do this transformation systematically by hand, which is more likely to be practical in your situation.</p>
+mon, False
+tues, False
+wed, True
+thurs, False
+fri, False
+sat, False
+jan, False
+feb, False
+mar, False
+apr, False
+may, False
+jun, False
+jul, False
+aug, False
+sep, False
+octo, True
+nov, False
+zero_to_six, False
+six_to_twelve, True
+twelve_to_eighteen, False
+seconds_since_user_creation, 33014378
+body_length, 808
+body_percent_uppercase, 1
+body_percent_spaces, 11
+body_percent_punctuation, 2
+body_starts_capitalized, True
+body_coleman_liau_index, 16
+body_includes_question_mark, False
+body_sentiment_polarity, 31
+body_sentiment_subjectivity, 69
+user_reputation, 11907
+body_includes_code, False
+num_tags, 3
+response_time, 52831
+year2008, False
+year2009, True
+year2010, False
+year2011, False
+year2012, False
+year2013, False
+year2014, False
+year2015, False
+is_top, False
+===
+
+SampledStackOverflowPost Has WP link
+title, How can I declare a function that takes in a function as parameter in Scheme
+body, <p>In Scheme, functions are <a href="http://en.wikipedia.org/wiki/First-class_citizen" rel="nofollow">first-class citizens</a>. Thus, you can pass a function as a parameter to another function, just like you do with any other symbol. There's no such thing as the <code>function</code> keyword.</p>
+
+<p>For example, to define a function called <code>map</code> that takes a function as an argument, and applies it to every member of the list, you could use:</p>
+
+<pre><code>(define (map f l)
+  (if (null? l)
+      l
+      (cons (f (car l)) (map f (cdr l)))))
+</code></pre>
+
+<p>Then, if you had a function called <code>add1</code> that you wanted to pass to <code>map</code>:</p>
+
+<pre><code>(define (add1 x)
+  (+ x 1))
+
+(map add1 '(1 2 3))
+</code></pre>
+
+<p>The result would be <code>(2 3 4)</code>.   </p>
+
+<p><strong><a href="http://ideone.com/clone/V79vv" rel="nofollow">DEMO</a></strong>.</p>
+mon, False
+tues, False
+wed, False
+thurs, False
+fri, False
+sat, False
+jan, False
+feb, False
+mar, False
+apr, False
+may, False
+jun, False
+jul, False
+aug, False
+sep, True
+octo, False
+nov, False
+zero_to_six, True
+six_to_twelve, False
+twelve_to_eighteen, False
+seconds_since_user_creation, 101003856
+body_length, 895
+body_percent_uppercase, 1
+body_percent_spaces, 14
+body_percent_punctuation, 2
+body_starts_capitalized, True
+body_coleman_liau_index, 16
+body_includes_question_mark, True
+body_sentiment_polarity, -6
+body_sentiment_subjectivity, 43
+user_reputation, 58526
+body_includes_code, True
+num_tags, 1
+response_time, 1043
+year2008, False
+year2009, False
+year2010, False
+year2011, False
+year2012, True
+year2013, False
+year2014, False
+year2015, False
+is_top, True
+===
+
+SampledStackOverflowPost Has WP link
+title, Efficient distance calculation between N points and a reference in numpy/scipy
+body, <p>You may need to specify a more detailed manner the distance function you are interested of, but here is a very simple (and efficient) implementation of <a href="http://en.wikipedia.org/wiki/Euclidean_distance#Squared_Euclidean_Distance" rel="nofollow">Squared Euclidean Distance</a> based on <code>inner product</code> (which obviously can be generalized, straightforward manner, to other kind of distance measures):</p>
+
+<pre><code>In []: P, c= randn(5, 3), randn(1, 3)
+In []: dot(((P- c)** 2), ones(3))
+Out[]: array([  8.80512,   4.61693,   2.6002,   3.3293,  12.41800])
+</code></pre>
+
+<p>Where <code>P</code> are your points and <code>c</code> is the center.</p>
+mon, False
+tues, True
+wed, False
+thurs, False
+fri, False
+sat, False
+jan, False
+feb, False
+mar, False
+apr, False
+may, False
+jun, True
+jul, False
+aug, False
+sep, False
+octo, False
+nov, False
+zero_to_six, False
+six_to_twelve, False
+twelve_to_eighteen, False
+seconds_since_user_creation, 13388786
+body_length, 668
+body_percent_uppercase, 2
+body_percent_spaces, 12
+body_percent_punctuation, 3
+body_starts_capitalized, True
+body_coleman_liau_index, 16
+body_includes_question_mark, False
+body_sentiment_polarity, 30
+body_sentiment_subjectivity, 59
+user_reputation, 5837
+body_includes_code, True
+num_tags, 4
+response_time, 10884
+year2008, False
+year2009, False
+year2010, False
+year2011, True
+year2012, False
+year2013, False
+year2014, False
+year2015, False
+is_top, False
+===
