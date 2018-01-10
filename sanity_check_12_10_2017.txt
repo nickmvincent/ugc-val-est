@@ -1,0 +1,50 @@
+
+This is a printout of the API requests made by the research code to answer RQ2.
+Just wanted a text document with the exact endpoint written down somewhere for reference.
+
+
+Mediawiki API request:
+https://en.wikipedia.org/w/api.php?format=json&action=query&prop=revisions&rvdir=newer&rvlimit=500&rvprop=ids|timestamp|flags|user&rvstart=20160428165447&tit
+les=Corpse_road&redirects=1&rvend=20160512165447
+{'batchcomplete': '', 'query': {'normalized': [{'from': 'Corpse_road', 'to': 'Corpse road'}], 'pages': {'12800936': {'pageid': 12800936, 'ns': 0, 'title': 'C
+orpse road'}}}}
+Pageview request:
+http://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/all-agents/Corpse_road/daily/20160428/20160505
+[{'project': 'en.wikipedia', 'article': 'Corpse_road', 'granularity': 'daily', 'timestamp': '2016042800', 'access': 'all-access', 'agent': 'all-agents', 'vie
+ws': 50}, {'project': 'en.wikipedia', 'article': 'Corpse_road', 'granularity': 'daily', 'timestamp': '2016042900', 'access': 'all-access', 'agent': 'all-agen
+ts', 'views': 60}, {'project': 'en.wikipedia', 'article': 'Corpse_road', 'granularity': 'daily', 'timestamp': '2016043000', 'access': 'all-access', 'agent':
+'all-agents', 'views': 62}, {'project': 'en.wikipedia', 'article': 'Corpse_road', 'granularity': 'daily', 'timestamp': '2016050100', 'access': 'all-access',
+'agent': 'all-agents', 'views': 60}, {'project': 'en.wikipedia', 'article': 'Corpse_road', 'granularity': 'daily', 'timestamp': '2016050200', 'access': 'all-
+access', 'agent': 'all-agents', 'views': 54}, {'project': 'en.wikipedia', 'article': 'Corpse_road', 'granularity': 'daily', 'timestamp': '2016050300', 'acces
+s': 'all-access', 'agent': 'all-agents', 'views': 68}, {'project': 'en.wikipedia', 'article': 'Corpse_road', 'granularity': 'daily', 'timestamp': '2016050400
+', 'access': 'all-access', 'agent': 'all-agents', 'views': 60}, {'project': 'en.wikipedia', 'article': 'Corpse_road', 'granularity': 'daily', 'timestamp': '2016050500', 'access': 'all-access', 'agent': 'all-agents', 'views': 1101}]
+Pageview request:
+http://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/all-agents/Corpse_road/daily/20160505/20160512
+[{'project': 'en.wikipedia', 'article': 'Corpse_road', 'granularity': 'daily', 'timestamp': '2016050500', 'access': 'all-access', 'agent': 'all-agents', 'views': 1101}, {'project': 'en.wikipedia', 'article': 'Corpse_road', 'granularity': 'daily', 'timestamp': '2016050600', 'access': 'all-access', 'agent': 'all-agents', 'views': 722}, {'project': 'en.wikipedia', 'article': 'Corpse_road', 'granularity': 'daily', 'timestamp': '2016050700', 'access': 'all-access', 'agent': 'all-agents', 'views': 77}, {'project': 'en.wikipedia', 'article': 'Corpse_road', 'granularity': 'daily', 'timestamp': '2016050800', 'access': 'all-access', 'agent': 'all-agents', 'views': 88}, {'project': 'en.wikipedia', 'article': 'Corpse_road', 'granularity': 'daily', 'timestamp': '2016050900', 'access': 'all-access', 'agent': 'all-agents', 'views': 89}, {'project': 'en.wikipedia', 'article': 'Corpse_road', 'granularity': 'daily', 'timestamp': '2016051000', 'access': 'all-access', 'agent': 'all-agents', 'views': 66}, {'project': 'en.wikipedia', 'article': 'Corpse_road', 'granularity': 'daily', 'timestamp': '2016051100', 'access': 'all-access', 'agent': 'all-agents', 'views': 72}, {'project': 'en.wikipedia', 'article': 'Corpse_road', 'granularity': 'daily', 'timestamp': '2016051200', 'access': 'all-access', 'agent': 'all-agents', 'views': 62}]
+average_diff 0.0
+average_wrong_diff 0.0
+Error/Tested: 0/1
+
+
+
+Mediawiki API request:
+https://en.wikipedia.org/w/api.php?format=json&action=query&prop=revisions&rvdir=newer&rvlimit=500&rvprop=ids|timestamp|flags|user&rvstart=20091224160203&titles=Levenshtein_distance&redirects=1&rvend=20100107160203
+{'batchcomplete': '', 'query': {'normalized': [{'from': 'Levenshtein_distance', 'to': 'Levenshtein distance'}], 'pages': {'406418': {'pageid': 406418, 'ns': 0, 'title': 'Levenshtein distance', 'revisions': [{'revid': 334969348, 'parentid': 328599510, 'user': '64.134.232.195', 'anon': '', 'timestamp': '2009-12-30T20:14:27Z'}, {'revid': 335046033, 'parentid': 334969348, 'user': 'Nanobear~enwiki', 'timestamp': '2009-12-31T04:40:10Z'}]}}}}
+Pageview request:
+http://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/all-agents/Levenshtein_distance/daily/20091224/20091231
+None
+Pageview request:
+http://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/all-agents/Levenshtein_distance/daily/20091231/20100107
+None
+Mediawiki API request:
+https://en.wikipedia.org/w/api.php?format=json&action=query&prop=revisions&rvdir=newer&rvlimit=500&rvprop=ids|timestamp|flags|user&rvstart=20091224160203&titles=Edit_distance&redirects=1&rvend=20100107160203
+{'batchcomplete': '', 'query': {'normalized': [{'from': 'Edit_distance', 'to': 'Edit distance'}], 'pages': {'406427': {'pageid': 406427, 'ns': 0, 'title': 'Edit distance'}}}}
+Pageview request:
+http://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/all-agents/Edit_distance/daily/20091224/20091231
+None
+Pageview request:
+http://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/all-agents/Edit_distance/daily/20091231/20100107
+None
+average_diff -2.0
+average_wrong_diff -2.0
+Error/Tested: 0/1
