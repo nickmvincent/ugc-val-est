@@ -14,7 +14,9 @@ def main():
     }
     qsr = SampledRedditThread.objects.filter(**kwargs)
     qss = SampledStackOverflowPost.objects.filter(**kwargs)
-
+    x = qss.values_list('num_other_answers', flat=True)
+    print(np.median(x))
+    return
     for var in [
         'num_edits', 'num_edits_prev_week', 
     ]:

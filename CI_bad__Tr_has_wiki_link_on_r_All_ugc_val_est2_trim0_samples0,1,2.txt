@@ -277,9 +277,15 @@ user_comment_karma,1,7.60769008501
 user_link_karma,0,25.8669599056
 user_link_karma,1,0.0421506897296
 WEIGHTED AVERAGE OF SUM OF ABSOLUTE VALUE OF ALL NDIFs
+<<<<<<< Updated upstream
 5.96353336317,5.96353336317,4.20296308887
 # of BIG NDIFS
 6,6,1.7363209075231865
+=======
+5.96353336317,5.96353336317,nan
+# of BIG NDIFS
+6,6,1.7416922560633785
+>>>>>>> Stashed changes
 VARS USED IN BLOCK REGRESSIONS
 X0:mon
 X1:tues
@@ -324,6 +330,7 @@ Treatment Effect Estimates: Blocking
          Y0: ATT        89.687         9.991         8.977         0.000        70.104       109.269
          Y1: ATT        -0.857         1.877        -0.457         0.648        -4.537         2.823
 
+<<<<<<< Updated upstream
 records_loaded:9.839812517166138
 rows_loaded:22.171912670135498
 CausalModel:1.568481683731079
@@ -331,3 +338,12 @@ propensity:20.09766411781311
 trim_0.0:0.004797697067260742
 stratify_s:1.056685447692871
 est_via_blocking:0.8124356269836426
+=======
+records_loaded:11.120530605316162
+rows_loaded:20.13680624961853
+CausalModel:1.2777431011199951
+propensity:19.538495540618896
+trim_0.0:0.005843639373779297
+stratify_s:1.0287983417510986
+est_via_blocking:0.7805869579315186
+>>>>>>> Stashed changes

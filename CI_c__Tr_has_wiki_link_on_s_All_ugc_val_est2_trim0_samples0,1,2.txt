@@ -398,6 +398,7 @@ Treatment Effect Estimates: Blocking
          Y0: ATT         4.364         1.558         2.800         0.005         1.309         7.418
          Y1: ATT         0.007         0.022         0.305         0.760        -0.037         0.050
 
+<<<<<<< Updated upstream
 records_loaded:18.31781792640686
 rows_loaded:35.07076454162598
 CausalModel:1.431840419769287
@@ -405,3 +406,12 @@ propensity:32.18038249015808
 trim_0.0:0.005881071090698242
 stratify_s:1.7596147060394287
 est_via_blocking:1.1525611877441406
+=======
+records_loaded:15.172027587890625
+rows_loaded:35.90996980667114
+CausalModel:1.549776315689087
+propensity:31.962825536727905
+trim_0.0:0.005998134613037109
+stratify_s:1.542442798614502
+est_via_blocking:1.1745150089263916
+>>>>>>> Stashed changes
