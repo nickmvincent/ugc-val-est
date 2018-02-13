@@ -42,13 +42,17 @@ Code used to populate DB from a json file (downloaded from BigQuery)
 json2db.py
 
 Code used to explore BigQuery
-<<<<<<< HEAD
-bq_explore.py
-=======
 bq_explore.py
 
 
 
 Important Note:
 To produce the Stack Overflow pageview estimates (argument --rq 13 and --rq 14 in stats.py, argument --is-top for prediction.py) you will need to full SO Questions database (to look up the other answers associated w/ a given question). This is is the only output that cannot be run using only the ~1.04M post samples.
->>>>>>> de3c149ee0c4971cf1d7a8d8895993688d1bc9a8
+
+
+To clarify, this repo includes the code to collect your own random sample of posts/answers.
+
+Alternatively, if you want to inspect or play with the exact sample used in our study, that dataset is linked below.
+
+Annotated dataset download (has ~1.04M Reddit posts, ~1.04M Stack Overflow answers, all necessary features pre-calculated, and all revelant Wikipedia information populated). Format is a single .sql file produced by postgres pg_dump command line utility. Total size is 2GB.
+https://drive.google.com/file/d/1rJvaEeYbMlXNqDFUVoGqKQkaqG0Hnfoi/view?usp=sharing
