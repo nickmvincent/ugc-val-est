@@ -22,6 +22,20 @@ class Blocking(Estimator):
         for i, s in enumerate(strata):
             feats = list(feature_names)
             X = s.raw_data['X']
+            D = s.raw_data['X']
+
+            if i == 0 or i == len(strata - 1):
+                ids = s.raw_data['ids']
+                treat_ids = []
+                control_ids = []
+                for dval, dval_index in enumerate(D):
+                    if dval == 1: #treat
+                        treat_ids.append(ids[dval_index])
+                    else:
+                        control_ids.append(ids[dval_index])
+                print(treat_ids[:5])
+                print(control_ids[:5])
+
             for feature_name in skip_features:
                 try:
                     col_num = feats.index(feature_name)
@@ -29,7 +43,7 @@ class Blocking(Estimator):
                     continue
                 X = np.delete(X, col_num, 1)
                 feats.remove(feature_name)
-            s.raw_data = Data(s.raw_data['Y'], s.raw_data['D'], X)
+            s.raw_data = Data(s.raw_data['Y'], s.raw_data['D'], X, ids=ids)
             try:
                 s.est_via_ols(adj, feats)
             except np.linalg.linalg.LinAlgError as err:
@@ -89,7 +103,7 @@ class Blocking(Estimator):
                         break
                 
                 strata[i] = causal.CausalModel(
-                    s.raw_data['Y'], s.raw_data['D'], X)
+                    s.raw_data['Y'], s.raw_data['D'], X, ids=ids)
                 strata[i].est_via_ols(adj, feats)
 
         Ns = [s.raw_data['N'] for s in strata]

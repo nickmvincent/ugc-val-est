@@ -342,7 +342,7 @@ def causal_inference(
                 for stratum in causal.strata:
                     val = stratum.summary_stats['sum_of_abs_ndiffs']
                     if np.isnan(val):
-                        # could be nan bc STD for a variable was 0
+                        # could be nan because standard dev for a variable was 0
                         continue
                     count = stratum.raw_data['N']
                     fraction = count / causal.raw_data['N']
