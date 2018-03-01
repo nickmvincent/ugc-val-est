@@ -18,23 +18,23 @@ class Blocking(Estimator):
     def __init__(self, strata, adj, feature_names, skip_features):
         # hacky
         self._method = 'Blocking'
-        
+        print('blocking')
         for i, s in enumerate(strata):
             feats = list(feature_names)
             X = s.raw_data['X']
-            D = s.raw_data['X']
+            D = s.raw_data['D']
 
-            if i == 0 or i == len(strata - 1):
+            if i == 0 or i == len(strata) - 1:
                 ids = s.raw_data['ids']
                 treat_ids = []
                 control_ids = []
-                for dval, dval_index in enumerate(D):
+                for dval_index, dval in enumerate(D):
                     if dval == 1: #treat
                         treat_ids.append(ids[dval_index])
                     else:
                         control_ids.append(ids[dval_index])
-                print(treat_ids[:5])
-                print(control_ids[:5])
+                print('treat_ids', treat_ids[:5])
+                print('control_ids', control_ids[:5])
 
             for feature_name in skip_features:
                 try:

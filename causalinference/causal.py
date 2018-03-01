@@ -205,7 +205,7 @@ class CausalModel(object):
 		def subset(p_low, p_high):
 			return (p_low < pscore) & (pscore <= p_high)
 		subsets = [subset(*ps) for ps in zip(blocks, blocks[1:])]
-		strata = [CausalModel(Y[s], D[s], X[s], ids[s]) for s in subsets]
+		strata = [CausalModel(Y[s], D[s], X[s], ids=ids[s]) for s in subsets]
 		self.strata = Strata(strata, subsets, pscore)
 
 	def stratify_s(self):
