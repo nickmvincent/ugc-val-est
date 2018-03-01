@@ -62,11 +62,13 @@ def get_qs_features_and_outcomes(platform, num_rows=None, filter_kwargs=None, ex
         features = common_features + list_stack_specific_features()
     if filter_kwargs is not None:
         qs = qs.filter(**filter_kwargs)
-        qs = qs.filter(
-            Q(has_wiki_link=False) | (
-                Q(url__contains='en.wikipedia') | Q(url__contains='en.m.wikipedia')  | Q(url__contains='www.wikipedia')  | Q(url__contains='//wikipedia')
-            )
-        )
+        # this was a quick comparison test to see if manually restricting urls to these 4 prefixes changed the results
+        # it did not change the results.
+        # qs = qs.filter(
+        #     Q(has_wiki_link=False) | (
+        #         Q(url__contains='en.wikipedia') | Q(url__contains='en.m.wikipedia')  | Q(url__contains='www.wikipedia')  | Q(url__contains='//wikipedia')
+        #     )
+        # )
     if exclude_kwargs is not None:
         qs = qs.exclude(**exclude_kwargs)
     if num_rows is not None:
