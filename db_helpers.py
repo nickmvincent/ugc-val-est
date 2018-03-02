@@ -300,6 +300,12 @@ def print_potential_wikilinks():
         writer = csv.writer(outfile)
         for url in url_list:
             writer.writerow([url])
+    
+    nonen = SampledRedditThread.objects.filter(has_wiki_link=True).exclude(url__contains='en.wikipedia').exclude(url__contains='en.m.wikipedia').exclude(url__contains='www.wikipedia').exclude(url__contains='//wikipedia').values_list('url', 'num_edits', 'num_edits_prev_week')
+    with open('nonen_list.csv', 'w', newline='') as outfile:
+        writer = csv.writer(outfile)
+        for line in nonen:
+            writer.writerow(line)
 
     # write out links that had a 
 
