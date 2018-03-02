@@ -23,7 +23,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy import stats
-from django.db import models
+from django.db.models import Q
 
 
 def so_special(treatment_feature, extra_filter):
