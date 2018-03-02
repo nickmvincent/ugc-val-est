@@ -657,11 +657,12 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
                 # FLAG
                 # quick comparison test to see if manually restricting urls to these 4 prefixes changed the results
                 # it did not change the results.
-                qs = qs.filter(
-                    Q(has_wiki_link=False) | (
-                        Q(url__contains='en.wikipedia') | Q(url__contains='en.m.wikipedia')  | Q(url__contains='www.wikipedia')  | Q(url__contains='//wikipedia')
+                if False:
+                    qs = qs.filter(
+                        Q(has_wiki_link=False) | (
+                            Q(url__contains='en.wikipedia') | Q(url__contains='en.m.wikipedia')  | Q(url__contains='www.wikipedia')  | Q(url__contains='//wikipedia')
+                        )
                     )
-                )
                 if treatment_kwargs:
                     treatment = {
                         'name': 'Treatment',
