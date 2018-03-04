@@ -2,9 +2,10 @@
 This is the code for the 2018 CHI paper "Examining Wikipedia with a Broader Lens: Quantifying the Value of Wikipedia's Relationships with Other Large-Scale Online Communities. ACM Conference on Human Factors in Computing Systems 2018".
 It consists of data collection, data processing, and data analysis.
 
-This code is still in the "research state", and not guaranteed to be suitable for re-purposing. In other words, use at your own risk.
+This code is still in the "research state", and not guaranteed to be suitable for re-purposing.
 The purpose in sharing it is to give insight into the exact methods (such as feature calculation, analysis choices, etc).
-If you have any questions about the analysis or have any suggestions for improvement, please don't hesitate to reach out.
+That being said, if you are interested in using parts of this research code for other projects and are running into issues, do feel free to reach out.
+Likewise, if you have any questions about the analysis or have any suggestions for improvement, please don't hesitate to reach out.
 www.nickmvincent.com
 
 Preprint paper is here: http://www.brenthecht.com/publications/chi2018_wikipediavaluetoonlinecommunities.pdf
