@@ -2,8 +2,10 @@
 This is the code for the 2018 CHI paper "Examining Wikipedia with a Broader Lens: Quantifying the Value of Wikipedia's Relationships with Other Large-Scale Online Communities. ACM Conference on Human Factors in Computing Systems 2018".
 It consists of data collection, data processing, and data analysis.
 
-This code is still in the "research state", and not yet ready for widespread distribution or forking.
+This code is still in the "research state", and not guaranteed to be suitable for re-purposing. In other words, use at your own risk.
 The purpose in sharing it is to give insight into the exact methods (such as feature calculation, analysis choices, etc).
+If you have any questions about the analysis or have any suggestions for improvement, please don't hesitate to reach out.
+www.nickmvincent.com
 
 Preprint paper is here: http://www.brenthecht.com/publications/chi2018_wikipediavaluetoonlinecommunities.pdf
 ACM DL link is forthcoming.
@@ -77,7 +79,8 @@ We chose the following pattern:
 If the Wikimedia API returns a "missing" error message when trying to get information about the article, mark it as NOT a valid Wikipedia link.
 The full list of such urls (only 300 Wikipedia links from 48k SO posts and 36k Reddit posts) is in "url_list.csv" in this folder and that csv file is regenerated when running the full analysis batch in "batch.sh".
 
-If we didn't get a "missing error", but we also couldn't actually get ANY revisions (in the 2 week period around the post, or before), mark that post so we can see how many meet that criteria. Only 50 met that criteria.
+If we didn't get a "missing" error from the Wikimedia API, but we also couldn't actually get ANY revisions (in the 2 week period around the post, or before), mark that post so we can see how many meet that criteria. Only ~50 met that criteria.
 
-For non-English Wikipedia posts, don't try to hit the APIs (this choice was made since we wanted to focus on English ORES as a quality metric). Therefore, non-English posts are treated as "stub" articles and don't contribute to pageviews/edits. Obviously this has the greatest potential to be problematic, so we re-ran the analyses with and without these posts included to make sure this wasn't affecting results in any way. It wasn't. This isn't altogher surprising because posts with non-English Wikipedia posts make up less than 2% of our Reddit posts and almost no SO posts.
+For non-English Wikipedia posts, don't try to hit the APIs (this choice was made since we wanted to focus on English ORES as a quality metric). Therefore, non-English posts are treated as "stub" articles and don't contribute to pageviews/edits. Obviously this has the greatest potential to be problematic, so we re-ran the analyses with and without these posts included to make sure this wasn't affecting results in any way. It wasn't. This isn't altogher surprising because posts with non-English Wikipedia posts make up less than 2% of our Reddit posts and almost none of our SO posts.
+
 All that said, much more careful consideration of non-English Wikipedia posts would be very important for follow-up work that focuses on specific communities (especially sub-reddits that do not use English) or any work that wants to examine effects across different language communities.
