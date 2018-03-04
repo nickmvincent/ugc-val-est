@@ -14,6 +14,13 @@ def main():
     }
     qsr = SampledRedditThread.objects.filter(**kwargs)
     qss = SampledStackOverflowPost.objects.filter(**kwargs)
+    errs = qsr.exclude(wiki_content_error=0)
+    print(len(errs))
+    for err in errs:
+        print(err.url)
+        input()
+    print(qsr.count())
+
     x = qss.values_list('num_other_answers', flat=True)
     print(np.median(x))
     return

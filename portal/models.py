@@ -357,6 +357,7 @@ class Post(models.Model):
             self.title_sentiment_polarity = blob.sentiment.polarity * 100
             self.title_sentiment_subjectivity = blob.sentiment.subjectivity * 100
 
+        # this line is critical!
         if self.has_wiki_link and self.wiki_content_error == 0:
             self.reset_edit_metrics()
             self.has_good_wiki_link = False
