@@ -459,6 +459,10 @@ def simple_linear(platform, quality_mode=False):
 
         # Create linear regression object
         regr = linear_model.LinearRegression()
+        p = regr.get_params()
+        print(len(p), len(features))
+        for val, feature in zip(p, features)
+            print(val, feature)
 
         # Train the model using the training sets
         regr.fit(X_train, y_train)

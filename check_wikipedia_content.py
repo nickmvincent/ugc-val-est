@@ -53,15 +53,16 @@ class MissingRevisionId(Exception):
         super(MissingRevisionId, self).__init__(self)
 
 
-class ContextNotSupported(Exception):
-    """Used to catch MissingRevision Media Wiki"""
+# deprecated
+# class ContextNotSupported(Exception):
+#     """Used to catch MissingRevision Media Wiki"""
 
-    def __init__(self, post, ores_context):
-        err_log, _ = ErrorLog.objects.get_or_create(uid=post.uid)
-        err_log.msg = '#3: ContextNotSupported: {}'.format(ores_context)[:500]
-        err_log.save()
-        handle_err(post, 3)
-        super(ContextNotSupported, self).__init__(self)
+#     def __init__(self, post, ores_context):
+#         err_log, _ = ErrorLog.objects.get_or_create(uid=post.uid)
+#         err_log.msg = '#3: ContextNotSupported: {}'.format(ores_context)[:500]
+#         err_log.save()
+#         handle_err(post, 3)
+#         super(ContextNotSupported, self).__init__(self)
 
 
 class PostMissingValidLink(Exception):
@@ -75,7 +76,7 @@ class PostMissingValidLink(Exception):
         post.save()
         super(PostMissingValidLink, self).__init__(self)
 
-
+# Deprecated
 # class MissingOresResponse(Exception):
 #     """Used to catch missing ores response"""
 #     def __init(self, uid, url):
