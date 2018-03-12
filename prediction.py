@@ -430,6 +430,7 @@ def simple_linear(platform, quality_mode=False):
     else:
         qs, features, outcomes = get_qs_features_and_outcomes(platform)
     for outcome in outcomes:
+        print(outcome)
         field_names = features + [outcome]
         rows = extract_vals_and_method_results(qs, field_names)
         records = values_list_to_records(rows, field_names)
@@ -461,7 +462,7 @@ def simple_linear(platform, quality_mode=False):
         regr = linear_model.LinearRegression()
         p = regr.get_params()
         print(len(p), len(features))
-        for val, feature in zip(p, features)
+        for val, feature in zip(p, features):
             print(val, feature)
 
         # Train the model using the training sets
@@ -518,6 +519,7 @@ def parse():
         help='select a sample number')
     args = parser.parse_args()
     if args.simple:
+        print('args.simple')
         simple_linear(args.platform)
     else:
         if args.rq is None:
