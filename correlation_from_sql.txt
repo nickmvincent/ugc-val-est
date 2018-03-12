@@ -1,0 +1,1 @@
+select(avg( portal_sampledredditthread.score * portal_sampledredditthread.mar::int ) - avg( portal_sampledredditthread.score ) + avg( portal_sampledredditthread.mar::int ) ) / ( stddev( portal_sampledredditthread.score ) * stddev(portal_sampledredditthread.mar::int) ) as correlation from portal_sampledredditthread;
