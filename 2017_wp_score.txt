@@ -2,11 +2,12 @@ SELECT
   AVG(score)
 FROM
   (SELECT *
-FROM TABLE_QUERY([fh-bigquery:reddit_posts], "REGEXP_MATCH(table_id, '^2016_..$')")
+FROM TABLE_QUERY([fh-bigquery:reddit_posts], "REGEXP_MATCH(table_id, '^2017_..$')")
 )
 WHERE
   LOWER(url) LIKE '%wikipedia.org/wiki/%'
 281.2423497593764
+total posts: 125707, 0.107%
 
 
 SELECT
@@ -17,7 +18,8 @@ FROM TABLE_QUERY([fh-bigquery:reddit_posts], "REGEXP_MATCH(table_id, '^2017_..$'
 )
 WHERE
   Lower(url) NOT LIKE '%wikipedia.org/wiki/%'
-51.968472327580386	
+51.968472327580386
+total posts: 117032022
 
 
 
