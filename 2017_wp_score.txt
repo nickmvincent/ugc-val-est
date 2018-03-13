@@ -1,0 +1,34 @@
+SELECT
+  AVG(score)
+FROM
+  (SELECT *
+FROM TABLE_QUERY([fh-bigquery:reddit_posts], "REGEXP_MATCH(table_id, '^2016_..$')")
+)
+WHERE
+  LOWER(url) LIKE '%wikipedia.org/wiki/%'
+281.2423497593764
+
+
+SELECT
+  avg(score)
+FROM
+  (SELECT *
+FROM TABLE_QUERY([fh-bigquery:reddit_posts], "REGEXP_MATCH(table_id, '^2017_..$')")
+)
+WHERE
+  Lower(url) NOT LIKE '%wikipedia.org/wiki/%'
+51.968472327580386	
+
+
+
+
+For reference, here's 2016 in on query
+SELECT
+  AVG(score)
+FROM
+  (SELECT *
+FROM TABLE_QUERY([fh-bigquery:reddit_posts], "REGEXP_MATCH(table_id, '^2016_..$')")
+)
+WHERE
+  LOWER(url) LIKE '%wikipedia.org/wiki/%'
+146.84844212487735
