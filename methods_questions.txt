@@ -16,3 +16,22 @@ w LOWER(url) 121298
 SO:
 w/o LOWER(body): 291431
 w LOWER(body): 291500
+
+
+
+Other big sites?
+SELECT
+  avg(score)
+FROM (
+  SELECT
+    *
+  FROM
+    TABLE_QUERY([fh-bigquery:reddit_posts], "REGEXP_MATCH(table_id, '^2016_..$')") )
+WHERE
+  domain like '%twitter.com'
+%twitter.com: 53.66091580625132
+%youtube.com: 16.944257757750076	
+%wikipedia.org: 146.84111382767503
+%imgur.com: 105.63193205844149
+theguardian.com: 53.88428134281343
+bbc.com: 58.335981036347
