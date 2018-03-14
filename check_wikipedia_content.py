@@ -440,13 +440,13 @@ def recalc_pageviews_for_post(post, session):
             post.num_wiki_pageviews += sum(
                 [entry['views'] for entry in pageviews])
             print(pageviews_prev_week)
-            pageviews_days_1_through_6 = sum(
-                [entry['views'] for entry in pageviews_prev_week[:6]
-            )
-            print(pageviews_days_1_through_6)
-            pageviews_day_of = pageviews_prev_week[6]['views']
+            avg_pageviews_days_1_through_7 = sum(
+                [entry['views'] for entry in pageviews_prev_week[:7]]
+            ) / 7
+            print('avg', avg_pageviews_days_1_through_7)
+            pageviews_day_of = pageviews_prev_week[7]['views']
             print(pageviews_day_of)
-            post.num_wiki_increased_pageviews_day_of = pageviews_day_of - pageviews_days_1_through_6
+            post.num_wiki_increased_pageviews_day_of = pageviews_day_of - avg_pageviews_days_1_through_7
             input()
     post.save()
 
