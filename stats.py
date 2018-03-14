@@ -592,9 +592,16 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
             ('week_after_avg_score', 'day_of_avg_score'),
             ('num_wiki_pageviews', 'num_wiki_pageviews_prev_week')
         ]
+    # day of page views
+    if rq == 15:
+        variables = ['num_wiki_increased_pageviews_day_of']
     if rq == 32:
         variables = [
             ('num_edits', 'num_edits_prev_week'),
+            ('num_wiki_pageviews', 'num_wiki_pageviews_prev_week')
+        ]
+    if rq == 33:
+        variables = [
             ('num_wiki_pageviews', 'num_wiki_pageviews_prev_week')
         ]
     if rq == 33:
@@ -684,8 +691,10 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
 
             descriptive_stats[name] = {}
             inferential_stats[name] = {}
+            # Conservative page view estimates for WP vs no WP
             if rq == 13:
                 treat, control = so_special('has_wiki_link', 0)
+            # conservative page view estimate for good WP vs bad WP
             elif rq == 14:
                 treat, control = so_special('has_c_wiki_link', 1)
             if rq == 13 or rq == 14:
