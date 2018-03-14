@@ -884,7 +884,7 @@ def parse():
     elif args.recalc_pageviews:
         posts = SampledRedditThread.objects.filter(has_wiki_link=True, sample_num__in=[0,1,2],
            # timestamp__gte=datetime.datetime(year=2015, month=7, day=1),
-            num_wiki_pageviews=0)
+            num_wiki_increased_pageviews_day_of__isnull=True)
         recalc_pageviews_for_posts(posts)
     else:
         if args.platform is None:
