@@ -464,7 +464,7 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
     elif rq == 11:
         subsample_kwargs = {'has_wiki_link': False}
         treatment_kwargs = {'has_other_link': True, }    
-    elif rq == 13 or rq == 14:
+    elif rq == 13 or rq == 14 or rq == 15:
         subsample_kwargs = {}
         treatment_kwargs = {}
     elif rq == 2:

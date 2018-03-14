@@ -92,12 +92,10 @@ def normalize_title(title):
     """
     Normalizes a title
     """
-    print(title)
     if len(title) >= 2:
             title = title[0].upper() + title[1:]
     title = title.replace(' ', '_')
     title = title.replace('/', '%2F')
-    print(title)
     return title
 
 def make_mediawiki_request(session, base, params, verbose=False):
@@ -438,11 +436,12 @@ def recalc_pageviews_for_post(post, session):
                 [entry['views'] for entry in pageviews_prev_week])
             post.num_wiki_pageviews += sum(
                 [entry['views'] for entry in pageviews])
-            avg_pageviews_days_1_through_7 = sum(
-                [entry['views'] for entry in pageviews_prev_week[:7]]
-            ) / 7
-            pageviews_day_of = pageviews_prev_week[7]['views']
-            post.num_wiki_increased_pageviews_day_of = pageviews_day_of - avg_pageviews_days_1_through_7
+            if len(pageviews_prev_week) > 1:
+                avg_pageviews_days_1_through_7 = sum(
+                    [entry['views'] for entry in pageviews_prev_week[:-1]]
+                ) / (len(pageviews_prev_week) - 1)
+                pageviews_day_of = pageviews_prev_week[-1]['views']
+                post.num_wiki_increased_pageviews_day_of = pageviews_day_of - avg_pageviews_days_1_through_7
     post.save()
 
 
