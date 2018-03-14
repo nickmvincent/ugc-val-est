@@ -203,6 +203,7 @@ class Post(models.Model):
 
     num_wiki_pageviews = models.IntegerField(blank=True, null=True)
     num_wiki_pageviews_prev_week = models.IntegerField(blank=True, null=True)
+    num_wiki_increased_pageviews_day_of = models.IntegerField(blank=True, null=True)
 
     sample_num = models.IntegerField(default=0, db_index=True)
 
