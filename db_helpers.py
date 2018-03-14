@@ -89,6 +89,7 @@ def show_samples():
                 out.append(model.__name__ + ' ' + x)
                 for feat in feats:
                     out.append('{}, {}'.format(feat, getattr(sample, feat)))
+                out.append(str(sample.__dict__))
                 out.append('===\n')
     with open('show_samples.txt', 'w') as outfile:
         outfile.write('\n'.join(out))
