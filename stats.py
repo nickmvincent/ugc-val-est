@@ -577,7 +577,7 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
                 'name': 'other'
             }]
         variables += list_stack_specific_features()
-        variables += ['num_pageviews']
+        variables += ['num_pageviews', 'num_wiki_increased_pageviews_day_of']
         extractor = get_links_from_body
         extract_from = 'body'
             
