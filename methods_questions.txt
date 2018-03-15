@@ -4,7 +4,7 @@ What about SO articles w/ multiple Wikipedia links?
     Pick the highest quality article for determining the "article quality".
 
 Note that the textstat metrics are not used (sentence count and lexicon count)
-    They are clearly broken based on our validations
+    Don't work well with these weird posts. No research suggests they would be critical to include.
 
 
 
@@ -39,3 +39,10 @@ theguardian.com: 53.88428134281343
 bbc.com: 58.335981036347
 
 # TODO: run causal analysis for another domain for comparison... maybe twitter or youtube?
+
+
+What about links to non-English WP?
+Included in counts
+Not included in RQ2 analysis?
+Num SO posts w/ non-en WP link: 221
+0.46%

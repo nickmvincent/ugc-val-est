@@ -604,10 +604,6 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
         variables = [
             ('num_wiki_pageviews', 'num_wiki_pageviews_prev_week')
         ]
-    if rq == 33:
-        variables = [
-            ('num_wiki_pageviews', 'num_wiki_pageviews_prev_week')
-        ]
     db_name = connection.settings_dict['NAME']
     output_filename = "STATS_on_{}_rq_{}_{}_samples{}.csv".format(
         platform, rq, db_name,
@@ -667,7 +663,7 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
                 if False:
                     qs = qs.filter(
                         Q(has_wiki_link=False) | (
-                            Q(url__contains='en.wikipedia') | Q(url__contains='en.m.wikipedia')  | Q(url__contains='www.wikipedia')  | Q(url__contains='//wikipedia')
+                            Q(body__contains='en.wikipedia') | Q(body__contains='en.m.wikipedia')  | Q(body__contains='www.wikipedia')  | Q(body__contains='//wikipedia')
                         )
                     )
                 if treatment_kwargs:
