@@ -452,7 +452,7 @@ class Post(models.Model):
                             else:
                                 self.num_major_edits_prev_week += 1
                 else:
-                    # we need to account for all the revisions that have a "good revision",
+                    # we need to account for all the revisions that have a "valid revision",
                     # but that revision didn't fall within a 2 week period
                     prev_revisions = Revision.objects.filter(
                         wiki_link__in=all_possible_links

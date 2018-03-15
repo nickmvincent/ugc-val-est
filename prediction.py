@@ -33,6 +33,7 @@ import numpy as np
 from sklearn import linear_model
 from causalinference import CausalModel
 
+FILTER_LANG = True
 
 def err_handle(msg, out):
     """error handling for this exploratory code"""
@@ -62,13 +63,20 @@ def get_qs_features_and_outcomes(platform, num_rows=None, filter_kwargs=None, ex
         features = common_features + list_stack_specific_features()
     if filter_kwargs is not None:
         qs = qs.filter(**filter_kwargs)
-        # this was a quick comparison test to see if manually restricting urls to these 4 prefixes changed the results
-        # it did not change the results.
-        # qs = qs.filter(
-        #     Q(has_wiki_link=False) | (
-        #         Q(url__contains='en.wikipedia') | Q(url__contains='en.m.wikipedia')  | Q(url__contains='www.wikipedia')  | Q(url__contains='//wikipedia')
-        #     )
-        # )
+         if FILTER_LANG:
+            if platform == 'r':
+                qs = qs.filter(
+                    Q(has_wiki_link=False) | (
+                        Q(url__contains='en.wikipedia') | Q(url__contains='en.m.wikipedia')  | Q(url__contains='www.wikipedia')  | Q(url__contains='//wikipedia')
+                    )
+                )
+            
+            elif platform == 's':
+                qs = qs.filter(
+                    Q(has_wiki_link=False) | (
+                        Q(body__contains='en.wikipedia') | Q(body__contains='en.m.wikipedia')  | Q(body__contains='www.wikipedia')  | Q(body__contains='//wikipedia')
+                    )
+                )
     if exclude_kwargs is not None:
         qs = qs.exclude(**exclude_kwargs)
     if num_rows is not None:
@@ -386,6 +394,8 @@ def causal_inference(
         for key, val in timing_info.items():
             out.append("{}:{}".format(key, val))
         if iterations == 1:
+            if FILTER_LANG:
+                filename = 'lang_filtered_' + filename
             with open(filename, 'w') as outfile:
                 outfile.write('\n'.join(out))
         else:

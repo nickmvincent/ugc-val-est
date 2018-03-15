@@ -26,6 +26,9 @@ from scipy import stats
 from django.db.models import Q
 
 
+# set this manually for now
+FILTER_LANG = True
+
 def so_special(treatment_feature, extra_filter):
     """helper"""
     if extra_filter:
@@ -413,6 +416,8 @@ def output_stats(output_filename, descriptive_stats, inferential_stats):
     arr = np.array(rows, dtype=object)
     # arr = np.transpose(arr)
     if output_filename:  # make sure not to write over file when doing bootstrapping!
+        if FILTER_LANG:
+            output_filename = 'lang_filtered_' + output_filename
         with open('csv_files/' + output_filename, 'w', newline='') as outfile:
             writer = csv.writer(outfile)
             writer.writerows(arr)
@@ -660,12 +665,20 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
                 # FLAG
                 # quick comparison test to see if manually restricting urls to these 4 prefixes changed the results
                 # it did not change the results.
-                if False:
-                    qs = qs.filter(
-                        Q(has_wiki_link=False) | (
-                            Q(body__contains='en.wikipedia') | Q(body__contains='en.m.wikipedia')  | Q(body__contains='www.wikipedia')  | Q(body__contains='//wikipedia')
+                if FILTER_LANG:
+                    if platform == 'r':
+                        qs = qs.filter(
+                            Q(has_wiki_link=False) | (
+                                Q(url__contains='en.wikipedia') | Q(url__contains='en.m.wikipedia')  | Q(url__contains='www.wikipedia')  | Q(url__contains='//wikipedia')
+                            )
                         )
-                    )
+                    
+                    elif platform == 's':
+                        qs = qs.filter(
+                            Q(has_wiki_link=False) | (
+                                Q(body__contains='en.wikipedia') | Q(body__contains='en.m.wikipedia')  | Q(body__contains='www.wikipedia')  | Q(body__contains='//wikipedia')
+                            )
+                        )
                 if treatment_kwargs:
                     treatment = {
                         'name': 'Treatment',

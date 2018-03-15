@@ -8,6 +8,9 @@ Note that the textstat metrics are not used (sentence count and lexicon count)
 
 
 
+
+Known Issues:
+
 SQL LIKE query doesn't have a LOWER(statement) - aren't you missing some Wikipedia links?
 Reddit:
 w/o LOWER(url) 121289
@@ -41,8 +44,15 @@ bbc.com: 58.335981036347
 # TODO: run causal analysis for another domain for comparison... maybe twitter or youtube?
 
 
-What about links to non-English WP?
-Included in counts
-Not included in RQ2 analysis?
-Num SO posts w/ non-en WP link: 221
-0.46%
+
+In the reported results, non-English WP articles were included in calcuations.
+These make up a very small fraction of the total:
+specifically, X% of SO and Y% of Reddit
+These mainly caused two sources of error:
+quality calculations
+WP before and after calculations
+
+Issue I hadn't considered: Articles in other languages with the same title as English WP articles
+
+Conclusion: re-running all analyses with these posts explicitly exlcuded gives the same results.
+This makes sense, considering they only make up 1-2% of WP links.
