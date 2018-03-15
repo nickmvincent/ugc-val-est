@@ -63,7 +63,7 @@ def get_qs_features_and_outcomes(platform, num_rows=None, filter_kwargs=None, ex
         features = common_features + list_stack_specific_features()
     if filter_kwargs is not None:
         qs = qs.filter(**filter_kwargs)
-         if FILTER_LANG:
+        if FILTER_LANG:
             if platform == 'r':
                 qs = qs.filter(
                     Q(has_wiki_link=False) | (
