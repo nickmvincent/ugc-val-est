@@ -796,6 +796,43 @@ def test(num=500):
             
         print('Error/Tested: {}/{}'.format(n_err, tested))
 
+
+def test_ores_scores(num=500):
+    """
+    This function doesn't hit API - it just tests data in the database
+    Test that ores scores got assigned correctly
+    """
+    has_ores_but_no_revs
+    for qs in [
+        qsr,
+        qss
+    ]:
+        tested = 0
+        n_err = 0
+        for post in qs:
+            if tested % 100 == 0:
+                print(tested)
+            tested += 1
+            missing_necessary_ores = False
+            for dja_link in post.wiki_links.all():
+                # test these separately
+                if dja_link.language_code != 'en':
+                    continue
+                tested += 1
+                all_possible_links = WikiLink.objects.filter(
+                    models.Q(title__in=[link_obj.title, link_obj.alt_title]) | models.Q(alt_title__in=[link_obj.title, link_obj.alt_title])
+                )
+                any_possible_revs = prev_revisions = Revision.objects.filter(
+                    wiki_link__in=all_possible_links
+                )
+                # if there's no revs it shouldn't be able to get a score...
+                if not any_possible_revs.exists() and post.day_of_avg_score is not None:
+                    n_err += 1
+                    print(dja_link.title, dja_link.url)
+                    print(post.wiki_content_error)
+                    input()
+               
+
 def get_scores_only(model):
     session = requests.Session()
     session.headers.update(

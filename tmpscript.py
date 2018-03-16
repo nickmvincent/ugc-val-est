@@ -1,23 +1,36 @@
 def tmp_so():
     from portal.models import SampledStackOverflowPost
-    noneng = SampledStackOverflowPost.objects.filter(has_wiki_link=True)
+    noneng = SampledStackOverflowPost.objects.filter(has_wiki_link=True, day_of_avg_score__gt=0)
     count = 0
     for post in noneng:
         for link in post.wiki_links.all():
             if link.language_code != 'en':
                 count += 1
                 print(count)
+                break
+                
 
 
 def tmp_reddit():
     from portal.models import SampledRedditThread
-    noneng = SampledRedditThread.objects.filter(has_wiki_link=True, has_good_wiki_link=True).exclude(url__contains='en.wikipedia').exclude(url__contains='en.m.wikipedia').exclude(url__contains='www.wikipedia').exclude(url__contains='//wikipedia')
+    noneng = SampledRedditThread.objects.filter(has_wiki_link=True,  day_of_avg_score__gt=0).exclude(url__contains='en.wikipedia').exclude(url__contains='en.m.wikipedia').exclude(url__contains='www.wikipedia').exclude(url__contains='//wikipedia')
     print(noneng.count())
-    for x in noneng:
-        print(x.url)
-        for link in x.wiki_links.all():
-            print(link.__dict__)
-            input()
+    # for x in noneng:
+    #     print(x.url)
+    #     for link in x.wiki_links.all():
+    #         print(link.__dict__)
+    #         input()
+# 787
+
+def tmp_deleted():
+    from portal.models import SampledRedditThread
+    deleted = SampledRedditThread.objects.filter(body='[deleted]', sample_num__in=[0,1,2])
+    print(deleted.count())
+    deleted_with_wiki_link = SampledRedditThread.objects.filter(has_wiki_link=True, body='[deleted]', sample_num__in=[0,1,2])
+    print(deleted_with_wiki_link.count())
+# 141775
+# 7504
+
 
 def tmp():
     from portal.models import SampledStackOverflowPost
