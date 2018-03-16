@@ -67,10 +67,11 @@ Alternatively, if you want to inspect or play with the exact sample and processe
 Annotated dataset download (has ~1.04M Reddit posts, ~1.04M Stack Overflow answers, all necessary features pre-calculated, and all revelant Wikipedia information populated). Format is a single .sql file produced by postgres pg_dump command line utility. Total size is ~2GB.
 https://drive.google.com/file/d/1rJvaEeYbMlXNqDFUVoGqKQkaqG0Hnfoi/view?usp=sharing
 This .sql file is contains the exact state of data that was used to produced results reported in the table.
+
 Therefore, you have the choice to reproduce this experiment with your own sample or replicate the reported results exactly.
 Or make your own modifications as you see fit!
 
 Notes about this 2GB data dump:
 * To produce the Stack Overflow overly conservative pageview estimates (argument --rq 13 and --rq 14 in stats.py, argument --is-top for prediction.py) you will need to full SO Questions database (to look up the other answers associated w/ a given question). This is is the only output that cannot be run using only the ~1.04M post samples. See "Study One" in the paper for more details.
-* Non-English Wikipedia links are not properly supported. See "implementation_details.md" for more details.
-* WP pageviews are daily
+* Non-English Wikipedia links are not fully supported (as there are very few non-English Wikipedia links in our aggregate analysis). See "implementation_details.md" for more details.
+* WP article pageviews are calculated with daily pageviews
