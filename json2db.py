@@ -109,7 +109,7 @@ def main(platform):
             print('Blob processing took {}'.format(time.time() - tic))
 
 
-def from_local_filesystem(platform, path):
+def from_local_filesystem(platform, path, table):
     """main driver"""
 
     prefixes = {}
@@ -118,6 +118,8 @@ def from_local_filesystem(platform, path):
     for file in all_files():
         tic = time.time()
         prefix = path[:path.find('/')]
+        if not prefix:
+            prefix = table
         model = prefix_to_model(prefix)
         with open(file, 'r', encoding='utf8') as jsonfile:
             print('open took {}'.format(time.time() - tic))
@@ -189,6 +191,8 @@ def parse():
         description='This module imports data from json (stored in GCS) to DB (postgres)')
     parser.add_argument(
         '--platform', help='the platform to use. "r" for reddit and "s" for stack overflow')
+    parser.add_argument(
+        '--table_prefix', default='reddit_2016')
     parser.add_argument(
         '--mode', help='the mode to use',
         default="from_local_filesystem")
