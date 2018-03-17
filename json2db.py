@@ -109,7 +109,7 @@ def main(platform):
             print('Blob processing took {}'.format(time.time() - tic))
 
 
-def from_local_filesystem(platform, path, table):
+def from_local_filesystem(platform, path, table_prefix=None):
     """main driver"""
 
     prefixes = {}
@@ -117,9 +117,10 @@ def from_local_filesystem(platform, path, table):
     all_files = glob.glob(os.path.join(path, "*.json"))
     for file in all_files():
         tic = time.time()
-        prefix = path[:path.find('/')]
-        if not prefix:
-            prefix = table
+        if table_prefix:
+            prefix = table_prefix
+        else:
+            prefix = path[:path.find('/')]
         model = prefix_to_model(prefix)
         with open(file, 'r', encoding='utf8') as jsonfile:
             print('open took {}'.format(time.time() - tic))
@@ -201,7 +202,7 @@ def parse():
         default="/home/nvl0834/reddit_data/submissions")
     args = parser.parse_args()
     if args.mode == 'from_local_filesystem':
-        from_local_filesystem(args.platform, args.path)
+        from_local_filesystem(args.platform, args.path, args.table_prefix)
     else:
         main(args.platform)
 
