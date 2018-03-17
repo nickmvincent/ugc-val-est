@@ -29,6 +29,21 @@ def show_errors():
     pprint(message_cache)
 
 
+def analyze_missing_question_distribution():
+    from portal.models import StackOverflowQuestion
+    logs = ErrorLog.objects.filter(msg__contains='len(')
+    print('There are {} filtered errors logged'.format(len(logs)))
+    message_cache = {}
+    avg_score = 0
+    avg_comment_count = 0
+    dates = []
+    for error_log in logs:
+        question = StackOverflowQuestion.objects.get(id=error_log.uid)
+        avg_score += question.score
+        avg_comment_count += question.comment_count
+        dates.append(error_log.creation_date)
+
+
 def main():
     """driver"""
 

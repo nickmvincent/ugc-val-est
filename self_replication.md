@@ -46,3 +46,16 @@ Here's the results of my 1,000,000 sample of SO posts:
 {'posts_attempted': 1000000, 'already_in_db': 0, 'already_in_errors': 0, 'rows_added': 984184, 'errors_added': 15816}
 Runtime for iteration 0 was 15516.642497777939
 Total runtime was 15516.642553329468
+
+Why did some of the rows have errors again? Popped into the shell to check out one of the errors (using the ErrorLog table)
+Turns out the parent_id points to a question that doesn't exist in my data dump!
+Let's check it out in the Stack Exchange Data Explorer to compare.
+Look's like the post should exist... so my copy of SO database is missing some questions, which is causing 1.5% of my row imports to fail.
+Looking into my notes, looks like here's the reason: there was a JsonDecodeError on one of the SO json files.
+At the time, I believed this was a BigQuery Error, and I decided this would not cause substantial bias, and so did not investigate the problem immensely.
+
+
+Here's the timing results of loading two (2016-01 and 2016-02) of the pushshift reddit files into a new DB:
+processing took 16329.738641023636
+open took 0.0016736984252929688
+processing took 16775.153500556946
