@@ -34,7 +34,7 @@ def main(platform):
     prefixes = {}
     confirmation_sent = False
     client = storage.Client()
-    bucket = client.get_bucket('datadumpsforme')
+    bucket = client.get_bucket(bucket)
     for blob in bucket.list_blobs():
         tic = time.time()
         path = blob.name
@@ -58,7 +58,7 @@ def main(platform):
                         'json2db JSONDecode Error',
                         path,
                         settings.EMAIL_HOST_USER,
-                        ['REDACTED'],
+                        ['nickmvincent@gmail.com'],
                         fail_silently=False,
                     )
                     continue
@@ -94,7 +94,7 @@ def main(platform):
                         'json2db Error!',
                         full_msg,
                         settings.EMAIL_HOST_USER,
-                        ['REDACTED'],
+                        ['nickmvincent@gmail.com'],
                         fail_silently=False,
                     )
             if not confirmation_sent:
@@ -102,7 +102,7 @@ def main(platform):
                     'Confirmation email: json2db ran successfully for one round',
                     path,
                     settings.EMAIL_HOST_USER,
-                    ['REDACTED'],
+                    ['nickmvincent@gmail.com'],
                     fail_silently=False,
                 )
                 confirmation_sent = True
@@ -129,13 +129,13 @@ def from_local_filesystem(platform, path, table_prefix=None):
                 try:
                     data = json.loads(line)
                 except JSONDecodeError:
-                    # send_mail(
-                    #     'json2db JSONDecode Error',
-                    #     path,
-                    #     settings.EMAIL_HOST_USER,
-                    #     ['REDACTED'],
-                    #     fail_silently=False,
-                    # )
+                    send_mail(
+                        'json2db JSONDecode Error',
+                        path,
+                        settings.EMAIL_HOST_USER,
+                        ['nickmvincent@gmail.com'],
+                        fail_silently=False,
+                    )
                     continue
                 kwargs = {}
                 for field in model._meta.get_fields():
@@ -165,22 +165,22 @@ def from_local_filesystem(platform, path, table_prefix=None):
                 except Exception as err:
                     full_msg = '\n'.join([path, str(data), str(kwargs), str(err)])
                     print(full_msg)
-            #         send_mail(
-            #             'json2db Error!',
-            #             full_msg,
-            #             settings.EMAIL_HOST_USER,
-            #             ['REDACTED'],
-            #             fail_silently=False,
-            #         )
-            # if not confirmation_sent:
-                # send_mail(
-                #     'Confirmation email: json2db ran successfully for one round',
-                #     path,
-                #     settings.EMAIL_HOST_USER,
-                #     ['REDACTED'],
-                #     fail_silently=False,
-                # )
-                # confirmation_sent = True
+                    send_mail(
+                        'json2db Error!',
+                        full_msg,
+                        settings.EMAIL_HOST_USER,
+                        ['nickmvincent@gmail.com'],
+                        fail_silently=False,
+                    )
+            if not confirmation_sent:
+                send_mail(
+                    'Confirmation email: json2db ran successfully for one round',
+                    path,
+                    settings.EMAIL_HOST_USER,
+                    ['nickmvincent@gmail.com'],
+                    fail_silently=False,
+                )
+                confirmation_sent = True
             print('processing took {}'.format(time.time() - tic))
 
 
@@ -200,6 +200,11 @@ def parse():
     parser.add_argument(
         '--path', help='where your json files live',
         default="/home/nvl0834/reddit_data/submissions")
+    parser.add_argument(
+        '--bucket', help='where your json files live in BQ',
+        default="nmvg_stackoverflow/answers")
+
+        
     args = parser.parse_args()
     if args.mode == 'from_local_filesystem':
         from_local_filesystem(args.platform, args.path, args.table_prefix)

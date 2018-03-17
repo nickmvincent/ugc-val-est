@@ -33,7 +33,7 @@ def analyze_missing_question_distribution():
     from portal.models import StackOverflowAnswer
     logs = ErrorLog.objects.filter(msg__contains='len(')
     n = lne(logs)
-    print('There are {} filtered errors logged'.format(n)
+    print('There are {} filtered errors logged'.format(n))
     message_cache = {}
     avg_score = 0
     avg_comment_count = 0
