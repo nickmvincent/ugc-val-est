@@ -115,7 +115,7 @@ def from_local_filesystem(platform, path, table_prefix=None):
     prefixes = {}
     confirmation_sent = False
     all_files = glob.glob(os.path.join(path, "*.json"))
-    for file in all_files():
+    for file in all_files:
         tic = time.time()
         if table_prefix:
             prefix = table_prefix

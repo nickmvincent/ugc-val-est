@@ -32,22 +32,22 @@ def show_errors():
 def analyze_missing_question_distribution():
     from portal.models import StackOverflowAnswer
     logs = ErrorLog.objects.filter(msg__contains='len(')
-    n = lne(logs)
-    print('There are {} filtered errors logged'.format(n)
+    n = len(logs)
+    print('There are {} filtered errors logged'.format(n))
     message_cache = {}
     avg_score = 0
     avg_comment_count = 0
     dates = []
     for error_log in logs:
-        answer = StackOverflowAnswer.objects.using('secondary').objects.get(id=error_log.uid)
-        avg_score += question.score
-        avg_comment_count += question.comment_count
-        dates.append(error_log.creation_date)
+        answer = StackOverflowAnswer.objects.using('secondary').get(id=error_log.uid)
+        avg_score += answer.score
+        avg_comment_count += answer.comment_count
+        dates.append(answer.creation_date)
     avg_score /= n
     print('avg_score', avg_score)
     avg_comment_count /= n
     print('avg_comment_count', avg_comment_count)
-
+    print(dates)
 
 def main():
     """driver"""
