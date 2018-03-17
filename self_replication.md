@@ -29,6 +29,8 @@ SELECT *, rand() as rand FROM [bigquery-public-data:stackoverflow.posts_answers]
 Step 2: Create a fresh new database!
 `sudo -u postgres psql postgres`
 `CREATE DATABASE ugc_val_est_repli1 OWNER <user>;`
+Set environment variables to point to this DB...
+`python manage.py migrate`
 
 Step 3: Run the scripts to get this json data into the fresh new database!
 Problem #1 encountered! Looks like my original code only supported reading data from Google Cloud Storage Buckets - there's no support for loading data from local files! Looks like an upgrade will be required (or we'd have to upload the new patched data to GCS, which seems unnecssary and could cost money).

@@ -233,7 +233,7 @@ def sample_so(data_source, rows_to_sample, rows_per_query, sample_num, links_onl
             'limit': rows_per_query,
         }
         if links_only:
-            query_kwargs['where'] = " WHERE {}.body like '%wikipedia.org/wiki/%' ".format(
+            query_kwargs['where'] = " WHERE Lower({}.body) like '%wikipedia.org/wiki/%' ".format(
                 answers_table
             )
         else:

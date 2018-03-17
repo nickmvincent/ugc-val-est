@@ -122,9 +122,9 @@ def main(platform):
             print('Blob processing took {}'.format(time.time() - tic))
 
 
-def so_json_to_sample_table(platform, model=SampledStackOverflowPost):
+def json_to_table(model=SampledStackOverflowPost):
     """
-    Take a json file and get it directly into the SAMPLE table
+    Take a json file and get it directly into a table
 
     abstract this later
     """
@@ -133,17 +133,25 @@ def so_json_to_sample_table(platform, model=SampledStackOverflowPost):
     json_path = '~/so_data/answers/samples/40k_dated_WP.json'
 
     path = [json_path]
+
+    test_dicts = []
+    tests = 5
+    test_counter = 0
     for path in paths:
         tic = time.time()
         print(path)
         with open(path, 'r', encoding='utf8') as jsonfile:
             print('open took {}'.format(time.time() - tic))
             tic = time.time()
-            test_counter = 0
             for line in jsonfile:
                 test_counter += 1
                 try:
                     data = json.loads(line)
+                    if test_counter < 10:
+                        test_dict = {}
+                        test_dict['json'] = {
+                            data
+                        }
                 except JSONDecodeError:
                     send_mail(
                         'json2db JSONDecode Error',
@@ -174,7 +182,13 @@ def so_json_to_sample_table(platform, model=SampledStackOverflowPost):
                             print(data)
                             continue
                 try:
-                    model.objects.create(**kwargs)
+                    obj = model.objects.create(**kwargs)
+                    if test_counter < 10:
+                        test_dict['model'] = {
+                            obj.__dict__
+                        }
+                        test_dicts.append(test_dict)
+                        test_counter += 1
                     prefixes[prefix] = True
                 except IntegrityError:
                     continue
@@ -198,6 +212,9 @@ def so_json_to_sample_table(platform, model=SampledStackOverflowPost):
                 )
                 confirmation_sent = True
             print('processing took {}'.format(time.time() - tic))
+            print(test_dicts)
+            with open('json_load_test_dicts.json', 'w') as file:
+                json.dump(test_dicts, file)
 
 
 def parse():
@@ -208,7 +225,11 @@ def parse():
         description='This module imports data from json (stored in GCS) to DB (postgres)')
     parser.add_argument(
         'platform', help='the platform to use. "r" for reddit and "s" for stack overflow')
+    parser.add_argument(
+        'mode', help='the mode to use. default is json_to_table")
     args = parser.parse_args()
+    if args.mode == 'so_json_to_sample_table':
+        so_json_to_sample_table()
     main(args.platform)
 
 
