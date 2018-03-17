@@ -203,12 +203,20 @@ def parse():
         '--must_include', help='path must include this...',
         default="/answers")
 
-    # python json2db.py --platform s --key stackoverflow-answers --mode bq --bucket nmvg_stackoverflow/answers --must
+    # python json2db.py --platform s --key stackoverflow-answers --mode bq --bucket nmvg_stackoverflow/answers --must_include /answers
 
         
     args = parser.parse_args()
     if args.mode == 'from_local_filesystem':
         from_local_filesystem(args.platform, args.path, args.key)
+    elif args.mode == 'test_mail':
+        send_mail(
+            'test subject',
+            'test body',
+            settings.EMAIL_HOST_USER,
+            ['nickmvincent@gmail.com'],
+            fail_silently=False,
+        )
     else:
         main(args.platform, args.key, args.bucket, args.must_include)
 
@@ -226,3 +234,4 @@ if __name__ == "__main__":
         ErrorLog, SampledStackOverflowPost
     )
     parse()
+    print('Warning: this script may fail if you have not configured email properly! Head to settings.py to set your email up. Or comment it out (not advised)')

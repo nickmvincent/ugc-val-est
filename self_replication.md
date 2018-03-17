@@ -1,7 +1,7 @@
 # A Story of Self-Replication
 ## This document documents my attempt to quickly replicate my experiments from scratch with a completly fresh database and sample, in light of potential dataset issues.
 
-Warning: this document is written in a very "note-self" manner, may includes grammatical errors and annoying mannerisms.
+Warning: this document is written in a very "note-to-self" manner, may includes grammatical errors and annoying mannerisms.
 
 Step 1: Download updated data files from pushshift.io (we used big query last time to download json)
 Why? Data up to Feb. 2016 has been patched. Want to practice running through a full setup.
@@ -39,10 +39,13 @@ Edit: actually, looks like it's pretty simple to replace my GCS code w/ code tha
 
 Problem #2: Oh boy! Looks like I had was switching between SO and Reddit by commenting/uncomments code. That would be a challenge for someone... let's fix it...
 
+
+## Loading full Reddit JSON to my DB:
 OK - I'm successfully loading Reddit data from JSON sampling new SO data from the BigQuery dataset I already downloaded.
 Started the SO data sample at 11:30pm and the Reddit data load at 12:10am.
 Here's another replication hiccup - I didn't the record the time that these steps should take, so current me has no idea!
 
+## Loading full SO JSON to my DB:
 Here's the results of my 1,000,000 sample of SO posts:
 {'posts_attempted': 1000000, 'already_in_db': 0, 'already_in_errors': 0, 'rows_added': 984184, 'errors_added': 15816}
 Runtime for iteration 0 was 15516.642497777939
@@ -54,11 +57,14 @@ Turns out the parent_id points to a question that doesn't exist in my data dump!
 Let's check it out in the Stack Exchange Data Explorer to compare.
 Look's like the post should exist... so my copy of SO database is missing some questions, which is causing 1.5% of my row imports to fail.
 Looking into my notes, looks like here's the reason: there was a JsonDecodeError on one of the SO json files.
-At the time, I believed this was a BigQuery Error, and I decided this would not cause substantial bias, and so did not investigate the problem immensely.
+So in the copy of data from BigQuery I was using at the same, some questions were missing, and I decided this would not cause substantial bias.
 As a quick exercise, I took a look at average Score, CommentCount, and dates of the 1.5% missing to estimate the effect of our analysis (which uses sampling and looks at aggregates, such that a small amount of missing posts would minimally affect results).
 avg_score 2.7023899848254933
 avg_comment_count 1.31398583712696
 
+However, for the sake of the exercise and future convenience, I decided to re-download the full SO database.
+
+Another Problem: didn't configure my email settings so it threw an error. This would be frustrating to anyone trying to use my code...
 
 
 Here's the timing results of loading two (2016-01 and 2016-02) of the pushshift reddit files into a new DB:
@@ -66,3 +72,29 @@ processing took 16329.738641023636
 open took 0.0016736984252929688
 processing took 16775.153500556946
 ^ 4.6 hourrs
+
+
+### Loading Reddit posts:
+First load 1000000 random posts.
+`python populate_db.py --platform r --sample 0`
+
+Does this:
+`SELECT selftext, id, score, author, created_utc, url, subreddit, num_comments, title, random() as rand FROM portal_redditpost ORDER BY rand LIMIT 1000000;`
+
+{'posts_attempted': 1000000, 'already_in_db': 0, 'already_in_errors': 0, 'rows_added': 1000000, 'errors_added': 0}
+Runtime for iteration 0 was 9805.322369098663
+Total runtime was 9805.322427272797
+
+Next load up to 40,000 WP posts.
+`python populate_db.py --platform r --sample 1 --links_only --rows_to_sample 40000 --rows_per_query 40000`
+Does this:
+`SELECT selftext, id, score, author, created_utc, url, subreddit, num_comments, title, random() as rand FROM portal_redditpost  WHERE LOWER(portal_redditpost.url) like '%wikipedia.org/wiki/%' ORDER BY rand LIMIT 40000;`
+
+{'posts_attempted': 20452, 'already_in_db': 1386, 'already_in_errors': 0, 'rows_added': 19066, 'errors_added': 0}
+Runtime for iteration 0 was 411.9969594478607
+Total runtime was 411.9970290660858
+
+Great! All reddit posts are loaded. Now let's get all that reddit author info!
+`python reddit_author_info.py all`
+This code is not user friendly either - you must read the code to understand that adding an additional argument decides if you process all users or just the unprocessed ones. Not a huge deal though.
+
