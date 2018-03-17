@@ -13,36 +13,30 @@ import pytz
 from google.cloud import storage
 
 
-def prefix_to_model(prefix):
+def key_to_table(key):
     """
-    For a given files prefix, returns the model/table it should be stored as
+    For a given files key, returns the model/table it should be stored as
     """
-    if 'reddit_2016' in prefix:
+    if 'reddit_2016' in key:
         return RedditPost
     return {
         'stackoverflow-answers': StackOverflowAnswer,
-        'stackoverflow-questions2': StackOverflowQuestion,
+        'stackoverflow-questions': StackOverflowQuestion,
         'stackoverflow-users': StackOverflowUser,
-    }[prefix]
+    }[key]
 
 SAVE_TEMPLATE = '{}_tmp.json'
 TEST = False
 
-def main(platform):
+def main(platform, table_key, bucket):
     """main driver"""
-
-    prefixes = {}
     confirmation_sent = False
     client = storage.Client()
     bucket = client.get_bucket(bucket)
     for blob in bucket.list_blobs():
         tic = time.time()
         path = blob.name
-        print(path)
-        prefix = path[:path.find('/')]
-        if TEST and prefixes.get(prefix):
-            continue
-        model = prefix_to_model(prefix)
+        model = key_to_table(table_key)
         save_location = SAVE_TEMPLATE.format(platform)
         blob.download_to_filename(save_location)
         with open(save_location, 'r', encoding='utf8') as jsonfile:
@@ -84,8 +78,8 @@ def main(platform):
                             continue
                 try:
                     model.objects.create(**kwargs)
-                    prefixes[prefix] = True
                 except IntegrityError:
+                    # it already exists!
                     continue
                 except Exception as err:
                     full_msg = '\n'.join([path, str(data), str(kwargs), str(err)])
@@ -112,7 +106,6 @@ def main(platform):
 def from_local_filesystem(platform, path, table_prefix=None):
     """main driver"""
 
-    prefixes = {}
     confirmation_sent = False
     all_files = glob.glob(os.path.join(path, "*.json"))
     for file in all_files:
@@ -159,7 +152,6 @@ def from_local_filesystem(platform, path, table_prefix=None):
                             continue
                 try:
                     model.objects.create(**kwargs)
-                    prefixes[prefix] = True
                 except IntegrityError:
                     continue
                 except Exception as err:
@@ -193,7 +185,7 @@ def parse():
     parser.add_argument(
         '--platform', help='the platform to use. "r" for reddit and "s" for stack overflow')
     parser.add_argument(
-        '--table_prefix', default='reddit_2016')
+        '--key', default='reddit_2016')
     parser.add_argument(
         '--mode', help='the mode to use',
         default="from_local_filesystem")
@@ -207,9 +199,9 @@ def parse():
         
     args = parser.parse_args()
     if args.mode == 'from_local_filesystem':
-        from_local_filesystem(args.platform, args.path, args.table_prefix)
+        from_local_filesystem(args.platform, args.path, args.key)
     else:
-        main(args.platform)
+        main(args.platformm, args.key, arg.sbucket)
 
 
 if __name__ == "__main__":
