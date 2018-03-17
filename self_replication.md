@@ -6,17 +6,16 @@ Why? Data up to Feb. 2016 has been patched. Want to practice running through a f
 `wget https://files.pushshift.io/reddit/submissions/RS_2016-02.bz2`
 
 Shall we re-download Stack Overflow data? I decided to try, just to see how much a hassle it would be.
-Otherwise, I'd need to get the SO tables back into GCS.
-But first, let's see if we can get the Stack Exchange Data Explorer...
+First, let's see if we can get the Stack Exchange Data Explorer...
 
 Trying to get 40k likely WP posts (if this doesn't work, I don't think the 1M sample will work!):
-`select top 40000 *
-from Posts
-where PostTypeId = 2 and CreationDate > '07/31/2008' and CreationDate < '06/11/2017' and Lower(body) like '%wikipedia.org/wiki/%'
-order by newid()`
+`select top 40000 * from Posts where PostTypeId = 2 and CreationDate > '07/31/2008' and CreationDate < '06/11/2017' and Lower(body) like '%wikipedia.org/wiki/%' order by newid()`
 ... server timeout
+We do see that there's 22M posts, which matches our Big Query DB.
 
 Dang. Looks like we may need to just use Big Query.
+
+
 
 `SELECT *, rand() as rand FROM [bigquery-public-data:stackoverflow.posts_answers] where creation_date > '2008-07-31 00:00:00' and creation_date < '2017-06-11 00:00:00' ORDER BY rand LIMIT 1000000;`
 
@@ -38,3 +37,12 @@ Forcing researchers who might want to use my code to use GCS seems like a bad ca
 Edit: actually, looks like it's pretty simple to replace my GCS code w/ code that hits the local filesystem.
 
 Problem #2: Oh boy! Looks like I had was switching between SO and Reddit by commenting/uncomments code. That would be a challenge for someone... let's fix it...
+
+OK - I'm successfully loading Reddit data from JSON sampling new SO data from the BigQuery dataset I already downloaded.
+Started the SO data sample at 11:30pm and the Reddit data load at 12:10am.
+Here's another replication hiccup - I didn't the record the time that these steps should take, so current me has no idea!
+
+Here's the results of my 1,000,000 sample of SO posts:
+{'posts_attempted': 1000000, 'already_in_db': 0, 'already_in_errors': 0, 'rows_added': 984184, 'errors_added': 15816}
+Runtime for iteration 0 was 15516.642497777939
+Total runtime was 15516.642553329468

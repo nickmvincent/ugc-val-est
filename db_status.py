@@ -22,6 +22,7 @@ def show_errors():
         msg = error_log.msg
         if msg not in message_cache:
             print(msg)
+            print(error_log.uid)
             message_cache[msg] = 0
         else:
             message_cache[msg] += 1
