@@ -28,7 +28,7 @@ def key_to_table(key):
 SAVE_TEMPLATE = '{}_tmp.json'
 TEST = False
 
-def main(platform, table_key, bucket):
+def main(platform, table_key, bucket, must_include):
     """main driver"""
     confirmation_sent = False
     client = storage.Client()
@@ -36,6 +36,10 @@ def main(platform, table_key, bucket):
     for blob in bucket.list_blobs():
         tic = time.time()
         path = blob.name
+        print(path)
+        if must_include not in path:
+            print('skipping, does not have {}'.format(must_include))
+            continue
         model = key_to_table(table_key)
         save_location = SAVE_TEMPLATE.format(platform)
         blob.download_to_filename(save_location)
@@ -194,14 +198,19 @@ def parse():
         default="/home/nvl0834/reddit_data/submissions")
     parser.add_argument(
         '--bucket', help='where your json files live in BQ',
-        default="nmvg_stackoverflow/answers")
+        default="nmvg_stackoverflow")
+    parser.add_argument(
+        '--must_include', help='path must include this...',
+        default="/answers")
+
+    # python json2db.py --platform s --key stackoverflow-answers --mode bq --bucket nmvg_stackoverflow/answers --must
 
         
     args = parser.parse_args()
     if args.mode == 'from_local_filesystem':
         from_local_filesystem(args.platform, args.path, args.key)
     else:
-        main(args.platformm, args.key, arg.sbucket)
+        main(args.platform, args.key, args.bucket, args.must_include)
 
 
 if __name__ == "__main__":
