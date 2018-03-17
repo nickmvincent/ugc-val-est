@@ -24,9 +24,6 @@ def prefix_to_model(prefix):
         'stackoverflow-users': StackOverflowUser,
     }[prefix]
 
-# completed stackoverflow-answers 0 to 63
-# error occurred in 64
-
 SAVE_TEMPLATE = '{}_tmp.json'
 TEST = False
 
@@ -42,17 +39,6 @@ def main(platform):
         path = blob.name
         print(path)
         prefix = path[:path.find('/')]
-        if platform == 's':
-            if 'stackoverflow-questions2' not in prefix:
-                print('prefix {} - manual override'.format(prefix))
-                continue
-            if 'reddit' in prefix:
-                print('Bypassing {} for now'.format(path))
-                continue
-        elif platform == 'r':
-            if 'stackoverflow' in prefix:
-                print('Bypassing {} for now'.format(path))
-                continue
         if TEST and prefixes.get(prefix):
             continue
         model = prefix_to_model(prefix)

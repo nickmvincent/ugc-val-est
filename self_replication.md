@@ -20,7 +20,7 @@ Dang. Looks like we may need to just use Big Query.
 
 `SELECT *, rand() as rand FROM [bigquery-public-data:stackoverflow.posts_answers] where creation_date > '2008-07-31 00:00:00' and creation_date < '2017-06-11 00:00:00' ORDER BY rand LIMIT 1000000;`
 
-SELECT *, rand() as rand FROM [bigquery-public-data:stackoverflow.posts_answers] where Lower(body) like '%wikipedia.org/wiki/%' and creation_date > '2008-07-31 00:00:00' and creation_date < '2017-06-11 00:00:00' ORDER BY rand LIMIT 40000;
+`SELECT *, rand() as rand FROM [bigquery-public-data:stackoverflow.posts_answers] where Lower(body) like '%wikipedia.org/wiki/%' and creation_date > '2008-07-31 00:00:00' and creation_date < '2017-06-11 00:00:00' ORDER BY rand LIMIT 40000;`
 
 ## Code update: let's "do the right thing" and use `LOWER(body) like`. It doesn't matter for this analysis (see ...) but it's the "Right Thing to Do".
 
@@ -35,8 +35,6 @@ Set environment variables to point to this DB...
 Step 3: Run the scripts to get this json data into the fresh new database!
 Problem #1 encountered! Looks like my original code only supported reading data from Google Cloud Storage Buckets - there's no support for loading data from local files! Looks like an upgrade will be required (or we'd have to upload the new patched data to GCS, which seems unnecssary and could cost money).
 Forcing researchers who might want to use my code to use GCS seems like a bad call.
+Edit: actually, looks like it's pretty simple to replace my GCS code w/ code that hits the local filesystem.
 
-
-Problem #2 encountered! My json2db.py script has a bunch print statements and continue statements and I don't remember why.
-Looks like I was manually forcing the script to start half-way through when it failed. Past me confused present me...
-
+Problem #2: Oh boy! Looks like I had was switching between SO and Reddit by commenting/uncomments code. That would be a challenge for someone... let's fix it...

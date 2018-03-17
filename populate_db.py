@@ -300,7 +300,7 @@ def sample_reddit(data_source, rows_to_sample, rows_per_query, sample_num, links
             'limit': rows_per_query,
         }
         if links_only:
-            query_kwargs['where'] = " WHERE {}.url like '%wikipedia.org/wiki/%' ".format(
+            query_kwargs['where'] = " WHERE LOWER({}.url) like '%wikipedia.org/wiki/%' ".format(
                 table
             )
         else:
@@ -319,13 +319,15 @@ def parse():
     parser = argparse.ArgumentParser(
         description='Populates db')
     parser.add_argument(
-        '--data_source', help='the data source to use. "bq" for bigquery and "db" for db')
+        '--data_source', help='the data source to use. "bq" for bigquery and "db" for db', default='db')
     parser.add_argument(
-        '--rows_to_sample', type=int, help="the total number of rows to sample")
+        '--rows_to_sample', type=int, help="the total number of rows to sample", default=1000000)
     parser.add_argument(
-        '--rows_per_query', type=int, help="the number of rows to sample in each query")
+        '--rows_per_query', type=int, help="the number of rows to sample in each query", default=1000000)
     parser.add_argument(
-        '--sample_num', type=int, help="the iteration number of this sample")
+        '--sample_num', type=int, help="the iteration number of this sample",)
+    parser.add_argument(
+        '--platform', help="the iteration number of this sample")
     parser.add_argument(
         '--links_only', 
         action='store_true',
@@ -336,8 +338,10 @@ def parse():
     oargs = (
         args.data_source, args.rows_to_sample, args.rows_per_query,
         args.sample_num, args.links_only)
-    # sample_so(*oargs)
-    sample_reddit(*oargs)
+    if args.platform == 'r':
+        sample_reddit(*oargs)
+    elif args.platform == 's':
+        sample_so(*oargs)
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dja.settings")
