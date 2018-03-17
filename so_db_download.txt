@@ -1,0 +1,10 @@
+2018_03_17
+
+stackoverflow_2018_03_17
+
+From BQ: https://bigquery.cloud.google.com/table/bigquery-public-data:stackoverflow.stackoverflow_posts
+
+In BQ:
+questions: 15,483,377
+answers: 24,071,488
+users: 8,523,668

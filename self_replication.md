@@ -98,3 +98,12 @@ Great! All reddit posts are loaded. Now let's get all that reddit author info!
 `python reddit_author_info.py all`
 This code is not user friendly either - you must read the code to understand that adding an additional argument decides if you process all users or just the unprocessed ones. Not a huge deal though.
 
+
+
+## Getting Reddit user info from the Reddit API
+`python reddit_author_info.py all`
+Wow! It ran with no problems. This is the first step so far that went off without a hitch.
+Worth noting that I needed to make sure I had set three environment variables to use the Reddit API:
+`reddit = praw.Reddit(
+        client_id=os.environ["CLIENT_ID"], 
+        client_secret=os.environ["CLIENT_SECRET"], user_agent=os.environ["UA"])`
