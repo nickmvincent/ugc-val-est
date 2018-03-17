@@ -122,7 +122,7 @@ def main(platform):
             print('Blob processing took {}'.format(time.time() - tic))
 
 
-def json_to_table(model=SampledStackOverflowPost):
+def json_to_table(model):
     """
     Take a json file and get it directly into a table
 
@@ -130,9 +130,9 @@ def json_to_table(model=SampledStackOverflowPost):
     """
 
     confirmation_sent = False
-    json_path = '~/so_data/answers/samples/40k_dated_WP.json'
+    json_path = '/home/nvl0834/so_data/answers/samples/40k_dated_WP.json'
 
-    path = [json_path]
+    paths = [json_path]
 
     test_dicts = []
     tests = 5
@@ -149,9 +149,7 @@ def json_to_table(model=SampledStackOverflowPost):
                     data = json.loads(line)
                     if test_counter < 10:
                         test_dict = {}
-                        test_dict['json'] = {
-                            data
-                        }
+                        test_dict['json'] = data
                 except JSONDecodeError:
                     send_mail(
                         'json2db JSONDecode Error',
@@ -184,9 +182,7 @@ def json_to_table(model=SampledStackOverflowPost):
                 try:
                     obj = model.objects.create(**kwargs)
                     if test_counter < 10:
-                        test_dict['model'] = {
-                            obj.__dict__
-                        }
+                        test_dict['model'] = obj.__dict__
                         test_dicts.append(test_dict)
                         test_counter += 1
                     prefixes[prefix] = True
@@ -224,12 +220,13 @@ def parse():
     parser = argparse.ArgumentParser(
         description='This module imports data from json (stored in GCS) to DB (postgres)')
     parser.add_argument(
-        'platform', help='the platform to use. "r" for reddit and "s" for stack overflow')
+        '--platform', help='the platform to use. "r" for reddit and "s" for stack overflow')
     parser.add_argument(
-        'mode', help='the mode to use. default is json_to_table")
+        '--mode', help='the mode to use. default is json_to_table',
+        default="json_to_table")
     args = parser.parse_args()
-    if args.mode == 'so_json_to_sample_table':
-        so_json_to_sample_table()
+    if args.mode == 'json_to_table':
+        json_to_table(SampledStackOverflowPost)
     main(args.platform)
 
 

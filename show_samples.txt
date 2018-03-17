@@ -1,9 +1,13 @@
 SampledRedditThread No WP link
-title, MRW I'm a fluoro-colored robot with a jungle-fever cloud fetish.
-body, [deleted]
-mon, False
+title, Wizards and Control
+body, Wizards: "Hey guys, we're trying to switch things in control up from draw-go and holding counterspells all game"
+
+Pro Tour: "Lol"
+
+
+mon, True
 tues, False
-wed, True
+wed, False
 thurs, False
 fri, False
 sat, False
@@ -12,77 +16,36 @@ feb, False
 mar, False
 apr, False
 may, False
-jun, True
-jul, False
-aug, False
-sep, False
-octo, False
-nov, False
-zero_to_six, False
-six_to_twelve, False
-twelve_to_eighteen, False
-seconds_since_user_creation, 0
-title_length, 64
-title_percent_uppercase, 6
-title_percent_spaces, 14
-title_percent_punctuation, 2
-title_starts_capitalized, True
-title_coleman_liau_index, 13
-title_includes_question_mark, False
-title_sentiment_polarity, 0
-title_sentiment_subjectivity, 0
-user_comment_karma, 0
-user_link_karma, 0
-user_is_mod, False
-user_is_suspended, False
-user_is_deleted, True
-{'_state': <django.db.models.base.ModelState object at 0x7fbeeb480b00>, 'uid': '4pdg9r', 'body': '[deleted]', 'body_length': 9, 'body_lexicon_count': 1, 'body_sentence_count': 1, 'body_num_links': 0, 'body_percent_uppercase': 0, 'body_percent_spaces': 0, 'body_percent_punctuation': 0, 'body_starts_capitalized': False, 'body_includes_question_mark': False, 'body_includes_code': False, 'body_coleman_liau_index': 7, 'body_sentiment_polarity': 0, 'body_sentiment_subjectivity': 0, 'title': "MRW I'm a fluoro-colored robot with a jungle-fever cloud fetish.", 'title_length': 64, 'title_lexicon_count': 1, 'title_sentence_count': 1, 'title_percent_uppercase': 6, 'title_percent_spaces': 14, 'title_percent_punctuation': 2, 'title_starts_capitalized': True, 'title_includes_question_mark': False, 'title_coleman_liau_index': 13, 'title_sentiment_polarity': 0, 'title_sentiment_subjectivity': 0, 'score': 1, 'num_comments': 1, 'context': 'shittyreactiongifs', 'author': '[deleted]', 'timestamp': datetime.datetime(2016, 6, 22, 22, 35, 42, tzinfo=<UTC>), 'has_wiki_link': False, 'has_no_link': False, 'has_other_link': True, 'has_good_wiki_link': False, 'has_b_wiki_link': False, 'has_c_wiki_link': False, 'num_wiki_links': 0, 'day_of_avg_score': None, 'week_after_avg_score': None, 'all_revisions_pulled': False, 'wiki_content_error': 0, 'mon': False, 'tues': False, 'wed': True, 'thurs': False, 'fri': False, 'sat': False, 'sun': False, 'jan': False, 'feb': False, 'mar': False, 'apr': False, 'may': False, 'jun': True, 'jul': False, 'aug': False, 'sep': False, 'octo': False, 'nov': False, 'dec': False, 'zero_to_six': False, 'six_to_twelve': False, 'twelve_to_eighteen': False, 'eighteen_to_twentyfour': True, 'year2008': False, 'year2009': False, 'year2010': False, 'year2011': False, 'year2012': False, 'year2013': False, 'year2014': False, 'year2015': False, 'year2016': True, 'user_created_utc': datetime.datetime(2016, 6, 22, 22, 35, 42, tzinfo=<UTC>), 'seconds_since_user_creation': 0, 'num_edits': 0, 'num_new_editors': 0, 'num_new_editors_retained': 0, 'num_new_editors_retained_180': 0, 'num_new_edits': 0, 'num_old_edits': 0, 'num_inactive_edits': 0, 'num_active_edits': 0, 'num_minor_edits': 0, 'num_major_edits': 0, 'num_edits_prev_week': 0, 'num_new_editors_prev_week': 0, 'num_new_editors_retained_prev_week': 0, 'num_new_editors_retained_prev_week_180': 0, 'num_new_edits_prev_week': 0, 'num_old_edits_prev_week': 0, 'num_inactive_edits_prev_week': 0, 'num_active_edits_prev_week': 0, 'num_minor_edits_prev_week': 0, 'num_major_edits_prev_week': 0, 'num_edits_preceding_post': 0, 'num_wiki_pageviews': None, 'num_wiki_pageviews_prev_week': None, 'sample_num': 0, 'user_info_processed': True, 'user_comment_karma': 0, 'user_link_karma': 0, 'user_is_mod': False, 'user_is_suspended': False, 'user_is_deleted': True, 'url': 'http://m.imgur.com/7dggktv?r', 'in_todayilearned': False, 'in_borntoday': False, 'in_wikipedia': False, 'in_CelebrityBornToday': False, 'in_The_Donald': False, 'in_other': True}
-===
-
-SampledRedditThread No WP link
-title, Wondering i[f] you'd like to see more ;):)
-body, 
-mon, False
-tues, False
-wed, False
-thurs, False
-fri, True
-sat, False
-jan, False
-feb, False
-mar, False
-apr, True
-may, False
 jun, False
 jul, False
 aug, False
 sep, False
-octo, False
+octo, True
 nov, False
 zero_to_six, True
 six_to_twelve, False
 twelve_to_eighteen, False
-seconds_since_user_creation, 2284
-title_length, 42
-title_percent_uppercase, 2
-title_percent_spaces, 17
+seconds_since_user_creation, 52025339
+title_length, 19
+title_percent_uppercase, 11
+title_percent_spaces, 11
 title_percent_punctuation, 0
 title_starts_capitalized, True
-title_coleman_liau_index, 9
+title_coleman_liau_index, 7
 title_includes_question_mark, False
-title_sentiment_polarity, 41
-title_sentiment_subjectivity, 83
-user_comment_karma, 106
-user_link_karma, 2517
+title_sentiment_polarity, 0
+title_sentiment_subjectivity, 0
+user_comment_karma, 8624
+user_link_karma, 1591
 user_is_mod, False
 user_is_suspended, False
 user_is_deleted, False
-{'_state': <django.db.models.base.ModelState object at 0x7fbeeb480b70>, 'uid': '4gx4ne', 'body': '', 'body_length': 0, 'body_lexicon_count': 0, 'body_sentence_count': 0, 'body_num_links': 0, 'body_percent_uppercase': 0, 'body_percent_spaces': 0, 'body_percent_punctuation': 0, 'body_starts_capitalized': False, 'body_includes_question_mark': False, 'body_includes_code': False, 'body_coleman_liau_index': 0, 'body_sentiment_polarity': 0, 'body_sentiment_subjectivity': 0, 'title': "Wondering i[f] you'd like to see more ;):)", 'title_length': 42, 'title_lexicon_count': 7, 'title_sentence_count': 1, 'title_percent_uppercase': 2, 'title_percent_spaces': 17, 'title_percent_punctuation': 0, 'title_starts_capitalized': True, 'title_includes_question_mark': False, 'title_coleman_liau_index': 9, 'title_sentiment_polarity': 41, 'title_sentiment_subjectivity': 83, 'score': 691, 'num_comments': 27, 'context': 'gonewild', 'author': 'HighOnBooty', 'timestamp': datetime.datetime(2016, 4, 29, 1, 8, 32, tzinfo=<UTC>), 'has_wiki_link': False, 'has_no_link': False, 'has_other_link': True, 'has_good_wiki_link': False, 'has_b_wiki_link': False, 'has_c_wiki_link': False, 'num_wiki_links': 0, 'day_of_avg_score': None, 'week_after_avg_score': None, 'all_revisions_pulled': False, 'wiki_content_error': 0, 'mon': False, 'tues': False, 'wed': False, 'thurs': False, 'fri': True, 'sat': False, 'sun': False, 'jan': False, 'feb': False, 'mar': False, 'apr': True, 'may': False, 'jun': False, 'jul': False, 'aug': False, 'sep': False, 'octo': False, 'nov': False, 'dec': False, 'zero_to_six': True, 'six_to_twelve': False, 'twelve_to_eighteen': False, 'eighteen_to_twentyfour': False, 'year2008': False, 'year2009': False, 'year2010': False, 'year2011': False, 'year2012': False, 'year2013': False, 'year2014': False, 'year2015': False, 'year2016': True, 'user_created_utc': datetime.datetime(2016, 4, 29, 0, 30, 28, tzinfo=<UTC>), 'seconds_since_user_creation': 2284, 'num_edits': 0, 'num_new_editors': 0, 'num_new_editors_retained': 0, 'num_new_editors_retained_180': 0, 'num_new_edits': 0, 'num_old_edits': 0, 'num_inactive_edits': 0, 'num_active_edits': 0, 'num_minor_edits': 0, 'num_major_edits': 0, 'num_edits_prev_week': 0, 'num_new_editors_prev_week': 0, 'num_new_editors_retained_prev_week': 0, 'num_new_editors_retained_prev_week_180': 0, 'num_new_edits_prev_week': 0, 'num_old_edits_prev_week': 0, 'num_inactive_edits_prev_week': 0, 'num_active_edits_prev_week': 0, 'num_minor_edits_prev_week': 0, 'num_major_edits_prev_week': 0, 'num_edits_preceding_post': 0, 'num_wiki_pageviews': None, 'num_wiki_pageviews_prev_week': None, 'sample_num': 0, 'user_info_processed': True, 'user_comment_karma': 106, 'user_link_karma': 2517, 'user_is_mod': False, 'user_is_suspended': False, 'user_is_deleted': False, 'url': 'http://imgur.com/a/SsuTW', 'in_todayilearned': False, 'in_borntoday': False, 'in_wikipedia': False, 'in_CelebrityBornToday': False, 'in_The_Donald': False, 'in_other': True}
+{'_state': <django.db.models.base.ModelState object at 0x7f837940fcc0>, 'uid': '57v9ro', 'body': 'Wizards: "Hey guys, we\'re trying to switch things in control up from draw-go and holding counterspells all game"\n\nPro Tour: "Lol"\n\n', 'body_length': 131, 'body_lexicon_count': 21, 'body_sentence_count': 1, 'body_num_links': 0, 'body_percent_uppercase': 4, 'body_percent_spaces': 15, 'body_percent_punctuation': 1, 'body_starts_capitalized': True, 'body_includes_question_mark': False, 'body_includes_code': False, 'body_coleman_liau_index': 14, 'body_sentiment_polarity': 20, 'body_sentiment_subjectivity': 55, 'title': 'Wizards and Control', 'title_length': 19, 'title_lexicon_count': 21, 'title_sentence_count': 1, 'title_percent_uppercase': 11, 'title_percent_spaces': 11, 'title_percent_punctuation': 0, 'title_starts_capitalized': True, 'title_includes_question_mark': False, 'title_coleman_liau_index': 7, 'title_sentiment_polarity': 0, 'title_sentiment_subjectivity': 0, 'score': 0, 'num_comments': 9, 'context': 'magicTCG', 'author': 'KunrinG', 'timestamp': datetime.datetime(2016, 10, 17, 3, 13, 2, tzinfo=<UTC>), 'has_wiki_link': False, 'has_no_link': True, 'has_other_link': False, 'has_good_wiki_link': False, 'has_b_wiki_link': False, 'has_c_wiki_link': False, 'num_wiki_links': 0, 'day_of_avg_score': None, 'week_after_avg_score': None, 'all_revisions_pulled': False, 'wiki_content_error': 0, 'mon': True, 'tues': False, 'wed': False, 'thurs': False, 'fri': False, 'sat': False, 'sun': False, 'jan': False, 'feb': False, 'mar': False, 'apr': False, 'may': False, 'jun': False, 'jul': False, 'aug': False, 'sep': False, 'octo': True, 'nov': False, 'dec': False, 'zero_to_six': True, 'six_to_twelve': False, 'twelve_to_eighteen': False, 'eighteen_to_twentyfour': False, 'year2008': False, 'year2009': False, 'year2010': False, 'year2011': False, 'year2012': False, 'year2013': False, 'year2014': False, 'year2015': False, 'year2016': True, 'user_created_utc': datetime.datetime(2015, 2, 22, 23, 44, 3, tzinfo=<UTC>), 'seconds_since_user_creation': 52025339, 'num_edits': 0, 'num_new_editors': 0, 'num_new_editors_retained': 0, 'num_new_editors_retained_180': 0, 'num_new_edits': 0, 'num_old_edits': 0, 'num_inactive_edits': 0, 'num_active_edits': 0, 'num_minor_edits': 0, 'num_major_edits': 0, 'num_edits_prev_week': 0, 'num_new_editors_prev_week': 0, 'num_new_editors_retained_prev_week': 0, 'num_new_editors_retained_prev_week_180': 0, 'num_new_edits_prev_week': 0, 'num_old_edits_prev_week': 0, 'num_inactive_edits_prev_week': 0, 'num_active_edits_prev_week': 0, 'num_minor_edits_prev_week': 0, 'num_major_edits_prev_week': 0, 'num_edits_preceding_post': 0, 'num_wiki_pageviews': None, 'num_wiki_pageviews_prev_week': None, 'num_wiki_increased_pageviews_day_of': None, 'sample_num': 0, 'user_info_processed': True, 'user_comment_karma': 8624, 'user_link_karma': 1591, 'user_is_mod': False, 'user_is_suspended': False, 'user_is_deleted': False, 'url': 'https://www.reddit.com/r/magicTCG/comments/57v9ro/wizards_and_control/', 'in_todayilearned': False, 'in_borntoday': False, 'in_wikipedia': False, 'in_CelebrityBornToday': False, 'in_The_Donald': False, 'in_other': True}
 ===
 
 SampledRedditThread No WP link
-title, The DOTA 2 7.0 Update - The Mailbox: December 11 ,2016
-body, 
+title, Why is Naldo more expensive than Sokratis?
+body, I'm trying to build a Bundesliga team and am looking for a CB, Sokratis is 5-6k cheaper than Naldo but has better pace, physical and -1 defending. Is there a reason for this?
 mon, True
 tues, False
 wed, False
@@ -100,160 +63,35 @@ aug, False
 sep, False
 octo, False
 nov, False
-zero_to_six, True
+zero_to_six, False
 six_to_twelve, False
 twelve_to_eighteen, False
-seconds_since_user_creation, 141821664
-title_length, 54
-title_percent_uppercase, 17
-title_percent_spaces, 19
-title_percent_punctuation, 4
-title_starts_capitalized, True
-title_coleman_liau_index, 4
-title_includes_question_mark, False
-title_sentiment_polarity, 0
-title_sentiment_subjectivity, 0
-user_comment_karma, 2176
-user_link_karma, 100
-user_is_mod, False
-user_is_suspended, False
-user_is_deleted, False
-{'_state': <django.db.models.base.ModelState object at 0x7fbeeb480be0>, 'uid': '5hu4h7', 'body': '', 'body_length': 0, 'body_lexicon_count': 0, 'body_sentence_count': 0, 'body_num_links': 0, 'body_percent_uppercase': 0, 'body_percent_spaces': 0, 'body_percent_punctuation': 0, 'body_starts_capitalized': False, 'body_includes_question_mark': False, 'body_includes_code': False, 'body_coleman_liau_index': 0, 'body_sentiment_polarity': 0, 'body_sentiment_subjectivity': 0, 'title': 'The DOTA 2 7.0 Update - The Mailbox: December 11 ,2016', 'title_length': 54, 'title_lexicon_count': 10, 'title_sentence_count': 1, 'title_percent_uppercase': 17, 'title_percent_spaces': 19, 'title_percent_punctuation': 4, 'title_starts_capitalized': True, 'title_includes_question_mark': False, 'title_coleman_liau_index': 4, 'title_sentiment_polarity': 0, 'title_sentiment_subjectivity': 0, 'score': 53, 'num_comments': 87, 'context': 'Cynicalbrit', 'author': 'deeman010', 'timestamp': datetime.datetime(2016, 12, 12, 2, 37, 43, tzinfo=<UTC>), 'has_wiki_link': False, 'has_no_link': False, 'has_other_link': True, 'has_good_wiki_link': False, 'has_b_wiki_link': False, 'has_c_wiki_link': False, 'num_wiki_links': 0, 'day_of_avg_score': None, 'week_after_avg_score': None, 'all_revisions_pulled': False, 'wiki_content_error': 0, 'mon': True, 'tues': False, 'wed': False, 'thurs': False, 'fri': False, 'sat': False, 'sun': False, 'jan': False, 'feb': False, 'mar': False, 'apr': False, 'may': False, 'jun': False, 'jul': False, 'aug': False, 'sep': False, 'octo': False, 'nov': False, 'dec': True, 'zero_to_six': True, 'six_to_twelve': False, 'twelve_to_eighteen': False, 'eighteen_to_twentyfour': False, 'year2008': False, 'year2009': False, 'year2010': False, 'year2011': False, 'year2012': False, 'year2013': False, 'year2014': False, 'year2015': False, 'year2016': True, 'user_created_utc': datetime.datetime(2012, 6, 14, 15, 43, 19, tzinfo=<UTC>), 'seconds_since_user_creation': 141821664, 'num_edits': 0, 'num_new_editors': 0, 'num_new_editors_retained': 0, 'num_new_editors_retained_180': 0, 'num_new_edits': 0, 'num_old_edits': 0, 'num_inactive_edits': 0, 'num_active_edits': 0, 'num_minor_edits': 0, 'num_major_edits': 0, 'num_edits_prev_week': 0, 'num_new_editors_prev_week': 0, 'num_new_editors_retained_prev_week': 0, 'num_new_editors_retained_prev_week_180': 0, 'num_new_edits_prev_week': 0, 'num_old_edits_prev_week': 0, 'num_inactive_edits_prev_week': 0, 'num_active_edits_prev_week': 0, 'num_minor_edits_prev_week': 0, 'num_major_edits_prev_week': 0, 'num_edits_preceding_post': 0, 'num_wiki_pageviews': None, 'num_wiki_pageviews_prev_week': None, 'sample_num': 0, 'user_info_processed': True, 'user_comment_karma': 2176, 'user_link_karma': 100, 'user_is_mod': False, 'user_is_suspended': False, 'user_is_deleted': False, 'url': 'https://www.youtube.com/watch?v=wUQEtluKKI4', 'in_todayilearned': False, 'in_borntoday': False, 'in_wikipedia': False, 'in_CelebrityBornToday': False, 'in_The_Donald': False, 'in_other': True}
-===
-
-SampledRedditThread No WP link
-title, Catt: Levelled all skills over 25
-body, By levelling up my Invention skill, I achieved at least level 25 in all skills.
-
-
-mon, False
-tues, False
-wed, False
-thurs, True
-fri, False
-sat, False
-jan, True
-feb, False
-mar, False
-apr, False
-may, False
-jun, False
-jul, False
-aug, False
-sep, False
-octo, False
-nov, False
-zero_to_six, True
-six_to_twelve, False
-twelve_to_eighteen, False
-seconds_since_user_creation, 75793394
-title_length, 33
-title_percent_uppercase, 6
-title_percent_spaces, 15
+seconds_since_user_creation, 5402745
+title_length, 42
+title_percent_uppercase, 7
+title_percent_spaces, 14
 title_percent_punctuation, 0
 title_starts_capitalized, True
-title_coleman_liau_index, 6
-title_includes_question_mark, False
+title_coleman_liau_index, 10
+title_includes_question_mark, True
 title_sentiment_polarity, 0
-title_sentiment_subjectivity, 0
-user_comment_karma, 1324
-user_link_karma, 3432
-user_is_mod, True
-user_is_suspended, False
-user_is_deleted, False
-{'_state': <django.db.models.base.ModelState object at 0x7fbeeb480c50>, 'uid': '4324jl', 'body': 'By levelling up my Invention skill, I achieved at least level 25 in all skills.\n\n', 'body_length': 81, 'body_lexicon_count': 15, 'body_sentence_count': 1, 'body_num_links': 0, 'body_percent_uppercase': 4, 'body_percent_spaces': 17, 'body_percent_punctuation': 2, 'body_starts_capitalized': True, 'body_includes_question_mark': False, 'body_includes_code': False, 'body_coleman_liau_index': 8, 'body_sentiment_polarity': -30, 'body_sentiment_subjectivity': 40, 'title': 'Catt: Levelled all skills over 25', 'title_length': 33, 'title_lexicon_count': 15, 'title_sentence_count': 1, 'title_percent_uppercase': 6, 'title_percent_spaces': 15, 'title_percent_punctuation': 0, 'title_starts_capitalized': True, 'title_includes_question_mark': False, 'title_coleman_liau_index': 6, 'title_sentiment_polarity': 0, 'title_sentiment_subjectivity': 0, 'score': 1, 'num_comments': 0, 'context': 'AdLogCatt', 'author': 'raberstaber', 'timestamp': datetime.datetime(2016, 1, 28, 6, 30, 32, tzinfo=<UTC>), 'has_wiki_link': False, 'has_no_link': True, 'has_other_link': False, 'has_good_wiki_link': False, 'has_b_wiki_link': False, 'has_c_wiki_link': False, 'num_wiki_links': 0, 'day_of_avg_score': None, 'week_after_avg_score': None, 'all_revisions_pulled': False, 'wiki_content_error': 0, 'mon': False, 'tues': False, 'wed': False, 'thurs': True, 'fri': False, 'sat': False, 'sun': False, 'jan': True, 'feb': False, 'mar': False, 'apr': False, 'may': False, 'jun': False, 'jul': False, 'aug': False, 'sep': False, 'octo': False, 'nov': False, 'dec': False, 'zero_to_six': True, 'six_to_twelve': False, 'twelve_to_eighteen': False, 'eighteen_to_twentyfour': False, 'year2008': False, 'year2009': False, 'year2010': False, 'year2011': False, 'year2012': False, 'year2013': False, 'year2014': False, 'year2015': False, 'year2016': True, 'user_created_utc': datetime.datetime(2013, 9, 3, 0, 47, 18, tzinfo=<UTC>), 'seconds_since_user_creation': 75793394, 'num_edits': 0, 'num_new_editors': 0, 'num_new_editors_retained': 0, 'num_new_editors_retained_180': 0, 'num_new_edits': 0, 'num_old_edits': 0, 'num_inactive_edits': 0, 'num_active_edits': 0, 'num_minor_edits': 0, 'num_major_edits': 0, 'num_edits_prev_week': 0, 'num_new_editors_prev_week': 0, 'num_new_editors_retained_prev_week': 0, 'num_new_editors_retained_prev_week_180': 0, 'num_new_edits_prev_week': 0, 'num_old_edits_prev_week': 0, 'num_inactive_edits_prev_week': 0, 'num_active_edits_prev_week': 0, 'num_minor_edits_prev_week': 0, 'num_major_edits_prev_week': 0, 'num_edits_preceding_post': 0, 'num_wiki_pageviews': None, 'num_wiki_pageviews_prev_week': None, 'sample_num': 0, 'user_info_processed': True, 'user_comment_karma': 1324, 'user_link_karma': 3432, 'user_is_mod': True, 'user_is_suspended': False, 'user_is_deleted': False, 'url': 'https://www.reddit.com/r/AdLogCatt/comments/4324jl/catt_levelled_all_skills_over_25/', 'in_todayilearned': False, 'in_borntoday': False, 'in_wikipedia': False, 'in_CelebrityBornToday': False, 'in_The_Donald': False, 'in_other': True}
-===
-
-SampledRedditThread No WP link
-title, Sunday Morning Thread brought to you by fruit smoothies.
-body, Damn 'spring forward' day light savings time. I want my hour back!
-mon, False
-tues, False
-wed, False
-thurs, False
-fri, False
-sat, False
-jan, False
-feb, False
-mar, True
-apr, False
-may, False
-jun, False
-jul, False
-aug, False
-sep, False
-octo, False
-nov, False
-zero_to_six, False
-six_to_twelve, True
-twelve_to_eighteen, False
-seconds_since_user_creation, 131052396
-title_length, 56
-title_percent_uppercase, 5
-title_percent_spaces, 14
-title_percent_punctuation, 2
-title_starts_capitalized, True
-title_coleman_liau_index, 12
-title_includes_question_mark, False
-title_sentiment_polarity, 0
-title_sentiment_subjectivity, 0
-user_comment_karma, 14859
-user_link_karma, 62
-user_is_mod, True
-user_is_suspended, False
-user_is_deleted, False
-{'_state': <django.db.models.base.ModelState object at 0x7fbeeb480cc0>, 'uid': '4a8415', 'body': "Damn 'spring forward' day light savings time. I want my hour back!", 'body_length': 66, 'body_lexicon_count': 12, 'body_sentence_count': 2, 'body_num_links': 0, 'body_percent_uppercase': 3, 'body_percent_spaces': 17, 'body_percent_punctuation': 2, 'body_starts_capitalized': True, 'body_includes_question_mark': False, 'body_includes_code': False, 'body_coleman_liau_index': 6, 'body_sentiment_polarity': 20, 'body_sentiment_subjectivity': 35, 'title': 'Sunday Morning Thread brought to you by fruit smoothies.', 'title_length': 56, 'title_lexicon_count': 12, 'title_sentence_count': 2, 'title_percent_uppercase': 5, 'title_percent_spaces': 14, 'title_percent_punctuation': 2, 'title_starts_capitalized': True, 'title_includes_question_mark': False, 'title_coleman_liau_index': 12, 'title_sentiment_polarity': 0, 'title_sentiment_subjectivity': 0, 'score': 6, 'num_comments': 34, 'context': 'CFBOffTopic', 'author': 'kirkedout', 'timestamp': datetime.datetime(2016, 3, 13, 12, 0, 21, tzinfo=<UTC>), 'has_wiki_link': False, 'has_no_link': True, 'has_other_link': False, 'has_good_wiki_link': False, 'has_b_wiki_link': False, 'has_c_wiki_link': False, 'num_wiki_links': 0, 'day_of_avg_score': None, 'week_after_avg_score': None, 'all_revisions_pulled': False, 'wiki_content_error': 0, 'mon': False, 'tues': False, 'wed': False, 'thurs': False, 'fri': False, 'sat': False, 'sun': True, 'jan': False, 'feb': False, 'mar': True, 'apr': False, 'may': False, 'jun': False, 'jul': False, 'aug': False, 'sep': False, 'octo': False, 'nov': False, 'dec': False, 'zero_to_six': False, 'six_to_twelve': True, 'twelve_to_eighteen': False, 'eighteen_to_twentyfour': False, 'year2008': False, 'year2009': False, 'year2010': False, 'year2011': False, 'year2012': False, 'year2013': False, 'year2014': False, 'year2015': False, 'year2016': True, 'user_created_utc': datetime.datetime(2012, 1, 17, 16, 33, 45, tzinfo=<UTC>), 'seconds_since_user_creation': 131052396, 'num_edits': 0, 'num_new_editors': 0, 'num_new_editors_retained': 0, 'num_new_editors_retained_180': 0, 'num_new_edits': 0, 'num_old_edits': 0, 'num_inactive_edits': 0, 'num_active_edits': 0, 'num_minor_edits': 0, 'num_major_edits': 0, 'num_edits_prev_week': 0, 'num_new_editors_prev_week': 0, 'num_new_editors_retained_prev_week': 0, 'num_new_editors_retained_prev_week_180': 0, 'num_new_edits_prev_week': 0, 'num_old_edits_prev_week': 0, 'num_inactive_edits_prev_week': 0, 'num_active_edits_prev_week': 0, 'num_minor_edits_prev_week': 0, 'num_major_edits_prev_week': 0, 'num_edits_preceding_post': 0, 'num_wiki_pageviews': None, 'num_wiki_pageviews_prev_week': None, 'sample_num': 0, 'user_info_processed': True, 'user_comment_karma': 14859, 'user_link_karma': 62, 'user_is_mod': True, 'user_is_suspended': False, 'user_is_deleted': False, 'url': 'https://www.reddit.com/r/CFBOffTopic/comments/4a8415/sunday_morning_thread_brought_to_you_by_fruit/', 'in_todayilearned': False, 'in_borntoday': False, 'in_wikipedia': False, 'in_CelebrityBornToday': False, 'in_The_Donald': False, 'in_other': True}
-===
-
-SampledRedditThread Has WP link
-title, TIL that the number of Azerbaijanis in Iran might be more than three times greater than the number of Azerbaijanis in Azerbaijan.
-body, 
-mon, False
-tues, True
-wed, False
-thurs, False
-fri, False
-sat, False
-jan, True
-feb, False
-mar, False
-apr, False
-may, False
-jun, False
-jul, False
-aug, False
-sep, False
-octo, False
-nov, False
-zero_to_six, True
-six_to_twelve, False
-twelve_to_eighteen, False
-seconds_since_user_creation, 24109496
-title_length, 129
-title_percent_uppercase, 5
-title_percent_spaces, 16
-title_percent_punctuation, 1
-title_starts_capitalized, True
-title_coleman_liau_index, 11
-title_includes_question_mark, False
-title_sentiment_polarity, 50
-title_sentiment_subjectivity, 50
-user_comment_karma, 5802
-user_link_karma, 152243
+title_sentiment_subjectivity, 60
+user_comment_karma, 932
+user_link_karma, 401
 user_is_mod, False
 user_is_suspended, False
 user_is_deleted, False
-{'_state': <django.db.models.base.ModelState object at 0x7fbeeb480f28>, 'uid': '3zhvpv', 'body': '', 'body_length': 0, 'body_lexicon_count': 0, 'body_sentence_count': 0, 'body_num_links': 0, 'body_percent_uppercase': 0, 'body_percent_spaces': 0, 'body_percent_punctuation': 0, 'body_starts_capitalized': False, 'body_includes_question_mark': False, 'body_includes_code': False, 'body_coleman_liau_index': 0, 'body_sentiment_polarity': 0, 'body_sentiment_subjectivity': 0, 'title': 'TIL that the number of Azerbaijanis in Iran might be more than three times greater than the number of Azerbaijanis in Azerbaijan.', 'title_length': 129, 'title_lexicon_count': 22, 'title_sentence_count': 1, 'title_percent_uppercase': 5, 'title_percent_spaces': 16, 'title_percent_punctuation': 1, 'title_starts_capitalized': True, 'title_includes_question_mark': False, 'title_coleman_liau_index': 11, 'title_sentiment_polarity': 50, 'title_sentiment_subjectivity': 50, 'score': 4, 'num_comments': 1, 'context': 'todayilearned', 'author': 'Futurist110', 'timestamp': datetime.datetime(2016, 1, 5, 1, 51, 50, tzinfo=<UTC>), 'has_wiki_link': True, 'has_no_link': False, 'has_other_link': False, 'has_good_wiki_link': True, 'has_b_wiki_link': True, 'has_c_wiki_link': True, 'num_wiki_links': 1, 'day_of_avg_score': 4, 'week_after_avg_score': 4, 'all_revisions_pulled': True, 'wiki_content_error': 0, 'mon': False, 'tues': True, 'wed': False, 'thurs': False, 'fri': False, 'sat': False, 'sun': False, 'jan': True, 'feb': False, 'mar': False, 'apr': False, 'may': False, 'jun': False, 'jul': False, 'aug': False, 'sep': False, 'octo': False, 'nov': False, 'dec': False, 'zero_to_six': True, 'six_to_twelve': False, 'twelve_to_eighteen': False, 'eighteen_to_twentyfour': False, 'year2008': False, 'year2009': False, 'year2010': False, 'year2011': False, 'year2012': False, 'year2013': False, 'year2014': False, 'year2015': False, 'year2016': True, 'user_created_utc': datetime.datetime(2015, 4, 1, 0, 46, 54, tzinfo=<UTC>), 'seconds_since_user_creation': 24109496, 'num_edits': 10, 'num_new_editors': 0, 'num_new_editors_retained': 0, 'num_new_editors_retained_180': 0, 'num_new_edits': 0, 'num_old_edits': 10, 'num_inactive_edits': 0, 'num_active_edits': 10, 'num_minor_edits': 10, 'num_major_edits': 0, 'num_edits_prev_week': 7, 'num_new_editors_prev_week': 0, 'num_new_editors_retained_prev_week': 0, 'num_new_editors_retained_prev_week_180': 0, 'num_new_edits_prev_week': 0, 'num_old_edits_prev_week': 7, 'num_inactive_edits_prev_week': 0, 'num_active_edits_prev_week': 7, 'num_minor_edits_prev_week': 7, 'num_major_edits_prev_week': 0, 'num_edits_preceding_post': 0, 'num_wiki_pageviews': 3012, 'num_wiki_pageviews_prev_week': 2797, 'sample_num': 1, 'user_info_processed': True, 'user_comment_karma': 5802, 'user_link_karma': 152243, 'user_is_mod': False, 'user_is_suspended': False, 'user_is_deleted': False, 'url': 'https://en.wikipedia.org/wiki/Azerbaijanis', 'in_todayilearned': True, 'in_borntoday': False, 'in_wikipedia': False, 'in_CelebrityBornToday': False, 'in_The_Donald': False, 'in_other': False}
+{'_state': <django.db.models.base.ModelState object at 0x7f837940fd30>, 'uid': '5j8pff', 'body': "I'm trying to build a Bundesliga team and am looking for a CB, Sokratis is 5-6k cheaper than Naldo but has better pace, physical and -1 defending. Is there a reason for this?", 'body_length': 174, 'body_lexicon_count': 33, 'body_sentence_count': 2, 'body_num_links': 0, 'body_percent_uppercase': 4, 'body_percent_spaces': 18, 'body_percent_punctuation': 2, 'body_starts_capitalized': True, 'body_includes_question_mark': True, 'body_includes_code': False, 'body_coleman_liau_index': 7, 'body_sentiment_polarity': 25, 'body_sentiment_subjectivity': 32, 'title': 'Why is Naldo more expensive than Sokratis?', 'title_length': 42, 'title_lexicon_count': 33, 'title_sentence_count': 2, 'title_percent_uppercase': 7, 'title_percent_spaces': 14, 'title_percent_punctuation': 0, 'title_starts_capitalized': True, 'title_includes_question_mark': True, 'title_coleman_liau_index': 10, 'title_sentiment_polarity': 0, 'title_sentiment_subjectivity': 60, 'score': 5, 'num_comments': 7, 'context': 'FIFA', 'author': 'ZOOMistheSLOWEST', 'timestamp': datetime.datetime(2016, 12, 19, 20, 25, 46, tzinfo=<UTC>), 'has_wiki_link': False, 'has_no_link': True, 'has_other_link': False, 'has_good_wiki_link': False, 'has_b_wiki_link': False, 'has_c_wiki_link': False, 'num_wiki_links': 0, 'day_of_avg_score': None, 'week_after_avg_score': None, 'all_revisions_pulled': False, 'wiki_content_error': 0, 'mon': True, 'tues': False, 'wed': False, 'thurs': False, 'fri': False, 'sat': False, 'sun': False, 'jan': False, 'feb': False, 'mar': False, 'apr': False, 'may': False, 'jun': False, 'jul': False, 'aug': False, 'sep': False, 'octo': False, 'nov': False, 'dec': True, 'zero_to_six': False, 'six_to_twelve': False, 'twelve_to_eighteen': False, 'eighteen_to_twentyfour': True, 'year2008': False, 'year2009': False, 'year2010': False, 'year2011': False, 'year2012': False, 'year2013': False, 'year2014': False, 'year2015': False, 'year2016': True, 'user_created_utc': datetime.datetime(2016, 10, 18, 7, 40, 1, tzinfo=<UTC>), 'seconds_since_user_creation': 5402745, 'num_edits': 0, 'num_new_editors': 0, 'num_new_editors_retained': 0, 'num_new_editors_retained_180': 0, 'num_new_edits': 0, 'num_old_edits': 0, 'num_inactive_edits': 0, 'num_active_edits': 0, 'num_minor_edits': 0, 'num_major_edits': 0, 'num_edits_prev_week': 0, 'num_new_editors_prev_week': 0, 'num_new_editors_retained_prev_week': 0, 'num_new_editors_retained_prev_week_180': 0, 'num_new_edits_prev_week': 0, 'num_old_edits_prev_week': 0, 'num_inactive_edits_prev_week': 0, 'num_active_edits_prev_week': 0, 'num_minor_edits_prev_week': 0, 'num_major_edits_prev_week': 0, 'num_edits_preceding_post': 0, 'num_wiki_pageviews': None, 'num_wiki_pageviews_prev_week': None, 'num_wiki_increased_pageviews_day_of': None, 'sample_num': 0, 'user_info_processed': True, 'user_comment_karma': 932, 'user_link_karma': 401, 'user_is_mod': False, 'user_is_suspended': False, 'user_is_deleted': False, 'url': 'https://www.reddit.com/r/FIFA/comments/5j8pff/why_is_naldo_more_expensive_than_sokratis/', 'in_todayilearned': False, 'in_borntoday': False, 'in_wikipedia': False, 'in_CelebrityBornToday': False, 'in_The_Donald': False, 'in_other': True}
 ===
 
-SampledRedditThread Has WP link
-title, Born today : May 13th - Lena Dunham
-body, 
+SampledRedditThread No WP link
+title, Please give us a way to choose what gamemode we queue for.
+body, I much prefer Payload to the capture the objective gamemode. I think Payload is way more balanced and fun, so I'd love a way to just queue for Payload.
 mon, False
 tues, False
-wed, False
+wed, True
 thurs, False
-fri, True
+fri, False
 sat, False
 jan, False
 feb, False
@@ -269,453 +107,33 @@ nov, False
 zero_to_six, True
 six_to_twelve, False
 twelve_to_eighteen, False
-seconds_since_user_creation, 121382389
-title_length, 35
-title_percent_uppercase, 11
-title_percent_spaces, 20
-title_percent_punctuation, 0
+seconds_since_user_creation, 119137796
+title_length, 58
+title_percent_uppercase, 2
+title_percent_spaces, 19
+title_percent_punctuation, 2
 title_starts_capitalized, True
-title_coleman_liau_index, 6
+title_coleman_liau_index, 5
 title_includes_question_mark, False
 title_sentiment_polarity, 0
 title_sentiment_subjectivity, 0
-user_comment_karma, 1201
-user_link_karma, 24728
+user_comment_karma, 1891
+user_link_karma, 4422
 user_is_mod, True
 user_is_suspended, False
 user_is_deleted, False
-{'_state': <django.db.models.base.ModelState object at 0x7fbeeb480f98>, 'uid': '4j4ntq', 'body': '', 'body_length': 0, 'body_lexicon_count': 0, 'body_sentence_count': 0, 'body_num_links': 0, 'body_percent_uppercase': 0, 'body_percent_spaces': 0, 'body_percent_punctuation': 0, 'body_starts_capitalized': False, 'body_includes_question_mark': False, 'body_includes_code': False, 'body_coleman_liau_index': 0, 'body_sentiment_polarity': 0, 'body_sentiment_subjectivity': 0, 'title': 'Born today : May 13th - Lena Dunham', 'title_length': 35, 'title_lexicon_count': 6, 'title_sentence_count': 1, 'title_percent_uppercase': 11, 'title_percent_spaces': 20, 'title_percent_punctuation': 0, 'title_starts_capitalized': True, 'title_includes_question_mark': False, 'title_coleman_liau_index': 6, 'title_sentiment_polarity': 0, 'title_sentiment_subjectivity': 0, 'score': 1, 'num_comments': 0, 'context': 'CelebrityBornToday', 'author': 'spike77wbs', 'timestamp': datetime.datetime(2016, 5, 13, 4, 17, 35, tzinfo=<UTC>), 'has_wiki_link': True, 'has_no_link': False, 'has_other_link': False, 'has_good_wiki_link': True, 'has_b_wiki_link': True, 'has_c_wiki_link': True, 'num_wiki_links': 1, 'day_of_avg_score': 4, 'week_after_avg_score': 4, 'all_revisions_pulled': True, 'wiki_content_error': 0, 'mon': False, 'tues': False, 'wed': False, 'thurs': False, 'fri': True, 'sat': False, 'sun': False, 'jan': False, 'feb': False, 'mar': False, 'apr': False, 'may': True, 'jun': False, 'jul': False, 'aug': False, 'sep': False, 'octo': False, 'nov': False, 'dec': False, 'zero_to_six': True, 'six_to_twelve': False, 'twelve_to_eighteen': False, 'eighteen_to_twentyfour': False, 'year2008': False, 'year2009': False, 'year2010': False, 'year2011': False, 'year2012': False, 'year2013': False, 'year2014': False, 'year2015': False, 'year2016': True, 'user_created_utc': datetime.datetime(2012, 7, 8, 6, 57, 46, tzinfo=<UTC>), 'seconds_since_user_creation': 121382389, 'num_edits': 1, 'num_new_editors': 0, 'num_new_editors_retained': 0, 'num_new_editors_retained_180': 0, 'num_new_edits': 0, 'num_old_edits': 1, 'num_inactive_edits': 0, 'num_active_edits': 1, 'num_minor_edits': 1, 'num_major_edits': 0, 'num_edits_prev_week': 2, 'num_new_editors_prev_week': 0, 'num_new_editors_retained_prev_week': 0, 'num_new_editors_retained_prev_week_180': 0, 'num_new_edits_prev_week': 0, 'num_old_edits_prev_week': 2, 'num_inactive_edits_prev_week': 0, 'num_active_edits_prev_week': 2, 'num_minor_edits_prev_week': 2, 'num_major_edits_prev_week': 0, 'num_edits_preceding_post': 0, 'num_wiki_pageviews': 47237, 'num_wiki_pageviews_prev_week': 34591, 'sample_num': 2, 'user_info_processed': True, 'user_comment_karma': 1201, 'user_link_karma': 24728, 'user_is_mod': True, 'user_is_suspended': False, 'user_is_deleted': False, 'url': 'https://en.wikipedia.org/wiki/Lena_Dunham', 'in_todayilearned': False, 'in_borntoday': False, 'in_wikipedia': False, 'in_CelebrityBornToday': True, 'in_The_Donald': False, 'in_other': False}
+{'_state': <django.db.models.base.ModelState object at 0x7f837940fda0>, 'uid': '4ht5z0', 'body': "I much prefer Payload to the capture the objective gamemode. I think Payload is way more balanced and fun, so I'd love a way to just queue for Payload.", 'body_length': 151, 'body_lexicon_count': 29, 'body_sentence_count': 2, 'body_num_links': 0, 'body_percent_uppercase': 4, 'body_percent_spaces': 19, 'body_percent_punctuation': 2, 'body_starts_capitalized': True, 'body_includes_question_mark': False, 'body_includes_code': False, 'body_coleman_liau_index': 7, 'body_sentiment_polarity': 30, 'body_sentiment_subjectivity': 32, 'title': 'Please give us a way to choose what gamemode we queue for.', 'title_length': 58, 'title_lexicon_count': 29, 'title_sentence_count': 2, 'title_percent_uppercase': 2, 'title_percent_spaces': 19, 'title_percent_punctuation': 2, 'title_starts_capitalized': True, 'title_includes_question_mark': False, 'title_coleman_liau_index': 5, 'title_sentiment_polarity': 0, 'title_sentiment_subjectivity': 0, 'score': 2, 'num_comments': 3, 'context': 'Overwatch', 'author': 'CaptainOblivious41', 'timestamp': datetime.datetime(2016, 5, 4, 5, 47, 50, tzinfo=<UTC>), 'has_wiki_link': False, 'has_no_link': True, 'has_other_link': False, 'has_good_wiki_link': False, 'has_b_wiki_link': False, 'has_c_wiki_link': False, 'num_wiki_links': 0, 'day_of_avg_score': None, 'week_after_avg_score': None, 'all_revisions_pulled': False, 'wiki_content_error': 0, 'mon': False, 'tues': False, 'wed': True, 'thurs': False, 'fri': False, 'sat': False, 'sun': False, 'jan': False, 'feb': False, 'mar': False, 'apr': False, 'may': True, 'jun': False, 'jul': False, 'aug': False, 'sep': False, 'octo': False, 'nov': False, 'dec': False, 'zero_to_six': True, 'six_to_twelve': False, 'twelve_to_eighteen': False, 'eighteen_to_twentyfour': False, 'year2008': False, 'year2009': False, 'year2010': False, 'year2011': False, 'year2012': False, 'year2013': False, 'year2014': False, 'year2015': False, 'year2016': True, 'user_created_utc': datetime.datetime(2012, 7, 25, 7, 57, 54, tzinfo=<UTC>), 'seconds_since_user_creation': 119137796, 'num_edits': 0, 'num_new_editors': 0, 'num_new_editors_retained': 0, 'num_new_editors_retained_180': 0, 'num_new_edits': 0, 'num_old_edits': 0, 'num_inactive_edits': 0, 'num_active_edits': 0, 'num_minor_edits': 0, 'num_major_edits': 0, 'num_edits_prev_week': 0, 'num_new_editors_prev_week': 0, 'num_new_editors_retained_prev_week': 0, 'num_new_editors_retained_prev_week_180': 0, 'num_new_edits_prev_week': 0, 'num_old_edits_prev_week': 0, 'num_inactive_edits_prev_week': 0, 'num_active_edits_prev_week': 0, 'num_minor_edits_prev_week': 0, 'num_major_edits_prev_week': 0, 'num_edits_preceding_post': 0, 'num_wiki_pageviews': None, 'num_wiki_pageviews_prev_week': None, 'num_wiki_increased_pageviews_day_of': None, 'sample_num': 0, 'user_info_processed': True, 'user_comment_karma': 1891, 'user_link_karma': 4422, 'user_is_mod': True, 'user_is_suspended': False, 'user_is_deleted': False, 'url': 'https://www.reddit.com/r/Overwatch/comments/4ht5z0/please_give_us_a_way_to_choose_what_gamemode_we/', 'in_todayilearned': False, 'in_borntoday': False, 'in_wikipedia': False, 'in_CelebrityBornToday': False, 'in_The_Donald': False, 'in_other': True}
 ===
 
-SampledRedditThread Has WP link
-title, Skiing in Australia takes place in the high country of the states of New South Wales, Victoria and Tasmania as well as in the Australian Capital Territory, during the Southern Hemisphere winter.
-body, [deleted]
-mon, False
-tues, False
-wed, False
-thurs, False
-fri, False
-sat, False
-jan, False
-feb, False
-mar, False
-apr, False
-may, False
-jun, False
-jul, False
-aug, False
-sep, True
-octo, False
-nov, False
-zero_to_six, True
-six_to_twelve, False
-twelve_to_eighteen, False
-seconds_since_user_creation, 0
-title_length, 194
-title_percent_uppercase, 6
-title_percent_spaces, 16
-title_percent_punctuation, 2
-title_starts_capitalized, True
-title_coleman_liau_index, 13
-title_includes_question_mark, False
-title_sentiment_polarity, 7
-title_sentiment_subjectivity, 24
-user_comment_karma, 0
-user_link_karma, 0
-user_is_mod, False
-user_is_suspended, False
-user_is_deleted, True
-{'_state': <django.db.models.base.ModelState object at 0x7fbeeb499048>, 'uid': '527ana', 'body': '[deleted]', 'body_length': 9, 'body_lexicon_count': 1, 'body_sentence_count': 1, 'body_num_links': 0, 'body_percent_uppercase': 0, 'body_percent_spaces': 0, 'body_percent_punctuation': 0, 'body_starts_capitalized': False, 'body_includes_question_mark': False, 'body_includes_code': False, 'body_coleman_liau_index': 7, 'body_sentiment_polarity': 0, 'body_sentiment_subjectivity': 0, 'title': 'Skiing in Australia takes place in the high country of the states of New South Wales, Victoria and Tasmania as well as in the Australian Capital Territory, during the Southern Hemisphere winter.', 'title_length': 194, 'title_lexicon_count': 1, 'title_sentence_count': 1, 'title_percent_uppercase': 6, 'title_percent_spaces': 16, 'title_percent_punctuation': 2, 'title_starts_capitalized': True, 'title_includes_question_mark': False, 'title_coleman_liau_index': 13, 'title_sentiment_polarity': 7, 'title_sentiment_subjectivity': 24, 'score': 1, 'num_comments': 0, 'context': 'wikipedia', 'author': '[deleted]', 'timestamp': datetime.datetime(2016, 9, 11, 6, 0, 54, tzinfo=<UTC>), 'has_wiki_link': True, 'has_no_link': False, 'has_other_link': False, 'has_good_wiki_link': True, 'has_b_wiki_link': True, 'has_c_wiki_link': True, 'num_wiki_links': 1, 'day_of_avg_score': 4, 'week_after_avg_score': 4, 'all_revisions_pulled': True, 'wiki_content_error': 0, 'mon': False, 'tues': False, 'wed': False, 'thurs': False, 'fri': False, 'sat': False, 'sun': True, 'jan': False, 'feb': False, 'mar': False, 'apr': False, 'may': False, 'jun': False, 'jul': False, 'aug': False, 'sep': True, 'octo': False, 'nov': False, 'dec': False, 'zero_to_six': True, 'six_to_twelve': False, 'twelve_to_eighteen': False, 'eighteen_to_twentyfour': False, 'year2008': False, 'year2009': False, 'year2010': False, 'year2011': False, 'year2012': False, 'year2013': False, 'year2014': False, 'year2015': False, 'year2016': True, 'user_created_utc': datetime.datetime(2016, 9, 11, 6, 0, 54, tzinfo=<UTC>), 'seconds_since_user_creation': 0, 'num_edits': 1, 'num_new_editors': 0, 'num_new_editors_retained': 0, 'num_new_editors_retained_180': 0, 'num_new_edits': 0, 'num_old_edits': 1, 'num_inactive_edits': 0, 'num_active_edits': 1, 'num_minor_edits': 1, 'num_major_edits': 0, 'num_edits_prev_week': 0, 'num_new_editors_prev_week': 0, 'num_new_editors_retained_prev_week': 0, 'num_new_editors_retained_prev_week_180': 0, 'num_new_edits_prev_week': 0, 'num_old_edits_prev_week': 0, 'num_inactive_edits_prev_week': 0, 'num_active_edits_prev_week': 0, 'num_minor_edits_prev_week': 0, 'num_major_edits_prev_week': 0, 'num_edits_preceding_post': 0, 'num_wiki_pageviews': 1592, 'num_wiki_pageviews_prev_week': 1566, 'sample_num': 1, 'user_info_processed': True, 'user_comment_karma': 0, 'user_link_karma': 0, 'user_is_mod': False, 'user_is_suspended': False, 'user_is_deleted': True, 'url': 'https://en.wikipedia.org/wiki/Skiing_in_Australia', 'in_todayilearned': False, 'in_borntoday': False, 'in_wikipedia': True, 'in_CelebrityBornToday': False, 'in_The_Donald': False, 'in_other': False}
-===
-
-SampledRedditThread Has WP link
-title, TIL about the The Kola Superdeep Borehole. The deepest hole in our planet ��. Deeper than the bottom of the world's oceans.
+SampledRedditThread No WP link
+title, Pow
 body, 
-mon, False
-tues, False
-wed, False
-thurs, False
-fri, True
-sat, False
-jan, False
-feb, True
-mar, False
-apr, False
-may, False
-jun, False
-jul, False
-aug, False
-sep, False
-octo, False
-nov, False
-zero_to_six, False
-six_to_twelve, False
-twelve_to_eighteen, False
-seconds_since_user_creation, 0
-title_length, 123
-title_percent_uppercase, 7
-title_percent_spaces, 17
-title_percent_punctuation, 2
-title_starts_capitalized, True
-title_coleman_liau_index, 7
-title_includes_question_mark, False
-title_sentiment_polarity, 0
-title_sentiment_subjectivity, 0
-user_comment_karma, 0
-user_link_karma, 0
-user_is_mod, False
-user_is_suspended, False
-user_is_deleted, True
-{'_state': <django.db.models.base.ModelState object at 0x7fbeeb4990b8>, 'uid': '45hfk8', 'body': '', 'body_length': 0, 'body_lexicon_count': 0, 'body_sentence_count': 0, 'body_num_links': 0, 'body_percent_uppercase': 0, 'body_percent_spaces': 0, 'body_percent_punctuation': 0, 'body_starts_capitalized': False, 'body_includes_question_mark': False, 'body_includes_code': False, 'body_coleman_liau_index': 0, 'body_sentiment_polarity': 0, 'body_sentiment_subjectivity': 0, 'title': "TIL about the The Kola Superdeep Borehole. The deepest hole in our planet ��. Deeper than the bottom of the world's oceans.", 'title_length': 123, 'title_lexicon_count': 22, 'title_sentence_count': 1, 'title_percent_uppercase': 7, 'title_percent_spaces': 17, 'title_percent_punctuation': 2, 'title_starts_capitalized': True, 'title_includes_question_mark': False, 'title_coleman_liau_index': 7, 'title_sentiment_polarity': 0, 'title_sentiment_subjectivity': 0, 'score': 1, 'num_comments': 0, 'context': 'todayilearned', 'author': 'tiktoktikkdotcom', 'timestamp': datetime.datetime(2016, 2, 12, 23, 6, 46, tzinfo=<UTC>), 'has_wiki_link': True, 'has_no_link': False, 'has_other_link': False, 'has_good_wiki_link': False, 'has_b_wiki_link': False, 'has_c_wiki_link': True, 'num_wiki_links': 1, 'day_of_avg_score': 2, 'week_after_avg_score': 2, 'all_revisions_pulled': True, 'wiki_content_error': 0, 'mon': False, 'tues': False, 'wed': False, 'thurs': False, 'fri': True, 'sat': False, 'sun': False, 'jan': False, 'feb': True, 'mar': False, 'apr': False, 'may': False, 'jun': False, 'jul': False, 'aug': False, 'sep': False, 'octo': False, 'nov': False, 'dec': False, 'zero_to_six': False, 'six_to_twelve': False, 'twelve_to_eighteen': False, 'eighteen_to_twentyfour': True, 'year2008': False, 'year2009': False, 'year2010': False, 'year2011': False, 'year2012': False, 'year2013': False, 'year2014': False, 'year2015': False, 'year2016': True, 'user_created_utc': datetime.datetime(2016, 2, 12, 23, 6, 46, tzinfo=<UTC>), 'seconds_since_user_creation': 0, 'num_edits': 0, 'num_new_editors': 0, 'num_new_editors_retained': 0, 'num_new_editors_retained_180': 0, 'num_new_edits': 0, 'num_old_edits': 0, 'num_inactive_edits': 0, 'num_active_edits': 0, 'num_minor_edits': 0, 'num_major_edits': 0, 'num_edits_prev_week': 0, 'num_new_editors_prev_week': 0, 'num_new_editors_retained_prev_week': 0, 'num_new_editors_retained_prev_week_180': 0, 'num_new_edits_prev_week': 0, 'num_old_edits_prev_week': 0, 'num_inactive_edits_prev_week': 0, 'num_active_edits_prev_week': 0, 'num_minor_edits_prev_week': 0, 'num_major_edits_prev_week': 0, 'num_edits_preceding_post': 0, 'num_wiki_pageviews': 22716, 'num_wiki_pageviews_prev_week': 9207, 'sample_num': 1, 'user_info_processed': True, 'user_comment_karma': 0, 'user_link_karma': 0, 'user_is_mod': False, 'user_is_suspended': False, 'user_is_deleted': True, 'url': 'https://en.wikipedia.org/wiki/Kola_Superdeep_Borehole', 'in_todayilearned': True, 'in_borntoday': False, 'in_wikipedia': False, 'in_CelebrityBornToday': False, 'in_The_Donald': False, 'in_other': False}
-===
-
-SampledRedditThread Has WP link
-title, TIL Two days before groundhog day 1999, Wiarton Willie died. His corpse was shown to the public dressed in a tuxedo and placed in a coffin. Later it turned out that it was actually another groundhog's body.
-body, 
-mon, False
-tues, True
-wed, False
-thurs, False
-fri, False
-sat, False
-jan, False
-feb, True
-mar, False
-apr, False
-may, False
-jun, False
-jul, False
-aug, False
-sep, False
-octo, False
-nov, False
-zero_to_six, False
-six_to_twelve, False
-twelve_to_eighteen, True
-seconds_since_user_creation, 81458695
-title_length, 206
-title_percent_uppercase, 4
-title_percent_spaces, 17
-title_percent_punctuation, 2
-title_starts_capitalized, True
-title_coleman_liau_index, 8
-title_includes_question_mark, False
-title_sentiment_polarity, 0
-title_sentiment_subjectivity, 5
-user_comment_karma, 60087
-user_link_karma, 44358
-user_is_mod, True
-user_is_suspended, False
-user_is_deleted, False
-{'_state': <django.db.models.base.ModelState object at 0x7fbeeb499128>, 'uid': '43uqov', 'body': '', 'body_length': 0, 'body_lexicon_count': 0, 'body_sentence_count': 0, 'body_num_links': 0, 'body_percent_uppercase': 0, 'body_percent_spaces': 0, 'body_percent_punctuation': 0, 'body_starts_capitalized': False, 'body_includes_question_mark': False, 'body_includes_code': False, 'body_coleman_liau_index': 0, 'body_sentiment_polarity': 0, 'body_sentiment_subjectivity': 0, 'title': "TIL Two days before groundhog day 1999, Wiarton Willie died. His corpse was shown to the public dressed in a tuxedo and placed in a coffin. Later it turned out that it was actually another groundhog's body.", 'title_length': 206, 'title_lexicon_count': 37, 'title_sentence_count': 1, 'title_percent_uppercase': 4, 'title_percent_spaces': 17, 'title_percent_punctuation': 2, 'title_starts_capitalized': True, 'title_includes_question_mark': False, 'title_coleman_liau_index': 8, 'title_sentiment_polarity': 0, 'title_sentiment_subjectivity': 5, 'score': 1, 'num_comments': 1, 'context': 'Games', 'author': 'AiwassAeon', 'timestamp': datetime.datetime(2016, 2, 2, 15, 44, 48, tzinfo=<UTC>), 'has_wiki_link': True, 'has_no_link': False, 'has_other_link': False, 'has_good_wiki_link': False, 'has_b_wiki_link': True, 'has_c_wiki_link': True, 'num_wiki_links': 1, 'day_of_avg_score': 3, 'week_after_avg_score': 3, 'all_revisions_pulled': True, 'wiki_content_error': 0, 'mon': False, 'tues': True, 'wed': False, 'thurs': False, 'fri': False, 'sat': False, 'sun': False, 'jan': False, 'feb': True, 'mar': False, 'apr': False, 'may': False, 'jun': False, 'jul': False, 'aug': False, 'sep': False, 'octo': False, 'nov': False, 'dec': False, 'zero_to_six': False, 'six_to_twelve': False, 'twelve_to_eighteen': True, 'eighteen_to_twentyfour': False, 'year2008': False, 'year2009': False, 'year2010': False, 'year2011': False, 'year2012': False, 'year2013': False, 'year2014': False, 'year2015': False, 'year2016': True, 'user_created_utc': datetime.datetime(2013, 7, 4, 20, 19, 53, tzinfo=<UTC>), 'seconds_since_user_creation': 81458695, 'num_edits': 2, 'num_new_editors': 0, 'num_new_editors_retained': 0, 'num_new_editors_retained_180': 0, 'num_new_edits': 0, 'num_old_edits': 2, 'num_inactive_edits': 0, 'num_active_edits': 2, 'num_minor_edits': 2, 'num_major_edits': 0, 'num_edits_prev_week': 5, 'num_new_editors_prev_week': 1, 'num_new_editors_retained_prev_week': 0, 'num_new_editors_retained_prev_week_180': 0, 'num_new_edits_prev_week': 1, 'num_old_edits_prev_week': 4, 'num_inactive_edits_prev_week': 1, 'num_active_edits_prev_week': 4, 'num_minor_edits_prev_week': 5, 'num_major_edits_prev_week': 0, 'num_edits_preceding_post': 1, 'num_wiki_pageviews': 11535, 'num_wiki_pageviews_prev_week': 11726, 'sample_num': 2, 'user_info_processed': True, 'user_comment_karma': 60087, 'user_link_karma': 44358, 'user_is_mod': True, 'user_is_suspended': False, 'user_is_deleted': False, 'url': 'https://en.wikipedia.org/wiki/Wiarton_Willie#Death_and_further_scandals', 'in_todayilearned': False, 'in_borntoday': False, 'in_wikipedia': False, 'in_CelebrityBornToday': False, 'in_The_Donald': False, 'in_other': True}
-===
-
-SampledStackOverflowPost No WP link
-title, For loop on multiple check boxes
-body, <p>Try using <code>FindControl</code> like this if you have id of controls like Checkbox1,Checkbox3 etc.</p>
-
-<pre><code>for (int i = 1; i &lt; 12; i+=2)
-{
-  CheckBox cb = (CheckBox)Page.FindControl("Checkbox" + i);
-  cb.Enabled = false;
-}
-</code></pre>
-mon, False
-tues, False
-wed, False
-thurs, False
-fri, True
-sat, False
-jan, False
-feb, False
-mar, False
-apr, False
-may, False
-jun, False
-jul, False
-aug, True
-sep, False
-octo, False
-nov, False
-zero_to_six, False
-six_to_twelve, True
-twelve_to_eighteen, False
-seconds_since_user_creation, 56835962
-body_length, 253
-body_percent_uppercase, 6
-body_percent_spaces, 13
-body_percent_punctuation, 2
-body_starts_capitalized, True
-body_coleman_liau_index, 16
-body_includes_question_mark, False
-body_sentiment_polarity, -57
-body_sentiment_subjectivity, 80
-user_reputation, 27985
-body_includes_code, True
-num_tags, 2
-response_time, 252
-year2008, False
-year2009, False
-year2010, False
-year2011, False
-year2012, False
-year2013, True
-year2014, False
-year2015, False
-is_top, True
-num_other_answers, 3
-{'_state': <django.db.models.base.ModelState object at 0x7fbeeb49b5f8>, 'uid': '18527559', 'body': '<p>Try using <code>FindControl</code> like this if you have id of controls like Checkbox1,Checkbox3 etc.</p>\n\n<pre><code>for (int i = 1; i &lt; 12; i+=2)\n{\n  CheckBox cb = (CheckBox)Page.FindControl("Checkbox" + i);\n  cb.Enabled = false;\n}\n</code></pre>', 'body_length': 253, 'body_lexicon_count': 29, 'body_sentence_count': 4, 'body_num_links': 0, 'body_percent_uppercase': 6, 'body_percent_spaces': 13, 'body_percent_punctuation': 2, 'body_starts_capitalized': True, 'body_includes_question_mark': False, 'body_includes_code': True, 'body_coleman_liau_index': 16, 'body_sentiment_polarity': -57, 'body_sentiment_subjectivity': 80, 'title': 'For loop on multiple check boxes', 'title_length': 32, 'title_lexicon_count': 29, 'title_sentence_count': 4, 'title_percent_uppercase': 3, 'title_percent_spaces': 16, 'title_percent_punctuation': 0, 'title_starts_capitalized': True, 'title_includes_question_mark': False, 'title_coleman_liau_index': 5, 'title_sentiment_polarity': 0, 'title_sentiment_subjectivity': 0, 'score': 4, 'num_comments': 3, 'context': None, 'author': '', 'timestamp': datetime.datetime(2013, 8, 30, 7, 44, 3, tzinfo=<UTC>), 'has_wiki_link': False, 'has_no_link': True, 'has_other_link': False, 'has_good_wiki_link': False, 'has_b_wiki_link': False, 'has_c_wiki_link': False, 'num_wiki_links': 0, 'day_of_avg_score': None, 'week_after_avg_score': None, 'all_revisions_pulled': False, 'wiki_content_error': 0, 'mon': False, 'tues': False, 'wed': False, 'thurs': False, 'fri': True, 'sat': False, 'sun': False, 'jan': False, 'feb': False, 'mar': False, 'apr': False, 'may': False, 'jun': False, 'jul': False, 'aug': True, 'sep': False, 'octo': False, 'nov': False, 'dec': False, 'zero_to_six': False, 'six_to_twelve': True, 'twelve_to_eighteen': False, 'eighteen_to_twentyfour': False, 'year2008': False, 'year2009': False, 'year2010': False, 'year2011': False, 'year2012': False, 'year2013': True, 'year2014': False, 'year2015': False, 'year2016': False, 'user_created_utc': datetime.datetime(2011, 11, 11, 11, 58, 1, tzinfo=<UTC>), 'seconds_since_user_creation': 56835962, 'num_edits': 0, 'num_new_editors': 0, 'num_new_editors_retained': 0, 'num_new_editors_retained_180': 0, 'num_new_edits': 0, 'num_old_edits': 0, 'num_inactive_edits': 0, 'num_active_edits': 0, 'num_minor_edits': 0, 'num_major_edits': 0, 'num_edits_prev_week': 0, 'num_new_editors_prev_week': 0, 'num_new_editors_retained_prev_week': 0, 'num_new_editors_retained_prev_week_180': 0, 'num_new_edits_prev_week': 0, 'num_old_edits_prev_week': 0, 'num_inactive_edits_prev_week': 0, 'num_active_edits_prev_week': 0, 'num_minor_edits_prev_week': 0, 'num_major_edits_prev_week': 0, 'num_edits_preceding_post': 0, 'num_wiki_pageviews': None, 'num_wiki_pageviews_prev_week': None, 'sample_num': 0, 'user_reputation': 27985, 'question_asked_utc': datetime.datetime(2013, 8, 30, 7, 39, 51, tzinfo=<UTC>), 'num_pageviews': 588, 'tags_string': 'c#|asp.net', 'num_tags': 2, 'num_other_answers': 3, 'question_score': 1, 'num_question_comments': 6, 'response_time': 252, 'is_top': True}
-===
-
-SampledStackOverflowPost No WP link
-title, Passing function-specific variables
-body, <blockquote>
-  <p>So is it possible to pass the variable Index from the main function to the doStuff function?</p>
-</blockquote>
-
-<p>No, not without explicitly passing it as a parameter to <code>doStuff</code>. Either <code>doStuff</code> needs to accept a parameter or it could utilize the <code>arguments</code> collection:</p>
-
-<pre><code>function main(index)
-{
-    doStuff(index);
-}
-
-function doStuff()
-{
-    var index = arguments[0];
-
-    if(index == 1)
-    {
-        document.write("Hello world!")
-    }
-}
-</code></pre>
 mon, False
 tues, False
 wed, False
 thurs, False
 fri, False
 sat, True
-jan, False
-feb, False
-mar, False
-apr, False
-may, False
-jun, False
-jul, False
-aug, False
-sep, False
-octo, False
-nov, True
-zero_to_six, False
-six_to_twelve, False
-twelve_to_eighteen, True
-seconds_since_user_creation, 113305432
-body_length, 525
-body_percent_uppercase, 2
-body_percent_spaces, 15
-body_percent_punctuation, 1
-body_starts_capitalized, False
-body_coleman_liau_index, 16
-body_includes_question_mark, True
-body_sentiment_polarity, 10
-body_sentiment_subjectivity, 66
-user_reputation, 27127
-body_includes_code, True
-num_tags, 3
-response_time, 94
-year2008, False
-year2009, False
-year2010, False
-year2011, False
-year2012, True
-year2013, False
-year2014, False
-year2015, False
-is_top, True
-num_other_answers, 3
-{'_state': <django.db.models.base.ModelState object at 0x7fbeeb49b668>, 'uid': '13323337', 'body': '<blockquote>\n  <p>So is it possible to pass the variable Index from the main function to the doStuff function?</p>\n</blockquote>\n\n<p>No, not without explicitly passing it as a parameter to <code>doStuff</code>. Either <code>doStuff</code> needs to accept a parameter or it could utilize the <code>arguments</code> collection:</p>\n\n<pre><code>function main(index)\n{\n    doStuff(index);\n}\n\nfunction doStuff()\n{\n    var index = arguments[0];\n\n    if(index == 1)\n    {\n        document.write("Hello world!")\n    }\n}\n</code></pre>', 'body_length': 525, 'body_lexicon_count': 57, 'body_sentence_count': 3, 'body_num_links': 0, 'body_percent_uppercase': 2, 'body_percent_spaces': 15, 'body_percent_punctuation': 1, 'body_starts_capitalized': False, 'body_includes_question_mark': True, 'body_includes_code': True, 'body_coleman_liau_index': 16, 'body_sentiment_polarity': 10, 'body_sentiment_subjectivity': 66, 'title': 'Passing function-specific variables', 'title_length': 35, 'title_lexicon_count': 57, 'title_sentence_count': 3, 'title_percent_uppercase': 3, 'title_percent_spaces': 6, 'title_percent_punctuation': 0, 'title_starts_capitalized': True, 'title_includes_question_mark': False, 'title_coleman_liau_index': 16, 'title_sentiment_polarity': 0, 'title_sentiment_subjectivity': 0, 'score': 1, 'num_comments': 2, 'context': None, 'author': '', 'timestamp': datetime.datetime(2012, 11, 10, 15, 27, 30, tzinfo=<UTC>), 'has_wiki_link': False, 'has_no_link': True, 'has_other_link': False, 'has_good_wiki_link': False, 'has_b_wiki_link': False, 'has_c_wiki_link': False, 'num_wiki_links': 0, 'day_of_avg_score': None, 'week_after_avg_score': None, 'all_revisions_pulled': False, 'wiki_content_error': 0, 'mon': False, 'tues': False, 'wed': False, 'thurs': False, 'fri': False, 'sat': True, 'sun': False, 'jan': False, 'feb': False, 'mar': False, 'apr': False, 'may': False, 'jun': False, 'jul': False, 'aug': False, 'sep': False, 'octo': False, 'nov': True, 'dec': False, 'zero_to_six': False, 'six_to_twelve': False, 'twelve_to_eighteen': True, 'eighteen_to_twentyfour': False, 'year2008': False, 'year2009': False, 'year2010': False, 'year2011': False, 'year2012': True, 'year2013': False, 'year2014': False, 'year2015': False, 'year2016': False, 'user_created_utc': datetime.datetime(2009, 4, 9, 5, 43, 38, tzinfo=<UTC>), 'seconds_since_user_creation': 113305432, 'num_edits': 0, 'num_new_editors': 0, 'num_new_editors_retained': 0, 'num_new_editors_retained_180': 0, 'num_new_edits': 0, 'num_old_edits': 0, 'num_inactive_edits': 0, 'num_active_edits': 0, 'num_minor_edits': 0, 'num_major_edits': 0, 'num_edits_prev_week': 0, 'num_new_editors_prev_week': 0, 'num_new_editors_retained_prev_week': 0, 'num_new_editors_retained_prev_week_180': 0, 'num_new_edits_prev_week': 0, 'num_old_edits_prev_week': 0, 'num_inactive_edits_prev_week': 0, 'num_active_edits_prev_week': 0, 'num_minor_edits_prev_week': 0, 'num_major_edits_prev_week': 0, 'num_edits_preceding_post': 0, 'num_wiki_pageviews': None, 'num_wiki_pageviews_prev_week': None, 'sample_num': 0, 'user_reputation': 27127, 'question_asked_utc': datetime.datetime(2012, 11, 10, 15, 25, 56, tzinfo=<UTC>), 'num_pageviews': 77, 'tags_string': 'javascript|jquery|html', 'num_tags': 3, 'num_other_answers': 3, 'question_score': 1, 'num_question_comments': 2, 'response_time': 94, 'is_top': True}
-===
-
-SampledStackOverflowPost No WP link
-title, JAXB Exception: Class not known to this context
-body, <p>I had this error because I registered the wrong class in this line of code:</p>
-
-<pre><code>JAXBContext context = JAXBContext.newInstance(MyRootXmlClass.class);
-</code></pre>
-mon, False
-tues, False
-wed, False
-thurs, True
-fri, False
-sat, False
-jan, False
-feb, False
-mar, True
-apr, False
-may, False
-jun, False
-jul, False
-aug, False
-sep, False
-octo, False
-nov, False
-zero_to_six, False
-six_to_twelve, False
-twelve_to_eighteen, False
-seconds_since_user_creation, 20641485
-body_length, 177
-body_percent_uppercase, 10
-body_percent_spaces, 10
-body_percent_punctuation, 1
-body_starts_capitalized, True
-body_coleman_liau_index, 16
-body_includes_question_mark, False
-body_sentiment_polarity, -50
-body_sentiment_subjectivity, 90
-user_reputation, 2673
-body_includes_code, True
-num_tags, 4
-response_time, 26000
-year2008, False
-year2009, False
-year2010, False
-year2011, False
-year2012, True
-year2013, False
-year2014, False
-year2015, False
-is_top, False
-num_other_answers, 6
-{'_state': <django.db.models.base.ModelState object at 0x7fbeeb49b6d8>, 'uid': '9932964', 'body': '<p>I had this error because I registered the wrong class in this line of code:</p>\n\n<pre><code>JAXBContext context = JAXBContext.newInstance(MyRootXmlClass.class);\n</code></pre>', 'body_length': 177, 'body_lexicon_count': 19, 'body_sentence_count': 1, 'body_num_links': 0, 'body_percent_uppercase': 10, 'body_percent_spaces': 10, 'body_percent_punctuation': 1, 'body_starts_capitalized': True, 'body_includes_question_mark': False, 'body_includes_code': True, 'body_coleman_liau_index': 16, 'body_sentiment_polarity': -50, 'body_sentiment_subjectivity': 90, 'title': 'JAXB Exception: Class not known to this context', 'title_length': 47, 'title_lexicon_count': 19, 'title_sentence_count': 1, 'title_percent_uppercase': 13, 'title_percent_spaces': 15, 'title_percent_punctuation': 0, 'title_starts_capitalized': True, 'title_includes_question_mark': False, 'title_coleman_liau_index': 10, 'title_sentiment_polarity': 0, 'title_sentiment_subjectivity': 0, 'score': 23, 'num_comments': 3, 'context': None, 'author': '', 'timestamp': datetime.datetime(2012, 3, 29, 20, 25, 19, tzinfo=<UTC>), 'has_wiki_link': False, 'has_no_link': True, 'has_other_link': False, 'has_good_wiki_link': False, 'has_b_wiki_link': False, 'has_c_wiki_link': False, 'num_wiki_links': 0, 'day_of_avg_score': None, 'week_after_avg_score': None, 'all_revisions_pulled': False, 'wiki_content_error': 0, 'mon': False, 'tues': False, 'wed': False, 'thurs': True, 'fri': False, 'sat': False, 'sun': False, 'jan': False, 'feb': False, 'mar': True, 'apr': False, 'may': False, 'jun': False, 'jul': False, 'aug': False, 'sep': False, 'octo': False, 'nov': False, 'dec': False, 'zero_to_six': False, 'six_to_twelve': False, 'twelve_to_eighteen': False, 'eighteen_to_twentyfour': True, 'year2008': False, 'year2009': False, 'year2010': False, 'year2011': False, 'year2012': True, 'year2013': False, 'year2014': False, 'year2015': False, 'year2016': False, 'user_created_utc': datetime.datetime(2011, 8, 3, 22, 40, 34, tzinfo=<UTC>), 'seconds_since_user_creation': 20641485, 'num_edits': 0, 'num_new_editors': 0, 'num_new_editors_retained': 0, 'num_new_editors_retained_180': 0, 'num_new_edits': 0, 'num_old_edits': 0, 'num_inactive_edits': 0, 'num_active_edits': 0, 'num_minor_edits': 0, 'num_major_edits': 0, 'num_edits_prev_week': 0, 'num_new_editors_prev_week': 0, 'num_new_editors_retained_prev_week': 0, 'num_new_editors_retained_prev_week_180': 0, 'num_new_edits_prev_week': 0, 'num_old_edits_prev_week': 0, 'num_inactive_edits_prev_week': 0, 'num_active_edits_prev_week': 0, 'num_minor_edits_prev_week': 0, 'num_major_edits_prev_week': 0, 'num_edits_preceding_post': 0, 'num_wiki_pageviews': None, 'num_wiki_pageviews_prev_week': None, 'sample_num': 0, 'user_reputation': 2673, 'question_asked_utc': datetime.datetime(2010, 7, 13, 13, 11, 59, tzinfo=<UTC>), 'num_pageviews': 68886, 'tags_string': 'java|web-services|jaxb|cxf', 'num_tags': 4, 'num_other_answers': 6, 'question_score': 27, 'num_question_comments': 0, 'response_time': 26000, 'is_top': False}
-===
-
-SampledStackOverflowPost No WP link
-title, Event Log - Viewstate verification failed
-body, <p>I get a lot of these Viewstate errors on one of my sites, and it's normally a bot trying its luck to post something nefarious.</p>
-
-<p>I suspect the same here - unless you have a lot of users from Belarus?</p>
-
-<p>If you amend your logs to also capture the query string and other request params, that can give you some clues as to what the (alleged) attacker - or unfortunate user - was trying to achieve.</p>
-mon, False
-tues, False
-wed, True
-thurs, False
-fri, False
-sat, False
-jan, False
-feb, False
-mar, False
-apr, False
-may, False
-jun, False
-jul, False
-aug, True
-sep, False
-octo, False
-nov, False
-zero_to_six, False
-six_to_twelve, False
-twelve_to_eighteen, True
-seconds_since_user_creation, 10293772
-body_length, 412
-body_percent_uppercase, 1
-body_percent_spaces, 18
-body_percent_punctuation, 1
-body_starts_capitalized, True
-body_coleman_liau_index, 10
-body_includes_question_mark, True
-body_sentiment_polarity, -11
-body_sentiment_subjectivity, 45
-user_reputation, 9140
-body_includes_code, False
-num_tags, 5
-response_time, 444
-year2008, False
-year2009, False
-year2010, False
-year2011, True
-year2012, False
-year2013, False
-year2014, False
-year2015, False
-is_top, False
-num_other_answers, 2
-{'_state': <django.db.models.base.ModelState object at 0x7fbeeb49b748>, 'uid': '6927603', 'body': "<p>I get a lot of these Viewstate errors on one of my sites, and it's normally a bot trying its luck to post something nefarious.</p>\n\n<p>I suspect the same here - unless you have a lot of users from Belarus?</p>\n\n<p>If you amend your logs to also capture the query string and other request params, that can give you some clues as to what the (alleged) attacker - or unfortunate user - was trying to achieve.</p>", 'body_length': 412, 'body_lexicon_count': 73, 'body_sentence_count': 3, 'body_num_links': 0, 'body_percent_uppercase': 1, 'body_percent_spaces': 18, 'body_percent_punctuation': 1, 'body_starts_capitalized': True, 'body_includes_question_mark': True, 'body_includes_code': False, 'body_coleman_liau_index': 10, 'body_sentiment_polarity': -11, 'body_sentiment_subjectivity': 45, 'title': 'Event Log - Viewstate verification failed', 'title_length': 41, 'title_lexicon_count': 73, 'title_sentence_count': 3, 'title_percent_uppercase': 7, 'title_percent_spaces': 12, 'title_percent_punctuation': 0, 'title_starts_capitalized': True, 'title_includes_question_mark': False, 'title_coleman_liau_index': 16, 'title_sentiment_polarity': -50, 'title_sentiment_subjectivity': 30, 'score': 0, 'num_comments': 4, 'context': None, 'author': '', 'timestamp': datetime.datetime(2011, 8, 3, 13, 55, 43, tzinfo=<UTC>), 'has_wiki_link': False, 'has_no_link': True, 'has_other_link': False, 'has_good_wiki_link': False, 'has_b_wiki_link': False, 'has_c_wiki_link': False, 'num_wiki_links': 0, 'day_of_avg_score': None, 'week_after_avg_score': None, 'all_revisions_pulled': False, 'wiki_content_error': 0, 'mon': False, 'tues': False, 'wed': True, 'thurs': False, 'fri': False, 'sat': False, 'sun': False, 'jan': False, 'feb': False, 'mar': False, 'apr': False, 'may': False, 'jun': False, 'jul': False, 'aug': True, 'sep': False, 'octo': False, 'nov': False, 'dec': False, 'zero_to_six': False, 'six_to_twelve': False, 'twelve_to_eighteen': True, 'eighteen_to_twentyfour': False, 'year2008': False, 'year2009': False, 'year2010': False, 'year2011': True, 'year2012': False, 'year2013': False, 'year2014': False, 'year2015': False, 'year2016': False, 'user_created_utc': datetime.datetime(2011, 4, 6, 10, 32, 51, tzinfo=<UTC>), 'seconds_since_user_creation': 10293772, 'num_edits': 0, 'num_new_editors': 0, 'num_new_editors_retained': 0, 'num_new_editors_retained_180': 0, 'num_new_edits': 0, 'num_old_edits': 0, 'num_inactive_edits': 0, 'num_active_edits': 0, 'num_minor_edits': 0, 'num_major_edits': 0, 'num_edits_prev_week': 0, 'num_new_editors_prev_week': 0, 'num_new_editors_retained_prev_week': 0, 'num_new_editors_retained_prev_week_180': 0, 'num_new_edits_prev_week': 0, 'num_old_edits_prev_week': 0, 'num_inactive_edits_prev_week': 0, 'num_active_edits_prev_week': 0, 'num_minor_edits_prev_week': 0, 'num_major_edits_prev_week': 0, 'num_edits_preceding_post': 0, 'num_wiki_pageviews': None, 'num_wiki_pageviews_prev_week': None, 'sample_num': 0, 'user_reputation': 9140, 'question_asked_utc': datetime.datetime(2011, 8, 3, 13, 48, 19, tzinfo=<UTC>), 'num_pageviews': 5112, 'tags_string': 'asp.net|iis|viewstate|event-log|web-farm', 'num_tags': 5, 'num_other_answers': 2, 'question_score': 0, 'num_question_comments': 0, 'response_time': 444, 'is_top': False}
-===
-
-SampledStackOverflowPost No WP link
-title, How to terminate variable expansion to create a string in Powershell
-body, <p>You can use $()</p>
-
-<pre><code>PS C:\&gt; $StringToAdd = "iss"
-PS C:\&gt; $CompeteString = "Miss$($StringToAdd)ippi"
-PS C:\&gt; $CompeteString
-Mississippi
-</code></pre>
-
-<p>The sub-expression operator for double-quoted strings is described <a href="http://www.neolisk.com/techblog/powershell-specialcharactersandtokens" rel="nofollow">here</a>. Whatever is in the brackets should be evaluated first. This can be a variable or even an expression.</p>
-
-<pre><code>PS C:\&gt; $CompeteString = "Miss$($StringToAdd.length * 2)ippi"
-PS C:\&gt; $CompeteString
-Miss6ippi
-</code></pre>
-mon, False
-tues, False
-wed, False
-thurs, False
-fri, False
-sat, True
-jan, False
-feb, False
-mar, False
-apr, False
-may, False
-jun, False
-jul, False
-aug, False
-sep, False
-octo, False
-nov, True
-zero_to_six, False
-six_to_twelve, False
-twelve_to_eighteen, False
-seconds_since_user_creation, 93493946
-body_length, 580
-body_percent_uppercase, 7
-body_percent_spaces, 8
-body_percent_punctuation, 1
-body_starts_capitalized, True
-body_coleman_liau_index, 16
-body_includes_question_mark, False
-body_sentiment_polarity, 25
-body_sentiment_subjectivity, 33
-user_reputation, 1874
-body_includes_code, True
-num_tags, 1
-response_time, 11313
-year2008, False
-year2009, False
-year2010, False
-year2011, False
-year2012, False
-year2013, True
-year2014, False
-year2015, False
-is_top, False
-num_other_answers, 3
-{'_state': <django.db.models.base.ModelState object at 0x7fbeeb49b7b8>, 'uid': '20305994', 'body': '<p>You can use $()</p>\n\n<pre><code>PS C:\\&gt; $StringToAdd = "iss"\nPS C:\\&gt; $CompeteString = "Miss$($StringToAdd)ippi"\nPS C:\\&gt; $CompeteString\nMississippi\n</code></pre>\n\n<p>The sub-expression operator for double-quoted strings is described <a href="http://www.neolisk.com/techblog/powershell-specialcharactersandtokens" rel="nofollow">here</a>. Whatever is in the brackets should be evaluated first. This can be a variable or even an expression.</p>\n\n<pre><code>PS C:\\&gt; $CompeteString = "Miss$($StringToAdd.length * 2)ippi"\nPS C:\\&gt; $CompeteString\nMiss6ippi\n</code></pre>', 'body_length': 580, 'body_lexicon_count': 56, 'body_sentence_count': 5, 'body_num_links': 1, 'body_percent_uppercase': 7, 'body_percent_spaces': 8, 'body_percent_punctuation': 1, 'body_starts_capitalized': True, 'body_includes_question_mark': False, 'body_includes_code': True, 'body_coleman_liau_index': 16, 'body_sentiment_polarity': 25, 'body_sentiment_subjectivity': 33, 'title': 'How to terminate variable expansion to create a string in Powershell', 'title_length': 68, 'title_lexicon_count': 56, 'title_sentence_count': 5, 'title_percent_uppercase': 3, 'title_percent_spaces': 15, 'title_percent_punctuation': 0, 'title_starts_capitalized': True, 'title_includes_question_mark': False, 'title_coleman_liau_index': 12, 'title_sentiment_polarity': 0, 'title_sentiment_subjectivity': 0, 'score': 2, 'num_comments': 0, 'context': None, 'author': '', 'timestamp': datetime.datetime(2013, 11, 30, 21, 42, 58, tzinfo=<UTC>), 'has_wiki_link': False, 'has_no_link': False, 'has_other_link': True, 'has_good_wiki_link': False, 'has_b_wiki_link': False, 'has_c_wiki_link': False, 'num_wiki_links': 0, 'day_of_avg_score': None, 'week_after_avg_score': None, 'all_revisions_pulled': False, 'wiki_content_error': 0, 'mon': False, 'tues': False, 'wed': False, 'thurs': False, 'fri': False, 'sat': True, 'sun': False, 'jan': False, 'feb': False, 'mar': False, 'apr': False, 'may': False, 'jun': False, 'jul': False, 'aug': False, 'sep': False, 'octo': False, 'nov': True, 'dec': False, 'zero_to_six': False, 'six_to_twelve': False, 'twelve_to_eighteen': False, 'eighteen_to_twentyfour': True, 'year2008': False, 'year2009': False, 'year2010': False, 'year2011': False, 'year2012': False, 'year2013': True, 'year2014': False, 'year2015': False, 'year2016': False, 'user_created_utc': datetime.datetime(2010, 12, 14, 19, 10, 32, tzinfo=<UTC>), 'seconds_since_user_creation': 93493946, 'num_edits': 0, 'num_new_editors': 0, 'num_new_editors_retained': 0, 'num_new_editors_retained_180': 0, 'num_new_edits': 0, 'num_old_edits': 0, 'num_inactive_edits': 0, 'num_active_edits': 0, 'num_minor_edits': 0, 'num_major_edits': 0, 'num_edits_prev_week': 0, 'num_new_editors_prev_week': 0, 'num_new_editors_retained_prev_week': 0, 'num_new_editors_retained_prev_week_180': 0, 'num_new_edits_prev_week': 0, 'num_old_edits_prev_week': 0, 'num_inactive_edits_prev_week': 0, 'num_active_edits_prev_week': 0, 'num_minor_edits_prev_week': 0, 'num_major_edits_prev_week': 0, 'num_edits_preceding_post': 0, 'num_wiki_pageviews': None, 'num_wiki_pageviews_prev_week': None, 'sample_num': 0, 'user_reputation': 1874, 'question_asked_utc': datetime.datetime(2013, 7, 18, 18, 34, 25, tzinfo=<UTC>), 'num_pageviews': 1930, 'tags_string': 'powershell', 'num_tags': 1, 'num_other_answers': 3, 'question_score': 8, 'num_question_comments': 1, 'response_time': 11313, 'is_top': False}
-===
-
-SampledStackOverflowPost Has WP link
-title, how do I display php results in div on same page
-body, <p>You can do this via <a href="http://en.wikipedia.org/wiki/AJAX" rel="nofollow">AJAX</a>. However, you will have to make your code less procedural.</p>
-mon, False
-tues, False
-wed, False
-thurs, True
-fri, False
-sat, False
 jan, False
 feb, False
 mar, False
@@ -729,46 +147,74 @@ octo, False
 nov, False
 zero_to_six, False
 six_to_twelve, False
-twelve_to_eighteen, False
-seconds_since_user_creation, 31196232
-body_length, 153
-body_percent_uppercase, 7
-body_percent_spaces, 11
-body_percent_punctuation, 3
-body_starts_capitalized, True
-body_coleman_liau_index, 16
-body_includes_question_mark, False
-body_sentiment_polarity, -16
-body_sentiment_subjectivity, 6
-user_reputation, 18403
-body_includes_code, False
-num_tags, 2
-response_time, 185
-year2008, False
-year2009, False
-year2010, False
-year2011, True
-year2012, False
-year2013, False
-year2014, False
-year2015, False
-is_top, False
-num_other_answers, 3
-{'_state': <django.db.models.base.ModelState object at 0x7fbeeb49b7f0>, 'uid': '5587800', 'body': '<p>You can do this via <a href="http://en.wikipedia.org/wiki/AJAX" rel="nofollow">AJAX</a>. However, you will have to make your code less procedural.</p>', 'body_length': 153, 'body_lexicon_count': 18, 'body_sentence_count': 2, 'body_num_links': 1, 'body_percent_uppercase': 7, 'body_percent_spaces': 11, 'body_percent_punctuation': 3, 'body_starts_capitalized': True, 'body_includes_question_mark': False, 'body_includes_code': False, 'body_coleman_liau_index': 16, 'body_sentiment_polarity': -16, 'body_sentiment_subjectivity': 6, 'title': 'how do I display php results in div on same page', 'title_length': 48, 'title_lexicon_count': 18, 'title_sentence_count': 2, 'title_percent_uppercase': 2, 'title_percent_spaces': 21, 'title_percent_punctuation': 0, 'title_starts_capitalized': False, 'title_includes_question_mark': False, 'title_coleman_liau_index': 2, 'title_sentiment_polarity': 0, 'title_sentiment_subjectivity': 12, 'score': 0, 'num_comments': 0, 'context': None, 'author': '', 'timestamp': datetime.datetime(2011, 4, 7, 21, 20, 29, tzinfo=<UTC>), 'has_wiki_link': True, 'has_no_link': False, 'has_other_link': False, 'has_good_wiki_link': True, 'has_b_wiki_link': True, 'has_c_wiki_link': True, 'num_wiki_links': 1, 'day_of_avg_score': 4, 'week_after_avg_score': 4, 'all_revisions_pulled': True, 'wiki_content_error': 0, 'mon': False, 'tues': False, 'wed': False, 'thurs': True, 'fri': False, 'sat': False, 'sun': False, 'jan': False, 'feb': False, 'mar': False, 'apr': True, 'may': False, 'jun': False, 'jul': False, 'aug': False, 'sep': False, 'octo': False, 'nov': False, 'dec': False, 'zero_to_six': False, 'six_to_twelve': False, 'twelve_to_eighteen': False, 'eighteen_to_twentyfour': True, 'year2008': False, 'year2009': False, 'year2010': False, 'year2011': True, 'year2012': False, 'year2013': False, 'year2014': False, 'year2015': False, 'year2016': False, 'user_created_utc': datetime.datetime(2010, 4, 11, 19, 43, 17, tzinfo=<UTC>), 'seconds_since_user_creation': 31196232, 'num_edits': 2, 'num_new_editors': 0, 'num_new_editors_retained': 0, 'num_new_editors_retained_180': 0, 'num_new_edits': 0, 'num_old_edits': 2, 'num_inactive_edits': 0, 'num_active_edits': 2, 'num_minor_edits': 2, 'num_major_edits': 0, 'num_edits_prev_week': 0, 'num_new_editors_prev_week': 0, 'num_new_editors_retained_prev_week': 0, 'num_new_editors_retained_prev_week_180': 0, 'num_new_edits_prev_week': 0, 'num_old_edits_prev_week': 0, 'num_inactive_edits_prev_week': 0, 'num_active_edits_prev_week': 0, 'num_minor_edits_prev_week': 0, 'num_major_edits_prev_week': 0, 'num_edits_preceding_post': 0, 'num_wiki_pageviews': None, 'num_wiki_pageviews_prev_week': None, 'sample_num': 1, 'user_reputation': 18403, 'question_asked_utc': datetime.datetime(2011, 4, 7, 21, 17, 24, tzinfo=<UTC>), 'num_pageviews': 2862, 'tags_string': 'php|mysql', 'num_tags': 2, 'num_other_answers': 3, 'question_score': 0, 'num_question_comments': 1, 'response_time': 185, 'is_top': False}
+twelve_to_eighteen, True
+seconds_since_user_creation, 9
+title_length, 3
+title_percent_uppercase, 33
+title_percent_spaces, 0
+title_percent_punctuation, 0
+title_starts_capitalized, True
+title_coleman_liau_index, 0
+title_includes_question_mark, False
+title_sentiment_polarity, 0
+title_sentiment_subjectivity, 0
+user_comment_karma, 0
+user_link_karma, 1
+user_is_mod, False
+user_is_suspended, False
+user_is_deleted, False
+{'_state': <django.db.models.base.ModelState object at 0x7f837940fe10>, 'uid': '4g3rxz', 'body': '', 'body_length': 0, 'body_lexicon_count': 0, 'body_sentence_count': 0, 'body_num_links': 0, 'body_percent_uppercase': 0, 'body_percent_spaces': 0, 'body_percent_punctuation': 0, 'body_starts_capitalized': False, 'body_includes_question_mark': False, 'body_includes_code': False, 'body_coleman_liau_index': 0, 'body_sentiment_polarity': 0, 'body_sentiment_subjectivity': 0, 'title': 'Pow', 'title_length': 3, 'title_lexicon_count': 1, 'title_sentence_count': 1, 'title_percent_uppercase': 33, 'title_percent_spaces': 0, 'title_percent_punctuation': 0, 'title_starts_capitalized': True, 'title_includes_question_mark': False, 'title_coleman_liau_index': 0, 'title_sentiment_polarity': 0, 'title_sentiment_subjectivity': 0, 'score': 1, 'num_comments': 0, 'context': 'SheLikesItRough', 'author': 'ahebndasu', 'timestamp': datetime.datetime(2016, 4, 23, 14, 54, 58, tzinfo=<UTC>), 'has_wiki_link': False, 'has_no_link': False, 'has_other_link': True, 'has_good_wiki_link': False, 'has_b_wiki_link': False, 'has_c_wiki_link': False, 'num_wiki_links': 0, 'day_of_avg_score': None, 'week_after_avg_score': None, 'all_revisions_pulled': False, 'wiki_content_error': 0, 'mon': False, 'tues': False, 'wed': False, 'thurs': False, 'fri': False, 'sat': True, 'sun': False, 'jan': False, 'feb': False, 'mar': False, 'apr': True, 'may': False, 'jun': False, 'jul': False, 'aug': False, 'sep': False, 'octo': False, 'nov': False, 'dec': False, 'zero_to_six': False, 'six_to_twelve': False, 'twelve_to_eighteen': True, 'eighteen_to_twentyfour': False, 'year2008': False, 'year2009': False, 'year2010': False, 'year2011': False, 'year2012': False, 'year2013': False, 'year2014': False, 'year2015': False, 'year2016': True, 'user_created_utc': datetime.datetime(2016, 4, 23, 14, 54, 49, tzinfo=<UTC>), 'seconds_since_user_creation': 9, 'num_edits': 0, 'num_new_editors': 0, 'num_new_editors_retained': 0, 'num_new_editors_retained_180': 0, 'num_new_edits': 0, 'num_old_edits': 0, 'num_inactive_edits': 0, 'num_active_edits': 0, 'num_minor_edits': 0, 'num_major_edits': 0, 'num_edits_prev_week': 0, 'num_new_editors_prev_week': 0, 'num_new_editors_retained_prev_week': 0, 'num_new_editors_retained_prev_week_180': 0, 'num_new_edits_prev_week': 0, 'num_old_edits_prev_week': 0, 'num_inactive_edits_prev_week': 0, 'num_active_edits_prev_week': 0, 'num_minor_edits_prev_week': 0, 'num_major_edits_prev_week': 0, 'num_edits_preceding_post': 0, 'num_wiki_pageviews': None, 'num_wiki_pageviews_prev_week': None, 'num_wiki_increased_pageviews_day_of': None, 'sample_num': 0, 'user_info_processed': True, 'user_comment_karma': 0, 'user_link_karma': 1, 'user_is_mod': False, 'user_is_suspended': False, 'user_is_deleted': False, 'url': 'http://i.hamwhibo.com/pow/', 'in_todayilearned': False, 'in_borntoday': False, 'in_wikipedia': False, 'in_CelebrityBornToday': False, 'in_The_Donald': False, 'in_other': True}
 ===
 
-SampledStackOverflowPost Has WP link
-title, How do I access a SQLITE database from HTML and the output thus obtained be a drop down list?
-body, <p>First of all, HTML alone cannot access sqlite databases. But, there are many tools, which get you closer to what you like. I recommand you to look at <a href="https://en.wikipedia.org/wiki/Web_framework" rel="nofollow">https://en.wikipedia.org/wiki/Web_framework</a> to learn about frameworks and <a href="https://en.wikipedia.org/wiki/Comparison_of_web_frameworks" rel="nofollow">https://en.wikipedia.org/wiki/Comparison_of_web_frameworks</a> for a list of existing frameworks (it is outdated, but still very long)</p>
-
-<p>Many frameworks offer a functionality called "Templates". This is a mechanism, which allows you to embed processing instructions (e.g. getting values from a database) into your HTML File. Examples are ctemplate, mustache and many more. Those tools process your HTML and insert the values from a database into the right place in your template at the web server and send the client the complete HTML.</p>
-
-<p>There are also ways to manipulate the contents of your page at the client site by javascript. Angular.js and react are only two big names that I am aware of. But also these would require a web server, which can access a database and deliver the values.</p>
+SampledRedditThread No WP link
+title, Gmail Troubleshooting Steps
+body, 
 mon, False
-tues, True
+tues, False
+wed, False
+thurs, True
+fri, False
+sat, False
+jan, False
+feb, False
+mar, False
+apr, False
+may, False
+jun, False
+jul, False
+aug, False
+sep, False
+octo, True
+nov, False
+zero_to_six, False
+six_to_twelve, True
+twelve_to_eighteen, False
+seconds_since_user_creation, 0
+title_length, 27
+title_percent_uppercase, 11
+title_percent_spaces, 7
+title_percent_punctuation, 0
+title_starts_capitalized, True
+title_coleman_liau_index, 16
+title_includes_question_mark, False
+title_sentiment_polarity, 0
+title_sentiment_subjectivity, 0
+user_comment_karma, 0
+user_link_karma, 0
+user_is_mod, False
+user_is_suspended, False
+user_is_deleted, True
+{'_state': <django.db.models.base.ModelState object at 0x7f837940fe80>, 'uid': '564l0l', 'body': '', 'body_length': 0, 'body_lexicon_count': 0, 'body_sentence_count': 0, 'body_num_links': 0, 'body_percent_uppercase': 0, 'body_percent_spaces': 0, 'body_percent_punctuation': 0, 'body_starts_capitalized': False, 'body_includes_question_mark': False, 'body_includes_code': False, 'body_coleman_liau_index': 0, 'body_sentiment_polarity': 0, 'body_sentiment_subjectivity': 0, 'title': 'Gmail Troubleshooting Steps', 'title_length': 27, 'title_lexicon_count': 3, 'title_sentence_count': 1, 'title_percent_uppercase': 11, 'title_percent_spaces': 7, 'title_percent_punctuation': 0, 'title_starts_capitalized': True, 'title_includes_question_mark': False, 'title_coleman_liau_index': 16, 'title_sentiment_polarity': 0, 'title_sentiment_subjectivity': 0, 'score': 1, 'num_comments': 0, 'context': 'computers', 'author': 'quickhelpus', 'timestamp': datetime.datetime(2016, 10, 6, 9, 30, 57, tzinfo=<UTC>), 'has_wiki_link': False, 'has_no_link': False, 'has_other_link': True, 'has_good_wiki_link': False, 'has_b_wiki_link': False, 'has_c_wiki_link': False, 'num_wiki_links': 0, 'day_of_avg_score': None, 'week_after_avg_score': None, 'all_revisions_pulled': False, 'wiki_content_error': 0, 'mon': False, 'tues': False, 'wed': False, 'thurs': True, 'fri': False, 'sat': False, 'sun': False, 'jan': False, 'feb': False, 'mar': False, 'apr': False, 'may': False, 'jun': False, 'jul': False, 'aug': False, 'sep': False, 'octo': True, 'nov': False, 'dec': False, 'zero_to_six': False, 'six_to_twelve': True, 'twelve_to_eighteen': False, 'eighteen_to_twentyfour': False, 'year2008': False, 'year2009': False, 'year2010': False, 'year2011': False, 'year2012': False, 'year2013': False, 'year2014': False, 'year2015': False, 'year2016': True, 'user_created_utc': datetime.datetime(2016, 10, 6, 9, 30, 57, tzinfo=<UTC>), 'seconds_since_user_creation': 0, 'num_edits': 0, 'num_new_editors': 0, 'num_new_editors_retained': 0, 'num_new_editors_retained_180': 0, 'num_new_edits': 0, 'num_old_edits': 0, 'num_inactive_edits': 0, 'num_active_edits': 0, 'num_minor_edits': 0, 'num_major_edits': 0, 'num_edits_prev_week': 0, 'num_new_editors_prev_week': 0, 'num_new_editors_retained_prev_week': 0, 'num_new_editors_retained_prev_week_180': 0, 'num_new_edits_prev_week': 0, 'num_old_edits_prev_week': 0, 'num_inactive_edits_prev_week': 0, 'num_active_edits_prev_week': 0, 'num_minor_edits_prev_week': 0, 'num_major_edits_prev_week': 0, 'num_edits_preceding_post': 0, 'num_wiki_pageviews': None, 'num_wiki_pageviews_prev_week': None, 'num_wiki_increased_pageviews_day_of': None, 'sample_num': 0, 'user_info_processed': True, 'user_comment_karma': 0, 'user_link_karma': 0, 'user_is_mod': False, 'user_is_suspended': False, 'user_is_deleted': True, 'url': 'https://quickhelpus.wordpress.com/2016/10/06/how-to-recover-or-get-back-the-deleted-gmail-account/', 'in_todayilearned': False, 'in_borntoday': False, 'in_wikipedia': False, 'in_CelebrityBornToday': False, 'in_The_Donald': False, 'in_other': True}
+===
+
+SampledRedditThread Has WP link
+title, TIL Stalin's once close political comrade and scholar, Nikolai Bukharin, wrote Stalin a note before being executed by him that read "Koba, why do you need me to die?". The note was found still in Stalin's desk 15 years later at the time of his death.
+body, 
+mon, False
+tues, False
 wed, False
 thurs, False
-fri, False
+fri, True
 sat, False
 jan, False
 feb, True
@@ -784,108 +230,290 @@ nov, False
 zero_to_six, False
 six_to_twelve, False
 twelve_to_eighteen, True
-seconds_since_user_creation, 138680443
-body_length, 1190
-body_percent_uppercase, 3
-body_percent_spaces, 14
-body_percent_punctuation, 2
-body_starts_capitalized, True
+seconds_since_user_creation, 17866117
+title_length, 250
+title_percent_uppercase, 4
+title_percent_spaces, 18
+title_percent_punctuation, 2
+title_starts_capitalized, True
+title_coleman_liau_index, 9
+title_includes_question_mark, True
+title_sentiment_polarity, 0
+title_sentiment_subjectivity, 5
+user_comment_karma, 8
+user_link_karma, 1
+user_is_mod, False
+user_is_suspended, False
+user_is_deleted, False
+{'_state': <django.db.models.base.ModelState object at 0x7f8379429128>, 'uid': '47pe2b', 'body': '', 'body_length': 0, 'body_lexicon_count': 0, 'body_sentence_count': 0, 'body_num_links': 0, 'body_percent_uppercase': 0, 'body_percent_spaces': 0, 'body_percent_punctuation': 0, 'body_starts_capitalized': False, 'body_includes_question_mark': False, 'body_includes_code': False, 'body_coleman_liau_index': 0, 'body_sentiment_polarity': 0, 'body_sentiment_subjectivity': 0, 'title': 'TIL Stalin\'s once close political comrade and scholar, Nikolai Bukharin, wrote Stalin a note before being executed by him that read "Koba, why do you need me to die?". The note was found still in Stalin\'s desk 15 years later at the time of his death.', 'title_length': 250, 'title_lexicon_count': 46, 'title_sentence_count': 1, 'title_percent_uppercase': 4, 'title_percent_spaces': 18, 'title_percent_punctuation': 2, 'title_starts_capitalized': True, 'title_includes_question_mark': True, 'title_coleman_liau_index': 9, 'title_sentiment_polarity': 0, 'title_sentiment_subjectivity': 5, 'score': 1, 'num_comments': 1, 'context': 'todayilearned', 'author': 'for2adall', 'timestamp': datetime.datetime(2016, 2, 26, 15, 5, 4, tzinfo=<UTC>), 'has_wiki_link': True, 'has_no_link': False, 'has_other_link': False, 'has_good_wiki_link': False, 'has_b_wiki_link': False, 'has_c_wiki_link': True, 'num_wiki_links': 1, 'day_of_avg_score': 2, 'week_after_avg_score': 2, 'all_revisions_pulled': True, 'wiki_content_error': 0, 'mon': False, 'tues': False, 'wed': False, 'thurs': False, 'fri': True, 'sat': False, 'sun': False, 'jan': False, 'feb': True, 'mar': False, 'apr': False, 'may': False, 'jun': False, 'jul': False, 'aug': False, 'sep': False, 'octo': False, 'nov': False, 'dec': False, 'zero_to_six': False, 'six_to_twelve': False, 'twelve_to_eighteen': True, 'eighteen_to_twentyfour': False, 'year2008': False, 'year2009': False, 'year2010': False, 'year2011': False, 'year2012': False, 'year2013': False, 'year2014': False, 'year2015': False, 'year2016': True, 'user_created_utc': datetime.datetime(2015, 8, 3, 20, 16, 27, tzinfo=<UTC>), 'seconds_since_user_creation': 17866117, 'num_edits': 0, 'num_new_editors': 0, 'num_new_editors_retained': 0, 'num_new_editors_retained_180': 0, 'num_new_edits': 0, 'num_old_edits': 0, 'num_inactive_edits': 0, 'num_active_edits': 0, 'num_minor_edits': 0, 'num_major_edits': 0, 'num_edits_prev_week': 0, 'num_new_editors_prev_week': 0, 'num_new_editors_retained_prev_week': 0, 'num_new_editors_retained_prev_week_180': 0, 'num_new_edits_prev_week': 0, 'num_old_edits_prev_week': 0, 'num_inactive_edits_prev_week': 0, 'num_active_edits_prev_week': 0, 'num_minor_edits_prev_week': 0, 'num_major_edits_prev_week': 0, 'num_edits_preceding_post': 0, 'num_wiki_pageviews': 2834, 'num_wiki_pageviews_prev_week': 2944, 'num_wiki_increased_pageviews_day_of': -20, 'sample_num': 2, 'user_info_processed': True, 'user_comment_karma': 8, 'user_link_karma': 1, 'user_is_mod': False, 'user_is_suspended': False, 'user_is_deleted': False, 'url': 'https://en.m.wikipedia.org/wiki/Nikolai_Bukharin', 'in_todayilearned': True, 'in_borntoday': False, 'in_wikipedia': False, 'in_CelebrityBornToday': False, 'in_The_Donald': False, 'in_other': False}
+===
+
+SampledRedditThread Has WP link
+title, Sudden realization today that Battlestar Galactica was the Firefly of its day. Extremely popular show canceled after a single season that was later wrapped up with a feature length movie.
+body, 
+mon, True
+tues, False
+wed, False
+thurs, False
+fri, False
+sat, False
+jan, False
+feb, False
+mar, False
+apr, False
+may, False
+jun, False
+jul, False
+aug, True
+sep, False
+octo, False
+nov, False
+zero_to_six, True
+six_to_twelve, False
+twelve_to_eighteen, False
+seconds_since_user_creation, 118203535
+title_length, 187
+title_percent_uppercase, 3
+title_percent_spaces, 16
+title_percent_punctuation, 1
+title_starts_capitalized, True
+title_coleman_liau_index, 13
+title_includes_question_mark, False
+title_sentiment_polarity, 13
+title_sentiment_subjectivity, 40
+user_comment_karma, 35152
+user_link_karma, 1161
+user_is_mod, True
+user_is_suspended, False
+user_is_deleted, False
+{'_state': <django.db.models.base.ModelState object at 0x7f8379429198>, 'uid': '4wopil', 'body': '', 'body_length': 0, 'body_lexicon_count': 0, 'body_sentence_count': 0, 'body_num_links': 0, 'body_percent_uppercase': 0, 'body_percent_spaces': 0, 'body_percent_punctuation': 0, 'body_starts_capitalized': False, 'body_includes_question_mark': False, 'body_includes_code': False, 'body_coleman_liau_index': 0, 'body_sentiment_polarity': 0, 'body_sentiment_subjectivity': 0, 'title': 'Sudden realization today that Battlestar Galactica was the Firefly of its day. Extremely popular show canceled after a single season that was later wrapped up with a feature length movie.', 'title_length': 187, 'title_lexicon_count': 30, 'title_sentence_count': 1, 'title_percent_uppercase': 3, 'title_percent_spaces': 16, 'title_percent_punctuation': 1, 'title_starts_capitalized': True, 'title_includes_question_mark': False, 'title_coleman_liau_index': 13, 'title_sentiment_polarity': 13, 'title_sentiment_subjectivity': 40, 'score': 38, 'num_comments': 10, 'context': 'firefly', 'author': 'Augustus420', 'timestamp': datetime.datetime(2016, 8, 8, 5, 54, 1, tzinfo=<UTC>), 'has_wiki_link': True, 'has_no_link': False, 'has_other_link': False, 'has_good_wiki_link': False, 'has_b_wiki_link': False, 'has_c_wiki_link': True, 'num_wiki_links': 1, 'day_of_avg_score': 2, 'week_after_avg_score': 2, 'all_revisions_pulled': True, 'wiki_content_error': 0, 'mon': True, 'tues': False, 'wed': False, 'thurs': False, 'fri': False, 'sat': False, 'sun': False, 'jan': False, 'feb': False, 'mar': False, 'apr': False, 'may': False, 'jun': False, 'jul': False, 'aug': True, 'sep': False, 'octo': False, 'nov': False, 'dec': False, 'zero_to_six': True, 'six_to_twelve': False, 'twelve_to_eighteen': False, 'eighteen_to_twentyfour': False, 'year2008': False, 'year2009': False, 'year2010': False, 'year2011': False, 'year2012': False, 'year2013': False, 'year2014': False, 'year2015': False, 'year2016': True, 'user_created_utc': datetime.datetime(2012, 11, 9, 3, 35, 6, tzinfo=<UTC>), 'seconds_since_user_creation': 118203535, 'num_edits': 0, 'num_new_editors': 0, 'num_new_editors_retained': 0, 'num_new_editors_retained_180': 0, 'num_new_edits': 0, 'num_old_edits': 0, 'num_inactive_edits': 0, 'num_active_edits': 0, 'num_minor_edits': 0, 'num_major_edits': 0, 'num_edits_prev_week': 0, 'num_new_editors_prev_week': 0, 'num_new_editors_retained_prev_week': 0, 'num_new_editors_retained_prev_week_180': 0, 'num_new_edits_prev_week': 0, 'num_old_edits_prev_week': 0, 'num_inactive_edits_prev_week': 0, 'num_active_edits_prev_week': 0, 'num_minor_edits_prev_week': 0, 'num_major_edits_prev_week': 0, 'num_edits_preceding_post': 0, 'num_wiki_pageviews': 5544, 'num_wiki_pageviews_prev_week': 5300, 'num_wiki_increased_pageviews_day_of': 222, 'sample_num': 2, 'user_info_processed': True, 'user_comment_karma': 35152, 'user_link_karma': 1161, 'user_is_mod': True, 'user_is_suspended': False, 'user_is_deleted': False, 'url': 'http://www.wikipedia.org/wiki/Battlestar_Galactica_(1978_TV_series)', 'in_todayilearned': False, 'in_borntoday': False, 'in_wikipedia': False, 'in_CelebrityBornToday': False, 'in_The_Donald': False, 'in_other': True}
+===
+
+SampledRedditThread Has WP link
+title, TIL that Al Pacino boycotted the 45th academy awards because Pacino had more screentime than Marlon Brando in The Godfather, but Brando was nominated for Best Actor instead of Pacino.
+body, 
+mon, False
+tues, False
+wed, False
+thurs, False
+fri, False
+sat, True
+jan, False
+feb, False
+mar, False
+apr, False
+may, False
+jun, False
+jul, False
+aug, False
+sep, False
+octo, False
+nov, True
+zero_to_six, False
+six_to_twelve, False
+twelve_to_eighteen, True
+seconds_since_user_creation, 35486019
+title_length, 183
+title_percent_uppercase, 8
+title_percent_spaces, 16
+title_percent_punctuation, 1
+title_starts_capitalized, True
+title_coleman_liau_index, 13
+title_includes_question_mark, False
+title_sentiment_polarity, 75
+title_sentiment_subjectivity, 40
+user_comment_karma, 3228
+user_link_karma, 6305
+user_is_mod, False
+user_is_suspended, False
+user_is_deleted, False
+{'_state': <django.db.models.base.ModelState object at 0x7f8379429208>, 'uid': '5f0913', 'body': '', 'body_length': 0, 'body_lexicon_count': 0, 'body_sentence_count': 0, 'body_num_links': 0, 'body_percent_uppercase': 0, 'body_percent_spaces': 0, 'body_percent_punctuation': 0, 'body_starts_capitalized': False, 'body_includes_question_mark': False, 'body_includes_code': False, 'body_coleman_liau_index': 0, 'body_sentiment_polarity': 0, 'body_sentiment_subjectivity': 0, 'title': 'TIL that Al Pacino boycotted the 45th academy awards because Pacino had more screentime than Marlon Brando in The Godfather, but Brando was nominated for Best Actor instead of Pacino.', 'title_length': 183, 'title_lexicon_count': 30, 'title_sentence_count': 1, 'title_percent_uppercase': 8, 'title_percent_spaces': 16, 'title_percent_punctuation': 1, 'title_starts_capitalized': True, 'title_includes_question_mark': False, 'title_coleman_liau_index': 13, 'title_sentiment_polarity': 75, 'title_sentiment_subjectivity': 40, 'score': 25, 'num_comments': 6, 'context': 'todayilearned', 'author': 'workadaywordsmith', 'timestamp': datetime.datetime(2016, 11, 26, 16, 41, 8, tzinfo=<UTC>), 'has_wiki_link': True, 'has_no_link': False, 'has_other_link': False, 'has_good_wiki_link': True, 'has_b_wiki_link': True, 'has_c_wiki_link': True, 'num_wiki_links': 1, 'day_of_avg_score': 5, 'week_after_avg_score': 5, 'all_revisions_pulled': True, 'wiki_content_error': 0, 'mon': False, 'tues': False, 'wed': False, 'thurs': False, 'fri': False, 'sat': True, 'sun': False, 'jan': False, 'feb': False, 'mar': False, 'apr': False, 'may': False, 'jun': False, 'jul': False, 'aug': False, 'sep': False, 'octo': False, 'nov': True, 'dec': False, 'zero_to_six': False, 'six_to_twelve': False, 'twelve_to_eighteen': True, 'eighteen_to_twentyfour': False, 'year2008': False, 'year2009': False, 'year2010': False, 'year2011': False, 'year2012': False, 'year2013': False, 'year2014': False, 'year2015': False, 'year2016': True, 'user_created_utc': datetime.datetime(2015, 10, 12, 23, 27, 29, tzinfo=<UTC>), 'seconds_since_user_creation': 35486019, 'num_edits': 11, 'num_new_editors': 0, 'num_new_editors_retained': 0, 'num_new_editors_retained_180': 0, 'num_new_edits': 0, 'num_old_edits': 11, 'num_inactive_edits': 0, 'num_active_edits': 11, 'num_minor_edits': 11, 'num_major_edits': 0, 'num_edits_prev_week': 1, 'num_new_editors_prev_week': 0, 'num_new_editors_retained_prev_week': 0, 'num_new_editors_retained_prev_week_180': 0, 'num_new_edits_prev_week': 0, 'num_old_edits_prev_week': 1, 'num_inactive_edits_prev_week': 0, 'num_active_edits_prev_week': 1, 'num_minor_edits_prev_week': 1, 'num_major_edits_prev_week': 0, 'num_edits_preceding_post': 0, 'num_wiki_pageviews': 65843, 'num_wiki_pageviews_prev_week': 73192, 'num_wiki_increased_pageviews_day_of': 1593, 'sample_num': 1, 'user_info_processed': True, 'user_comment_karma': 3228, 'user_link_karma': 6305, 'user_is_mod': False, 'user_is_suspended': False, 'user_is_deleted': False, 'url': 'https://en.wikipedia.org/wiki/The_Godfather#Accolades', 'in_todayilearned': True, 'in_borntoday': False, 'in_wikipedia': False, 'in_CelebrityBornToday': False, 'in_The_Donald': False, 'in_other': False}
+===
+
+SampledRedditThread Has WP link
+title, TIL of the Brazilian wandering spider whose bite causes erections in humans that can lead to impotence.
+body, 
+mon, False
+tues, False
+wed, False
+thurs, False
+fri, False
+sat, True
+jan, False
+feb, False
+mar, True
+apr, False
+may, False
+jun, False
+jul, False
+aug, False
+sep, False
+octo, False
+nov, False
+zero_to_six, True
+six_to_twelve, False
+twelve_to_eighteen, False
+seconds_since_user_creation, 54986689
+title_length, 103
+title_percent_uppercase, 4
+title_percent_spaces, 16
+title_percent_punctuation, 1
+title_starts_capitalized, True
+title_coleman_liau_index, 12
+title_includes_question_mark, False
+title_sentiment_polarity, 0
+title_sentiment_subjectivity, 0
+user_comment_karma, 873
+user_link_karma, 5139
+user_is_mod, False
+user_is_suspended, False
+user_is_deleted, False
+{'_state': <django.db.models.base.ModelState object at 0x7f8379429278>, 'uid': '491h6h', 'body': '', 'body_length': 0, 'body_lexicon_count': 0, 'body_sentence_count': 0, 'body_num_links': 0, 'body_percent_uppercase': 0, 'body_percent_spaces': 0, 'body_percent_punctuation': 0, 'body_starts_capitalized': False, 'body_includes_question_mark': False, 'body_includes_code': False, 'body_coleman_liau_index': 0, 'body_sentiment_polarity': 0, 'body_sentiment_subjectivity': 0, 'title': 'TIL of the Brazilian wandering spider whose bite causes erections in humans that can lead to impotence.', 'title_length': 103, 'title_lexicon_count': 17, 'title_sentence_count': 1, 'title_percent_uppercase': 4, 'title_percent_spaces': 16, 'title_percent_punctuation': 1, 'title_starts_capitalized': True, 'title_includes_question_mark': False, 'title_coleman_liau_index': 12, 'title_sentiment_polarity': 0, 'title_sentiment_subjectivity': 0, 'score': 13, 'num_comments': 3, 'context': 'todayilearned', 'author': 'sirjopalot', 'timestamp': datetime.datetime(2016, 3, 5, 6, 56, 20, tzinfo=<UTC>), 'has_wiki_link': True, 'has_no_link': False, 'has_other_link': False, 'has_good_wiki_link': False, 'has_b_wiki_link': False, 'has_c_wiki_link': False, 'num_wiki_links': 1, 'day_of_avg_score': 0, 'week_after_avg_score': 0, 'all_revisions_pulled': True, 'wiki_content_error': 0, 'mon': False, 'tues': False, 'wed': False, 'thurs': False, 'fri': False, 'sat': True, 'sun': False, 'jan': False, 'feb': False, 'mar': True, 'apr': False, 'may': False, 'jun': False, 'jul': False, 'aug': False, 'sep': False, 'octo': False, 'nov': False, 'dec': False, 'zero_to_six': True, 'six_to_twelve': False, 'twelve_to_eighteen': False, 'eighteen_to_twentyfour': False, 'year2008': False, 'year2009': False, 'year2010': False, 'year2011': False, 'year2012': False, 'year2013': False, 'year2014': False, 'year2015': False, 'year2016': True, 'user_created_utc': datetime.datetime(2014, 6, 7, 20, 51, 31, tzinfo=<UTC>), 'seconds_since_user_creation': 54986689, 'num_edits': 0, 'num_new_editors': 0, 'num_new_editors_retained': 0, 'num_new_editors_retained_180': 0, 'num_new_edits': 0, 'num_old_edits': 0, 'num_inactive_edits': 0, 'num_active_edits': 0, 'num_minor_edits': 0, 'num_major_edits': 0, 'num_edits_prev_week': 0, 'num_new_editors_prev_week': 0, 'num_new_editors_retained_prev_week': 0, 'num_new_editors_retained_prev_week_180': 0, 'num_new_edits_prev_week': 0, 'num_old_edits_prev_week': 0, 'num_inactive_edits_prev_week': 0, 'num_active_edits_prev_week': 0, 'num_minor_edits_prev_week': 0, 'num_major_edits_prev_week': 0, 'num_edits_preceding_post': 0, 'num_wiki_pageviews': 20916, 'num_wiki_pageviews_prev_week': 8797, 'num_wiki_increased_pageviews_day_of': 128, 'sample_num': 1, 'user_info_processed': True, 'user_comment_karma': 873, 'user_link_karma': 5139, 'user_is_mod': False, 'user_is_suspended': False, 'user_is_deleted': False, 'url': 'https://en.wikipedia.org/wiki/Brazilian_wandering_spider#Toxicity_and_prey', 'in_todayilearned': True, 'in_borntoday': False, 'in_wikipedia': False, 'in_CelebrityBornToday': False, 'in_The_Donald': False, 'in_other': False}
+===
+
+SampledRedditThread Has WP link
+title, TIL There was a time when AMD and Intel CPUs used the same socket, and could run on the same motherboard.
+body, 
+mon, False
+tues, False
+wed, False
+thurs, False
+fri, True
+sat, False
+jan, False
+feb, False
+mar, False
+apr, False
+may, False
+jun, False
+jul, False
+aug, False
+sep, False
+octo, True
+nov, False
+zero_to_six, False
+six_to_twelve, False
+twelve_to_eighteen, True
+seconds_since_user_creation, 116009469
+title_length, 105
+title_percent_uppercase, 10
+title_percent_spaces, 19
+title_percent_punctuation, 2
+title_starts_capitalized, True
+title_coleman_liau_index, 6
+title_includes_question_mark, False
+title_sentiment_polarity, 0
+title_sentiment_subjectivity, 12
+user_comment_karma, 324538
+user_link_karma, 322885
+user_is_mod, True
+user_is_suspended, False
+user_is_deleted, False
+{'_state': <django.db.models.base.ModelState object at 0x7f83794292e8>, 'uid': '58n9nu', 'body': '', 'body_length': 0, 'body_lexicon_count': 0, 'body_sentence_count': 0, 'body_num_links': 0, 'body_percent_uppercase': 0, 'body_percent_spaces': 0, 'body_percent_punctuation': 0, 'body_starts_capitalized': False, 'body_includes_question_mark': False, 'body_includes_code': False, 'body_coleman_liau_index': 0, 'body_sentiment_polarity': 0, 'body_sentiment_subjectivity': 0, 'title': 'TIL There was a time when AMD and Intel CPUs used the same socket, and could run on the same motherboard.', 'title_length': 105, 'title_lexicon_count': 21, 'title_sentence_count': 1, 'title_percent_uppercase': 10, 'title_percent_spaces': 19, 'title_percent_punctuation': 2, 'title_starts_capitalized': True, 'title_includes_question_mark': False, 'title_coleman_liau_index': 6, 'title_sentiment_polarity': 0, 'title_sentiment_subjectivity': 12, 'score': 1179, 'num_comments': 111, 'context': 'todayilearned', 'author': 'huphelmeyer', 'timestamp': datetime.datetime(2016, 10, 21, 13, 42, 41, tzinfo=<UTC>), 'has_wiki_link': True, 'has_no_link': False, 'has_other_link': False, 'has_good_wiki_link': False, 'has_b_wiki_link': False, 'has_c_wiki_link': False, 'num_wiki_links': 1, 'day_of_avg_score': 1, 'week_after_avg_score': 1, 'all_revisions_pulled': True, 'wiki_content_error': 0, 'mon': False, 'tues': False, 'wed': False, 'thurs': False, 'fri': True, 'sat': False, 'sun': False, 'jan': False, 'feb': False, 'mar': False, 'apr': False, 'may': False, 'jun': False, 'jul': False, 'aug': False, 'sep': False, 'octo': True, 'nov': False, 'dec': False, 'zero_to_six': False, 'six_to_twelve': False, 'twelve_to_eighteen': True, 'eighteen_to_twentyfour': False, 'year2008': False, 'year2009': False, 'year2010': False, 'year2011': False, 'year2012': False, 'year2013': False, 'year2014': False, 'year2015': False, 'year2016': True, 'user_created_utc': datetime.datetime(2013, 2, 16, 20, 51, 32, tzinfo=<UTC>), 'seconds_since_user_creation': 116009469, 'num_edits': 0, 'num_new_editors': 0, 'num_new_editors_retained': 0, 'num_new_editors_retained_180': 0, 'num_new_edits': 0, 'num_old_edits': 0, 'num_inactive_edits': 0, 'num_active_edits': 0, 'num_minor_edits': 0, 'num_major_edits': 0, 'num_edits_prev_week': 0, 'num_new_editors_prev_week': 0, 'num_new_editors_retained_prev_week': 0, 'num_new_editors_retained_prev_week_180': 0, 'num_new_edits_prev_week': 0, 'num_old_edits_prev_week': 0, 'num_inactive_edits_prev_week': 0, 'num_active_edits_prev_week': 0, 'num_minor_edits_prev_week': 0, 'num_major_edits_prev_week': 0, 'num_edits_preceding_post': 0, 'num_wiki_pageviews': 15407, 'num_wiki_pageviews_prev_week': 9626, 'num_wiki_increased_pageviews_day_of': 9050, 'sample_num': 1, 'user_info_processed': True, 'user_comment_karma': 324538, 'user_link_karma': 322885, 'user_is_mod': True, 'user_is_suspended': False, 'user_is_deleted': False, 'url': 'https://en.wikipedia.org/wiki/Socket_7', 'in_todayilearned': True, 'in_borntoday': False, 'in_wikipedia': False, 'in_CelebrityBornToday': False, 'in_The_Donald': False, 'in_other': False}
+===
+
+SampledStackOverflowPost No WP link
+title, get value from json php codeigniter
+body, <pre><code>&lt;?php
+$str = '[[{"class":"com.ehealth.data.Sample_Data","collectedBy":"2013-07-21","collectedDate":"Kamal","orderID":2,"sampleID":2.897033553E9},{"class":"com.ehealth.data.Order_Data","doctorUsername":"Kamal","dueDate":"2014-01-02","orderDate":"2013-12-12","orderID":2,"patientID":"P0001","prority":1,"status":"complete","testType":"Fasting Blood Sugar"}],[{"class":"com.ehealth.data.Sample_Data","collectedBy":"2013-07-22","collectedDate":"Kamal","orderID":3,"sampleID":5.978956192E9},{"class":"com.ehealth.data.Order_Data","doctorUsername":"Kamal","dueDate":"2014-01-02","orderDate":"2013-12-12","orderID":3,"patientID":"P0001","prority":2,"status":"complete","testType":"Fasting Blood Sugar"}]]';
+
+$json = json_decode($str,true);
+
+foreach ($json as $datas){
+    foreach ($datas as $data){
+        echo (isset($data['sampleID']) ? $data['sampleID'] :'')."&lt;br/&gt;";
+    }
+}
+
+echo '&lt;pre&gt;';
+print_r ($json);
+echo '&lt;/pre&gt;';
+// exit;
+
+?&gt;
+</code></pre>
+mon, True
+tues, False
+wed, False
+thurs, False
+fri, False
+sat, False
+jan, False
+feb, False
+mar, False
+apr, False
+may, False
+jun, False
+jul, True
+aug, False
+sep, False
+octo, False
+nov, False
+zero_to_six, False
+six_to_twelve, True
+twelve_to_eighteen, False
+seconds_since_user_creation, 16663110
+body_length, 981
+body_percent_uppercase, 6
+body_percent_spaces, 4
+body_percent_punctuation, 4
+body_starts_capitalized, False
 body_coleman_liau_index, 16
-body_includes_question_mark, False
-body_sentiment_polarity, 19
-body_sentiment_subjectivity, 47
-user_reputation, 767
-body_includes_code, False
-num_tags, 4
-response_time, 45047
+body_includes_question_mark, True
+body_sentiment_polarity, 30
+body_sentiment_subjectivity, 70
+user_reputation, 100
+body_includes_code, True
+num_tags, 2
+response_time, 433
 year2008, False
 year2009, False
 year2010, False
 year2011, False
 year2012, False
-year2013, False
+year2013, True
 year2014, False
 year2015, False
-is_top, True
-num_other_answers, 1
-{'_state': <django.db.models.base.ModelState object at 0x7fbeeb49b860>, 'uid': '35160331', 'body': '<p>First of all, HTML alone cannot access sqlite databases. But, there are many tools, which get you closer to what you like. I recommand you to look at <a href="https://en.wikipedia.org/wiki/Web_framework" rel="nofollow">https://en.wikipedia.org/wiki/Web_framework</a> to learn about frameworks and <a href="https://en.wikipedia.org/wiki/Comparison_of_web_frameworks" rel="nofollow">https://en.wikipedia.org/wiki/Comparison_of_web_frameworks</a> for a list of existing frameworks (it is outdated, but still very long)</p>\n\n<p>Many frameworks offer a functionality called "Templates". This is a mechanism, which allows you to embed processing instructions (e.g. getting values from a database) into your HTML File. Examples are ctemplate, mustache and many more. Those tools process your HTML and insert the values from a database into the right place in your template at the web server and send the client the complete HTML.</p>\n\n<p>There are also ways to manipulate the contents of your page at the client site by javascript. Angular.js and react are only two big names that I am aware of. But also these would require a web server, which can access a database and deliver the values.</p>', 'body_length': 1190, 'body_lexicon_count': 164, 'body_sentence_count': 12, 'body_num_links': 2, 'body_percent_uppercase': 3, 'body_percent_spaces': 14, 'body_percent_punctuation': 2, 'body_starts_capitalized': True, 'body_includes_question_mark': False, 'body_includes_code': False, 'body_coleman_liau_index': 16, 'body_sentiment_polarity': 19, 'body_sentiment_subjectivity': 47, 'title': 'How do I access a SQLITE database from HTML and the output thus obtained be a drop down list?', 'title_length': 93, 'title_lexicon_count': 164, 'title_sentence_count': 12, 'title_percent_uppercase': 13, 'title_percent_spaces': 19, 'title_percent_punctuation': 0, 'title_starts_capitalized': True, 'title_includes_question_mark': True, 'title_coleman_liau_index': 6, 'title_sentiment_polarity': -15, 'title_sentiment_subjectivity': 28, 'score': 0, 'num_comments': 0, 'context': None, 'author': '', 'timestamp': datetime.datetime(2016, 2, 2, 17, 45, tzinfo=<UTC>), 'has_wiki_link': True, 'has_no_link': False, 'has_other_link': False, 'has_good_wiki_link': False, 'has_b_wiki_link': False, 'has_c_wiki_link': True, 'num_wiki_links': 2, 'day_of_avg_score': 2, 'week_after_avg_score': 2, 'all_revisions_pulled': True, 'wiki_content_error': 0, 'mon': False, 'tues': True, 'wed': False, 'thurs': False, 'fri': False, 'sat': False, 'sun': False, 'jan': False, 'feb': True, 'mar': False, 'apr': False, 'may': False, 'jun': False, 'jul': False, 'aug': False, 'sep': False, 'octo': False, 'nov': False, 'dec': False, 'zero_to_six': False, 'six_to_twelve': False, 'twelve_to_eighteen': True, 'eighteen_to_twentyfour': False, 'year2008': False, 'year2009': False, 'year2010': False, 'year2011': False, 'year2012': False, 'year2013': False, 'year2014': False, 'year2015': False, 'year2016': True, 'user_created_utc': datetime.datetime(2011, 9, 11, 15, 24, 17, tzinfo=<UTC>), 'seconds_since_user_creation': 138680443, 'num_edits': 10, 'num_new_editors': 5, 'num_new_editors_retained': 0, 'num_new_editors_retained_180': 0, 'num_new_edits': 5, 'num_old_edits': 5, 'num_inactive_edits': 5, 'num_active_edits': 5, 'num_minor_edits': 10, 'num_major_edits': 0, 'num_edits_prev_week': 3, 'num_new_editors_prev_week': 0, 'num_new_editors_retained_prev_week': 0, 'num_new_editors_retained_prev_week_180': 0, 'num_new_edits_prev_week': 0, 'num_old_edits_prev_week': 3, 'num_inactive_edits_prev_week': 0, 'num_active_edits_prev_week': 3, 'num_minor_edits_prev_week': 3, 'num_major_edits_prev_week': 0, 'num_edits_preceding_post': 0, 'num_wiki_pageviews': 8844, 'num_wiki_pageviews_prev_week': 8837, 'sample_num': 0, 'user_reputation': 767, 'question_asked_utc': datetime.datetime(2016, 2, 1, 5, 14, 13, tzinfo=<UTC>), 'num_pageviews': 28, 'tags_string': 'php|html|sqlite|sqlite3', 'num_tags': 4, 'num_other_answers': 1, 'question_score': 0, 'num_question_comments': 1, 'response_time': 45047, 'is_top': True}
+is_top, False
+num_other_answers, 2
+{'_state': <django.db.models.base.ModelState object at 0x7f8379427748>, 'uid': '17781985', 'body': '<pre><code>&lt;?php\n$str = \'[[{"class":"com.ehealth.data.Sample_Data","collectedBy":"2013-07-21","collectedDate":"Kamal","orderID":2,"sampleID":2.897033553E9},{"class":"com.ehealth.data.Order_Data","doctorUsername":"Kamal","dueDate":"2014-01-02","orderDate":"2013-12-12","orderID":2,"patientID":"P0001","prority":1,"status":"complete","testType":"Fasting Blood Sugar"}],[{"class":"com.ehealth.data.Sample_Data","collectedBy":"2013-07-22","collectedDate":"Kamal","orderID":3,"sampleID":5.978956192E9},{"class":"com.ehealth.data.Order_Data","doctorUsername":"Kamal","dueDate":"2014-01-02","orderDate":"2013-12-12","orderID":3,"patientID":"P0001","prority":2,"status":"complete","testType":"Fasting Blood Sugar"}]]\';\n\n$json = json_decode($str,true);\n\nforeach ($json as $datas){\n    foreach ($datas as $data){\n        echo (isset($data[\'sampleID\']) ? $data[\'sampleID\'] :\'\')."&lt;br/&gt;";\n    }\n}\n\necho \'&lt;pre&gt;\';\nprint_r ($json);\necho \'&lt;/pre&gt;\';\n// exit;\n\n?&gt;\n</code></pre>', 'body_length': 981, 'body_lexicon_count': 30, 'body_sentence_count': 4, 'body_num_links': 0, 'body_percent_uppercase': 6, 'body_percent_spaces': 4, 'body_percent_punctuation': 4, 'body_starts_capitalized': False, 'body_includes_question_mark': True, 'body_includes_code': True, 'body_coleman_liau_index': 16, 'body_sentiment_polarity': 30, 'body_sentiment_subjectivity': 70, 'title': 'get value from json php codeigniter', 'title_length': 35, 'title_lexicon_count': 30, 'title_sentence_count': 4, 'title_percent_uppercase': 0, 'title_percent_spaces': 14, 'title_percent_punctuation': 0, 'title_starts_capitalized': False, 'title_includes_question_mark': False, 'title_coleman_liau_index': 8, 'title_sentiment_polarity': 0, 'title_sentiment_subjectivity': 0, 'score': 0, 'num_comments': 0, 'context': None, 'author': '', 'timestamp': datetime.datetime(2013, 7, 22, 7, 22, 3, tzinfo=<UTC>), 'has_wiki_link': False, 'has_no_link': True, 'has_other_link': False, 'has_good_wiki_link': False, 'has_b_wiki_link': False, 'has_c_wiki_link': False, 'num_wiki_links': 0, 'day_of_avg_score': None, 'week_after_avg_score': None, 'all_revisions_pulled': False, 'wiki_content_error': 0, 'mon': True, 'tues': False, 'wed': False, 'thurs': False, 'fri': False, 'sat': False, 'sun': False, 'jan': False, 'feb': False, 'mar': False, 'apr': False, 'may': False, 'jun': False, 'jul': True, 'aug': False, 'sep': False, 'octo': False, 'nov': False, 'dec': False, 'zero_to_six': False, 'six_to_twelve': True, 'twelve_to_eighteen': False, 'eighteen_to_twentyfour': False, 'year2008': False, 'year2009': False, 'year2010': False, 'year2011': False, 'year2012': False, 'year2013': True, 'year2014': False, 'year2015': False, 'year2016': False, 'user_created_utc': datetime.datetime(2013, 1, 10, 10, 43, 33, tzinfo=<UTC>), 'seconds_since_user_creation': 16663110, 'num_edits': 0, 'num_new_editors': 0, 'num_new_editors_retained': 0, 'num_new_editors_retained_180': 0, 'num_new_edits': 0, 'num_old_edits': 0, 'num_inactive_edits': 0, 'num_active_edits': 0, 'num_minor_edits': 0, 'num_major_edits': 0, 'num_edits_prev_week': 0, 'num_new_editors_prev_week': 0, 'num_new_editors_retained_prev_week': 0, 'num_new_editors_retained_prev_week_180': 0, 'num_new_edits_prev_week': 0, 'num_old_edits_prev_week': 0, 'num_inactive_edits_prev_week': 0, 'num_active_edits_prev_week': 0, 'num_minor_edits_prev_week': 0, 'num_major_edits_prev_week': 0, 'num_edits_preceding_post': 0, 'num_wiki_pageviews': None, 'num_wiki_pageviews_prev_week': None, 'num_wiki_increased_pageviews_day_of': None, 'sample_num': 0, 'user_reputation': 100, 'question_asked_utc': datetime.datetime(2013, 7, 22, 7, 14, 50, tzinfo=<UTC>), 'num_pageviews': 654, 'tags_string': 'codeigniter|codeigniter-url', 'num_tags': 2, 'num_other_answers': 2, 'question_score': 0, 'num_question_comments': 2, 'response_time': 433, 'is_top': False}
 ===
 
-SampledStackOverflowPost Has WP link
-title, How to solve this ILP/CP matrix puzzle
-body, <p>Oh, I just love it when these little optimisation problems pop up. They always remind me of that one time in my very first year when I built a thing that would solve Sudoku's and had a ton of fun with it! You may guess how many sudoku's I've solved ever since :).</p>
+SampledStackOverflowPost No WP link
+title, Class not found exception even if the jar is on the classpath / debugging classpath problems
+body, <p>The penny finally dropped.</p>
 
-<hr>
+<p>The problem is that home directory '~' references do not work except for the first entry in the classpath, which really threw me off the track. Because it worked on for the first entry I thought it would work for the others. </p>
 
-<p>Now, your problem is an <a href="https://en.wikipedia.org/wiki/Integer_programming" rel="nofollow">ILP (Integer Linear Program)</a>. Even before you read up on that article, you should take note that <em>ILP's are <strong>hard</strong></em>. Restricting the solution space to <strong>N</strong> or <strong>Z</strong> is severely limiting and oftentimes, such a solution does not exist!</p>
+<p>The problem comes from (and is easy to see with hindsight) that the home directory path expansion is done by the shell and to the shell the whole classpath entry looks like a single argument and hence the expansion happens only once at the beginning of the argument.</p>
 
-<p>For your problem, the task at hand essentially boils down to solving this,</p>
+<p>I confirmed this by writing this simple bash script:</p>
 
-<pre><code>Minimise 0 (arbitrary objective function)
+<pre><code>#!/bin/bash 
+ for i; do 
+    echo $i 
+ done
 </code></pre>
 
-<p>Subject to,</p>
+<p>saved it as 'test' and tried my command line like this:</p>
 
-<pre><code>x1 + x2 + x3 = 13
-x4 + x5 + x6 = 8
-x7 + x8 + x9 = 24
-
-x1 + x4 + x7 = 14
-x2 + x5 + x8 = 14
-x3 + x6 + x9 = 17
+<pre><code>./test -cp ~/FirmwareUpdate/bin:~/PureJavaHidApi/bin/purejavahidapi.jar:~/PureJavaHidApi/lib/jna-4.0.0.jar Test
 </code></pre>
 
-<p>And,  </p>
+<p>which outputs:</p>
 
-<pre><code>x_i in N, x_i distinct.
+<pre><code>-cp
+/Users/nyholku/FirmwareUpdate/bin:~/PureJavaHidApi/bin/purejavahidapi.jar:~/PureJavaHidApi/lib/jna-4.0.0.jar
+Test
 </code></pre>
 
-<p>In matrix form, these equations become,</p>
-
-<pre><code>    |1   1   1   0   0   0   0   0   0|
-    |0   0   0   1   1   1   0   0   0|
-A = |0   0   0   0   0   0   1   1   1|
-    |1   0   0   1   0   0   1   0   0|
-    |0   1   0   0   1   0   0   1   0|
-    |0   0   1   0   0   1   0   0   1|
-</code></pre>
-
-<p>And,</p>
-
-<pre><code>    |13|
-    | 8|
-B = |24|
-    |14|
-    |14|
-    |17|
-</code></pre>
-
-<p>Such that the constraints reduce to <code>A*x = B</code>. So the problem we want to solve can now equivalently be written as,</p>
-
-<pre><code>Minimise 0
-</code></pre>
-
-<p>Subject to,</p>
-
-<pre><code>A * x = B
-</code></pre>
-
-<p>And,</p>
-
-<pre><code>x in N^7, x_i distinct.
-</code></pre>
-
-<p>Does this look hard to you? If not, think about this: the real line is huge, and on that line, every once in a while, is a tiny dot. That's an integer. We need some of those. We do not know which ones. So essentially, a perfect analogy would be looking for a needle in a haystack.</p>
-
-<p>Now, do not despair, we are surprisingly good at finding these ILP needles! I just want you to appreciate the nontrivial difficulty of the field this problem stems from.</p>
-
-<p>I want to give you working code, but I do not know your preferred choice of language/toolkit. If this is just a hobbyist approach, even Excel's solver would work beautifully. If it is not, I do not think I could've phrased it any better than Willem Van Onsem already has, and I would like to direct you to his answer for an implementation.</p>
+<p>confirming the diagnose.</p>
 mon, False
-tues, True
+tues, False
 wed, False
 thurs, False
 fri, False
-sat, False
+sat, True
 jan, True
 feb, False
 mar, False
@@ -900,20 +528,126 @@ nov, False
 zero_to_six, False
 six_to_twelve, True
 twelve_to_eighteen, False
-seconds_since_user_creation, 35062364
-body_length, 2552
+seconds_since_user_creation, 99402537
+body_length, 1075
+body_percent_uppercase, 3
+body_percent_spaces, 12
+body_percent_punctuation, 1
+body_starts_capitalized, True
+body_coleman_liau_index, 16
+body_includes_question_mark, False
+body_sentiment_polarity, 16
+body_sentiment_subjectivity, 56
+user_reputation, 136
+body_includes_code, True
+num_tags, 2
+response_time, 0
+year2008, False
+year2009, False
+year2010, False
+year2011, False
+year2012, False
+year2013, False
+year2014, False
+year2015, True
+is_top, True
+num_other_answers, 1
+{'_state': <django.db.models.base.ModelState object at 0x7f83794277b8>, 'uid': '28123344', 'body': "<p>The penny finally dropped.</p>\n\n<p>The problem is that home directory '~' references do not work except for the first entry in the classpath, which really threw me off the track. Because it worked on for the first entry I thought it would work for the others. </p>\n\n<p>The problem comes from (and is easy to see with hindsight) that the home directory path expansion is done by the shell and to the shell the whole classpath entry looks like a single argument and hence the expansion happens only once at the beginning of the argument.</p>\n\n<p>I confirmed this by writing this simple bash script:</p>\n\n<pre><code>#!/bin/bash \n for i; do \n    echo $i \n done\n</code></pre>\n\n<p>saved it as 'test' and tried my command line like this:</p>\n\n<pre><code>./test -cp ~/FirmwareUpdate/bin:~/PureJavaHidApi/bin/purejavahidapi.jar:~/PureJavaHidApi/lib/jna-4.0.0.jar Test\n</code></pre>\n\n<p>which outputs:</p>\n\n<pre><code>-cp\n/Users/nyholku/FirmwareUpdate/bin:~/PureJavaHidApi/bin/purejavahidapi.jar:~/PureJavaHidApi/lib/jna-4.0.0.jar\nTest\n</code></pre>\n\n<p>confirming the diagnose.</p>", 'body_length': 1075, 'body_lexicon_count': 136, 'body_sentence_count': 9, 'body_num_links': 0, 'body_percent_uppercase': 3, 'body_percent_spaces': 12, 'body_percent_punctuation': 1, 'body_starts_capitalized': True, 'body_includes_question_mark': False, 'body_includes_code': True, 'body_coleman_liau_index': 16, 'body_sentiment_polarity': 16, 'body_sentiment_subjectivity': 56, 'title': 'Class not found exception even if the jar is on the classpath / debugging classpath problems', 'title_length': 92, 'title_lexicon_count': 136, 'title_sentence_count': 9, 'title_percent_uppercase': 1, 'title_percent_spaces': 16, 'title_percent_punctuation': 0, 'title_starts_capitalized': True, 'title_includes_question_mark': False, 'title_coleman_liau_index': 12, 'title_sentiment_polarity': 0, 'title_sentiment_subjectivity': 0, 'score': 0, 'num_comments': 3, 'context': None, 'author': '', 'timestamp': datetime.datetime(2015, 1, 24, 7, 31, 19, tzinfo=<UTC>), 'has_wiki_link': False, 'has_no_link': True, 'has_other_link': False, 'has_good_wiki_link': False, 'has_b_wiki_link': False, 'has_c_wiki_link': False, 'num_wiki_links': 0, 'day_of_avg_score': None, 'week_after_avg_score': None, 'all_revisions_pulled': False, 'wiki_content_error': 0, 'mon': False, 'tues': False, 'wed': False, 'thurs': False, 'fri': False, 'sat': True, 'sun': False, 'jan': True, 'feb': False, 'mar': False, 'apr': False, 'may': False, 'jun': False, 'jul': False, 'aug': False, 'sep': False, 'octo': False, 'nov': False, 'dec': False, 'zero_to_six': False, 'six_to_twelve': True, 'twelve_to_eighteen': False, 'eighteen_to_twentyfour': False, 'year2008': False, 'year2009': False, 'year2010': False, 'year2011': False, 'year2012': False, 'year2013': False, 'year2014': False, 'year2015': True, 'year2016': False, 'user_created_utc': datetime.datetime(2011, 11, 30, 19, 42, 22, tzinfo=<UTC>), 'seconds_since_user_creation': 99402537, 'num_edits': 0, 'num_new_editors': 0, 'num_new_editors_retained': 0, 'num_new_editors_retained_180': 0, 'num_new_edits': 0, 'num_old_edits': 0, 'num_inactive_edits': 0, 'num_active_edits': 0, 'num_minor_edits': 0, 'num_major_edits': 0, 'num_edits_prev_week': 0, 'num_new_editors_prev_week': 0, 'num_new_editors_retained_prev_week': 0, 'num_new_editors_retained_prev_week_180': 0, 'num_new_edits_prev_week': 0, 'num_old_edits_prev_week': 0, 'num_inactive_edits_prev_week': 0, 'num_active_edits_prev_week': 0, 'num_minor_edits_prev_week': 0, 'num_major_edits_prev_week': 0, 'num_edits_preceding_post': 0, 'num_wiki_pageviews': None, 'num_wiki_pageviews_prev_week': None, 'num_wiki_increased_pageviews_day_of': None, 'sample_num': 0, 'user_reputation': 136, 'question_asked_utc': datetime.datetime(2015, 1, 24, 7, 31, 19, tzinfo=<UTC>), 'num_pageviews': 146, 'tags_string': 'java|classpath', 'num_tags': 2, 'num_other_answers': 1, 'question_score': 0, 'num_question_comments': 2, 'response_time': 0, 'is_top': True}
+===
+
+SampledStackOverflowPost No WP link
+title, React - How to Populate and Show a Modal, then Send AJAX Request on Submit
+body, <p>In my opinion you should not manage your self the Modal details. I advice you to take a look to <a href="https://react-bootstrap.github.io/" rel="nofollow noreferrer">https://react-bootstrap.github.io/</a> (as suggested in <a href="https://stackoverflow.com/questions/28241912/bootstrap-modal-in-react-js">Bootstrap modal in React.js</a>). This is a library pretty well documented and it have a nice Modal in it.</p>
+
+<pre><code>var Modal = ReactBootstrap.Modal
+</code></pre>
+
+<p>And then use it as <code>&lt;Modal/&gt;</code>.</p>
+
+<p>Notice that <code>Modal</code> has a <code>show</code> properties that when it is <code>true</code> the modal is shown. </p>
+
+<p>The best to use it is to wrap it in a component of your own where you store the state <code>{show : true/false}</code>. Then declare an open and a close method that changes the state accordingly. </p>
+
+<pre><code>var BootstrapModal = React.createClass({
+    getInitialState : function () {
+        return {
+           show : false
+        }
+    },
+    close: function() {
+        if (!this.state.saving) {
+            this.setState({
+               show: false
+            });
+        }
+    },
+    open: function() {
+        this.setState({
+            show : true
+        });
+    },
+    render: function() {
+        return (
+            &lt;Modal show={this.state.show}&gt;
+                ...
+            &lt;/Modal&gt;
+        );
+    },
+});
+</code></pre>
+
+<p>The when you use it in your external component you can do something like this:</p>
+
+<pre><code>var MyComponent = React.createClass({
+    handleSomeEventInARowSomewhere : function () {
+         ....
+         this.refs.mymodal.open();
+    },
+    render : function () {
+         return (
+              ...
+              &lt;BootstrapModal ref="mymodal"/&gt;
+              ...
+         )
+    }
+});
+</code></pre>
+
+<p>This way you can open your modal when you want, see that you can pass stuff in the open method so feel free to adapt this example to your own needs.</p>
+mon, False
+tues, False
+wed, False
+thurs, True
+fri, False
+sat, False
+jan, False
+feb, True
+mar, False
+apr, False
+may, False
+jun, False
+jul, False
+aug, False
+sep, False
+octo, False
+nov, False
+zero_to_six, False
+six_to_twelve, True
+twelve_to_eighteen, False
+seconds_since_user_creation, 113689429
+body_length, 1994
 body_percent_uppercase, 2
-body_percent_spaces, 21
+body_percent_spaces, 24
 body_percent_punctuation, 2
 body_starts_capitalized, True
-body_coleman_liau_index, 11
-body_includes_question_mark, True
+body_coleman_liau_index, 16
+body_includes_question_mark, False
 body_sentiment_polarity, 21
-body_sentiment_subjectivity, 51
-user_reputation, 1398
+body_sentiment_subjectivity, 67
+user_reputation, 661
 body_includes_code, True
-num_tags, 4
-response_time, 6794
+num_tags, 3
+response_time, 2022
 year2008, False
 year2009, False
 year2010, False
@@ -922,22 +656,20 @@ year2012, False
 year2013, False
 year2014, False
 year2015, False
-is_top, False
-num_other_answers, 4
-{'_state': <django.db.models.base.ModelState object at 0x7fbeeb49b8d0>, 'uid': '34742096', 'body': '<p>Oh, I just love it when these little optimisation problems pop up. They always remind me of that one time in my very first year when I built a thing that would solve Sudoku\'s and had a ton of fun with it! You may guess how many sudoku\'s I\'ve solved ever since :).</p>\n\n<hr>\n\n<p>Now, your problem is an <a href="https://en.wikipedia.org/wiki/Integer_programming" rel="nofollow">ILP (Integer Linear Program)</a>. Even before you read up on that article, you should take note that <em>ILP\'s are <strong>hard</strong></em>. Restricting the solution space to <strong>N</strong> or <strong>Z</strong> is severely limiting and oftentimes, such a solution does not exist!</p>\n\n<p>For your problem, the task at hand essentially boils down to solving this,</p>\n\n<pre><code>Minimise 0 (arbitrary objective function)\n</code></pre>\n\n<p>Subject to,</p>\n\n<pre><code>x1 + x2 + x3 = 13\nx4 + x5 + x6 = 8\nx7 + x8 + x9 = 24\n\nx1 + x4 + x7 = 14\nx2 + x5 + x8 = 14\nx3 + x6 + x9 = 17\n</code></pre>\n\n<p>And,  </p>\n\n<pre><code>x_i in N, x_i distinct.\n</code></pre>\n\n<p>In matrix form, these equations become,</p>\n\n<pre><code>    |1   1   1   0   0   0   0   0   0|\n    |0   0   0   1   1   1   0   0   0|\nA = |0   0   0   0   0   0   1   1   1|\n    |1   0   0   1   0   0   1   0   0|\n    |0   1   0   0   1   0   0   1   0|\n    |0   0   1   0   0   1   0   0   1|\n</code></pre>\n\n<p>And,</p>\n\n<pre><code>    |13|\n    | 8|\nB = |24|\n    |14|\n    |14|\n    |17|\n</code></pre>\n\n<p>Such that the constraints reduce to <code>A*x = B</code>. So the problem we want to solve can now equivalently be written as,</p>\n\n<pre><code>Minimise 0\n</code></pre>\n\n<p>Subject to,</p>\n\n<pre><code>A * x = B\n</code></pre>\n\n<p>And,</p>\n\n<pre><code>x in N^7, x_i distinct.\n</code></pre>\n\n<p>Does this look hard to you? If not, think about this: the real line is huge, and on that line, every once in a while, is a tiny dot. That\'s an integer. We need some of those. We do not know which ones. So essentially, a perfect analogy would be looking for a needle in a haystack.</p>\n\n<p>Now, do not despair, we are surprisingly good at finding these ILP needles! I just want you to appreciate the nontrivial difficulty of the field this problem stems from.</p>\n\n<p>I want to give you working code, but I do not know your preferred choice of language/toolkit. If this is just a hobbyist approach, even Excel\'s solver would work beautifully. If it is not, I do not think I could\'ve phrased it any better than Willem Van Onsem already has, and I would like to direct you to his answer for an implementation.</p>', 'body_length': 2552, 'body_lexicon_count': 413, 'body_sentence_count': 21, 'body_num_links': 1, 'body_percent_uppercase': 2, 'body_percent_spaces': 21, 'body_percent_punctuation': 2, 'body_starts_capitalized': True, 'body_includes_question_mark': True, 'body_includes_code': True, 'body_coleman_liau_index': 11, 'body_sentiment_polarity': 21, 'body_sentiment_subjectivity': 51, 'title': 'How to solve this ILP/CP matrix puzzle', 'title_length': 38, 'title_lexicon_count': 413, 'title_sentence_count': 21, 'title_percent_uppercase': 16, 'title_percent_spaces': 16, 'title_percent_punctuation': 0, 'title_starts_capitalized': True, 'title_includes_question_mark': False, 'title_coleman_liau_index': 7, 'title_sentiment_polarity': 0, 'title_sentiment_subjectivity': 0, 'score': 3, 'num_comments': 4, 'context': None, 'author': '', 'timestamp': datetime.datetime(2016, 1, 12, 11, 10, 58, tzinfo=<UTC>), 'has_wiki_link': True, 'has_no_link': False, 'has_other_link': False, 'has_good_wiki_link': False, 'has_b_wiki_link': True, 'has_c_wiki_link': True, 'num_wiki_links': 1, 'day_of_avg_score': 3, 'week_after_avg_score': 3, 'all_revisions_pulled': True, 'wiki_content_error': 0, 'mon': False, 'tues': True, 'wed': False, 'thurs': False, 'fri': False, 'sat': False, 'sun': False, 'jan': True, 'feb': False, 'mar': False, 'apr': False, 'may': False, 'jun': False, 'jul': False, 'aug': False, 'sep': False, 'octo': False, 'nov': False, 'dec': False, 'zero_to_six': False, 'six_to_twelve': True, 'twelve_to_eighteen': False, 'eighteen_to_twentyfour': False, 'year2008': False, 'year2009': False, 'year2010': False, 'year2011': False, 'year2012': False, 'year2013': False, 'year2014': False, 'year2015': False, 'year2016': True, 'user_created_utc': datetime.datetime(2014, 12, 2, 15, 38, 14, tzinfo=<UTC>), 'seconds_since_user_creation': 35062364, 'num_edits': 0, 'num_new_editors': 0, 'num_new_editors_retained': 0, 'num_new_editors_retained_180': 0, 'num_new_edits': 0, 'num_old_edits': 0, 'num_inactive_edits': 0, 'num_active_edits': 0, 'num_minor_edits': 0, 'num_major_edits': 0, 'num_edits_prev_week': 2, 'num_new_editors_prev_week': 0, 'num_new_editors_retained_prev_week': 0, 'num_new_editors_retained_prev_week_180': 0, 'num_new_edits_prev_week': 0, 'num_old_edits_prev_week': 2, 'num_inactive_edits_prev_week': 0, 'num_active_edits_prev_week': 2, 'num_minor_edits_prev_week': 2, 'num_major_edits_prev_week': 0, 'num_edits_preceding_post': 0, 'num_wiki_pageviews': 3685, 'num_wiki_pageviews_prev_week': 3559, 'sample_num': 2, 'user_reputation': 1398, 'question_asked_utc': datetime.datetime(2016, 1, 12, 9, 17, 44, tzinfo=<UTC>), 'num_pageviews': 230, 'tags_string': 'matrix|puzzle|constraint-programming|integer-programming', 'num_tags': 4, 'num_other_answers': 4, 'question_score': 2, 'num_question_comments': 6, 'response_time': 6794, 'is_top': False}
+is_top, True
+num_other_answers, 1
+{'_state': <django.db.models.base.ModelState object at 0x7f8379427828>, 'uid': '35625595', 'body': '<p>In my opinion you should not manage your self the Modal details. I advice you to take a look to <a href="https://react-bootstrap.github.io/" rel="nofollow noreferrer">https://react-bootstrap.github.io/</a> (as suggested in <a href="https://stackoverflow.com/questions/28241912/bootstrap-modal-in-react-js">Bootstrap modal in React.js</a>). This is a library pretty well documented and it have a nice Modal in it.</p>\n\n<pre><code>var Modal = ReactBootstrap.Modal\n</code></pre>\n\n<p>And then use it as <code>&lt;Modal/&gt;</code>.</p>\n\n<p>Notice that <code>Modal</code> has a <code>show</code> properties that when it is <code>true</code> the modal is shown. </p>\n\n<p>The best to use it is to wrap it in a component of your own where you store the state <code>{show : true/false}</code>. Then declare an open and a close method that changes the state accordingly. </p>\n\n<pre><code>var BootstrapModal = React.createClass({\n    getInitialState : function () {\n        return {\n           show : false\n        }\n    },\n    close: function() {\n        if (!this.state.saving) {\n            this.setState({\n               show: false\n            });\n        }\n    },\n    open: function() {\n        this.setState({\n            show : true\n        });\n    },\n    render: function() {\n        return (\n            &lt;Modal show={this.state.show}&gt;\n                ...\n            &lt;/Modal&gt;\n        );\n    },\n});\n</code></pre>\n\n<p>The when you use it in your external component you can do something like this:</p>\n\n<pre><code>var MyComponent = React.createClass({\n    handleSomeEventInARowSomewhere : function () {\n         ....\n         this.refs.mymodal.open();\n    },\n    render : function () {\n         return (\n              ...\n              &lt;BootstrapModal ref="mymodal"/&gt;\n              ...\n         )\n    }\n});\n</code></pre>\n\n<p>This way you can open your modal when you want, see that you can pass stuff in the open method so feel free to adapt this example to your own needs.</p>', 'body_length': 1994, 'body_lexicon_count': 195, 'body_sentence_count': 19, 'body_num_links': 2, 'body_percent_uppercase': 2, 'body_percent_spaces': 24, 'body_percent_punctuation': 2, 'body_starts_capitalized': True, 'body_includes_question_mark': False, 'body_includes_code': True, 'body_coleman_liau_index': 16, 'body_sentiment_polarity': 21, 'body_sentiment_subjectivity': 67, 'title': 'React - How to Populate and Show a Modal, then Send AJAX Request on Submit', 'title_length': 74, 'title_lexicon_count': 195, 'title_sentence_count': 19, 'title_percent_uppercase': 16, 'title_percent_spaces': 19, 'title_percent_punctuation': 1, 'title_starts_capitalized': True, 'title_includes_question_mark': False, 'title_coleman_liau_index': 7, 'title_sentiment_polarity': 0, 'title_sentiment_subjectivity': 0, 'score': 2, 'num_comments': 1, 'context': None, 'author': '', 'timestamp': datetime.datetime(2016, 2, 25, 11, 10, 36, tzinfo=<UTC>), 'has_wiki_link': False, 'has_no_link': False, 'has_other_link': True, 'has_good_wiki_link': False, 'has_b_wiki_link': False, 'has_c_wiki_link': False, 'num_wiki_links': 0, 'day_of_avg_score': None, 'week_after_avg_score': None, 'all_revisions_pulled': False, 'wiki_content_error': 0, 'mon': False, 'tues': False, 'wed': False, 'thurs': True, 'fri': False, 'sat': False, 'sun': False, 'jan': False, 'feb': True, 'mar': False, 'apr': False, 'may': False, 'jun': False, 'jul': False, 'aug': False, 'sep': False, 'octo': False, 'nov': False, 'dec': False, 'zero_to_six': False, 'six_to_twelve': True, 'twelve_to_eighteen': False, 'eighteen_to_twentyfour': False, 'year2008': False, 'year2009': False, 'year2010': False, 'year2011': False, 'year2012': False, 'year2013': False, 'year2014': False, 'year2015': False, 'year2016': True, 'user_created_utc': datetime.datetime(2012, 7, 19, 14, 46, 47, tzinfo=<UTC>), 'seconds_since_user_creation': 113689429, 'num_edits': 0, 'num_new_editors': 0, 'num_new_editors_retained': 0, 'num_new_editors_retained_180': 0, 'num_new_edits': 0, 'num_old_edits': 0, 'num_inactive_edits': 0, 'num_active_edits': 0, 'num_minor_edits': 0, 'num_major_edits': 0, 'num_edits_prev_week': 0, 'num_new_editors_prev_week': 0, 'num_new_editors_retained_prev_week': 0, 'num_new_editors_retained_prev_week_180': 0, 'num_new_edits_prev_week': 0, 'num_old_edits_prev_week': 0, 'num_inactive_edits_prev_week': 0, 'num_active_edits_prev_week': 0, 'num_minor_edits_prev_week': 0, 'num_major_edits_prev_week': 0, 'num_edits_preceding_post': 0, 'num_wiki_pageviews': None, 'num_wiki_pageviews_prev_week': None, 'num_wiki_increased_pageviews_day_of': None, 'sample_num': 0, 'user_reputation': 661, 'question_asked_utc': datetime.datetime(2016, 2, 25, 10, 36, 54, tzinfo=<UTC>), 'num_pageviews': 1165, 'tags_string': 'javascript|jquery|reactjs', 'num_tags': 3, 'num_other_answers': 1, 'question_score': 2, 'num_question_comments': 0, 'response_time': 2022, 'is_top': True}
 ===
 
-SampledStackOverflowPost Has WP link
-title, Salting Your Password: Best Practices?
-body, <p>The real answer, which nobody seems to have touched upon, is that <a href="http://benlog.com/articles/2008/06/19/dont-hash-secrets/" rel="noreferrer">both are wrong</a>. If you are implementing your own crypto, no matter how trivial a part you think you're doing, you <em>are going</em> to make mistakes.</p>
+SampledStackOverflowPost No WP link
+title, Another WCF MaxMessageSize error
+body, <p>My guess is your actual service name isn't MyService by rather it is in a namespace.</p>
 
-<p><a href="http://en.wikipedia.org/wiki/Hash-based_message_authentication_code" rel="noreferrer">HMAC</a> is a better approach, but even then if you're using something like SHA-1, you've already picked an algorithm which is unsuitable for password hashing due to its design for speed. Use something like <a href="http://en.wikipedia.org/wiki/Bcrypt" rel="noreferrer">bcrypt</a> or possibly <a href="http://www.tarsnap.com/scrypt.html" rel="noreferrer">scrypt</a> and take the problem out of your hands entirely.</p>
-
-<p>Oh, and don't even think about comparing the resulting hashes for equality with with your programming language or database string comparison utilities. Those compare character by character and short-circuit as <code>false</code> if a character differs. So now attackers can use statistical methods to try and work out what the hash is, a character at a time.</p>
+<p>Assuming you are using .NET 4 the actual service is picking up a default endpoint with the default binding settings or 65536. Change the name in the service element to be the fully qualified type name of the service implementation class</p>
 mon, False
 tues, False
-wed, False
-thurs, True
+wed, True
+thurs, False
 fri, False
 sat, False
 jan, False
@@ -953,21 +685,131 @@ octo, False
 nov, False
 zero_to_six, False
 six_to_twelve, False
+twelve_to_eighteen, True
+seconds_since_user_creation, 2953574
+body_length, 336
+body_percent_uppercase, 2
+body_percent_spaces, 16
+body_percent_punctuation, 1
+body_starts_capitalized, True
+body_coleman_liau_index, 11
+body_includes_question_mark, False
+body_sentiment_polarity, 0
+body_sentiment_subjectivity, 10
+user_reputation, 5519
+body_includes_code, False
+num_tags, 2
+response_time, 1884
+year2008, False
+year2009, False
+year2010, False
+year2011, True
+year2012, False
+year2013, False
+year2014, False
+year2015, False
+is_top, True
+num_other_answers, 3
+{'_state': <django.db.models.base.ModelState object at 0x7f8379427898>, 'uid': '6763470', 'body': "<p>My guess is your actual service name isn't MyService by rather it is in a namespace.</p>\n\n<p>Assuming you are using .NET 4 the actual service is picking up a default endpoint with the default binding settings or 65536. Change the name in the service element to be the fully qualified type name of the service implementation class</p>", 'body_length': 336, 'body_lexicon_count': 57, 'body_sentence_count': 4, 'body_num_links': 0, 'body_percent_uppercase': 2, 'body_percent_spaces': 16, 'body_percent_punctuation': 1, 'body_starts_capitalized': True, 'body_includes_question_mark': False, 'body_includes_code': False, 'body_coleman_liau_index': 11, 'body_sentiment_polarity': 0, 'body_sentiment_subjectivity': 10, 'title': 'Another WCF MaxMessageSize error', 'title_length': 32, 'title_lexicon_count': 57, 'title_sentence_count': 4, 'title_percent_uppercase': 22, 'title_percent_spaces': 9, 'title_percent_punctuation': 0, 'title_starts_capitalized': True, 'title_includes_question_mark': False, 'title_coleman_liau_index': 16, 'title_sentiment_polarity': 0, 'title_sentiment_subjectivity': 0, 'score': 0, 'num_comments': 8, 'context': None, 'author': '', 'timestamp': datetime.datetime(2011, 7, 20, 14, 23, 8, tzinfo=<UTC>), 'has_wiki_link': False, 'has_no_link': True, 'has_other_link': False, 'has_good_wiki_link': False, 'has_b_wiki_link': False, 'has_c_wiki_link': False, 'num_wiki_links': 0, 'day_of_avg_score': None, 'week_after_avg_score': None, 'all_revisions_pulled': False, 'wiki_content_error': 0, 'mon': False, 'tues': False, 'wed': True, 'thurs': False, 'fri': False, 'sat': False, 'sun': False, 'jan': False, 'feb': False, 'mar': False, 'apr': False, 'may': False, 'jun': False, 'jul': True, 'aug': False, 'sep': False, 'octo': False, 'nov': False, 'dec': False, 'zero_to_six': False, 'six_to_twelve': False, 'twelve_to_eighteen': True, 'eighteen_to_twentyfour': False, 'year2008': False, 'year2009': False, 'year2010': False, 'year2011': True, 'year2012': False, 'year2013': False, 'year2014': False, 'year2015': False, 'year2016': False, 'user_created_utc': datetime.datetime(2011, 6, 16, 9, 56, 54, tzinfo=<UTC>), 'seconds_since_user_creation': 2953574, 'num_edits': 0, 'num_new_editors': 0, 'num_new_editors_retained': 0, 'num_new_editors_retained_180': 0, 'num_new_edits': 0, 'num_old_edits': 0, 'num_inactive_edits': 0, 'num_active_edits': 0, 'num_minor_edits': 0, 'num_major_edits': 0, 'num_edits_prev_week': 0, 'num_new_editors_prev_week': 0, 'num_new_editors_retained_prev_week': 0, 'num_new_editors_retained_prev_week_180': 0, 'num_new_edits_prev_week': 0, 'num_old_edits_prev_week': 0, 'num_inactive_edits_prev_week': 0, 'num_active_edits_prev_week': 0, 'num_minor_edits_prev_week': 0, 'num_major_edits_prev_week': 0, 'num_edits_preceding_post': 0, 'num_wiki_pageviews': None, 'num_wiki_pageviews_prev_week': None, 'num_wiki_increased_pageviews_day_of': None, 'sample_num': 0, 'user_reputation': 5519, 'question_asked_utc': datetime.datetime(2011, 7, 20, 13, 51, 44, tzinfo=<UTC>), 'num_pageviews': 851, 'tags_string': '.net|wcf', 'num_tags': 2, 'num_other_answers': 3, 'question_score': 0, 'num_question_comments': 2, 'response_time': 1884, 'is_top': True}
+===
+
+SampledStackOverflowPost No WP link
+title, adodb and access changing ® to Â®
+body, <p>If you update with command texts, I would have a look at the way the commandText property of your connection is elaborated. I bet that your character update is done even before the INSERT/UPDATE string is sent to the database.</p>
+mon, False
+tues, True
+wed, False
+thurs, False
+fri, False
+sat, False
+jan, False
+feb, False
+mar, False
+apr, False
+may, False
+jun, False
+jul, False
+aug, False
+sep, False
+octo, True
+nov, False
+zero_to_six, False
+six_to_twelve, False
 twelve_to_eighteen, False
-seconds_since_user_creation, 100307830
-body_length, 1196
-body_percent_uppercase, 1
-body_percent_spaces, 12
+seconds_since_user_creation, 3669137
+body_length, 233
+body_percent_uppercase, 7
+body_percent_spaces, 17
+body_percent_punctuation, 1
+body_starts_capitalized, True
+body_coleman_liau_index, 11
+body_includes_question_mark, False
+body_sentiment_polarity, 0
+body_sentiment_subjectivity, 0
+user_reputation, 8220
+body_includes_code, False
+num_tags, 3
+response_time, 16837
+year2008, True
+year2009, False
+year2010, False
+year2011, False
+year2012, False
+year2013, False
+year2014, False
+year2015, False
+is_top, False
+num_other_answers, 3
+{'_state': <django.db.models.base.ModelState object at 0x7f8379427908>, 'uid': '244446', 'body': '<p>If you update with command texts, I would have a look at the way the commandText property of your connection is elaborated. I bet that your character update is done even before the INSERT/UPDATE string is sent to the database.</p>', 'body_length': 233, 'body_lexicon_count': 40, 'body_sentence_count': 2, 'body_num_links': 0, 'body_percent_uppercase': 7, 'body_percent_spaces': 17, 'body_percent_punctuation': 1, 'body_starts_capitalized': True, 'body_includes_question_mark': False, 'body_includes_code': False, 'body_coleman_liau_index': 11, 'body_sentiment_polarity': 0, 'body_sentiment_subjectivity': 0, 'title': 'adodb and access changing ® to Â®', 'title_length': 33, 'title_lexicon_count': 40, 'title_sentence_count': 2, 'title_percent_uppercase': 3, 'title_percent_spaces': 18, 'title_percent_punctuation': 0, 'title_starts_capitalized': False, 'title_includes_question_mark': False, 'title_coleman_liau_index': 2, 'title_sentiment_polarity': 0, 'title_sentiment_subjectivity': 0, 'score': 0, 'num_comments': 0, 'context': None, 'author': '', 'timestamp': datetime.datetime(2008, 10, 28, 19, 9, 48, tzinfo=<UTC>), 'has_wiki_link': False, 'has_no_link': True, 'has_other_link': False, 'has_good_wiki_link': False, 'has_b_wiki_link': False, 'has_c_wiki_link': False, 'num_wiki_links': 0, 'day_of_avg_score': None, 'week_after_avg_score': None, 'all_revisions_pulled': False, 'wiki_content_error': 0, 'mon': False, 'tues': True, 'wed': False, 'thurs': False, 'fri': False, 'sat': False, 'sun': False, 'jan': False, 'feb': False, 'mar': False, 'apr': False, 'may': False, 'jun': False, 'jul': False, 'aug': False, 'sep': False, 'octo': True, 'nov': False, 'dec': False, 'zero_to_six': False, 'six_to_twelve': False, 'twelve_to_eighteen': False, 'eighteen_to_twentyfour': True, 'year2008': True, 'year2009': False, 'year2010': False, 'year2011': False, 'year2012': False, 'year2013': False, 'year2014': False, 'year2015': False, 'year2016': False, 'user_created_utc': datetime.datetime(2008, 9, 16, 7, 57, 31, tzinfo=<UTC>), 'seconds_since_user_creation': 3669137, 'num_edits': 0, 'num_new_editors': 0, 'num_new_editors_retained': 0, 'num_new_editors_retained_180': 0, 'num_new_edits': 0, 'num_old_edits': 0, 'num_inactive_edits': 0, 'num_active_edits': 0, 'num_minor_edits': 0, 'num_major_edits': 0, 'num_edits_prev_week': 0, 'num_new_editors_prev_week': 0, 'num_new_editors_retained_prev_week': 0, 'num_new_editors_retained_prev_week_180': 0, 'num_new_edits_prev_week': 0, 'num_old_edits_prev_week': 0, 'num_inactive_edits_prev_week': 0, 'num_active_edits_prev_week': 0, 'num_minor_edits_prev_week': 0, 'num_major_edits_prev_week': 0, 'num_edits_preceding_post': 0, 'num_wiki_pageviews': None, 'num_wiki_pageviews_prev_week': None, 'num_wiki_increased_pageviews_day_of': None, 'sample_num': 0, 'user_reputation': 8220, 'question_asked_utc': datetime.datetime(2008, 10, 28, 14, 29, 11, tzinfo=<UTC>), 'num_pageviews': 1071, 'tags_string': 'php|ms-access|adodb', 'num_tags': 3, 'num_other_answers': 3, 'question_score': 1, 'num_question_comments': 2, 'response_time': 16837, 'is_top': False}
+===
+
+SampledStackOverflowPost Has WP link
+title, How do I execute a php-cli from php-cgi with nohup
+body, <p>You can either remove the CLI check <code>if (PHP_SAPI === 'cli')</code>, or include the file and call  <code>require '../boot.php'; Logger::mailit();</code> yourself. Or you can look into <a href="http://php.net/exec" rel="nofollow">exec()</a> (or <a href="http://php.net/proc_open" rel="nofollow">proc_open()</a>, …) to execute the script as its own process. This might be necessary if you need the sandboxing.</p>
+
+<hr>
+
+<p>have you tried something like <code>exec('your/script.php &amp;')</code>? (<a href="http://en.wikipedia.org/wiki/Nohup" rel="nofollow">NOHUP</a>)</p>
+
+<hr>
+
+<p>with <a href="http://php.net/proc_open" rel="nofollow">proc_open()</a> you can setup the environment for your script (including funky file descriptor stuff). with <a href="http://php.net/proc_get_status" rel="nofollow">proc_get_status()</a> you can get the PID of the process you started with proc_open(). With <a href="http://php.net/posix_kill" rel="nofollow">posix_kill()</a> you can send signals to a process.</p>
+
+<p>If I'm not mistaking, your parent process (in your case the php-cgi) keeps running until the child process (in your case the php-cli) finished - even if you setup non-blocking execution.</p>
+mon, False
+tues, False
+wed, False
+thurs, False
+fri, False
+sat, False
+jan, False
+feb, False
+mar, False
+apr, False
+may, False
+jun, False
+jul, True
+aug, False
+sep, False
+octo, False
+nov, False
+zero_to_six, False
+six_to_twelve, True
+twelve_to_eighteen, False
+seconds_since_user_creation, 51399276
+body_length, 1202
+body_percent_uppercase, 2
+body_percent_spaces, 11
 body_percent_punctuation, 2
 body_starts_capitalized, True
 body_coleman_liau_index, 16
-body_includes_question_mark, False
-body_sentiment_polarity, 23
-body_sentiment_subjectivity, 63
-user_reputation, 1388
+body_includes_question_mark, True
+body_sentiment_polarity, 30
+body_sentiment_subjectivity, 100
+user_reputation, 10753
 body_includes_code, True
-num_tags, 4
-response_time, 7152
+num_tags, 1
+response_time, 1610
 year2008, False
 year2009, False
 year2010, False
@@ -977,32 +819,22 @@ year2013, False
 year2014, False
 year2015, False
 is_top, False
-num_other_answers, 8
-{'_state': <django.db.models.base.ModelState object at 0x7fbeeb49b940>, 'uid': '11352880', 'body': '<p>The real answer, which nobody seems to have touched upon, is that <a href="http://benlog.com/articles/2008/06/19/dont-hash-secrets/" rel="noreferrer">both are wrong</a>. If you are implementing your own crypto, no matter how trivial a part you think you\'re doing, you <em>are going</em> to make mistakes.</p>\n\n<p><a href="http://en.wikipedia.org/wiki/Hash-based_message_authentication_code" rel="noreferrer">HMAC</a> is a better approach, but even then if you\'re using something like SHA-1, you\'ve already picked an algorithm which is unsuitable for password hashing due to its design for speed. Use something like <a href="http://en.wikipedia.org/wiki/Bcrypt" rel="noreferrer">bcrypt</a> or possibly <a href="http://www.tarsnap.com/scrypt.html" rel="noreferrer">scrypt</a> and take the problem out of your hands entirely.</p>\n\n<p>Oh, and don\'t even think about comparing the resulting hashes for equality with with your programming language or database string comparison utilities. Those compare character by character and short-circuit as <code>false</code> if a character differs. So now attackers can use statistical methods to try and work out what the hash is, a character at a time.</p>', 'body_length': 1196, 'body_lexicon_count': 149, 'body_sentence_count': 11, 'body_num_links': 4, 'body_percent_uppercase': 1, 'body_percent_spaces': 12, 'body_percent_punctuation': 2, 'body_starts_capitalized': True, 'body_includes_question_mark': False, 'body_includes_code': True, 'body_coleman_liau_index': 16, 'body_sentiment_polarity': 23, 'body_sentiment_subjectivity': 63, 'title': 'Salting Your Password: Best Practices?', 'title_length': 38, 'title_lexicon_count': 149, 'title_sentence_count': 11, 'title_percent_uppercase': 13, 'title_percent_spaces': 11, 'title_percent_punctuation': 0, 'title_starts_capitalized': True, 'title_includes_question_mark': True, 'title_coleman_liau_index': 16, 'title_sentiment_polarity': 100, 'title_sentiment_subjectivity': 30, 'score': 16, 'num_comments': 0, 'context': None, 'author': '', 'timestamp': datetime.datetime(2012, 7, 5, 21, 33, 2, tzinfo=<UTC>), 'has_wiki_link': True, 'has_no_link': False, 'has_other_link': False, 'has_good_wiki_link': False, 'has_b_wiki_link': False, 'has_c_wiki_link': True, 'num_wiki_links': 2, 'day_of_avg_score': 1, 'week_after_avg_score': 1, 'all_revisions_pulled': True, 'wiki_content_error': 0, 'mon': False, 'tues': False, 'wed': False, 'thurs': True, 'fri': False, 'sat': False, 'sun': False, 'jan': False, 'feb': False, 'mar': False, 'apr': False, 'may': False, 'jun': False, 'jul': True, 'aug': False, 'sep': False, 'octo': False, 'nov': False, 'dec': False, 'zero_to_six': False, 'six_to_twelve': False, 'twelve_to_eighteen': False, 'eighteen_to_twentyfour': True, 'year2008': False, 'year2009': False, 'year2010': False, 'year2011': False, 'year2012': True, 'year2013': False, 'year2014': False, 'year2015': False, 'year2016': False, 'user_created_utc': datetime.datetime(2009, 5, 1, 22, 15, 52, tzinfo=<UTC>), 'seconds_since_user_creation': 100307830, 'num_edits': 3, 'num_new_editors': 0, 'num_new_editors_retained': 0, 'num_new_editors_retained_180': 0, 'num_new_edits': 0, 'num_old_edits': 3, 'num_inactive_edits': 0, 'num_active_edits': 3, 'num_minor_edits': 3, 'num_major_edits': 0, 'num_edits_prev_week': 1, 'num_new_editors_prev_week': 0, 'num_new_editors_retained_prev_week': 0, 'num_new_editors_retained_prev_week_180': 0, 'num_new_edits_prev_week': 0, 'num_old_edits_prev_week': 1, 'num_inactive_edits_prev_week': 0, 'num_active_edits_prev_week': 1, 'num_minor_edits_prev_week': 1, 'num_major_edits_prev_week': 0, 'num_edits_preceding_post': 0, 'num_wiki_pageviews': None, 'num_wiki_pageviews_prev_week': None, 'sample_num': 0, 'user_reputation': 1388, 'question_asked_utc': datetime.datetime(2009, 3, 23, 19, 33, 50, tzinfo=<UTC>), 'num_pageviews': 57546, 'tags_string': 'hash|cryptography|passwords|salt', 'num_tags': 4, 'num_other_answers': 8, 'question_score': 136, 'num_question_comments': 13, 'response_time': 7152, 'is_top': False}
+num_other_answers, 3
+{'_state': <django.db.models.base.ModelState object at 0x7f83794279b0>, 'uid': '11382808', 'body': '<p>You can either remove the CLI check <code>if (PHP_SAPI === \'cli\')</code>, or include the file and call  <code>require \'../boot.php\'; Logger::mailit();</code> yourself. Or you can look into <a href="http://php.net/exec" rel="nofollow">exec()</a> (or <a href="http://php.net/proc_open" rel="nofollow">proc_open()</a>, …) to execute the script as its own process. This might be necessary if you need the sandboxing.</p>\n\n<hr>\n\n<p>have you tried something like <code>exec(\'your/script.php &amp;\')</code>? (<a href="http://en.wikipedia.org/wiki/Nohup" rel="nofollow">NOHUP</a>)</p>\n\n<hr>\n\n<p>with <a href="http://php.net/proc_open" rel="nofollow">proc_open()</a> you can setup the environment for your script (including funky file descriptor stuff). with <a href="http://php.net/proc_get_status" rel="nofollow">proc_get_status()</a> you can get the PID of the process you started with proc_open(). With <a href="http://php.net/posix_kill" rel="nofollow">posix_kill()</a> you can send signals to a process.</p>\n\n<p>If I\'m not mistaking, your parent process (in your case the php-cgi) keeps running until the child process (in your case the php-cli) finished - even if you setup non-blocking execution.</p>', 'body_length': 1202, 'body_lexicon_count': 136, 'body_sentence_count': 14, 'body_num_links': 6, 'body_percent_uppercase': 2, 'body_percent_spaces': 11, 'body_percent_punctuation': 2, 'body_starts_capitalized': True, 'body_includes_question_mark': True, 'body_includes_code': True, 'body_coleman_liau_index': 16, 'body_sentiment_polarity': 30, 'body_sentiment_subjectivity': 100, 'title': 'How do I execute a php-cli from php-cgi with nohup', 'title_length': 50, 'title_lexicon_count': 136, 'title_sentence_count': 14, 'title_percent_uppercase': 4, 'title_percent_spaces': 18, 'title_percent_punctuation': 0, 'title_starts_capitalized': True, 'title_includes_question_mark': False, 'title_coleman_liau_index': 5, 'title_sentiment_polarity': 0, 'title_sentiment_subjectivity': 0, 'score': -1, 'num_comments': 0, 'context': None, 'author': '', 'timestamp': datetime.datetime(2012, 7, 8, 11, 33, 47, tzinfo=<UTC>), 'has_wiki_link': True, 'has_no_link': False, 'has_other_link': False, 'has_good_wiki_link': False, 'has_b_wiki_link': False, 'has_c_wiki_link': False, 'num_wiki_links': 1, 'day_of_avg_score': 1, 'week_after_avg_score': 1, 'all_revisions_pulled': True, 'wiki_content_error': 0, 'mon': False, 'tues': False, 'wed': False, 'thurs': False, 'fri': False, 'sat': False, 'sun': True, 'jan': False, 'feb': False, 'mar': False, 'apr': False, 'may': False, 'jun': False, 'jul': True, 'aug': False, 'sep': False, 'octo': False, 'nov': False, 'dec': False, 'zero_to_six': False, 'six_to_twelve': True, 'twelve_to_eighteen': False, 'eighteen_to_twentyfour': False, 'year2008': False, 'year2009': False, 'year2010': False, 'year2011': False, 'year2012': True, 'year2013': False, 'year2014': False, 'year2015': False, 'year2016': False, 'user_created_utc': datetime.datetime(2010, 11, 21, 13, 59, 11, tzinfo=<UTC>), 'seconds_since_user_creation': 51399276, 'num_edits': 0, 'num_new_editors': 0, 'num_new_editors_retained': 0, 'num_new_editors_retained_180': 0, 'num_new_edits': 0, 'num_old_edits': 0, 'num_inactive_edits': 0, 'num_active_edits': 0, 'num_minor_edits': 0, 'num_major_edits': 0, 'num_edits_prev_week': 0, 'num_new_editors_prev_week': 0, 'num_new_editors_retained_prev_week': 0, 'num_new_editors_retained_prev_week_180': 0, 'num_new_edits_prev_week': 0, 'num_old_edits_prev_week': 0, 'num_inactive_edits_prev_week': 0, 'num_active_edits_prev_week': 0, 'num_minor_edits_prev_week': 0, 'num_major_edits_prev_week': 0, 'num_edits_preceding_post': 0, 'num_wiki_pageviews': 0, 'num_wiki_pageviews_prev_week': 0, 'num_wiki_increased_pageviews_day_of': None, 'sample_num': 1, 'user_reputation': 10753, 'question_asked_utc': datetime.datetime(2012, 7, 8, 11, 6, 57, tzinfo=<UTC>), 'num_pageviews': 256, 'tags_string': 'php', 'num_tags': 1, 'num_other_answers': 3, 'question_score': 4, 'num_question_comments': 0, 'response_time': 1610, 'is_top': False}
 ===
 
 SampledStackOverflowPost Has WP link
-title, stack dump accessing malloc char array
-body, <p>devices is an array of pointers. You are copying the string "smxxxx1" <em>over</em> the array, when it looks like you want to set element 0 to point to the string.</p>
+title, Strange result in Mysql subtraction
+body, <p>Unsigned ints cannot hold a negative value</p>
 
-<p>Instead of the strcpy() try:</p>
+<p>If you try and subtract 1 from 0 it loops back round to the largest value it can have</p>
 
-<pre><code>devices[0] = "smxxxx1"
-</code></pre>
+<p><a href="http://en.wikipedia.org/wiki/Signedness" rel="nofollow">http://en.wikipedia.org/wiki/Signedness</a></p>
 
-<p>or</p>
-
-<pre><code>devices[0] = strdup("smxxxx1")
-</code></pre>
-
-<p><strong>Edit:</strong></p>
-
-<p>On a 32 bit system, devices[0] is composed of four bytes. These four bytes are being overwritten with the byte values of the first four characters of the string "smxxxx1". In <a href="http://www.asciitable.com/" rel="nofollow noreferrer">ascii</a> these are 0x73, 0x6D, 0x78, 0x78. Assuming <a href="http://en.wikipedia.org/wiki/Endianness" rel="nofollow noreferrer">little-endian</a> addressing, you end-up with devices[0] containing a pointer to the address 0x78786D73. This address will almost certainly not be valid within the process. When the call to printf() tries to dereference this invalid pointer the OS triggers a segmentation fault and dumps core.</p>
-
-<p>The problem was that the OP was incorrectly treating the devices variable as a string (array of char) when initialising it. Its actually an array of <em>pointers</em> to char, and printf() is interpreting it as such.</p>
+<p>Not sure if that makes much sense but let me know if still stuck and will try to explain better!</p>
 mon, False
 tues, False
-wed, True
+wed, False
 thurs, False
 fri, False
 sat, False
@@ -1018,31 +850,206 @@ sep, False
 octo, False
 nov, False
 zero_to_six, False
-six_to_twelve, True
+six_to_twelve, False
 twelve_to_eighteen, False
-seconds_since_user_creation, 38784738
-body_length, 1249
+seconds_since_user_creation, 5221329
+body_length, 365
 body_percent_uppercase, 1
-body_percent_spaces, 13
-body_percent_punctuation, 2
-body_starts_capitalized, False
+body_percent_spaces, 12
+body_percent_punctuation, 1
+body_starts_capitalized, True
 body_coleman_liau_index, 16
 body_includes_question_mark, False
-body_sentiment_polarity, 1
-body_sentiment_subjectivity, 35
-user_reputation, 5747
-body_includes_code, True
-num_tags, 3
-response_time, 478
+body_sentiment_polarity, 4
+body_sentiment_subjectivity, 37
+user_reputation, 131
+body_includes_code, False
+num_tags, 2
+response_time, 1023
 year2008, False
 year2009, False
-year2010, True
+year2010, False
+year2011, False
+year2012, False
+year2013, False
+year2014, True
+year2015, False
+is_top, True
+num_other_answers, 2
+{'_state': <django.db.models.base.ModelState object at 0x7f8379427a20>, 'uid': '23597636', 'body': '<p>Unsigned ints cannot hold a negative value</p>\n\n<p>If you try and subtract 1 from 0 it loops back round to the largest value it can have</p>\n\n<p><a href="http://en.wikipedia.org/wiki/Signedness" rel="nofollow">http://en.wikipedia.org/wiki/Signedness</a></p>\n\n<p>Not sure if that makes much sense but let me know if still stuck and will try to explain better!</p>', 'body_length': 365, 'body_lexicon_count': 49, 'body_sentence_count': 2, 'body_num_links': 1, 'body_percent_uppercase': 1, 'body_percent_spaces': 12, 'body_percent_punctuation': 1, 'body_starts_capitalized': True, 'body_includes_question_mark': False, 'body_includes_code': False, 'body_coleman_liau_index': 16, 'body_sentiment_polarity': 4, 'body_sentiment_subjectivity': 37, 'title': 'Strange result in Mysql subtraction', 'title_length': 35, 'title_lexicon_count': 49, 'title_sentence_count': 2, 'title_percent_uppercase': 6, 'title_percent_spaces': 11, 'title_percent_punctuation': 0, 'title_starts_capitalized': True, 'title_includes_question_mark': False, 'title_coleman_liau_index': 14, 'title_sentiment_polarity': -5, 'title_sentiment_subjectivity': 15, 'score': 2, 'num_comments': 2, 'context': None, 'author': '', 'timestamp': datetime.datetime(2014, 5, 11, 20, 35, 58, tzinfo=<UTC>), 'has_wiki_link': True, 'has_no_link': False, 'has_other_link': False, 'has_good_wiki_link': False, 'has_b_wiki_link': False, 'has_c_wiki_link': False, 'num_wiki_links': 1, 'day_of_avg_score': 1, 'week_after_avg_score': 1, 'all_revisions_pulled': True, 'wiki_content_error': 0, 'mon': False, 'tues': False, 'wed': False, 'thurs': False, 'fri': False, 'sat': False, 'sun': True, 'jan': False, 'feb': False, 'mar': False, 'apr': False, 'may': True, 'jun': False, 'jul': False, 'aug': False, 'sep': False, 'octo': False, 'nov': False, 'dec': False, 'zero_to_six': False, 'six_to_twelve': False, 'twelve_to_eighteen': False, 'eighteen_to_twentyfour': True, 'year2008': False, 'year2009': False, 'year2010': False, 'year2011': False, 'year2012': False, 'year2013': False, 'year2014': True, 'year2015': False, 'year2016': False, 'user_created_utc': datetime.datetime(2014, 3, 12, 10, 13, 49, tzinfo=<UTC>), 'seconds_since_user_creation': 5221329, 'num_edits': 0, 'num_new_editors': 0, 'num_new_editors_retained': 0, 'num_new_editors_retained_180': 0, 'num_new_edits': 0, 'num_old_edits': 0, 'num_inactive_edits': 0, 'num_active_edits': 0, 'num_minor_edits': 0, 'num_major_edits': 0, 'num_edits_prev_week': 0, 'num_new_editors_prev_week': 0, 'num_new_editors_retained_prev_week': 0, 'num_new_editors_retained_prev_week_180': 0, 'num_new_edits_prev_week': 0, 'num_old_edits_prev_week': 0, 'num_inactive_edits_prev_week': 0, 'num_active_edits_prev_week': 0, 'num_minor_edits_prev_week': 0, 'num_major_edits_prev_week': 0, 'num_edits_preceding_post': 0, 'num_wiki_pageviews': 0, 'num_wiki_pageviews_prev_week': 0, 'num_wiki_increased_pageviews_day_of': None, 'sample_num': 2, 'user_reputation': 131, 'question_asked_utc': datetime.datetime(2014, 5, 11, 20, 18, 55, tzinfo=<UTC>), 'num_pageviews': 115, 'tags_string': 'mysql|sql', 'num_tags': 2, 'num_other_answers': 2, 'question_score': 0, 'num_question_comments': 3, 'response_time': 1023, 'is_top': True}
+===
+
+SampledStackOverflowPost Has WP link
+title, How do you use ssh in a shell script?
+body, <p>You can use <a href="https://en.wikipedia.org/wiki/Expect" rel="nofollow noreferrer"><code>expect</code></a> command to populate the username/password info.</p>
+mon, False
+tues, True
+wed, False
+thurs, False
+fri, False
+sat, False
+jan, False
+feb, False
+mar, False
+apr, False
+may, False
+jun, False
+jul, False
+aug, True
+sep, False
+octo, False
+nov, False
+zero_to_six, False
+six_to_twelve, False
+twelve_to_eighteen, False
+seconds_since_user_creation, 196916
+body_length, 163
+body_percent_uppercase, 1
+body_percent_spaces, 7
+body_percent_punctuation, 2
+body_starts_capitalized, True
+body_coleman_liau_index, 16
+body_includes_question_mark, False
+body_sentiment_polarity, 0
+body_sentiment_subjectivity, 0
+user_reputation, 4521
+body_includes_code, True
+num_tags, 5
+response_time, 773
+year2008, True
+year2009, False
+year2010, False
 year2011, False
 year2012, False
 year2013, False
 year2014, False
 year2015, False
 is_top, False
-num_other_answers, 6
-{'_state': <django.db.models.base.ModelState object at 0x7fbeeb49b9b0>, 'uid': '2817299', 'body': '<p>devices is an array of pointers. You are copying the string "smxxxx1" <em>over</em> the array, when it looks like you want to set element 0 to point to the string.</p>\n\n<p>Instead of the strcpy() try:</p>\n\n<pre><code>devices[0] = "smxxxx1"\n</code></pre>\n\n<p>or</p>\n\n<pre><code>devices[0] = strdup("smxxxx1")\n</code></pre>\n\n<p><strong>Edit:</strong></p>\n\n<p>On a 32 bit system, devices[0] is composed of four bytes. These four bytes are being overwritten with the byte values of the first four characters of the string "smxxxx1". In <a href="http://www.asciitable.com/" rel="nofollow noreferrer">ascii</a> these are 0x73, 0x6D, 0x78, 0x78. Assuming <a href="http://en.wikipedia.org/wiki/Endianness" rel="nofollow noreferrer">little-endian</a> addressing, you end-up with devices[0] containing a pointer to the address 0x78786D73. This address will almost certainly not be valid within the process. When the call to printf() tries to dereference this invalid pointer the OS triggers a segmentation fault and dumps core.</p>\n\n<p>The problem was that the OP was incorrectly treating the devices variable as a string (array of char) when initialising it. Its actually an array of <em>pointers</em> to char, and printf() is interpreting it as such.</p>', 'body_length': 1249, 'body_lexicon_count': 168, 'body_sentence_count': 12, 'body_num_links': 2, 'body_percent_uppercase': 1, 'body_percent_spaces': 13, 'body_percent_punctuation': 2, 'body_starts_capitalized': False, 'body_includes_question_mark': False, 'body_includes_code': True, 'body_coleman_liau_index': 16, 'body_sentiment_polarity': 1, 'body_sentiment_subjectivity': 35, 'title': 'stack dump accessing malloc char array', 'title_length': 38, 'title_lexicon_count': 168, 'title_sentence_count': 12, 'title_percent_uppercase': 0, 'title_percent_spaces': 13, 'title_percent_punctuation': 0, 'title_starts_capitalized': False, 'title_includes_question_mark': False, 'title_coleman_liau_index': 11, 'title_sentiment_polarity': 0, 'title_sentiment_subjectivity': 0, 'score': 0, 'num_comments': 3, 'context': None, 'author': '', 'timestamp': datetime.datetime(2010, 5, 12, 9, 2, 34, tzinfo=<UTC>), 'has_wiki_link': True, 'has_no_link': False, 'has_other_link': False, 'has_good_wiki_link': False, 'has_b_wiki_link': True, 'has_c_wiki_link': True, 'num_wiki_links': 1, 'day_of_avg_score': 3, 'week_after_avg_score': 3, 'all_revisions_pulled': True, 'wiki_content_error': 0, 'mon': False, 'tues': False, 'wed': True, 'thurs': False, 'fri': False, 'sat': False, 'sun': False, 'jan': False, 'feb': False, 'mar': False, 'apr': False, 'may': True, 'jun': False, 'jul': False, 'aug': False, 'sep': False, 'octo': False, 'nov': False, 'dec': False, 'zero_to_six': False, 'six_to_twelve': True, 'twelve_to_eighteen': False, 'eighteen_to_twentyfour': False, 'year2008': False, 'year2009': False, 'year2010': True, 'year2011': False, 'year2012': False, 'year2013': False, 'year2014': False, 'year2015': False, 'year2016': False, 'user_created_utc': datetime.datetime(2009, 2, 17, 11, 30, 16, tzinfo=<UTC>), 'seconds_since_user_creation': 38784738, 'num_edits': 2, 'num_new_editors': 0, 'num_new_editors_retained': 0, 'num_new_editors_retained_180': 0, 'num_new_edits': 0, 'num_old_edits': 2, 'num_inactive_edits': 2, 'num_active_edits': 0, 'num_minor_edits': 2, 'num_major_edits': 0, 'num_edits_prev_week': 1, 'num_new_editors_prev_week': 0, 'num_new_editors_retained_prev_week': 0, 'num_new_editors_retained_prev_week_180': 0, 'num_new_edits_prev_week': 0, 'num_old_edits_prev_week': 1, 'num_inactive_edits_prev_week': 0, 'num_active_edits_prev_week': 1, 'num_minor_edits_prev_week': 1, 'num_major_edits_prev_week': 0, 'num_edits_preceding_post': 0, 'num_wiki_pageviews': None, 'num_wiki_pageviews_prev_week': None, 'sample_num': 1, 'user_reputation': 5747, 'question_asked_utc': datetime.datetime(2010, 5, 12, 8, 54, 36, tzinfo=<UTC>), 'num_pageviews': 764, 'tags_string': 'c|memory-management|stack-dump', 'num_tags': 3, 'num_other_answers': 6, 'question_score': 5, 'num_question_comments': 3, 'response_time': 478, 'is_top': False}
+num_other_answers, 5
+{'_state': <django.db.models.base.ModelState object at 0x7f8379427a90>, 'uid': '29078', 'body': '<p>You can use <a href="https://en.wikipedia.org/wiki/Expect" rel="nofollow noreferrer"><code>expect</code></a> command to populate the username/password info.</p>', 'body_length': 163, 'body_lexicon_count': 13, 'body_sentence_count': 2, 'body_num_links': 1, 'body_percent_uppercase': 1, 'body_percent_spaces': 7, 'body_percent_punctuation': 2, 'body_starts_capitalized': True, 'body_includes_question_mark': False, 'body_includes_code': True, 'body_coleman_liau_index': 16, 'body_sentiment_polarity': 0, 'body_sentiment_subjectivity': 0, 'title': 'How do you use ssh in a shell script?', 'title_length': 37, 'title_lexicon_count': 13, 'title_sentence_count': 2, 'title_percent_uppercase': 3, 'title_percent_spaces': 22, 'title_percent_punctuation': 0, 'title_starts_capitalized': True, 'title_includes_question_mark': True, 'title_coleman_liau_index': 0, 'title_sentiment_polarity': 0, 'title_sentiment_subjectivity': 0, 'score': 0, 'num_comments': 2, 'context': None, 'author': '', 'timestamp': datetime.datetime(2008, 8, 26, 22, 18, 30, tzinfo=<UTC>), 'has_wiki_link': True, 'has_no_link': False, 'has_other_link': False, 'has_good_wiki_link': False, 'has_b_wiki_link': False, 'has_c_wiki_link': True, 'num_wiki_links': 1, 'day_of_avg_score': 1, 'week_after_avg_score': 2, 'all_revisions_pulled': True, 'wiki_content_error': 0, 'mon': False, 'tues': True, 'wed': False, 'thurs': False, 'fri': False, 'sat': False, 'sun': False, 'jan': False, 'feb': False, 'mar': False, 'apr': False, 'may': False, 'jun': False, 'jul': False, 'aug': True, 'sep': False, 'octo': False, 'nov': False, 'dec': False, 'zero_to_six': False, 'six_to_twelve': False, 'twelve_to_eighteen': False, 'eighteen_to_twentyfour': True, 'year2008': True, 'year2009': False, 'year2010': False, 'year2011': False, 'year2012': False, 'year2013': False, 'year2014': False, 'year2015': False, 'year2016': False, 'user_created_utc': datetime.datetime(2008, 8, 24, 15, 36, 34, tzinfo=<UTC>), 'seconds_since_user_creation': 196916, 'num_edits': 3, 'num_new_editors': 0, 'num_new_editors_retained': 0, 'num_new_editors_retained_180': 0, 'num_new_edits': 0, 'num_old_edits': 3, 'num_inactive_edits': 1, 'num_active_edits': 2, 'num_minor_edits': 3, 'num_major_edits': 0, 'num_edits_prev_week': 0, 'num_new_editors_prev_week': 0, 'num_new_editors_retained_prev_week': 0, 'num_new_editors_retained_prev_week_180': 0, 'num_new_edits_prev_week': 0, 'num_old_edits_prev_week': 0, 'num_inactive_edits_prev_week': 0, 'num_active_edits_prev_week': 0, 'num_minor_edits_prev_week': 0, 'num_major_edits_prev_week': 0, 'num_edits_preceding_post': 0, 'num_wiki_pageviews': 0, 'num_wiki_pageviews_prev_week': 0, 'num_wiki_increased_pageviews_day_of': None, 'sample_num': 1, 'user_reputation': 4521, 'question_asked_utc': datetime.datetime(2008, 8, 26, 22, 5, 37, tzinfo=<UTC>), 'num_pageviews': 21232, 'tags_string': 'bash|shell|ssh|ksh|rsh', 'num_tags': 5, 'num_other_answers': 5, 'question_score': 10, 'num_question_comments': 0, 'response_time': 773, 'is_top': False}
+===
+
+SampledStackOverflowPost Has WP link
+title, Execute MySQL event in two dates
+body, <p>You can use <strong>crontab</strong> to execute events for your possible date/time. <strong>Crontab</strong> accept 5 parameters to set execution date/time.</p>
+
+<pre><code>* * * * *  YOUR_COMMAND_TO_EXECUTE
+</code></pre>
+
+<p>Here every * is a single parameter for <strong>Contab</strong>.</p>
+
+<pre><code>* --&gt; min (0 - 59)
+* --&gt; hour (0 - 23)
+* --&gt; day of month (1 - 31)
+* --&gt; month (1 - 12)
+* --&gt; day of week (0 - 6) (0 to 6 are Sunday to Saturday, or use names; 7 is also Sunday)
+</code></pre>
+
+<p><strong>Example</strong></p>
+
+<pre><code># For example, you can run a backup of all your user accounts
+# at 5 a.m every week with:
+0 5 * * 1 tar -zcf /var/backups/home.tgz /home/
+</code></pre>
+
+<p>Here is details about the <strong>crontab</strong> <a href="https://en.wikipedia.org/wiki/Cron#Overview" rel="nofollow">Overview</a></p>
+mon, False
+tues, True
+wed, False
+thurs, False
+fri, False
+sat, False
+jan, False
+feb, False
+mar, False
+apr, False
+may, False
+jun, False
+jul, False
+aug, False
+sep, False
+octo, True
+nov, False
+zero_to_six, False
+six_to_twelve, False
+twelve_to_eighteen, False
+seconds_since_user_creation, 83935130
+body_length, 853
+body_percent_uppercase, 4
+body_percent_spaces, 13
+body_percent_punctuation, 1
+body_starts_capitalized, True
+body_coleman_liau_index, 16
+body_includes_question_mark, False
+body_sentiment_polarity, -3
+body_sentiment_subjectivity, 60
+user_reputation, 1608
+body_includes_code, True
+num_tags, 1
+response_time, 1084
+year2008, False
+year2009, False
+year2010, False
+year2011, False
+year2012, False
+year2013, False
+year2014, False
+year2015, False
+is_top, True
+num_other_answers, 1
+{'_state': <django.db.models.base.ModelState object at 0x7f8379427b00>, 'uid': '39861120', 'body': '<p>You can use <strong>crontab</strong> to execute events for your possible date/time. <strong>Crontab</strong> accept 5 parameters to set execution date/time.</p>\n\n<pre><code>* * * * *  YOUR_COMMAND_TO_EXECUTE\n</code></pre>\n\n<p>Here every * is a single parameter for <strong>Contab</strong>.</p>\n\n<pre><code>* --&gt; min (0 - 59)\n* --&gt; hour (0 - 23)\n* --&gt; day of month (1 - 31)\n* --&gt; month (1 - 12)\n* --&gt; day of week (0 - 6) (0 to 6 are Sunday to Saturday, or use names; 7 is also Sunday)\n</code></pre>\n\n<p><strong>Example</strong></p>\n\n<pre><code># For example, you can run a backup of all your user accounts\n# at 5 a.m every week with:\n0 5 * * 1 tar -zcf /var/backups/home.tgz /home/\n</code></pre>\n\n<p>Here is details about the <strong>crontab</strong> <a href="https://en.wikipedia.org/wiki/Cron#Overview" rel="nofollow">Overview</a></p>', 'body_length': 853, 'body_lexicon_count': 107, 'body_sentence_count': 6, 'body_num_links': 1, 'body_percent_uppercase': 4, 'body_percent_spaces': 13, 'body_percent_punctuation': 1, 'body_starts_capitalized': True, 'body_includes_question_mark': False, 'body_includes_code': True, 'body_coleman_liau_index': 16, 'body_sentiment_polarity': -3, 'body_sentiment_subjectivity': 60, 'title': 'Execute MySQL event in two dates', 'title_length': 32, 'title_lexicon_count': 107, 'title_sentence_count': 6, 'title_percent_uppercase': 16, 'title_percent_spaces': 16, 'title_percent_punctuation': 0, 'title_starts_capitalized': True, 'title_includes_question_mark': False, 'title_coleman_liau_index': 5, 'title_sentiment_polarity': 0, 'title_sentiment_subjectivity': 0, 'score': 1, 'num_comments': 3, 'context': None, 'author': '', 'timestamp': datetime.datetime(2016, 10, 4, 20, 23, 31, tzinfo=<UTC>), 'has_wiki_link': True, 'has_no_link': False, 'has_other_link': False, 'has_good_wiki_link': False, 'has_b_wiki_link': False, 'has_c_wiki_link': True, 'num_wiki_links': 1, 'day_of_avg_score': 2, 'week_after_avg_score': 2, 'all_revisions_pulled': True, 'wiki_content_error': 0, 'mon': False, 'tues': True, 'wed': False, 'thurs': False, 'fri': False, 'sat': False, 'sun': False, 'jan': False, 'feb': False, 'mar': False, 'apr': False, 'may': False, 'jun': False, 'jul': False, 'aug': False, 'sep': False, 'octo': True, 'nov': False, 'dec': False, 'zero_to_six': False, 'six_to_twelve': False, 'twelve_to_eighteen': False, 'eighteen_to_twentyfour': True, 'year2008': False, 'year2009': False, 'year2010': False, 'year2011': False, 'year2012': False, 'year2013': False, 'year2014': False, 'year2015': False, 'year2016': True, 'user_created_utc': datetime.datetime(2014, 2, 6, 9, 4, 41, tzinfo=<UTC>), 'seconds_since_user_creation': 83935130, 'num_edits': 0, 'num_new_editors': 0, 'num_new_editors_retained': 0, 'num_new_editors_retained_180': 0, 'num_new_edits': 0, 'num_old_edits': 0, 'num_inactive_edits': 0, 'num_active_edits': 0, 'num_minor_edits': 0, 'num_major_edits': 0, 'num_edits_prev_week': 2, 'num_new_editors_prev_week': 0, 'num_new_editors_retained_prev_week': 0, 'num_new_editors_retained_prev_week_180': 0, 'num_new_edits_prev_week': 0, 'num_old_edits_prev_week': 2, 'num_inactive_edits_prev_week': 0, 'num_active_edits_prev_week': 2, 'num_minor_edits_prev_week': 2, 'num_major_edits_prev_week': 0, 'num_edits_preceding_post': 0, 'num_wiki_pageviews': 15599, 'num_wiki_pageviews_prev_week': 16546, 'num_wiki_increased_pageviews_day_of': 356, 'sample_num': 0, 'user_reputation': 1608, 'question_asked_utc': datetime.datetime(2016, 10, 4, 20, 5, 27, tzinfo=<UTC>), 'num_pageviews': 19, 'tags_string': 'mysql', 'num_tags': 1, 'num_other_answers': 1, 'question_score': 1, 'num_question_comments': 6, 'response_time': 1084, 'is_top': True}
+===
+
+SampledStackOverflowPost Has WP link
+title, Design pattern suggestion work flow manager
+body, <p>So, you basically need state management and events to trigger when state changes, you might think of looking into following:</p>
+
+<p>Observer Pattern: <a href="http://en.wikipedia.org/wiki/Observer_pattern" rel="nofollow">http://en.wikipedia.org/wiki/Observer_pattern</a></p>
+
+<p>Also use database to store states as you mentioned you need to show them up to user.</p>
+mon, False
+tues, True
+wed, False
+thurs, False
+fri, False
+sat, False
+jan, False
+feb, False
+mar, False
+apr, False
+may, False
+jun, False
+jul, True
+aug, False
+sep, False
+octo, False
+nov, False
+zero_to_six, False
+six_to_twelve, False
+twelve_to_eighteen, True
+seconds_since_user_creation, 69099
+body_length, 371
+body_percent_uppercase, 2
+body_percent_spaces, 11
+body_percent_punctuation, 2
+body_starts_capitalized, True
+body_coleman_liau_index, 16
+body_includes_question_mark, False
+body_sentiment_polarity, 0
+body_sentiment_subjectivity, 0
+user_reputation, 1842
+body_includes_code, False
+num_tags, 3
+response_time, 466
+year2008, False
+year2009, False
+year2010, False
+year2011, False
+year2012, False
+year2013, True
+year2014, False
+year2015, False
+is_top, True
+num_other_answers, 1
+{'_state': <django.db.models.base.ModelState object at 0x7f8379427b70>, 'uid': '17678606', 'body': '<p>So, you basically need state management and events to trigger when state changes, you might think of looking into following:</p>\n\n<p>Observer Pattern: <a href="http://en.wikipedia.org/wiki/Observer_pattern" rel="nofollow">http://en.wikipedia.org/wiki/Observer_pattern</a></p>\n\n<p>Also use database to store states as you mentioned you need to show them up to user.</p>', 'body_length': 371, 'body_lexicon_count': 42, 'body_sentence_count': 2, 'body_num_links': 1, 'body_percent_uppercase': 2, 'body_percent_spaces': 11, 'body_percent_punctuation': 2, 'body_starts_capitalized': True, 'body_includes_question_mark': False, 'body_includes_code': False, 'body_coleman_liau_index': 16, 'body_sentiment_polarity': 0, 'body_sentiment_subjectivity': 0, 'title': 'Design pattern suggestion work flow manager', 'title_length': 43, 'title_lexicon_count': 42, 'title_sentence_count': 2, 'title_percent_uppercase': 2, 'title_percent_spaces': 12, 'title_percent_punctuation': 0, 'title_starts_capitalized': True, 'title_includes_question_mark': False, 'title_coleman_liau_index': 16, 'title_sentiment_polarity': 0, 'title_sentiment_subjectivity': 0, 'score': 0, 'num_comments': 0, 'context': None, 'author': '', 'timestamp': datetime.datetime(2013, 7, 16, 13, 59, 42, tzinfo=<UTC>), 'has_wiki_link': True, 'has_no_link': False, 'has_other_link': False, 'has_good_wiki_link': False, 'has_b_wiki_link': False, 'has_c_wiki_link': False, 'num_wiki_links': 1, 'day_of_avg_score': 1, 'week_after_avg_score': 1, 'all_revisions_pulled': True, 'wiki_content_error': 0, 'mon': False, 'tues': True, 'wed': False, 'thurs': False, 'fri': False, 'sat': False, 'sun': False, 'jan': False, 'feb': False, 'mar': False, 'apr': False, 'may': False, 'jun': False, 'jul': True, 'aug': False, 'sep': False, 'octo': False, 'nov': False, 'dec': False, 'zero_to_six': False, 'six_to_twelve': False, 'twelve_to_eighteen': True, 'eighteen_to_twentyfour': False, 'year2008': False, 'year2009': False, 'year2010': False, 'year2011': False, 'year2012': False, 'year2013': True, 'year2014': False, 'year2015': False, 'year2016': False, 'user_created_utc': datetime.datetime(2013, 7, 15, 18, 48, 3, tzinfo=<UTC>), 'seconds_since_user_creation': 69099, 'num_edits': 0, 'num_new_editors': 0, 'num_new_editors_retained': 0, 'num_new_editors_retained_180': 0, 'num_new_edits': 0, 'num_old_edits': 0, 'num_inactive_edits': 0, 'num_active_edits': 0, 'num_minor_edits': 0, 'num_major_edits': 0, 'num_edits_prev_week': 0, 'num_new_editors_prev_week': 0, 'num_new_editors_retained_prev_week': 0, 'num_new_editors_retained_prev_week_180': 0, 'num_new_edits_prev_week': 0, 'num_old_edits_prev_week': 0, 'num_inactive_edits_prev_week': 0, 'num_active_edits_prev_week': 0, 'num_minor_edits_prev_week': 0, 'num_major_edits_prev_week': 0, 'num_edits_preceding_post': 0, 'num_wiki_pageviews': 0, 'num_wiki_pageviews_prev_week': 0, 'num_wiki_increased_pageviews_day_of': None, 'sample_num': 2, 'user_reputation': 1842, 'question_asked_utc': datetime.datetime(2013, 7, 16, 13, 51, 56, tzinfo=<UTC>), 'num_pageviews': 244, 'tags_string': 'java|java-ee|design-patterns', 'num_tags': 3, 'num_other_answers': 1, 'question_score': 0, 'num_question_comments': 0, 'response_time': 466, 'is_top': True}
 ===
