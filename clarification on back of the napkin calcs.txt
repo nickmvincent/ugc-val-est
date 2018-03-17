@@ -1,7 +1,0 @@
-For SO, 
-the lower bound uses the lower bound estimate.
-
-For reddit,
-the lower bound (From the paper: 114K), uses the lower bound estimate of "treatment effect", applies this lower bound estimate to all WP posts, and then attributes every point from these posts to WP.
-
-An even more conservative approach would be to only attribute

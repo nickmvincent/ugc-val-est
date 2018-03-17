@@ -35,7 +35,6 @@ def main(platform):
 
     prefixes = {}
     confirmation_sent = False
-
     client = storage.Client()
     bucket = client.get_bucket('datadumpsforme')
     for blob in bucket.list_blobs():
@@ -44,13 +43,6 @@ def main(platform):
         print(path)
         prefix = path[:path.find('/')]
         if platform == 's':
-            #try:
-            #    num = int(path[-3:])
-            #except:
-            #    continue
-            #if num < 46:
-            #    print('skipping bc less than 46')
-            #    continue
             if 'stackoverflow-questions2' not in prefix:
                 print('prefix {} - manual override'.format(prefix))
                 continue
@@ -128,6 +120,86 @@ def main(platform):
                 )
                 confirmation_sent = True
             print('Blob processing took {}'.format(time.time() - tic))
+
+
+def so_json_to_sample_table(platform, model=SampledStackOverflowPost):
+    """
+    Take a json file and get it directly into the SAMPLE table
+
+    abstract this later
+    """
+
+    confirmation_sent = False
+    json_path = '~/so_data/answers/samples/40k_dated_WP.json'
+
+    path = [json_path]
+    for path in paths:
+        tic = time.time()
+        print(path)
+        with open(path, 'r', encoding='utf8') as jsonfile:
+            print('open took {}'.format(time.time() - tic))
+            tic = time.time()
+            test_counter = 0
+            for line in jsonfile:
+                test_counter += 1
+                try:
+                    data = json.loads(line)
+                except JSONDecodeError:
+                    send_mail(
+                        'json2db JSONDecode Error',
+                        path,
+                        settings.EMAIL_HOST_USER,
+                        ['REDACTED'],
+                        fail_silently=False,
+                    )
+                    continue
+                kwargs = {}
+                for field in model._meta.get_fields():
+                    try:
+                        kwargs[field.name] = data[field.name]
+                    except KeyError:
+                        continue
+                    val = kwargs[field.name]
+                    if val == 'null':
+                        kwargs.pop(field.name, 0)
+                    if (field._description() == 'Field of type: DateTimeField' and 
+                        val):
+                        if '.' in val:
+                            period_index = val.find('.')
+                            kwargs[field.name] = val[:period_index] + ' UTC'
+                        try:
+                            as_dt = datetime.strptime(kwargs[field.name], "%Y-%m-%d %H:%M:%S %Z")
+                            kwargs[field.name] = as_dt.astimezone(pytz.UTC)
+                        except ValueError:
+                            print(data)
+                            continue
+                try:
+                    model.objects.create(**kwargs)
+                    prefixes[prefix] = True
+                except IntegrityError:
+                    continue
+                except Exception as err:
+                    full_msg = '\n'.join([path, str(data), str(kwargs), str(err)])
+                    print(full_msg)
+                    send_mail(
+                        'json2db Error!',
+                        full_msg,
+                        settings.EMAIL_HOST_USER,
+                        ['REDACTED'],
+                        fail_silently=False,
+                    )
+            if not confirmation_sent:
+                send_mail(
+                    'Confirmation email: json2db ran successfully for one round',
+                    path,
+                    settings.EMAIL_HOST_USER,
+                    ['REDACTED'],
+                    fail_silently=False,
+                )
+                confirmation_sent = True
+            print('processing took {}'.format(time.time() - tic))
+
+
 def parse():
     """
     Parse args and do the appropriate analysis
@@ -150,6 +222,6 @@ if __name__ == "__main__":
     from portal.models import (
         RedditPost, StackOverflowAnswer, 
         StackOverflowQuestion, StackOverflowUser,
-        ErrorLog
+        ErrorLog, SampledStackOverflowPost
     )
     parse()

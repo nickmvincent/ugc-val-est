@@ -1,4 +1,6 @@
 
+
+# re-run causal analysis with test data to make sure you didn't break it :)
 from causalinference import CausalModel
 
 from causalinference.utils.tools import vignette_data
