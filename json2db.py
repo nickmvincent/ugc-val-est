@@ -2,6 +2,7 @@
 This module imports data from json (stored in GCS) to DB (postgres)
 """
 import os
+import glob
 import json
 from json.decoder import JSONDecodeError
 import argparse
@@ -108,34 +109,22 @@ def main(platform):
             print('Blob processing took {}'.format(time.time() - tic))
 
 
-def json_to_table(model):
-    """
-    Take a json file and get it directly into a table
+def from_local_filesystem(platform, path):
+    """main driver"""
 
-    abstract this later
-    """
-
+    prefixes = {}
     confirmation_sent = False
-    json_path = '/home/nvl0834/so_data/answers/samples/40k_dated_WP.json'
-
-    paths = [json_path]
-
-    test_dicts = []
-    tests = 5
-    test_counter = 0
-    for path in paths:
+    all_files = glob.glob(os.path.join(path, "*.json"))
+    for file in all_files():
         tic = time.time()
-        print(path)
-        with open(path, 'r', encoding='utf8') as jsonfile:
+        prefix = path[:path.find('/')]
+        model = prefix_to_model(prefix)
+        with open(file, 'r', encoding='utf8') as jsonfile:
             print('open took {}'.format(time.time() - tic))
             tic = time.time()
             for line in jsonfile:
-                test_counter += 1
                 try:
                     data = json.loads(line)
-                    if test_counter < 10:
-                        test_dict = {}
-                        test_dict['json'] = data
                 except JSONDecodeError:
                     send_mail(
                         'json2db JSONDecode Error',
@@ -166,11 +155,7 @@ def json_to_table(model):
                             print(data)
                             continue
                 try:
-                    obj = model.objects.create(**kwargs)
-                    if test_counter < 10:
-                        test_dict['model'] = obj.__dict__
-                        test_dicts.append(test_dict)
-                        test_counter += 1
+                    model.objects.create(**kwargs)
                     prefixes[prefix] = True
                 except IntegrityError:
                     continue
@@ -194,9 +179,6 @@ def json_to_table(model):
                 )
                 confirmation_sent = True
             print('processing took {}'.format(time.time() - tic))
-            print(test_dicts)
-            with open('json_load_test_dicts.json', 'w') as file:
-                json.dump(test_dicts, file)
 
 
 def parse():
@@ -209,11 +191,15 @@ def parse():
         '--platform', help='the platform to use. "r" for reddit and "s" for stack overflow')
     parser.add_argument(
         '--mode', help='the mode to use. default is json_to_table',
-        default="json_to_table")
+        default="from_local_filesystem")
+    parser.add_argument(
+        '--path', help='where your json files live',
+        default="/home/nvl0834/reddit_data/submissions")
     args = parser.parse_args()
-    if args.mode == 'json_to_table':
-        json_to_table(SampledStackOverflowPost)
-    main(args.platform)
+    if args.mode == 'from_local_filesystem':
+        from_local_filesystem(args.platform, args.path)
+    else:
+        main(args.platform)
 
 
 if __name__ == "__main__":
