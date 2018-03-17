@@ -279,9 +279,9 @@ def print_potential_wikilinks():
     from url_helpers import extract_urls
     import csv
     qs_r = SampledRedditThread.objects.filter(
-        url__contains=WIK, has_wiki_link=False, sample_num__in=[0,1,2])
+        url__icontains=WIK, has_wiki_link=False, sample_num__in=[0,1,2])
     qs_s = SampledStackOverflowPost.objects.filter(
-        body__contains=WIK, has_wiki_link=False, sample_num__in=[0,1,2])
+        body__icontains=WIK, has_wiki_link=False, sample_num__in=[0,1,2])
     url_list = []
     for index, qs in enumerate([qs_r, qs_s]):
         print('===')
@@ -302,7 +302,7 @@ def print_potential_wikilinks():
         for url in url_list:
             writer.writerow([url])
     
-    nonen = SampledRedditThread.objects.filter(has_wiki_link=True).exclude(url__contains='en.wikipedia').exclude(url__contains='en.m.wikipedia').exclude(url__contains='www.wikipedia').exclude(url__contains='//wikipedia').values_list('url', 'num_edits', 'num_edits_prev_week')
+    nonen = SampledRedditThread.objects.filter(has_wiki_link=True).exclude(url__icontains='en.wikipedia').exclude(url__icontains='en.m.wikipedia').exclude(url__icontains='www.wikipedia').exclude(url__icontains='//wikipedia').values_list('url', 'num_edits', 'num_edits_prev_week')
     with open('nonen_reddit_list.csv', 'w', newline='') as outfile:
         writer = csv.writer(outfile)
         for line in nonen:

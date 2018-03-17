@@ -560,9 +560,10 @@ def identify_links(filtered, field):
             except Exception:
                 print(url)
                 continue
-            post.wiki_links.add(dja_link)
-            post.has_wiki_link = True
-            post.num_wiki_links += 1
+            if dja_link.language_code == 'en':
+                post.wiki_links.add(dja_link)
+                post.has_wiki_link = True
+                post.num_wiki_links += 1
             post.save()
 
 
@@ -886,18 +887,7 @@ def parse():
         '--start')
     parser.add_argument(
         '--end')
-    parser.add_argument(
-        '--fix_27'
-    )
     args = parser.parse_args()
-    if args.fix_27:
-        filtered = SampledStackOverflowPost.objects.filter(
-            body__contains=WIK, sample_num__in=[0,1,2],
-            has_c_wiki_link=True).filter(body__contains='&#39;')
-        print('Found {} in fix_27'.format(len(filtered)))
-        identify_links(filtered, 'body')
-        print('Now retrieving')
-        retrieve_links_info(filtered, SampledStackOverflowPost)
     elif args.test:
         if args.test_num:
             test(int(args.test_num))
@@ -914,11 +904,9 @@ def parse():
             rerun_all_scores(model)
     elif args.recalc_pageviews:
         posts = SampledRedditThread.objects.filter(has_wiki_link=True, sample_num__in=[0,1,2],
-           # timestamp__gte=datetime.datetime(year=2015, month=7, day=1),
             num_wiki_increased_pageviews_day_of__isnull=True)
         recalc_pageviews_for_posts(posts)
         posts = SampledStackOverflowPost.objects.filter(has_wiki_link=True, sample_num__in=[0,1,2],
-           # timestamp__gte=datetime.datetime(year=2015, month=7, day=1),
             num_wiki_increased_pageviews_day_of__isnull=True)
         recalc_pageviews_for_posts(posts)
     else:
@@ -948,7 +936,7 @@ def parse():
                     all_revisions_pulled=False,
                 )
             if args.mode == 'identify' or args.mode == 'full':
-                filtered = model.objects.filter(**{field + '__contains': WIK})
+                filtered = model.objects.filter(**{field + '__icontains': WIK})
                 print('Going to IDENTIFY {} items'.format(len(filtered)))
                 identify_links(filtered, field)
             if args.mode == 'retrieve' or args.mode == 'full':
@@ -962,7 +950,7 @@ def parse():
             if args.mode == 'try_untouched':
                 # this will try to identify and pull revisions for WP-containing posts that haven't been touched yet
                 filtered = model.objects.filter(**{
-                    field + '__contains': WIK,
+                    field + '__icontains': WIK,
                     'has_wiki_link': False,
                 })
                 print('Going to IDENTIFY {} untouched items'.format(len(filtered)))

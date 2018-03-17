@@ -7,7 +7,7 @@ def explore_queryset():
     """
     Explores a queryset. Meant for extended shell scripting
     """
-    qs = SampledRedditThread.objects.filter(url__contains="wikipedia.org/wiki")
+    qs = SampledRedditThread.objects.filter(url__icontains="wikipedia.org/wiki")
     for thread in qs:
         if 'imgur' in thread.url:
             print(thread.url)
@@ -61,7 +61,7 @@ def main():
     ) + '\n'
     report_body += count_template.format(
         'SampledRedditThread with wiki links',
-        SampledRedditThread.objects.filter(url__contains='wikipedia.org/wiki/').count(),
+        SampledRedditThread.objects.filter(url__icontains='wikipedia.org/wiki/').count(),
     ) + '\n'
     report_body += count_template.format(
         'SampledStackOverflowPost',

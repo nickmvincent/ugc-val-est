@@ -67,14 +67,14 @@ def get_qs_features_and_outcomes(platform, num_rows=None, filter_kwargs=None, ex
             if platform == 'r':
                 qs = qs.filter(
                     Q(has_wiki_link=False) | (
-                        Q(url__contains='en.wikipedia') | Q(url__contains='en.m.wikipedia')  | Q(url__contains='www.wikipedia')  | Q(url__contains='//wikipedia')
+                        Q(url__icontains='en.wikipedia') | Q(url__icontains='en.m.wikipedia')  | Q(url__icontains='www.wikipedia')  | Q(url__icontains='//wikipedia')
                     )
                 )
             
             elif platform == 's':
                 qs = qs.filter(
                     Q(has_wiki_link=False) | (
-                        Q(body__contains='en.wikipedia') | Q(body__contains='en.m.wikipedia')  | Q(body__contains='www.wikipedia')  | Q(body__contains='//wikipedia')
+                        Q(body__icontains='en.wikipedia') | Q(body__icontains='en.m.wikipedia')  | Q(body__icontains='www.wikipedia')  | Q(body__icontains='//wikipedia')
                     )
                 )
     if exclude_kwargs is not None:
