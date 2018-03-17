@@ -126,13 +126,13 @@ def from_local_filesystem(platform, path):
                 try:
                     data = json.loads(line)
                 except JSONDecodeError:
-                    send_mail(
-                        'json2db JSONDecode Error',
-                        path,
-                        settings.EMAIL_HOST_USER,
-                        ['REDACTED'],
-                        fail_silently=False,
-                    )
+                    # send_mail(
+                    #     'json2db JSONDecode Error',
+                    #     path,
+                    #     settings.EMAIL_HOST_USER,
+                    #     ['REDACTED'],
+                    #     fail_silently=False,
+                    # )
                     continue
                 kwargs = {}
                 for field in model._meta.get_fields():
@@ -162,22 +162,22 @@ def from_local_filesystem(platform, path):
                 except Exception as err:
                     full_msg = '\n'.join([path, str(data), str(kwargs), str(err)])
                     print(full_msg)
-                    send_mail(
-                        'json2db Error!',
-                        full_msg,
-                        settings.EMAIL_HOST_USER,
-                        ['REDACTED'],
-                        fail_silently=False,
-                    )
-            if not confirmation_sent:
-                send_mail(
-                    'Confirmation email: json2db ran successfully for one round',
-                    path,
-                    settings.EMAIL_HOST_USER,
-                    ['REDACTED'],
-                    fail_silently=False,
-                )
-                confirmation_sent = True
+            #         send_mail(
+            #             'json2db Error!',
+            #             full_msg,
+            #             settings.EMAIL_HOST_USER,
+            #             ['REDACTED'],
+            #             fail_silently=False,
+            #         )
+            # if not confirmation_sent:
+                # send_mail(
+                #     'Confirmation email: json2db ran successfully for one round',
+                #     path,
+                #     settings.EMAIL_HOST_USER,
+                #     ['REDACTED'],
+                #     fail_silently=False,
+                # )
+                # confirmation_sent = True
             print('processing took {}'.format(time.time() - tic))
 
 
@@ -190,7 +190,7 @@ def parse():
     parser.add_argument(
         '--platform', help='the platform to use. "r" for reddit and "s" for stack overflow')
     parser.add_argument(
-        '--mode', help='the mode to use. default is json_to_table',
+        '--mode', help='the mode to use',
         default="from_local_filesystem")
     parser.add_argument(
         '--path', help='where your json files live',
