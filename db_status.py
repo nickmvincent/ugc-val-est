@@ -64,7 +64,7 @@ def main():
     )
     print(report_body)
     show_errors()
-    explore_queryset()
+    analyze_missing_question_distribution()
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dja.settings")
