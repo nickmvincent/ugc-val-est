@@ -30,18 +30,23 @@ def show_errors():
 
 
 def analyze_missing_question_distribution():
-    from portal.models import StackOverflowQuestion
+    from portal.models import StackOverflowAnswer
     logs = ErrorLog.objects.filter(msg__contains='len(')
-    print('There are {} filtered errors logged'.format(len(logs)))
+    n = lne(logs)
+    print('There are {} filtered errors logged'.format(n)
     message_cache = {}
     avg_score = 0
     avg_comment_count = 0
     dates = []
     for error_log in logs:
-        question = StackOverflowQuestion.objects.get(id=error_log.uid)
+        answer = StackOverflowAnswer.objects.using('secondary').objects.get(id=error_log.uid)
         avg_score += question.score
         avg_comment_count += question.comment_count
         dates.append(error_log.creation_date)
+    avg_score /= n
+    print('avg_score', avg_score)
+    avg_comment_count /= n
+    print('avg_comment_count', avg_comment_count)
 
 
 def main():
