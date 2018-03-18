@@ -112,3 +112,4 @@ Worth noting that I needed to make sure I had set three environment variables to
 ## Getting WP info for Reddit posts
 While I hit the Reddit API, I can also get the WP info!
 Let's review how to do that...
+`python check_wikipedia_content.py --platform r --mode full`

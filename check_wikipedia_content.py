@@ -45,7 +45,7 @@ class MissingRevisionId(Exception):
     Get a list of all such errors by querying for wiki_error_content=2
     """
 
-    def __init__(self, post, info):
+    def __init__(self, post, info, link):
         err_log, _ = ErrorLog.objects.get_or_create(uid=post.uid)
         err_log.msg = '#2: MissingRevisionId: {}'.format(info)[:500]
         err_log.save()
@@ -73,7 +73,7 @@ class MissingRevisionId(Exception):
 class PostMissingValidLink(Exception):
     """Used to catch missing article, improperly formatted links, etc"""
 
-    def __init__(self, post, link):
+    def __init__(self, post, info, link):
         err_log, _ = ErrorLog.objects.get_or_create(uid=post.uid)
         err_log.msg = '#4: PostMissingValidLink: {}'.format(info)[:500]
         err_log.save()
@@ -503,7 +503,7 @@ def get_revs_for_single_post(post, session):
                 dja_link.save()
             for _, page in pages.items():
                 if 'missing' in page:
-                    raise PostMissingValidLink(post, dja_link)
+                    raise PostMissingValidLink(post, "revid request said missing", dja_link)
                 if 'revisions' in page:
                     revisions += page['revisions']
         # if no revs were found in the two week block, look backwards
@@ -521,7 +521,7 @@ def get_revs_for_single_post(post, session):
                 dja_link.title, week_before_post, week_after_post
             )
             print('No revisions for {}'.format(info))
-            raise MissingRevisionId(post, info)
+            raise MissingRevisionId(post, info, dja_link)
         rev_kwargs_lst = []
         revids = []
         for rev_obj in revisions:
