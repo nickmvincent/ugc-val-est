@@ -466,12 +466,12 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
         subsample_kwargs = {}
         treatment_kwargs = {'has_wiki_link': True, }
 
-    # only compare wiki links to other links
+    # only compare wiki links to no links
     elif rq == 12:
         subsample_kwargs = {'has_other_link': False}
         treatment_kwargs = {'has_wiki_link': True, }
 
-    # only compare other link to no lin
+    # only compare other link to no link
     elif rq == 11:
         subsample_kwargs = {'has_wiki_link': False}
         treatment_kwargs = {'has_other_link': True, }    

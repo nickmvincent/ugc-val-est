@@ -131,7 +131,7 @@ def causal_inference(
     fails = 0
     for iteration in range(iterations):
         if float(iteration) / iterations >= goal:
-            print('{}/{}|'.format(iteration, iterations), end='')
+            # print('{}/{}|'.format(iteration, iterations), end='')
             goal += 0.1
         out = []
         times, atts = [], []
@@ -223,7 +223,7 @@ def causal_inference(
         X_c = X[D == 0]
         X_t = X[D == 1]
         print(len(X_c))
-        print(len(X_t))
+        print('len x_t', len(X_t))
         to_delete, cols_deleted = [], 0
         for col_num, col in enumerate(X_c.T):
             if not np.any(col):
@@ -443,7 +443,6 @@ def simple_linear(platform, quality_mode=False):
     else:
         qs, features, outcomes = get_qs_features_and_outcomes(platform)
     for outcome in outcomes:
-        print(outcome)
         field_names = features + [outcome]
         rows = extract_vals_and_method_results(qs, field_names)
         records = values_list_to_records(rows, field_names)
@@ -474,9 +473,6 @@ def simple_linear(platform, quality_mode=False):
         # Create linear regression object
         regr = linear_model.LinearRegression()
         p = regr.get_params()
-        print(len(p), len(features))
-        for val, feature in zip(p, features):
-            print(val, feature)
 
         # Train the model using the training sets
         regr.fit(X_train, y_train)
@@ -532,7 +528,6 @@ def parse():
         help='select a sample number')
     args = parser.parse_args()
     if args.simple:
-        print('args.simple')
         simple_linear(args.platform)
     else:
         if args.rq is None:

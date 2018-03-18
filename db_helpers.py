@@ -355,9 +355,7 @@ if __name__ == "__main__":
     )
     from queryset_helpers import batch_qs
     if len(sys.argv) > 1:
-        if sys.argv[1] == 'clear_fixed_errors':
-            clear_fixed_errors()
-        elif sys.argv[1] == 'reset_revision_info':
+        if sys.argv[1] == 'reset_revision_info':
             reset_revision_info()
         elif sys.argv[1] == 'show_samples':
             show_samples()
@@ -375,8 +373,6 @@ if __name__ == "__main__":
             sample_articles()
         elif sys.argv[1] == 'extract_pairs':
             extract_pairs(sys.argv[2], sys.argv[3])
-        elif sys.argv[1] == 'fix_bad_registration_time':
-            fix_bad_registration_time()
         elif sys.argv[1] == 'mark_top_answers':
             mark_top_answers()
         elif sys.argv[1] == 'quick_helper':

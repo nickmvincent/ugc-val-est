@@ -519,6 +519,8 @@ class SampledRedditThread(Post):
         if 'www.reddit.com' in self.url:
             self.has_no_link = True
             self.has_other_link = False
+        if self.has_wiki_link is True:
+            self.has_other_link = False
         if self.body_num_links == 0:
             self.body_num_links = len(extract_urls(self.body))
         super(SampledRedditThread, self).save(*args, **kwargs)
