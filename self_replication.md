@@ -107,3 +107,8 @@ Worth noting that I needed to make sure I had set three environment variables to
 `reddit = praw.Reddit(
         client_id=os.environ["CLIENT_ID"], 
         client_secret=os.environ["CLIENT_SECRET"], user_agent=os.environ["UA"])`
+
+
+## Getting WP info for Reddit posts
+While I hit the Reddit API, I can also get the WP info!
+Let's review how to do that...

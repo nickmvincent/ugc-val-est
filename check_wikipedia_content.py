@@ -49,7 +49,12 @@ class MissingRevisionId(Exception):
         err_log, _ = ErrorLog.objects.get_or_create(uid=post.uid)
         err_log.msg = '#2: MissingRevisionId: {}'.format(info)[:500]
         err_log.save()
-        handle_err(post, 2)
+        post.wiki_links.remove(link)
+        post.num_wiki_links -= 1
+        assert(post.num_wiki_links >= 0)
+        if post.num_wiki_links == 0:
+            post.has_wiki_link = False
+        handle_err(post, 2) #saves post
         super(MissingRevisionId, self).__init__(self)
 
 
@@ -69,11 +74,16 @@ class PostMissingValidLink(Exception):
     """Used to catch missing article, improperly formatted links, etc"""
 
     def __init__(self, post, link):
+        err_log, _ = ErrorLog.objects.get_or_create(uid=post.uid)
+        err_log.msg = '#4: PostMissingValidLink: {}'.format(info)[:500]
+        err_log.save()
+
         post.wiki_links.remove(link)
         post.num_wiki_links -= 1
+        assert(post.num_wiki_links >= 0)
         if post.num_wiki_links == 0:
             post.has_wiki_link = False
-        post.save()
+        handle_err(post, 4) #saves post
         super(PostMissingValidLink, self).__init__(self)
 
 # Deprecated
@@ -867,7 +877,7 @@ def parse():
         '--mode', help='identify, retrieve, full (performs both in sequence)')
     parser.add_argument(
         '--clear_first', action='store_true', default=False,
-        help='identify, retrieve, full (performs both in sequence)')
+        help='clears info first')
     parser.add_argument(
         '--test', action='store_true', default=False,
         help='test')
