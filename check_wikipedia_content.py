@@ -351,7 +351,7 @@ def check_reverted(qs1, qs2):
         'Reverted counts :D',
         str(counts),
         settings.EMAIL_HOST_USER,
-        ['REDACTED'],
+        ['nickmvincent@gmail.com'],
         fail_silently=False,
     )
 
