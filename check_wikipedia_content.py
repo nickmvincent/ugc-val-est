@@ -901,7 +901,7 @@ def parse():
     parser.add_argument(
         '--end')
     args = parser.parse_args()
-    elif args.test:
+    if args.test:
         if args.test_num:
             test(int(args.test_num))
         else:
