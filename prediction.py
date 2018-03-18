@@ -287,7 +287,6 @@ def causal_inference(
         causal = CausalModel(Y, D, X, ids=ids)
         times.append(mark_time('CausalModel'))
         out.append(str(causal.summary_stats))
-        print(causal.summary_stats)
         ndifs.append(causal.summary_stats['sum_of_abs_ndiffs'])
         big_ndifs_counts.append(causal.summary_stats['num_large_ndiffs'])
         # causal.est_via_ols()
@@ -308,7 +307,6 @@ def causal_inference(
             for key, val in dic.items():
                 out.append("{}:{}".format(key, val))
         out.append(str(causal.propensity))
-        print(causal.propensity)
         if trim_val == 's':
             causal.trim_s()
         else:
