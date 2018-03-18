@@ -553,12 +553,11 @@ def parse():
             for rq in rqs:
                 if rq == '1':
                     treatments = [
-                        # TODO fix
-                        # {
-                        #     'name': 'has_other_link',
-                        #     'filter_kwargs': {},
-                        #     'exclude_kwargs': {'has_wiki_link': True}
-                        # },
+                        {
+                            'name': 'has_other_link',
+                            'filter_kwargs': {},
+                            'exclude_kwargs': {'has_wiki_link': True}
+                        },
                         {   
                             'name': 'has_wiki_link',
                             'filter_kwargs': {},
