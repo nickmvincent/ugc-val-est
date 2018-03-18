@@ -641,6 +641,7 @@ def retrieve_links_info(posts_needing_revs, model):
             print(post.body)
             err_count += 1
             post.all_revisions_pulled = True
+            # TODO: the post model just got saved in the error handling. This could probably be optimized with minimal effort.
             post.save()
         except (ConnectionError, JSONDecodeError) as err:
             err_count += 1

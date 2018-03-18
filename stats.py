@@ -460,15 +460,24 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
             os.makedirs(directory)
     variables = ['score', 'num_comments', ]
     variables += list_common_features()
+
+    # compare has_wiki_link to has_no_wiki_link
     if rq == 10:
         subsample_kwargs = {}
         treatment_kwargs = {'has_wiki_link': True, }
+
+    # only compare wiki links to other links
     elif rq == 12:
         subsample_kwargs = {'has_other_link': False}
         treatment_kwargs = {'has_wiki_link': True, }
+
+    # only compare other link to no lin
     elif rq == 11:
         subsample_kwargs = {'has_wiki_link': False}
         treatment_kwargs = {'has_other_link': True, }    
+
+    # rq == 13: special so pageviews analysis
+    # rq == 14: special so pageviews analysis comparing quality
     elif rq == 13 or rq == 14 or rq == 15:
         subsample_kwargs = {}
         treatment_kwargs = {}
