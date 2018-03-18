@@ -868,6 +868,9 @@ def parse():
     """
     Parse args and do the appropriate analysis
     """
+
+    # EXAMPLE:
+    # python check_wikipedia_content.py --platform r --mode full
     parser = argparse.ArgumentParser(
         description='Identify wikipedia links and get info about them')
     parser.add_argument(
