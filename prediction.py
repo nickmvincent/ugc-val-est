@@ -120,6 +120,7 @@ def causal_inference(
     Use causalinference module to perform causal inference analysis
 
     """
+    print(treatment_name)
     def mark_time(desc):
         """return a tuple of time, description of time"""
         return (time.time(), desc)
@@ -221,6 +222,8 @@ def causal_inference(
         X = np.transpose(np.array(feature_rows))
         X_c = X[D == 0]
         X_t = X[D == 1]
+        print(len(X_c))
+        print(len(X_t))
         to_delete, cols_deleted = [], 0
         for col_num, col in enumerate(X_c.T):
             if not np.any(col):
@@ -305,10 +308,9 @@ def causal_inference(
             for key, val in dic.items():
                 out.append("{}:{}".format(key, val))
         out.append(str(causal.propensity))
+        print(causal.propensity)
         if trim_val == 's':
             causal.trim_s()
-        elif trim_val is None:
-            causal.trim(True)
         else:
             causal.cutoff = float(trim_val)
             causal.trim()
@@ -556,12 +558,14 @@ def parse():
             for rq in rqs:
                 if rq == '1':
                     treatments = [
-                        {
-                            'name': 'has_other_link',
-                            'filter_kwargs': {},
-                            'exclude_kwargs': {'has_wiki_link': True}
-                        },
-                        {    'name': 'has_wiki_link',
+                        # TODO fix
+                        # {
+                        #     'name': 'has_other_link',
+                        #     'filter_kwargs': {},
+                        #     'exclude_kwargs': {'has_wiki_link': True}
+                        # },
+                        {   
+                            'name': 'has_wiki_link',
                             'filter_kwargs': {},
                             'exclude_kwargs': {'has_other_link': True}
                         },

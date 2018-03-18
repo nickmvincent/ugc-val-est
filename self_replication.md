@@ -115,3 +115,7 @@ Let's review how to do that...
 `python check_wikipedia_content.py --platform r --mode full`
 Ran into an issue because I forgot that I needed to include a start and end index (which I added to allow for "screen parallelization")
 `python check_wikipedia_content.py --platform r --mode full --start 0 --end 40000`
+
+
+## Running causal models for Reddit
+Running into some issues here... looks like I forgot to compute features for the non-WP link
