@@ -681,6 +681,7 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
                                 Q(url__icontains='en.wikipedia') | Q(url__icontains='en.m.wikipedia')  | Q(url__icontains='www.wikipedia')  | Q(url__icontains='//wikipedia')
                             )
                         )
+                        qs = qs.filter(wiki_content_error=0)
                     
                     elif platform == 's':
                         qs = qs.filter(
@@ -688,6 +689,7 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
                                 Q(body__icontains='en.wikipedia') | Q(body__icontains='en.m.wikipedia')  | Q(body__icontains='www.wikipedia')  | Q(body__icontains='//wikipedia')
                             )
                         )
+                        qs = qs.filter(wiki_content_error=0)
                 if treatment_kwargs:
                     treatment = {
                         'name': 'Treatment',
