@@ -57,8 +57,8 @@ Turns out the parent_id points to a question that doesn't exist in my data dump!
 Let's check it out in the Stack Exchange Data Explorer to compare.
 Look's like the post should exist... so my copy of SO database is missing some questions, which is causing 1.5% of my row imports to fail.
 Looking into my notes, looks like here's the reason: there was a JsonDecodeError on one of the SO json files.
-So in the copy of data from BigQuery I was using at the same, some questions were missing, and I decided this would not cause substantial bias.
-As a quick exercise, I took a look at average Score, CommentCount, and dates of the 1.5% missing to estimate the effect of our analysis (which uses sampling and looks at aggregates, such that a small amount of missing posts would minimally affect results).
+Edit: I actually fixed this JsonDecodeError at the time (was able to find logs stored in email - glad I used that...)
+Edit #2: I finally found the original reason. The original sampling did not include questions with a null user_id. Thus answers to these questions were not included in the sample. This makes up about 1.38% of all questions. The descriptive stats of the missing answers are extremely close to the full sample.
 avg_score 2.7023899848254933
 avg_comment_count 1.31398583712696
 

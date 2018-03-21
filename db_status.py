@@ -34,7 +34,6 @@ def analyze_missing_question_distribution():
     logs = ErrorLog.objects.filter(msg__contains='len(')
     n = len(logs)
     print('There are {} filtered errors logged'.format(n))
-    message_cache = {}
     avg_score = 0
     avg_comment_count = 0
     dates = []
