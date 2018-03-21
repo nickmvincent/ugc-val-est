@@ -686,7 +686,7 @@ class StackOverflowQuestion(models.Model):
         max_length=30, blank=True, null=True)
     last_editor_user_id = models.IntegerField(blank=True, null=True)
     owner_display_name = models.CharField(max_length=30)
-    owner_user_id = models.IntegerField(db_index=True)
+    owner_user_id = models.IntegerField(db_index=True, blank=True, null=True)
     post_type_id = models.IntegerField()
     score = models.IntegerField(default=0)
     tags = models.CharField(max_length=115)
