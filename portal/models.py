@@ -382,7 +382,7 @@ class Post(models.Model):
                 endtime = self.timestamp + datetime.timedelta(days=7)
                 revisions = Revision.objects.filter(
                     wiki_link__in=all_possible_links,
-                    timestamp__gte=starttime, timestamp__lte=endtime)
+                    timestamp__gte=starttime, timestamp__lte=endtime).order_by('timestamp')
                 if revisions.exists():
                     for field, dt in field_to_dt.items():
                         ores_score = get_closest_to(
@@ -430,7 +430,7 @@ class Post(models.Model):
                             if revision.registration and revision.registration > starttime:
                                 self.num_new_edits_prev_week += 1
                                 if users_seen.get(revision.user) is None:
-                                    # RQ2 Metric: num_new_editors_prev_weem
+                                    # RQ2 Metric: num_new_editors_prev_week
                                     self.num_new_editors_prev_week += 1
                                     users_seen[revision.user] = True
                                     if revision.user_retained:

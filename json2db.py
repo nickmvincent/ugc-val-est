@@ -82,8 +82,9 @@ def main(platform, table_key, bucket, must_include):
                             continue
                 try:
                     model.objects.create(**kwargs)
-                except IntegrityError:
+                except IntegrityError as err:
                     # it already exists!
+                    print(err)
                     continue
                 except Exception as err:
                     full_msg = '\n'.join([path, str(data), str(kwargs), str(err)])
