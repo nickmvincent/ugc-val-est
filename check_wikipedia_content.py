@@ -394,6 +394,8 @@ def get_userinfo_for_all_revs(revs, session):
                 session, 'en',
                 user['name'])
             lastrev_date = None
+            # will only have 1 item in the lastrev_pages list.
+            assert(len(lastrev_pages) <= 1)
             for result_page in lastrev_pages:
                 contribs = result_page['usercontribs']
                 lastrev = contribs[0]

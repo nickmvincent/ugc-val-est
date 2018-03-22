@@ -64,6 +64,10 @@ avg_comment_count 1.31398583712696
 
 However, for the sake of the exercise and future convenience, I decided to re-download the full SO database.
 
+stackoverflow_2018_03_17
+Questions: 15483376
+Answers: 24071488 (24071488)
+
 Another Problem: didn't configure my email settings so it threw an error. This would be frustrating to anyone trying to use my code...
 
 
