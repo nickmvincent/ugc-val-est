@@ -855,12 +855,11 @@ def get_scores_only(model):
 
 
 def rerun_all_scores(model):
-    # temporarily modifeid to only do bad ones
     session = requests.Session()
     session.headers.update(
         USER_AGENT)
     all_posts = model.objects.filter(
-        has_wiki_link=True, has_c_wiki_link=True,
+        has_wiki_link=True
     )
     print('About to get scores for {} posts'.format(len(all_posts)))
     get_scores_for_posts(all_posts, session)
