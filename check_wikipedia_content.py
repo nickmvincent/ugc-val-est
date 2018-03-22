@@ -396,8 +396,11 @@ def get_userinfo_for_all_revs(revs, session):
             lastrev_date = None
             for result_page in lastrev_pages:
                 contribs = result_page['usercontribs']
-                lastrev = contribs[0]
-                lastrev_date = lastrev['timestamp']
+                try:
+                    lastrev = contribs[0]
+                    lastrev_date = lastrev['timestamp']
+                except:
+                    print(contribs)
             revs = user_to_revs[user['name']]
             for rev in revs:
                 rev.editcount = user.get('editcount', 0)
@@ -636,7 +639,6 @@ def retrieve_links_info(posts_needing_revs, model):
             post.save()
         except PostMissingValidLink:
             print('Post was missing a valid link')
-            print(post.body)
             err_count += 1
             post.all_revisions_pulled = True
             # TODO: the post model just got saved in the error handling. This could probably be optimized with minimal effort.
