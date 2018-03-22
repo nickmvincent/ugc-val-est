@@ -39,3 +39,16 @@ def tmp():
     for x in errs:
         print(x.url)
         input()
+
+
+def tmp():
+    from django.db.models import Avg
+    from portal.models import SampledRedditThread
+    from django.db.models import Q
+    qs = SampledRedditThread.objects.all()
+    qs = qs.exclude(
+        Q(has_wiki_link=False) | Q(wiki_content_error=0)
+    )
+    print(qs.count())
+    print(qs.aggregate(Avg('num_edits')))
+

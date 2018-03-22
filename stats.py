@@ -28,6 +28,7 @@ from django.db.models import Q
 
 # set this manually for now
 FILTER_LANG = True
+ONLY_EDITED = True
 
 def so_special(treatment_feature, extra_filter):
     """helper"""
@@ -690,6 +691,8 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
                             )
                         )
                         qs = qs.filter(wiki_content_error=0)
+                if ONLY_EDITED:
+                    qs = qs.filter(Q(num_edits__gte=1) | Q(num_edits_prev_week__gte=1))
                 if treatment_kwargs:
                     treatment = {
                         'name': 'Treatment',
