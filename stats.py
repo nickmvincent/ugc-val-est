@@ -28,7 +28,7 @@ from django.db.models import Q
 
 # set this manually for now
 FILTER_LANG = True
-ONLY_EDITED = True
+ONLY_EDITED = False
 
 def so_special(treatment_feature, extra_filter):
     """helper"""
