@@ -435,7 +435,6 @@ def simple_linear(platform, quality_mode=False):
         qs, features, outcomes = get_qs_features_and_outcomes(platform, filter_kwargs={
             'has_wiki_link': True,
             'wiki_content_error': 0,
-            'day_of_avg_score__isnull': False,
         })
         features = ['day_of_avg_score']
     else:

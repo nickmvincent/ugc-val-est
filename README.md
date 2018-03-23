@@ -67,6 +67,8 @@ Alternatively, if you want to inspect or play with the exact sample and processe
 Annotated dataset download (has ~1.04M Reddit posts, ~1.04M Stack Overflow answers, all necessary features pre-calculated, and all revelant Wikipedia information populated). Format is a single .sql file produced by postgres pg_dump command line utility. Total size is ~2GB.
 https://drive.google.com/file/d/1rJvaEeYbMlXNqDFUVoGqKQkaqG0Hnfoi/view?usp=sharing
 This .sql file is contains the exact state of data that was used to produced results reported in the table.
+The corresponding outputs can be found here: https://github.com/nickmvincent/ugc-val-est/tree/15082729f0286e3964eb4aed718934984fa89266
+
 
 Therefore, you have the choice to reproduce this experiment with your own sample or replicate the reported results exactly.
 Or make your own modifications as you see fit!

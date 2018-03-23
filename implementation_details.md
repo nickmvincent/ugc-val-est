@@ -1,17 +1,20 @@
 # A note on some design choices
 
 What to do with broken links?
-People often post broken links (e.g. they typed out a Wikipedia article name and mispelled it, the article doesn't exist, etc)
+Some users post broken links (e.g. they typed out a Wikipedia article name and mispelled it, the article doesn't exist, etc)
 We chose the following pattern:
-If the Wikimedia API returns a "missing" error message when trying to get information about the article, mark it as NOT a valid Wikipedia link.
+If the Wikimedia revisions API returns a "missing" error message when trying to get information about the article, mark it as NOT a valid Wikipedia link.
 The full list of such urls (only 300 Wikipedia links from 48k SO posts and 36k Reddit posts) is in "url_list.csv" in this folder and that csv file is regenerated when running the full analysis batch in "batch.sh".
 
-If we didn't get a "missing" error from the Wikimedia API, but we also couldn't actually get ANY revisions (in the 2 week period around the post, or before), mark that post so we can see how many meet that criteria. Only ~50 Reddit post and 200 SO posts met that criteria. Re-running analysis with and without these posts does not change any conclusions.
+If we didn't get a "missing" error from the Wikimedia API, but we also couldn't actually get ANY revisions (in the 2 week period around the post, or before), mark that post so we can see how many meet that criteria. Only ~50 Reddit post and 200 SO posts met that criteria, so we didn't take action on these. Re-running analysis with and without these posts does not change any conclusions.
 These links appear to be caused by Wikipedia article links that were posted before the article was written, e.g.
 title: Web_SQL_Database, dates:2010-01-12 20:24:44+00:00_2010-01-26 20:24:44+00:00
 or
 title: Wiring_(development_platform), dates:2010-07-16 15:32:12+00:00_2010-07-30 15:32:12+00:00
 An argument could be made for including or excluding these, so we just did both. Reported results include them.
+
+If ORES returns an error for any revisions in the 2 week period, mark it as missing the ORES score. We don't include these in the Study 2 analyses. A list of all such links is written to "has_link_but_no_ores.csv".
+
 
 
 For non-English Wikipedia links, don't try to hit the APIs.

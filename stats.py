@@ -27,8 +27,8 @@ from django.db.models import Q
 
 
 # set this manually for now
-FILTER_LANG = True
-ONLY_EDITED = False
+FILTER_LANG = False
+EXCLUDE_NO_ORES = True
 
 def so_special(treatment_feature, extra_filter):
     """helper"""
@@ -419,6 +419,8 @@ def output_stats(output_filename, descriptive_stats, inferential_stats):
     if output_filename:  # make sure not to write over file when doing bootstrapping!
         if FILTER_LANG:
             output_filename = 'lang_filtered_' + output_filename
+        if EXCLUDE_NO_ORES:
+            output_filename = 'exclude_no_ores_' + output_filename
         with open('csv_files/' + output_filename, 'w', newline='') as outfile:
             writer = csv.writer(outfile)
             writer.writerows(arr)
@@ -491,10 +493,10 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
     elif rq == 3:
         subsample_kwargs = {
             'has_wiki_link': True,
-            'day_of_avg_score__isnull': False,
-            'week_after_avg_score__isnull': False,
         }
         treatment_kwargs = None
+        if EXCLUDE_NO_ORES:
+            subsample_kwargs['day_of_avg_score__isnull': False]
     elif rq == 33:
         subsample_kwargs = {
             'has_wiki_link': True,
@@ -691,8 +693,6 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
                             )
                         )
                         qs = qs.filter(wiki_content_error=0)
-                if ONLY_EDITED:
-                    qs = qs.filter(Q(num_edits__gte=1) | Q(num_edits_prev_week__gte=1))
                 if treatment_kwargs:
                     treatment = {
                         'name': 'Treatment',
