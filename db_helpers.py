@@ -322,15 +322,33 @@ def print_potential_wikilinks():
     reddit_has_link_but_no_ores = []
     so_has_link_but_no_ores = []
     errs = defaultdict(int)
+    counts = {
+        'reddit': defaultdict(int),
+        'so': defaultdict(int)
+    }
     for post in qs_r:
-        url = [','.join([post.url, str(post.missing_ores_during_two_weeks), str(post.missing_ores_on_old_revisions), str(post.no_revisions)])]
+        url = [','.join(
+            [post.url, str(post.missing_ores_during_two_weeks), str(post.missing_ores_on_old_revisions), str(post.no_revisions), str(post.missing_ores_error_code)])]
+        if post.missing_ores_during_two_weeks:
+            counts['reddit']['missing_ores_during_two_weeks'] += 1
+        if post.missing_ores_on_old_revisions:
+            counts['reddit']['missing_ores_on_old_revisions'] += 1
+        if post.no_revisions:
+            counts['reddit']['no_revisions'] += 1
         if post.wiki_content_error == 0:
-            reddit_has_link_but_no_ores.append(urls)
+            reddit_has_link_but_no_ores.append(url)
         else:
             errs[post.wiki_content_error] += 1
     for post in qs_s:
         urls = extract_urls(post.body, WIK)
-        urls = [','.join([str(urls), str(post.missing_ores_during_two_weeks), str(post.missing_ores_on_old_revisions), str(post.no_revisions)])]
+        urls = [','.join(
+            [str(urls), str(post.missing_ores_during_two_weeks), str(post.missing_ores_on_old_revisions), str(post.no_revisions), str(post.missing_ores_error_code)])]
+        if post.missing_ores_during_two_weeks:
+            counts['so']['missing_ores_during_two_weeks'] += 1
+        if post.missing_ores_on_old_revisions:
+            counts['so']['missing_ores_on_old_revisions'] += 1
+        if post.no_revisions:
+            counts['so']['no_revisions'] += 1
         if post.wiki_content_error == 0:
             so_has_link_but_no_ores.append(urls)
         else:
@@ -344,6 +362,7 @@ def print_potential_wikilinks():
         writer = csv.writer(outfile)
         writer.writerows(so_has_link_but_no_ores)
     print(errs)
+    print(counts)
             
 
 def clean_then_delete():
