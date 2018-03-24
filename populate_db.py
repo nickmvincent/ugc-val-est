@@ -238,7 +238,7 @@ def sample_so(data_source, rows_to_sample, rows_per_query, sample_num, links_onl
                     answers_table
                 )
             else:
-                query_kwargs['where'] = "WHERE portal_stackoverflowquestion.owner_user_id is NULL and creation_date < '2017-06-11 00:00:00' ".format
+                query_kwargs['where'] = "WHERE portal_stackoverflowquestion.owner_user_id is NULL and creation_date < '2017-06-11 00:00:00' "
         else:
             if links_only:
                 query_kwargs['where'] = " WHERE Lower({}.body) like '%wikipedia.org/wiki/%' ".format(
