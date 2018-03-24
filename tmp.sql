@@ -1,0 +1,1 @@
+SELECT count(*), avg(portal_stackoverflowanswer.score) FROM portal_stackoverflowanswer LEFT JOIN portal_stackoverflowquestion ON portal_stackoverflowanswer.parent_id=portal_stackoverflowquestion.id WHERE portal_stackoverflowanswer.body LIKE '%wikipedia.org/wiki%' AND portal_stackoverflowquestion.owner_user_id is NULL

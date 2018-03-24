@@ -41,3 +41,4 @@ This bug is fixed in the current version of the code.
 Much more careful consideration of non-English Wikipedia posts would be very important for follow-up work that focuses on specific communities (especially sub-reddits that do not use English) or any work that wants to examine effects across different language communities. That being said, the current state of this code is not capable of properly analyzing subcommunities with many links to non-English Wikipedia.
 
 Use of Pageview API: we used the mediawiki pageview API, which (1) returns daily page views and (2) does not return results for dates before Oct. 2015. Therefore, links from before Oct. 2015 are not included in the page view analysis. For more detailed analysis of cross-community relationships (e.g. looking at time series), using hourly page views might be valauble!
+

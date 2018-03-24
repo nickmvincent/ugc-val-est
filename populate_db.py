@@ -137,7 +137,7 @@ def sample_from_data_source(
     print('Total runtime was {}'.format(time.time() - t_init))
 
 
-def sample_so(data_source, rows_to_sample, rows_per_query, sample_num, links_only):
+def sample_so(data_source, rows_to_sample, rows_per_query, sample_num, links_only, owner_null=False):
     """
     Sample Stack Overflow Answers
     Args:
@@ -232,12 +232,20 @@ def sample_so(data_source, rows_to_sample, rows_per_query, sample_num, links_onl
             'table': table,
             'limit': rows_per_query,
         }
-        if links_only:
-            query_kwargs['where'] = " WHERE Lower({}.body) like '%wikipedia.org/wiki/%' ".format(
-                answers_table
-            )
+        if owner_null:
+            if links_only:
+                query_kwargs['where'] = "WHERE portal_stackoverflowquestion.owner_user_id is NULL and Lower({}.body) like '%wikipedia.org/wiki/%' creation_date < '2017-06-11 00:00:00' ".format(
+                    answers_table
+                )
+            else:
+                query_kwargs['where'] = "WHERE portal_stackoverflowquestion.owner_user_id is NULL and creation_date < '2017-06-11 00:00:00' ".format
         else:
-            query_kwargs['where'] = ''
+            if links_only:
+                query_kwargs['where'] = " WHERE Lower({}.body) like '%wikipedia.org/wiki/%' ".format(
+                    answers_table
+                )
+            else:
+                query_kwargs['where'] = ''
         query = QUERY_TEMPLATE.format(**query_kwargs)
         queries.append(query)
     sample_from_data_source(
@@ -334,14 +342,21 @@ def parse():
         default=False,
         help="to only sample links"
     )
+    parser.add_argument(
+        '--owner_null', 
+        action='store_true',
+        default=False,
+        help="to only answers with question owner id NULL"
+    )
     args = parser.parse_args()
     oargs = (
         args.data_source, args.rows_to_sample, args.rows_per_query,
         args.sample_num, args.links_only)
+    owner_null =args.owner_null
     if args.platform == 'r':
         sample_reddit(*oargs)
     elif args.platform == 's':
-        sample_so(*oargs)
+        sample_so(*oargs, owner_null=owner_null)
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dja.settings")

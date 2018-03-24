@@ -122,4 +122,53 @@ Ran into an issue because I forgot that I needed to include a start and end inde
 
 
 ## Running causal models for Reddit
-Running into some issues here... looks like I forgot to compute features for the non-WP link
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Misc
+stackoverflow_2018_03_17=> SELECT count(*), avg(portal_stackoverflowanswer.score) FROM portal_stackoverflowanswer LEFT JOIN portal_stackoverflowquestion ON portal_stackoverflowanswer.parent_id=portal_stackoverflowquestion.id WHERE portal_stackoverflowanswer.body LIKE '%wikipedia.org/wiki%' AND portal_stackoverflowquestion.owner_user_id is NULL
+stackoverflow_2018_03_17-> ;
+ count |        avg
+-------+--------------------
+  6673 | 6.1201858234677057
+(1 row)
+
+stackoverflow_2018_03_17=> SELECT count(*), avg(portal_stackoverflowanswer.score) FROM portal_stackoverflowanswer LEFT JOIN portal_stackoverflowquestion ON portal_stackoverflowanswer.parent_id=portal_stackoverflowquestion.id WHERE portal_stackoverflowanswer.body LIKE '%wikipedia.org/wiki%' AND portal_stackoverflowquestion.owner_user_id is not NULL
+;
+ count  |        avg
+--------+--------------------
+ 292297 | 5.9702973345603958
+(1 row)
+
+stackoverflow_2018_03_17=> SELECT count(*), avg(portal_stackoverflowanswer.score) FROM portal_stackoverflowanswer LEFT JOIN portal_stackoverflowquestion ON portal_stackoverflowanswer.parent_id=portal_stackoverflowquestion.id WHERE portal_stackoverflowanswer.body NOT LIKE '%wikipedia.org/wiki%' AND portal_stackoverflowquestion.owner_user_id is NULL
+;
+ count  |        avg
+--------+--------------------
+ 411300 | 2.8802358375881352
+(1 row)
+
+1.62%
+
+
+stackoverflow_2018_03_17=> SELECT count(*), avg(portal_stackoverflowanswer.score) FROM portal_stackoverflowanswer LEFT JOIN portal_stackoverflowquestion ON portal_stackoverflowanswer.parent_id=portal_stackoverflowquestion.id WHERE portal_stackoverflowquestion.owner_user_id is not NULL                             ;
+  count   |        avg
+----------+--------------------
+ 23653515 | 2.6779522620633762
+
+stackoverflow_2018_03_17=> SELECT count(*), avg(portal_stackoverflowanswer.score) FROM portal_stackoverflowanswer LEFT JOIN portal_stackoverflowquestion ON portal_stackoverflowanswer.parent_id=portal_stackoverflowquestion.id WHERE portal_stackoverflowanswer.body NOT LIKE '%wikipedia.org/wiki%' AND portal_stackoverflowquestion.owner_user_id is NULL
+;
+ count  |        avg
+--------+--------------------
+ 411300 | 2.8802358375881352
+
