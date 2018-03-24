@@ -205,6 +205,10 @@ class Post(models.Model):
     num_wiki_pageviews_prev_week = models.IntegerField(blank=True, null=True)
     num_wiki_increased_pageviews_day_of = models.IntegerField(blank=True, null=True)
 
+    missing_ores_during_two_weeks = models.BooleanField(default=False)
+    missing_ores_on_old_revisions = models.BooleanField(default=False)
+    missing_ores_error_code = models.IntegerField(blank=True, null=True)
+
     sample_num = models.IntegerField(default=0, db_index=True)
 
     def reset_edit_metrics(self):
@@ -385,11 +389,14 @@ class Post(models.Model):
                     timestamp__gte=starttime, timestamp__lte=endtime).order_by('timestamp')
                 if revisions.exists():
                     for field, dt in field_to_dt.items():
-                        ores_score = get_closest_to(
+                        closest_rev = get_closest_to(
                             Revision.objects.filter(
-                                wiki_link__in=all_possible_links), dt).score
+                                wiki_link__in=all_possible_links), dt)
+                        ores_score = closest_rev.score
                         if ores_score is None:
                             missing_necessary_ores = True
+                            self.missing_ores_during_two_weeks = True
+                            self.missing_ores_error_code = closest_rev.err_code
                         else:
                             field_to_score[field] += ores_score
                             if ores_score >= 4:
@@ -462,6 +469,8 @@ class Post(models.Model):
                         ores_score = closest_rev.score
                         if ores_score is None:
                             missing_necessary_ores = True
+                            self.missing_ores_on_old_revisions = True
+                            self.missing_ores_error_code = closest_rev.err_code
                         else:
                             if ores_score >= 4:
                                 self.has_good_wiki_link = True
@@ -471,6 +480,8 @@ class Post(models.Model):
                                 self.has_c_wiki_link = True
                             field_to_score['day_of'] += ores_score
                             field_to_score['week_after'] += ores_score
+                    else:
+                        raise ValueError('post marked has_wiki_link=True has no revisions')
                             
             if num_links:
                 # the fields used in this comprehension are day_of and week_after
