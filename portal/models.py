@@ -371,6 +371,11 @@ class Post(models.Model):
             self.has_c_wiki_link = False
             self.day_of_avg_score = None
             self.week_after_avg_score = None
+            self.missing_ores_during_two_weeks = False
+            self.missing_ores_on_old_revisions = False
+            self.no_revisions = False
+            self.missing_ores_error_code = False
+            
             field_to_dt = {
                 'day_of': self.timestamp,
                 'week_after': self.timestamp + datetime.timedelta(days=7),
