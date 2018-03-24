@@ -865,6 +865,17 @@ def rerun_all_scores(model):
     get_scores_for_posts(all_posts, session)
 
 
+def rerun_all_scores(model):
+    session = requests.Session()
+    session.headers.update(
+        USER_AGENT)
+    missingold = model.objects.filter(
+        has_wiki_link=True, missing_ores_on_old_revisions=True
+    )
+    print('About to get scores for {} posts'.format(len(missingold)))
+    get_scores_for_posts(missingold, session)
+
+
 
 def parse():
     """
@@ -896,6 +907,9 @@ def parse():
         '--rerun_all_scores', action='store_true', default=False,
         help='test')
     parser.add_argument(
+        '--rerun_missing_old', action='store_true', default=False,
+        help='test')
+    parser.add_argument(
         '--recalc_pageviews', action='store_true', default=False,
         help='test')
     parser.add_argument(
@@ -911,6 +925,12 @@ def parse():
     elif args.get_scores_only:
         for model in [SampledRedditThread, SampledStackOverflowPost]:
             get_scores_only(model)
+    elif args.rerun_missing_old:
+        for model in [
+            SampledRedditThread,
+            SampledStackOverflowPost
+        ]:
+            rerun_missing_old(model)
     elif args.rerun_all_scores:
         for model in [
             SampledRedditThread,
