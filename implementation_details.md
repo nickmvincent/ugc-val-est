@@ -23,7 +23,6 @@ An argument could be made for including or excluding these, so we just did both.
 ## What if ORES can't return a predicted score?
 If ORES returns an error for any revisions in the 2 week period, mark it as "missing the ORES score" (day_of_avg_score=None). We don't include these in the Study 2 analyses. A list of all such links is written to "has_link_but_no_ores.csv". This means 57 posts were excluded when computing the reported results.
 
-However, this did not include about 2000 posts that didn't have a revision in 2 week period AND didn't have an ores score. Therefore, as another double check we also re-ran results with and without these posts.
 
 
 ## Known issues related to non-English articles:

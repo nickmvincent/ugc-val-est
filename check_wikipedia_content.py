@@ -249,7 +249,7 @@ def get_scores_for_posts(posts, session):
             all_possible_links = WikiLink.objects.filter(
                 models.Q(title__in=[dja_link.title, dja_link.alt_title]) | models.Q(alt_title__in=[dja_link.title, dja_link.alt_title])
             )
-            dja_revs = Revision.objects.filter(wiki_link__in=all_possible_links)
+            dja_revs = Revision.objects.filter(wiki_link__in=all_possible_links, timestamp__lte=post.timestamp)
             try:
                 for timestamp in [post.timestamp, post.timestamp + datetime.timedelta(days=7)]:
                     closest_rev = get_closest_to(dja_revs, timestamp)
@@ -277,6 +277,7 @@ def get_scores_for_posts(posts, session):
             try:
                 predicted_code = scores[str(revid)]['wp10']['score']['prediction']
                 rev.score = map_ores_code_to_int(predicted_code)
+                print(rev.score)
             except KeyError:
                 print('KeyError')
                 print(scores)
