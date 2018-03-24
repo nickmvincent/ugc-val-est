@@ -312,18 +312,30 @@ def print_potential_wikilinks():
         has_wiki_link=True, day_of_avg_score__isnull=True, sample_num__in=[0,1,2])
     qs_s = SampledStackOverflowPost.objects.filter(
         has_wiki_link=True, day_of_avg_score__isnull=True, sample_num__in=[0,1,2])
-    has_link_but_no_ores = []
+    reddit_has_link_but_no_ores = []
+    so_has_link_but_no_ores = []
     errs = defaultdict(int)
-    for index, qs in enumerate([qs_r, qs_s]):
-        for post in qs:
-            urls = extract_urls(post.body, WIK) if index == 1 else [post.url]
-            if post.wiki_content_error == 0:
-                has_link_but_no_ores.append(urls)
-            else:
-                errs[post.wiki_content_error] += 1
-    with open('has_link_but_no_ores.csv', 'w', newline='') as outfile:
+    for post in qs_r:
+        url = [','.join([post.url, post.missing_ores_during_two_weeks, post.missing_ores_on_old_revisions, post.no_revisions])]
+        if post.wiki_content_error == 0:
+            reddit_has_link_but_no_ores.append(urls)
+        else:
+            errs[post.wiki_content_error] += 1
+    for post in qs_s:
+        urls = extract_urls(post.body, WIK)
+        urls = [','.join([str(urls), post.missing_ores_during_two_weeks, post.missing_ores_on_old_revisions, post.no_revisions])]
+        if post.wiki_content_error == 0:
+            so_has_link_but_no_ores.append(urls)
+        else:
+            errs[post.wiki_content_error] += 1
+
+    
+    with open('reddit_has_link_but_no_ores.csv', 'w', newline='') as outfile:
         writer = csv.writer(outfile)
-        writer.writerows(has_link_but_no_ores)
+        writer.writerows(reddit_has_link_but_no_ores)
+    with open('so_has_link_but_no_ores.csv', 'w', newline='') as outfile:
+        writer = csv.writer(outfile)
+        writer.writerows(so_has_link_but_no_ores)
     print(errs)
             
 

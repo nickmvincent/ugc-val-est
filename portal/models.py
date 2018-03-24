@@ -590,8 +590,8 @@ class WikiLink(models.Model):
     """
     url = models.CharField(max_length=300)
     language_code = models.CharField(max_length=10, blank=True, null=True)
-    title = models.CharField(max_length=300, blank=True, null=True)
-    alt_title = models.CharField(max_length=300, blank=True, null=True)
+    title = models.CharField(max_length=300, blank=True, null=True, db_index=True)
+    alt_title = models.CharField(max_length=300, blank=True, null=True, db_index=True)
     err_code = models.IntegerField(default=0)
 
     def save(self, *args, **kwargs):
@@ -639,7 +639,7 @@ class Revision(models.Model):
     GA - 4
     FA - 5
     """
-    timestamp = models.DateTimeField(default=timezone.now)
+    timestamp = models.DateTimeField(default=timezone.now, db_index=True)
     wiki_link = models.ForeignKey(WikiLink)
     revid = models.CharField(max_length=50, primary_key=True)
     lastrev_date = models.DateTimeField(blank=True, null=True)
