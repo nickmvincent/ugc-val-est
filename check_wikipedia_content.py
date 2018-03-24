@@ -865,7 +865,7 @@ def rerun_all_scores(model):
     get_scores_for_posts(all_posts, session)
 
 
-def rerun_all_scores(model):
+def rerun_missing_old(model):
     session = requests.Session()
     session.headers.update(
         USER_AGENT)
