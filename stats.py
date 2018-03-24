@@ -28,7 +28,7 @@ from django.db.models import Q
 
 # set this manually for now
 FILTER_LANG = False
-EXCLUDE_NO_ORES = True
+EXCLUDE_NO_ORES = False
 
 def so_special(treatment_feature, extra_filter):
     """helper"""

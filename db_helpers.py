@@ -323,14 +323,14 @@ def print_potential_wikilinks():
     so_has_link_but_no_ores = []
     errs = defaultdict(int)
     for post in qs_r:
-        url = [','.join([post.url, post.missing_ores_during_two_weeks, post.missing_ores_on_old_revisions, post.no_revisions])]
+        url = [','.join([post.url, str(post.missing_ores_during_two_weeks), str(post.missing_ores_on_old_revisions), str(post.no_revisions)])]
         if post.wiki_content_error == 0:
             reddit_has_link_but_no_ores.append(urls)
         else:
             errs[post.wiki_content_error] += 1
     for post in qs_s:
         urls = extract_urls(post.body, WIK)
-        urls = [','.join([str(urls), post.missing_ores_during_two_weeks, post.missing_ores_on_old_revisions, post.no_revisions])]
+        urls = [','.join([str(urls), str(post.missing_ores_during_two_weeks), str(post.missing_ores_on_old_revisions), str(post.no_revisions)])]
         if post.wiki_content_error == 0:
             so_has_link_but_no_ores.append(urls)
         else:
