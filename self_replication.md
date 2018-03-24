@@ -151,6 +151,11 @@ stackoverflow_2018_03_17=> SELECT count(*), avg(portal_stackoverflowanswer.score
  292297 | 5.9702973345603958
 (1 row)
 
+6673 / (292297+6673) * 100
+2.28%
+40000 * 0.028
+1120
+
 stackoverflow_2018_03_17=> SELECT count(*), avg(portal_stackoverflowanswer.score) FROM portal_stackoverflowanswer LEFT JOIN portal_stackoverflowquestion ON portal_stackoverflowanswer.parent_id=portal_stackoverflowquestion.id WHERE portal_stackoverflowanswer.body NOT LIKE '%wikipedia.org/wiki%' AND portal_stackoverflowquestion.owner_user_id is NULL
 ;
  count  |        avg
@@ -171,4 +176,36 @@ stackoverflow_2018_03_17=> SELECT count(*), avg(portal_stackoverflowanswer.score
  count  |        avg
 --------+--------------------
  411300 | 2.8802358375881352
+
+
+
+## Simulating 
+`python populate_db.py --rows_to_sample 15797 --rows_per_query 15797 --owner_null --platform s --sample_num 3`
+To sample 15797 rows, will use 1 iterations with 15797 rows per iteration
+
+    SELECT portal_stackoverflowanswer.body, portal_stackoverflowanswer.id, portal_stackoverflowanswer.score, portal_stackoverflowanswer.creation_date, portal_stackoverflowanswer.comment_count, portal_stackoverflowuser.reputation, portal_stackoverflowuser.creation_date as user_created_utc, portal_stackoverflowquestion.view_count, portal_stackoverflowquestion.answer_count, portal_stackoverflowquestion.title, portal_stackoverflowquestion.comment_count, portal_stackoverflowquestion.score, portal_stackoverflowquestion.creation_date as question_asked_utc, portal_stackoverflowquestion.tags, random() as rand
+    FROM portal_stackoverflowanswer
+            LEFT JOIN portal_stackoverflowuser ON portal_stackoverflowanswer.owner_user_id = portal_stackoverflowuser.id
+            LEFT JOIN portal_stackoverflowquestion ON portal_stackoverflowanswer.parent_id = portal_stackoverflowquestion.id
+              WHERE portal_stackoverflowquestion.owner_user_id is NULL and portal_stackoverflowanswer.creation_date < '2017-06-11 00:00:00' ORDER BY rand LIMIT 15797;
+
+[(24071488,)]
+{'posts_attempted': 15797, 'already_in_db': 101, 'already_in_errors': 0, 'rows_added': 15696, 'errors_added': 0}
+Runtime for iteration 0 was 438.0836570262909
+Total runtime was 438.0837275981903
+
+
+`python populate_db.py --rows_to_sample 1120 --rows_per_query 1120 --owner_null --platform s --sample_num 4 --links_only`
+To sample 1120 rows, will use 1 iterations with 1120 rows per iteration
+
+    SELECT portal_stackoverflowanswer.body, portal_stackoverflowanswer.id, portal_stackoverflowanswer.score, portal_stackoverflowanswer.creation_date, portal_stackoverflowanswer.comment_count, portal_stackoverflowuser.reputation, portal_stackoverflowuser.creation_date as user_created_utc, portal_stackoverflowquestion.view_count, portal_stackoverflowquestion.answer_count, portal_stackoverflowquestion.title, portal_stackoverflowquestion.comment_count, portal_stackoverflowquestion.score, portal_stackoverflowquestion.creation_date as question_asked_utc, portal_stackoverflowquestion.tags, random() as rand
+    FROM portal_stackoverflowanswer
+            LEFT JOIN portal_stackoverflowuser ON portal_stackoverflowanswer.owner_user_id = portal_stackoverflowuser.id
+            LEFT JOIN portal_stackoverflowquestion ON portal_stackoverflowanswer.parent_id = portal_stackoverflowquestion.id
+              WHERE portal_stackoverflowquestion.owner_user_id is NULL and Lower(portal_stackoverflowanswer.body) like '%wikipedia.org/wiki/%' and portal_stackoverflowanswer.creation_date < '2017-06-11 00:00:00' ORDER BY rand LIMIT 1120;
+
+[(24071488,)]
+{'posts_attempted': 1120, 'already_in_db': 59, 'already_in_errors': 0, 'rows_added': 1061, 'errors_added': 0}
+Runtime for iteration 0 was 262.6569736003876
+Total runtime was 262.65703415870667
 

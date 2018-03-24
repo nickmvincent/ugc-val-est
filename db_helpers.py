@@ -130,17 +130,22 @@ def save_links_and_posts():
     save_posts()
     
 
-def save_posts():
+def save_posts(sample_num=None):
     """
     Re compute Wiki link rows
     """
     print('saving posts... (slow)')
-    reddit = SampledRedditThread.objects.filter(has_wiki_link=True, sample_num__in=[0,1,2]).order_by('uid')
+    if sample_num is None:
+        sample_num = [0,1,2]
+    else:
+        sample_num = sample_num.split(',')
+        sample_num = [int(x) for x in sample_num]
+    reddit = SampledRedditThread.objects.filter(has_wiki_link=True, sample_num__in=sample_num).order_by('uid')
     for start, end, total, batch in batch_qs(reddit):
         print('reddit', start, end, total)
         for item in batch:
             item.save()
-    stack = SampledStackOverflowPost.objects.filter(has_wiki_link=True, sample_num__in=[0,1,2]).order_by('uid')
+    stack = SampledStackOverflowPost.objects.filter(has_wiki_link=True, sample_num__in=sample_num).order_by('uid')
     for start, end, total, batch in batch_qs(stack):
         print('stack', start, end, total)
         for item in batch:
@@ -404,7 +409,10 @@ if __name__ == "__main__":
         elif sys.argv[1] == 'save_links_and_posts':
             save_links_and_posts()
         elif sys.argv[1] == 'save_posts':
-            save_posts()
+            try:
+                save_posts(sys.argv[2])
+            except:
+                save_posts()
         elif sys.argv[1] == 'clear_json2db':
             clear_json2db()
         elif sys.argv[1] == 'show_missing_errors':
