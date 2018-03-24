@@ -127,6 +127,13 @@ def save_links_and_posts():
     print('saving links... (slow)')
     for link in WikiLink.objects.all():
         link.save()
+    save_posts()
+    
+
+def save_posts():
+    """
+    Re compute Wiki link rows
+    """
     print('saving posts... (slow)')
     reddit = SampledRedditThread.objects.filter(has_wiki_link=True, sample_num__in=[0,1,2]).order_by('uid')
     for start, end, total, batch in batch_qs(reddit):
@@ -377,6 +384,8 @@ if __name__ == "__main__":
             bulk_save_rev()
         elif sys.argv[1] == 'save_links_and_posts':
             save_links_and_posts()
+        elif sys.argv[1] == 'save_posts':
+            save_posts()
         elif sys.argv[1] == 'clear_json2db':
             clear_json2db()
         elif sys.argv[1] == 'show_missing_errors':
