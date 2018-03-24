@@ -207,6 +207,7 @@ class Post(models.Model):
 
     missing_ores_during_two_weeks = models.BooleanField(default=False)
     missing_ores_on_old_revisions = models.BooleanField(default=False)
+    no_revisions = models.BooleanField(default=False)
     missing_ores_error_code = models.IntegerField(blank=True, null=True)
 
     sample_num = models.IntegerField(default=0, db_index=True)
@@ -481,7 +482,8 @@ class Post(models.Model):
                             field_to_score['day_of'] += ores_score
                             field_to_score['week_after'] += ores_score
                     else:
-                        raise ValueError('post marked has_wiki_link=True has no revisions')
+                        self.no_revisions = True
+                        missing_necessary_ores = True
                             
             if num_links:
                 # the fields used in this comprehension are day_of and week_after
