@@ -499,6 +499,8 @@ class Post(models.Model):
             # if it has no Wiki link and wasn't marked as "has_no_link"
             # then it must have a non-wiki link!
             self.has_other_link = True
+        if self.has_wiki_link is True:
+            self.has_other_link = False
         super(Post, self).save(*args, **kwargs)
 
 
@@ -534,8 +536,6 @@ class SampledRedditThread(Post):
             setattr(self, 'in_other', True)
         if 'www.reddit.com' in self.url:
             self.has_no_link = True
-            self.has_other_link = False
-        if self.has_wiki_link is True:
             self.has_other_link = False
         if self.body_num_links == 0:
             self.body_num_links = len(extract_urls(self.body))
