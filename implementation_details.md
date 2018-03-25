@@ -1,5 +1,10 @@
 # A (relatively detailed) note on some design choices
 
+## TLDR: Important considerations for future work
+Much more careful consideration of non-English Wikipedia posts would be very important for follow-up work that focuses on specific communities (especially sub-reddits that do not use English) or any work that wants to examine effects across different language communities. That being said, the current state of this code is not capable of properly analyzing subcommunities with many links to non-English Wikipedia.
+
+Use of Pageview API: we used the mediawiki pageview API, which (1) returns daily page views and (2) does not return results for dates before Oct. 2015. Therefore, links from before Oct. 2015 are not included in the page view analysis. For more detailed analysis of cross-community relationships (e.g. looking at time series), using hourly page views might be valauble!
+
 ## What is a Wikipedia link?
 We looked for a simple pattern to find wikipedia links: "wikipedia.org/wiki"
 
@@ -42,8 +47,5 @@ In the original Stack Overflow sample, answers to questions that were asked by d
 These questions were rare (about 1.5%), and had roughly the same descriptive stats for score/comments as the other 98.5% percent of posts, but just to make sure this decision had no effect on conclusions, we (1) included these posts in our full replication and (2) added an appropriate number of sampled "owner is null" posts and WP-linking posts to the original dataset, and found no conclusions changed (results were nearly identical: max error for score was 0.1, max error for comments was 0.1 and max error for pageviews was 4).
 
 
-## Important considerations for future work
-Much more careful consideration of non-English Wikipedia posts would be very important for follow-up work that focuses on specific communities (especially sub-reddits that do not use English) or any work that wants to examine effects across different language communities. That being said, the current state of this code is not capable of properly analyzing subcommunities with many links to non-English Wikipedia.
 
-Use of Pageview API: we used the mediawiki pageview API, which (1) returns daily page views and (2) does not return results for dates before Oct. 2015. Therefore, links from before Oct. 2015 are not included in the page view analysis. For more detailed analysis of cross-community relationships (e.g. looking at time series), using hourly page views might be valauble!
 
