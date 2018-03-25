@@ -36,6 +36,11 @@ This bug affects only 44 (0.1%) Reddit posts and 99 (0.2%) SO posts.
 Example: https://de.wikipedia.org/wiki/File_Transfer_Protocol
 This bug is fixed in the current version of the code.
 
+## Known issues related to deleted SO accounts (rare: affects about 1.5% of posts)
+In the original Stack Overflow sample, answers to questions that were asked by deleted users (specifically, questions where the question owner had a null user id) were excluded. 
+
+These questions were rare (about 1.5%), and had roughly the same descriptive stats for score/comments as the other 98.5% percent of posts, but just to make sure this decision had no effect on conclusions, we (1) included these posts in our full replication and (2) added an appropriate number of sampled "owner is null" posts and WP-linking posts to the original dataset, and found no conclusions changed (results were nearly identical: max error for score was 0.1, max error for comments was 0.1 and max error for pageviews was 4).
+
 
 ## Important considerations for future work
 Much more careful consideration of non-English Wikipedia posts would be very important for follow-up work that focuses on specific communities (especially sub-reddits that do not use English) or any work that wants to examine effects across different language communities. That being said, the current state of this code is not capable of properly analyzing subcommunities with many links to non-English Wikipedia.
