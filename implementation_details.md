@@ -28,14 +28,21 @@ title: Wiring_(development_platform), dates:2010-07-16 15:32:12+00:00_2010-07-30
 Only 50 Reddit posts and 200 SO posts met that criteria, so we just treated these as stub articles but flagged them with error code 2 (assuming someone might have decided to click the link and create the article, hence potential for a revision). Re-running analysis with and without these posts does not change any conclusions.
 
 ## What if ORES can't return a predicted score (very rare: affects 0.1% of Wikipedia posts)
-If ORES returns an error for any revisions in the 2 week period, mark it as "missing the ORES score" (day_of_avg_score=None). We don't include these in the Study 2 analyses b/c we were not sure exactly what the error meant. A list of all such links is written to "*_has_link_but_no_ores.csv". This means 57 posts were excluded when computing the reported results. We also included a flag to re-run analysis with and without these posts and found these 0.1% of posts did not influence results at all.
+If ORES returns an error for any revisions in the 2 week period, mark it as "missing the ORES score" (day_of_avg_score=None). We don't include these in the Study 2 analyses b/c we were not sure exactly what the error meant. A list of all such links is written to files that end with "has_link_but_no_ores.csv". This means 57 posts were excluded when computing the reported results. We also included a flag to re-run analysis with and without these posts and found these 0.1% of posts did not influence results at all.
 There were 45 posts that were missing an ORES score from a revision before the 2 week period. These were treated as Stub articles.
 
 ## Known issues related to non-English articles (rare: affects 1-2% of Wikipedia posts)
 For non-English Wikipedia links, the code doesn't try to hit the APIs.
 We didn't add explicit handling for non-English Wikipedia links becuase posts with non-English Wikipedia posts make up less than 2% of our Reddit posts and less than 1% of SO posts.
 * By default non-English posts are treated as "stub" articles and don't contribute to pageviews/edits. 
-This has no effect on the analysis of WP links vs non-WP links. However, it's possible this could affect our quality analysis, or our Reddit/SO effects on WP analysis (because each post would be counted as having zero edits before and after). Therefore, we re-ran the analyses with and without these posts included to make sure this wasn't affecting results in any way, and found it wasn't. In our replications, we chose a simpler option to just treat these as non-WP links.
+This has no effect on the analysis of WP links vs non-WP links. However, it's possible this could affect our quality analysis or the RQ2 Reddit/SO effects on WP analysis (because each post would be counted as having zero edits before and after). Therefore, we re-ran the analyses with and without these posts included to make sure this issue didn't change any of our conclusions, and found no changes. (No changes to high-quality on Reddit; No changes to high-quality on SO; +10 to score of low-quality posts on Reddit with no changes to comments; no changes to low-quality on SO).
+In other words, the reported results have a slightly lower upper bound and lower bound score for low quality posts on Reddit, but no other changes.
+For RQ2, we see a slightly higher edit effect from Reddit to Wikipedia (0.415 instead of 0.405) with no other changes.
+
+
+In our replications, we chose a simpler option to just treat these as non-WP links.
+
+
 * Links to Wikipedia articles that are not English Wikipedia, but share a title with an English wikipedia article, may be erroneously associated with the ORES score for that Wikipedia article. We also made sure this not affect reported results, and found it did not.
 This bug affects only 44 (0.1%) Reddit posts and 99 (0.2%) SO posts.
 Example: https://de.wikipedia.org/wiki/File_Transfer_Protocol
