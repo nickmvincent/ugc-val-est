@@ -360,8 +360,13 @@ def get_base(url):
         'i.imgur.com': 'imgur.com',
     }
     double_slash = url.find('//')
+    if double_slash == -1:
+        double_slash = -2
     single_slash = url.find('/', double_slash + 2)
-    base = url[double_slash + 2:single_slash]
+    if single_slash == -1:
+        base = url[double_slash + 2:]
+    else:
+        base = url[double_slash + 2:single_slash]
     base = base.replace('www.', '')
     base = base.replace('.m.', '.')
     if base[0:2] == 'm.':
