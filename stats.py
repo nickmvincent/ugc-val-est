@@ -219,7 +219,7 @@ def frequency_distribution(qs, field, qs_name, extractor=None):
     plot_bar(sorted_val_to_count[:20], title, filename)
 
     rows = []
-    for i, val_tup in enumerate(sorted_val_to_count[:25]):
+    for i, val_tup in enumerate(sorted_val_to_count):
         count = val_to_count[val_tup[0]]
         percent = count / num_threads * 100
         print(i, val_tup, percent)

@@ -15,11 +15,12 @@ SQL LIKE query doesn't have a LOWER(statement) - aren't you missing some Wikiped
 Reddit:
 w/o LOWER(url) 121289
 w LOWER(url) 121298
+(missing 9)
 
 SO:
 w/o LOWER(body): 291431
 w LOWER(body): 291500
-
+(missing 69)
 
 
 Other big sites?
