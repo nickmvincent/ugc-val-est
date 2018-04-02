@@ -382,7 +382,7 @@ def get_links_from_url(url):
 
 
 def get_base(url):
-    return tldextract.extract('url').domain
+    return tldextract.extract(url).domain
 
 
 def output_stats(output_filename, descriptive_stats, inferential_stats):
