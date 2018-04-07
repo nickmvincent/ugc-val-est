@@ -1,0 +1,11 @@
+SELECT avg(score), count(score) FROM [fh-bigquery:reddit_posts.2017_12] where lower(url) like '%wikipedia.org/wiki%';
+upper bound of # WP posts 2017_12
+9803
+score: 272.4
+
+SELECT avg(score), count(score) FROM [fh-bigquery:reddit_posts.2017_12];
+upper bound of # post 2017_12
+10567492
+score: 58.1
+
+9803 / 10567492 * 100 = 0.093

@@ -147,7 +147,8 @@ class CausalModel(object):
 			Y_trimmed = self.raw_data['Y'][keep]
 			D_trimmed = self.raw_data['D'][keep]
 			X_trimmed = self.raw_data['X'][keep]
-			self.raw_data = Data(Y_trimmed, D_trimmed, X_trimmed, self.raw_data['pairs'], self.raw_data['ids'])
+			ids = self.raw_data['ids'][keep]
+			self.raw_data = Data(Y_trimmed, D_trimmed, X_trimmed, self.raw_data['pairs'], ids)
 			self.raw_data._dict['pscore'] = pscore[keep]
 			self.summary_stats = Summary(self.raw_data)
 			self.strata = None
