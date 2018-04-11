@@ -159,10 +159,11 @@ def make_mediawiki_request(session, base, params, verbose=False):
 
 def make_pageview_request(session, **kwargs):
     """
-    example:  http://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/
-    all-access/all-agents/Albert_Einstein/daily/2015100100/2015103100
+    example:  http://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/all-agents/Albert_Einstein/daily/2015100100/2015103100
     """
-    base = 'http://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/all-agents/{title}/daily/{start}/{end}'
+    if kwargs.get('language_code') is None:
+        kwargs['language_code'] = 'en'
+    base = 'http://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/{language_code}.wikipedia/all-access/all-agents/{title}/daily/{start}/{end}'
     endpoint = base.format(**kwargs)
     
     result = session.get(endpoint)
@@ -810,42 +811,6 @@ def test(num=500):
         print('average_diff_in_edits_db', average_wrong_diff)
             
         print('Error/Tested: {}/{}'.format(n_err, tested))
-
-
-def test_ores_scores(num=500):
-    """
-    This function doesn't hit API - it just tests data in the database
-    Test that ores scores got assigned correctly
-    """
-    has_ores_but_no_revs
-    for qs in [
-        qsr,
-        qss
-    ]:
-        tested = 0
-        n_err = 0
-        for post in qs:
-            if tested % 100 == 0:
-                print(tested)
-            tested += 1
-            missing_necessary_ores = False
-            for dja_link in post.wiki_links.all():
-                # test these separately
-                if dja_link.language_code != 'en':
-                    continue
-                tested += 1
-                all_possible_links = WikiLink.objects.filter(
-                    models.Q(title__in=[link_obj.title, link_obj.alt_title]) | models.Q(alt_title__in=[link_obj.title, link_obj.alt_title])
-                )
-                any_possible_revs = prev_revisions = Revision.objects.filter(
-                    wiki_link__in=all_possible_links
-                )
-                # if there's no revs it shouldn't be able to get a score...
-                if not any_possible_revs.exists() and post.day_of_avg_score is not None:
-                    n_err += 1
-                    print(dja_link.title, dja_link.url)
-                    print(post.wiki_content_error)
-                    input()
                
 
 def get_scores_only(model):
@@ -914,6 +879,9 @@ def parse():
         '--recalc_pageviews', action='store_true', default=False,
         help='test')
     parser.add_argument(
+        '--rerun_pv_nonen', action='store_true', default=False,
+        help='test')
+    parser.add_argument(
         '--start')
     parser.add_argument(
         '--end')
@@ -944,6 +912,11 @@ def parse():
         recalc_pageviews_for_posts(posts)
         posts = SampledStackOverflowPost.objects.filter(has_wiki_link=True, sample_num__in=[0,1,2],
             num_wiki_increased_pageviews_day_of__isnull=True)
+        recalc_pageviews_for_posts(posts)
+    elif args.rerun_pv_nonen:
+        posts = SampledRedditThread.objects.filter(has_wiki_link=True).exclude(url__icontains='en.wikipedia').exclude(url__icontains='en.m.wikipedia').exclude(url__icontains='www.wikipedia').exclude(url__icontains='//wikipedia')
+        recalc_pageviews_for_posts(posts)
+        posts = SampledStackOverflowPost.objects.filter(has_wiki_link=True).exclude(url__icontains='en.wikipedia').exclude(url__icontains='en.m.wikipedia').exclude(url__icontains='www.wikipedia').exclude(url__icontains='//wikipedia')
         recalc_pageviews_for_posts(posts)
     else:
         if args.platform is None:
