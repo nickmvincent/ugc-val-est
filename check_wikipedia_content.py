@@ -470,8 +470,9 @@ def get_revs_for_single_post(post, session):
     post.num_wiki_pageviews = 0
     post.num_wiki_pageviews_prev_week = 0
     for dja_link in dja_links:
-        if dja_link.language_code != 'en':
+        if dja_link.language_code in ['en', 'fr', 'de', 'ja']:
             continue
+        lang = dja_link.language_code
         dja_link.save() # just to update the title - this can be removed later!
         wiki_api_str_fmt = '%Y%m%d%H%M%S'
         pageview_api_str_fmt = '%Y%m%d'
@@ -486,11 +487,12 @@ def get_revs_for_single_post(post, session):
             session,
             title=norm_title, start=week_before_post.strftime(
                 pageview_api_str_fmt),
-            end=day_of_post_short_str)
+            end=day_of_post_short_str, language_code=lang)
         pageviews = make_pageview_request(
             session,
             title=norm_title, start=day_of_post_short_str,
-            end=week_after_post.strftime(pageview_api_str_fmt))
+            end=week_after_post.strftime(pageview_api_str_fmt),
+            language_code=lang)
         if pageviews_prev_week and pageviews:
             post.num_wiki_pageviews_prev_week += sum(
                 [entry['views'] for entry in pageviews_prev_week])
@@ -707,8 +709,7 @@ def test(num=500):
             after_pageviews = 0
             links = []
             for dja_link in post.wiki_links.all():
-                if dja_link.language_code != 'en':
-                    continue
+                # if dja_lf
                 links.append('{} ({})'.format(dja_link.title, dja_link.id))
                 revisions = []
                 wiki_api_str_fmt = '%Y%m%d%H%M%S'
