@@ -507,11 +507,12 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
         }
         treatment_kwargs = None
         if EXCLUDE_NO_ORES:
-            subsample_kwargs['day_of_avg_score__isnull': False]
+            subsample_kwargs['day_of_avg_score__isnull'] = False
     elif rq == 32:
         subsample_kwargs = {
             'has_wiki_link': True,
         }
+        treatment_kwargs = None
     elif rq == 33:
         subsample_kwargs = {
             'has_wiki_link': True,
