@@ -915,9 +915,9 @@ def parse():
         recalc_pageviews_for_posts(posts)
     elif args.rerun_pv_nonen:
         posts = SampledRedditThread.objects.filter(has_wiki_link=True).exclude(url__icontains='en.wikipedia').exclude(url__icontains='en.m.wikipedia').exclude(url__icontains='www.wikipedia').exclude(url__icontains='//wikipedia')
-        recalc_pageviews_for_posts(posts)
+        retrieve_links_info(posts, SampledRedditThread)
         posts = SampledStackOverflowPost.objects.filter(has_wiki_link=True).exclude(body__icontains='en.wikipedia').exclude(body__icontains='en.m.wikipedia').exclude(body__icontains='www.wikipedia').exclude(body__icontains='//wikipedia')
-        recalc_pageviews_for_posts(posts)
+        retrieve_links_info(posts, SampledStackOverflowPost)
     else:
         if args.platform is None:
             platforms = ['r', 's']

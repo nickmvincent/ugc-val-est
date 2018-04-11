@@ -508,6 +508,10 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
         treatment_kwargs = None
         if EXCLUDE_NO_ORES:
             subsample_kwargs['day_of_avg_score__isnull': False]
+    elif rq == 32:
+        subsample_kwargs = {
+            'has_wiki_link': True,
+        }
     elif rq == 33:
         subsample_kwargs = {
             'has_wiki_link': True,
@@ -531,33 +535,33 @@ def main(platform='r', rq=1, calculate_frequency=False, bootstrap=None, sample_n
                 'qs': SampledRedditThread.objects.filter(**subsample_kwargs).filter(
                     context='todayilearned'),
                 'name': 'todayilearned'
-            }, {
-                'qs': SampledRedditThread.objects.filter(**subsample_kwargs).filter(
-                    context__in=TOP_TEN),
-                'name': 'TOP TEN'
-            }, {
-                'qs': SampledRedditThread.objects.filter(**subsample_kwargs).filter(
-                    context='borntoday'),
-                'name': 'borntoday'
-            }, {
-                'qs': SampledRedditThread.objects.filter(**subsample_kwargs).filter(
-                    context='wikipedia'),
-                'name': 'wikipedia'
-            }, {
-                'qs': SampledRedditThread.objects.filter(**subsample_kwargs).filter(
-                    context='CelebrityBornToday'),
-                'name': 'CelebrityBornToday'
-            }, {
-                'qs': SampledRedditThread.objects.filter(**subsample_kwargs).filter(
-                    context='The_Donald'),
-                'name': 'The_Donald'
-            }, {
-                'qs': SampledRedditThread.objects.filter(**subsample_kwargs).exclude(
-                    context__in=[
-                        'The_Donald', 'CelebrityBornToday', 'wikipedia', 'borntoday', 'todayilearned',
-                    ]),
-                'name': 'OTHER'
-            }
+            },
+            #{    'qs': SampledRedditThread.objects.filter(**subsample_kwargs).filter(
+            #         context__in=TOP_TEN),
+            #     'name': 'TOP TEN'
+            # }, {
+            #     'qs': SampledRedditThread.objects.filter(**subsample_kwargs).filter(
+            #         context='borntoday'),
+            #     'name': 'borntoday'
+            # }, {
+            #     'qs': SampledRedditThread.objects.filter(**subsample_kwargs).filter(
+            #         context='wikipedia'),
+            #     'name': 'wikipedia'
+            # }, {
+            #     'qs': SampledRedditThread.objects.filter(**subsample_kwargs).filter(
+            #         context='CelebrityBornToday'),
+            #     'name': 'CelebrityBornToday'
+            # }, {
+            #     'qs': SampledRedditThread.objects.filter(**subsample_kwargs).filter(
+            #         context='The_Donald'),
+            #     'name': 'The_Donald'
+            # }, {
+            #     'qs': SampledRedditThread.objects.filter(**subsample_kwargs).exclude(
+            #         context__in=[
+            #             'The_Donald', 'CelebrityBornToday', 'wikipedia', 'borntoday', 'todayilearned',
+            #         ]),
+            #     'name': 'OTHER'
+            # }
             
             ]
         if rq == 3:
