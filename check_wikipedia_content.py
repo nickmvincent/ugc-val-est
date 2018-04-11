@@ -470,7 +470,7 @@ def get_revs_for_single_post(post, session):
     post.num_wiki_pageviews = 0
     post.num_wiki_pageviews_prev_week = 0
     for dja_link in dja_links:
-        if dja_link.language_code in ['en', 'fr', 'de', 'ja']:
+        if dja_link.language_code not in ['en', 'fr', 'de', 'ja']:
             continue
         lang = dja_link.language_code
         dja_link.save() # just to update the title - this can be removed later!
