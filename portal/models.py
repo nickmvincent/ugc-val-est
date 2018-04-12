@@ -611,8 +611,7 @@ class WikiLink(models.Model):
         else:
             code = url[prefix_start:prefix_end]
         if prefix_start == 1 and prefix_end != -1:
-            if prefix_start == -1:
-                print('code, url', code, url)
+            print('code, url', code, url)
         self.language_code = code
         i = url.find(WIKI_PATTERN) + len(WIKI_PATTERN)
         url_query_params = url.find('?')
