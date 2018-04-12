@@ -124,11 +124,14 @@ def save_links_and_posts():
     Runs through all the rows and re-saves to trigger
     computation
     """
-    print('saving links... (slow)')
-    for link in WikiLink.objects.all():
-        link.save()
+    save_links()
     save_posts()
     
+
+def save_links():print('saving links... (slow)')
+    for link in WikiLink.objects.all():
+        link.save()
+
 
 def save_posts(sample_num=None):
     """
@@ -406,6 +409,8 @@ if __name__ == "__main__":
             bulk_save()
         elif sys.argv[1] == 'bulk_save_rev':
             bulk_save_rev()
+        elif sys.argv[1] == 'save_links':
+            save_links()
         elif sys.argv[1] == 'save_links_and_posts':
             save_links_and_posts()
         elif sys.argv[1] == 'save_posts':
