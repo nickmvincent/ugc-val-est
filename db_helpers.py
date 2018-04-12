@@ -128,7 +128,8 @@ def save_links_and_posts():
     save_posts()
     
 
-def save_links():print('saving links... (slow)')
+def save_links():
+    print('saving links... (slow)')
     for link in WikiLink.objects.all():
         link.save()
 
