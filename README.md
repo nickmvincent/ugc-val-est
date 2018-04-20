@@ -45,11 +45,14 @@ stats.py
 * there's some slightly hacky logic in here. Some fields should be compared directly between treatment and control (i.e. post score), while in some case we actually want to compare TWO fields to each other (e.g. num_edits_prev_week vs. num_edits). This logic is mostly handled by the `rq` parameter, which orginally corresponded to three different research questions. That mapping is no longer accurate, but instead the `rq` parameter is used to just store a bunch of configurations (i.e. what counts as control, what field to compute, etc.)
 
 ## Code related to Causal Analysis (uses numpy, causalinference libraries)
-High-level: prediction.py
+### High-level: prediction.py
 * can add/remove/transform the covariates used in propensity score matching here
 * can change causal analysis choices here. Some through command line args, e.g. should we trim extreme values, should we have interaction terms in the logistic propensity score regression
 * can add more causal analyses here
-Low-level: causalinference (this is a slightly modified copy of the BSD 3-clause licensed library, from here: https://github.com/laurencium/Causalinference)
+### Low-level: causalinference (this is a slightly modified copy of the BSD 3-clause licensed library, from here: https://github.com/laurencium/Causalinference)
+* There's only two additions from the original version.
+1. added logic to automatically remove covariates as they become "obsolete" for a strata (i.e. if a row would constant across the strata, such is if every post in that strata has length 10, or because a dummy variable become linearly dependent, such as if all the posts in the strata took place in 3 months)
+2. Added a bunch of print statement. Most notable is that we print out the normalized covariates bias at the beginning, after trimming, and after matching, so we can that covariate bias is going down.
 * can make low-level edits here, i.e. exactly how is regression calculated, how to report covariate bias, etc.
 
 ## Code related to database management (this is where most features are calculated)
