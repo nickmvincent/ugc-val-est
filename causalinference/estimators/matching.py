@@ -49,7 +49,6 @@ class Matching(Estimator):
 			D_full = np.array(D_full)
 			X_full = np.array(X_full)
 			matched_data = causal.CausalModel(Y_full, D_full, X_full)
-			print(matched_data.summary_stats)
 			self._dict['matched_data'] = matched_data
 			self._dict['unique_examples'] = unique_examples
 			

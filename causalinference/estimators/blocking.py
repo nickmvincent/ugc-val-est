@@ -77,12 +77,10 @@ class Blocking(Estimator):
                     if (stdevs[0] == 0 and stdevs[1] == 0):
                         to_delete.append(col_num)
                 for col_num in to_delete:
-                    print('Deleting a column b/c standard deviation was 0')
-                    print('Col num was {} and col name was {}'.format(col_num, feats[col_num - cols_deleted]))
+                    print('Deleting col in stratum {} b/c sd=0: Col num: {} and col name: {}'.format(i, col_num, feats[col_num - cols_deleted]))
                     X = np.delete(X, col_num - cols_deleted, 1)
                     feats.remove(feats[col_num - cols_deleted])
                     cols_deleted += 1
-                    print('So far, {} columns have been deleted'.format(col_num))
                 while True:
                     sums = defaultdict(int)
                     can_break = True
@@ -163,7 +161,7 @@ class Blocking(Estimator):
         # this seems wrong
         # however, _dict['r2'] is unused
         for vals in r2s:
-            self._dict['r2'].append(calc_atx(vals, N_ts))
+            self._dict['r2'].append(vals)
         for errvals in ate_ses:
             self._dict['ate_se'].append(calc_atx_se(errvals, Ns))
         for errvals in atc_ses:
