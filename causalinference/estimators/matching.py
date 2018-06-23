@@ -5,6 +5,7 @@ from itertools import chain
 from functools import reduce
 
 from .base import Estimator, estimation_names, standard_err_names
+from ..causal import CausalModel
 
 
 class Matching(Estimator):
@@ -25,14 +26,31 @@ class Matching(Estimator):
 		for name in estimation_names() + standard_err_names():
 			self._dict[name] = []
 
-		y_index = 0
 		for y_c, y_t in zip(Y_c.T, Y_t.T):
-			print('Do calc for variable number {}'.format(y_index))
-			y_index += 1
-			print('  matching controls...')
 			matches_c = [match(X_i, X_t, W, m) for X_i in X_c]
-			print('  matching treatments...')
 			matches_t = [match(X_i, X_c, W, m) for X_i in X_t]
+
+
+			X_full = []
+			Y_full = []
+			D_full = []
+			indices_c = set([])
+			indices_t = set([])
+			for (matches, X_, Y_, D_val, indices_) in [
+				(matches_c, X_c, Y_c, 0, indices_c),
+				(matches_t, X_t, Y_t, 1, indices_t),
+			]:
+				for idx in matches:
+					X_full.append(X_[idx])
+					Y_full.append(Y_[idx])
+					D_full.append(D_val)
+					indices_.add(idx)
+			unique_examples = len(indices_c) + len(indices_t)
+			matched_data = CausalModel(Y_full, D_full, X_full)
+			print(matched_data.summary_stats)
+			self._dict['matched_data'] = matched_data
+			self._dict['unique_examples'] = unique_examples
+			
 			yhat_c = np.array([y_t[idx].mean() for idx in matches_c])
 			yhat_t = np.array([y_c[idx].mean() for idx in matches_t])
 			ITT_c = yhat_c - y_c
