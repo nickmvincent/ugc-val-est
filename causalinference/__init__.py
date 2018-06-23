@@ -1,2 +1,1 @@
 from .causal import CausalModel
-

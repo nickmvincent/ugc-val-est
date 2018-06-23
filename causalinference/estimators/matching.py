@@ -5,8 +5,7 @@ from itertools import chain
 from functools import reduce
 
 from .base import Estimator, estimation_names, standard_err_names
-from ..causal import CausalModel
-
+from .. import causal
 
 class Matching(Estimator):
 
@@ -46,7 +45,7 @@ class Matching(Estimator):
 					D_full.append(D_val)
 					indices_.add(idx)
 			unique_examples = len(indices_c) + len(indices_t)
-			matched_data = CausalModel(Y_full, D_full, X_full)
+			matched_data = causal.CausalModel(Y_full, D_full, X_full)
 			print(matched_data.summary_stats)
 			self._dict['matched_data'] = matched_data
 			self._dict['unique_examples'] = unique_examples
