@@ -18,7 +18,6 @@ class Blocking(Estimator):
     def __init__(self, strata, adj, feature_names, skip_features):
         # hacky
         self._method = 'Blocking'
-        print('blocking')
         for i, s in enumerate(strata):
             feats = list(feature_names)
             X = s.raw_data['X']
@@ -33,6 +32,10 @@ class Blocking(Estimator):
                         treat_ids.append(ids[dval_index])
                     else:
                         control_ids.append(ids[dval_index])
+                if i == 0:
+                    print('Printing example ids from lowest stratum')
+                if i == len(strata) - 1:
+                    print('Printing example ids from highest stratum')
                 print('treat_ids', treat_ids[:5])
                 print('control_ids', control_ids[:5])
 
@@ -43,6 +46,7 @@ class Blocking(Estimator):
                     continue
                 X = np.delete(X, col_num, 1)
                 feats.remove(feature_name)
+
             s.raw_data = Data(s.raw_data['Y'], s.raw_data['D'], X, ids=ids)
             try:
                 s.est_via_ols(adj, feats)
@@ -73,9 +77,12 @@ class Blocking(Estimator):
                     if (stdevs[0] == 0 or stdevs[1] == 0):
                         to_delete.append(col_num)
                 for col_num in to_delete:
+                    print('Deleting a column b/c standard deviation was 0')
+                    print('Col num was {} and col name was {}'.format(col_num, feats[col_num - cols_deleted]))
                     X = np.delete(X, col_num - cols_deleted, 1)
                     feats.remove(feats[col_num - cols_deleted])
                     cols_deleted += 1
+                    print('So far, {} columns have been deleted'.format(col_num))
                 while True:
                     sums = defaultdict(int)
                     can_break = True
@@ -96,9 +103,12 @@ class Blocking(Estimator):
                                     to_delete.append(col_num)
                                     break
                     for col_num in to_delete:
+                        print('Deleting a column b/c redundant dummy var')
+                        print('Col num was {} and col name was {}'.format(col_num, feats[col_num - cols_deleted]))
                         X = np.delete(X, col_num - cols_deleted, 1)
                         feats.remove(feats[col_num - cols_deleted])
                         cols_deleted += 1
+                        print('So far, {} columns have been deleted'.format(col_num))
                     if can_break:
                         break
                 
@@ -109,7 +119,6 @@ class Blocking(Estimator):
         Ns = [s.raw_data['N'] for s in strata]
         N_cs = [s.raw_data['N_c'] for s in strata]
         N_ts = [s.raw_data['N_t'] for s in strata]
-
 
         ates = np.array([s.estimates['ols']['ate'] for s in strata]).T
         ate_ses = np.array([s.estimates['ols']['ate_se'] for s in strata]).T
@@ -150,6 +159,9 @@ class Blocking(Estimator):
             self._dict['atc'].append(calc_atx(vals, N_cs))
         for vals in atts:
             self._dict['att'].append(calc_atx(vals, N_ts))
+        
+        # this seems wrong
+        # however, _dict['r2'] is unused
         for vals in r2s:
             self._dict['r2'].append(calc_atx(vals, N_ts))
         for errvals in ate_ses:
