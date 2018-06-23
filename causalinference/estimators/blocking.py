@@ -74,7 +74,7 @@ class Blocking(Estimator):
                     stdevs = (
                         s.summary_stats['X_c_sd'][col_num],
                         s.summary_stats['X_t_sd'][col_num])
-                    if (stdevs[0] == 0 or stdevs[1] == 0):
+                    if (stdevs[0] == 0 and stdevs[1] == 0):
                         to_delete.append(col_num)
                 for col_num in to_delete:
                     print('Deleting a column b/c standard deviation was 0')
