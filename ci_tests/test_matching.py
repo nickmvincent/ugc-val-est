@@ -4,6 +4,19 @@ import numpy as np
 import sys
 sys.path.append('..')
 import causalinference.estimators.matching as m
+import causalinference.causal as c
+
+
+def test_init():
+
+	Y1 = np.array([1, 2, 3, 4, 12, 10, 44, 87])
+	D1 = np.array([0, 0, 0, 0, 1, 1, 1, 1])
+	X1 = np.array([[1, 42], [3, 32], [9, 7], [12, 86],
+	               [5, 94], [4, 36], [2, 13], [6, 61]])
+	ids = list(range(len(Y1)))
+	causal1 = c.CausalModel(Y1, D1, X1, ids=ids)
+
+	causal1.est_via_matching()
 
 
 def test_norm():
@@ -150,3 +163,5 @@ def test_calc_ate_se():
 	ans = 1.0630146
 	assert np.allclose(out_se, ans)
 
+if __name__ == '__main__':
+	test_init()

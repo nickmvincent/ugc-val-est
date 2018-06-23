@@ -29,7 +29,6 @@ class Matching(Estimator):
 			matches_c = [match(X_i, X_t, W, m) for X_i in X_c]
 			matches_t = [match(X_i, X_c, W, m) for X_i in X_t]
 
-
 			X_full = []
 			Y_full = []
 			D_full = []
@@ -40,11 +39,15 @@ class Matching(Estimator):
 				(matches_t, X_t, Y_t, 1, indices_t),
 			]:
 				for idx in matches:
-					X_full.append(X_[idx])
-					Y_full.append(Y_[idx])
+					idx_val = idx[0]
+					X_full.append(X_[idx_val])
+					Y_full.append(Y_[idx_val])
 					D_full.append(D_val)
-					indices_.add(idx)
+					indices_.add(idx_val)
 			unique_examples = len(indices_c) + len(indices_t)
+			Y_full = np.array(Y_full)
+			D_full = np.array(D_full)
+			X_full = np.array(X_full)
 			matched_data = causal.CausalModel(Y_full, D_full, X_full)
 			print(matched_data.summary_stats)
 			self._dict['matched_data'] = matched_data
