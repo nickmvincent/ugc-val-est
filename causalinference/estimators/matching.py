@@ -35,8 +35,8 @@ class Matching(Estimator):
 			indices_c = set([])
 			indices_t = set([])
 			for (matches, X_, Y_, D_val, indices_) in [
-				(matches_c, X_c, Y_c, 0, indices_c),
-				(matches_t, X_t, Y_t, 1, indices_t),
+				(matches_c, X_t, Y_t, 1, indices_t),
+				(matches_t, X_c, Y_c, 0, indices_c),
 			]:
 				for idx in matches:
 					idx_val = idx[0]
