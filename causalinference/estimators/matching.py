@@ -26,31 +26,28 @@ class Matching(Estimator):
 			self._dict[name] = []
 
 		for y_c, y_t in zip(Y_c.T, Y_t.T):
+			# get a matching treatment example for EACH control example
 			matches_c = [match(X_i, X_t, W, m) for X_i in X_c]
+			# get a matching control example for EAHC treatment example
 			matches_t = [match(X_i, X_c, W, m) for X_i in X_t]
 
-			X_full = []
-			Y_full = []
-			D_full = []
-			indices_c = set([])
-			indices_t = set([])
-			for (matches, X_, Y_, D_val, indices_) in [
-				(matches_c, X_t, Y_t, 1, indices_t),
-				(matches_t, X_c, Y_c, 0, indices_c),
-			]:
-				for idx in matches:
-					idx_val = idx[0]
-					X_full.append(X_[idx_val])
-					Y_full.append(Y_[idx_val])
-					D_full.append(D_val)
-					indices_.add(idx_val)
-			unique_examples = len(indices_c) + len(indices_t)
-			Y_full = np.array(Y_full)
-			D_full = np.array(D_full)
-			X_full = np.array(X_full)
-			matched_data = causal.CausalModel(Y_full, D_full, X_full)
-			self._dict['matched_data'] = matched_data
-			self._dict['unique_examples'] = unique_examples
+
+			# construct a dataset from all the matches so we can look at covariate balance, etc
+
+			att_data = causal.CausalModel(
+				np.concatenate([y_t, [y_c[idx] for idx in matches_t]]),
+				np.concatenate([X_t, [X_c[idx] for idx in matches_t]]),
+				np.concatenate([[1 for _ in X_t], [0 for _ in matches_t]]),
+			)
+
+			atc_data = causal.CausalModel(
+				np.concatenate([y_c, [y_t[idx] for idx in matches_c]]),
+				np.concatenate([X_c, [X_t[idx] for idx in matches_c]]),
+				np.concatenate([[0 for _ in X_c], [1 for _ in matches_c]]),
+			)
+			
+			self._dict['att_data'] = att_data
+			self._dict['atc_data'] = atc_data
 			
 			yhat_c = np.array([y_t[idx].mean() for idx in matches_c])
 			yhat_t = np.array([y_c[idx].mean() for idx in matches_t])

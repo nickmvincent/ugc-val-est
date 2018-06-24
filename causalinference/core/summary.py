@@ -34,12 +34,19 @@ class Summary(Dict):
 		self._dict['X_t_sd'] = np.sqrt(data['X_t'].var(0, ddof=1))
 		self._dict['ndiff'] = calc_ndiff(
 			self['X_c_mean'], self['X_t_mean'],
-			self['X_c_sd'], self['X_t_sd'])
+			self['X_c_sd'], self['X_t_sd']
+		)
+		# might be helpful to assess balance
 		self._dict['sum_of_abs_ndiffs'] = sum([
 			abs(ndiff) for ndiff in self._dict['ndiff'].T if not np.isnan(ndiff)
 		])
+		
 		self._dict['num_large_ndiffs'] = len([
 			ndiff for ndiff in self._dict['ndiff'] if ndiff >= 0.25
+		])
+
+		self._dict['num_0.1_ndiffs'] = len([
+			ndiff for ndiff in self._dict['ndiff'] if ndiff >= 0.1
 		])
 
 
