@@ -222,8 +222,8 @@ def causal_inference(
         X = np.transpose(np.array(feature_rows))
         X_c = X[D == 0]
         X_t = X[D == 1]
-        print(len(X_c))
-        print('len x_t', len(X_t))
+        print('len X_c', len(X_c))
+        print('len X_t', len(X_t))
         to_delete, cols_deleted = [], 0
         for col_num, col in enumerate(X_c.T):
             if not np.any(col):
@@ -267,8 +267,6 @@ def causal_inference(
                         sums[dummy_category] += np.sum(col)
 
             for dummy_category, names in dummies.items():
-                if sums[dummy_category] == 0:
-                    continue
                 if sums[dummy_category] == total:
                     for col_num in range(X.shape[1]):
                         if successful_fields[col_num] in names:

@@ -92,8 +92,9 @@ class Blocking(Estimator):
                                 sums[dummy_category] += np.sum(X.T[col_num])
 
                     for dummy_category, names in dummies.items():
-                        if sums[dummy_category] == 0:
-                            continue
+                        # redundant, total is never equal to 0 anyway
+                        # if sums[dummy_category] == 0:
+                        #     continue
                         if sums[dummy_category] == total:
                             for col_num in range(X.shape[1]):
                                 if feats[col_num] in names:
