@@ -33,11 +33,11 @@ class Matching(Estimator):
 
 
 			# construct a dataset from all the matches so we can look at covariate balance, etc
-			print(
-				np.concatenate([y_t, [y_c[idx[0]] for idx in matches_t]]), '\n',
-				np.concatenate([X_t, [X_c[idx[0]] for idx in matches_t]]), '\n',
-				np.concatenate([[1 for _ in X_t], [0 for _ in matches_t]]), '\n',
-			)
+			# print(
+			# 	np.concatenate([y_t, [y_c[idx[0]] for idx in matches_t]]), '\n',
+			# 	np.concatenate([X_t, [X_c[idx[0]] for idx in matches_t]]), '\n',
+			# 	np.concatenate([[1 for _ in X_t], [0 for _ in matches_t]]), '\n',
+			# )
 			att_data = causal.CausalModel(
 				np.concatenate([y_t, [y_c[idx[0]] for idx in matches_t]]),
 				np.concatenate([[1 for _ in X_t], [0 for _ in matches_t]]),
@@ -49,7 +49,8 @@ class Matching(Estimator):
 				np.concatenate([[0 for _ in X_c], [1 for _ in matches_c]]),
 				np.concatenate([X_c, [X_t[idx[0]] for idx in matches_c]]),
 			)
-			
+			self._dict['att_unique_examples'] = len(set([idx[0] for idx in matches_c]))
+			self._dict['atc_unique_examples'] = len(set([idx[0] for idx in matches_t]))
 			self._dict['att_data'] = att_data
 			self._dict['atc_data'] = atc_data
 			
