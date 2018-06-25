@@ -49,8 +49,8 @@ class Matching(Estimator):
 				np.concatenate([[0 for _ in X_c], [1 for _ in matches_c]]),
 				np.concatenate([X_c, [X_t[idx[0]] for idx in matches_c]]),
 			)
-			self._dict['att_unique_examples'] = len(set([idx[0] for idx in matches_c]) + len(X_t))
-			self._dict['atc_unique_examples'] = len(set([idx[0] for idx in matches_t]) + len(X_c))
+			self._dict['att_unique_examples'] = len(set([idx[0] for idx in matches_c])) + len(X_t)
+			self._dict['atc_unique_examples'] = len(set([idx[0] for idx in matches_t])) + len(X_c)
 			self._dict['att_data'] = att_data
 			self._dict['atc_data'] = atc_data
 			
