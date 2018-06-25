@@ -40,13 +40,13 @@ class Summary(Dict):
 		self._dict['sum_of_abs_ndiffs'] = sum([
 			abs(ndiff) for ndiff in self._dict['ndiff'].T if not np.isnan(ndiff)
 		])
-		
+
 		self._dict['num_large_ndiffs'] = len([
-			ndiff for ndiff in self._dict['ndiff'] if ndiff >= 0.25
+			ndiff for ndiff in self._dict['ndiff'] if abs(ndiff) >= 0.25
 		])
 
 		self._dict['num_0.1_ndiffs'] = len([
-			ndiff for ndiff in self._dict['ndiff'] if ndiff >= 0.1
+			ndiff for ndiff in self._dict['ndiff'] if abs(ndiff) >= 0.1
 		])
 
 
