@@ -15,7 +15,7 @@ class Blocking(Estimator):
     Dictionary-like class containing treatment effect estimates.
     """
 
-    def __init__(self, strata, adj, feature_names, skip_features):
+    def __init__(self, strata, adj, feature_names, skip_features, dummies=None):
         # hacky
         self._method = 'Blocking'
         for i, s in enumerate(strata):
@@ -53,23 +53,24 @@ class Blocking(Estimator):
             except np.linalg.linalg.LinAlgError as err:
                 total = X.shape[0]
                 to_delete, cols_deleted = [], 0
-                dummies = {
-                    'months':	[
-                        'jan', 'feb', 'mar', 'apr',
-                        'may', 'jun', 'jul', 'aug', 'sep',
-                        'octo', 'nov',
-                    ],
-                    'hours': ['zero_to_six', 'six_to_twelve', 'twelve_to_eighteen', ],
-                    'contexts': ['in_todayilearned',
-                                'in_borntoday', 'in_wikipedia', 'in_CelebrityBornToday', 'in_The_Donald', ],
-                    'years': ['year2008', 'year2009', 'year2010',
-                            'year2011', 'year2012', 'year2013',
-                            'year2014', 'year2015', ],
-                    'days:': [
-                        'mon', 'tues', 'wed', 'thurs',
-                        'fri', 'sat',
-                    ],
-                }
+                if dummies is None:
+                    dummies = {
+                        'months':	[
+                            'jan', 'feb', 'mar', 'apr',
+                            'may', 'jun', 'jul', 'aug', 'sep',
+                            'octo', 'nov',
+                        ],
+                        'hours': ['zero_to_six', 'six_to_twelve', 'twelve_to_eighteen', ],
+                        'contexts': ['in_todayilearned',
+                                    'in_borntoday', 'in_wikipedia', 'in_CelebrityBornToday', 'in_The_Donald', ],
+                        'years': ['year2008', 'year2009', 'year2010',
+                                'year2011', 'year2012', 'year2013',
+                                'year2014', 'year2015', ],
+                        'days:': [
+                            'mon', 'tues', 'wed', 'thurs',
+                            'fri', 'sat',
+                        ],
+                    }
                 for col_num in range(X.shape[1]):
                     stdevs = (
                         s.summary_stats['X_c_sd'][col_num],
