@@ -27,7 +27,7 @@ pylint==1.7.2
 pylint-django==0.7.2
 pylint-plugin-utils==0.2.6
 pytz==2017.2
-requests==2.18.1
+requests==2.20.0
 requests-oauthlib==0.8.0
 rsa==3.4.2
 six==1.10.0
