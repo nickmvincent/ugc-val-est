@@ -34,5 +34,5 @@ six==1.10.0
 SQLAlchemy==1.1.12
 textstat==0.3.1
 update-checker==0.16
-urllib3==1.24.2
+urllib3==1.26.5
 wrapt==1.10.10
